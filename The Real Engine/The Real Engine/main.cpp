@@ -1,5 +1,8 @@
 #include "Engine.h"
 
+#ifdef _CONSOLE
+int main() {
+#else
 #ifdef _WIN32
 #include <Windows.h>
 
@@ -7,6 +10,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin,
 #else
 int main(int argc, char** argv){
 #endif //_WIN32
+#endif // Console
 	Engine engine;
-	engine.run();
+	engine.Run();
 }
