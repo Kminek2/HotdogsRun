@@ -1,8 +1,10 @@
 #pragma once
 #include "Model.h"
 #include "Transform.h"
+#include "ObjectScript.h"
 
 #include <list>
+#include <vector>
 
 class Commands;
 
@@ -20,7 +22,12 @@ public:
 
 	Transform* transform;
 
+	std::vector<ObjectScript*> objectScripts;
+
+	void AddScript(ObjectScript* script);
+
 	static void DeleteAll();
+	static void UpdateAllObjectScripts();
 
 	static void TransformTransformsToMemory();
 	friend Commands;

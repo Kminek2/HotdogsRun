@@ -67,6 +67,7 @@ void Application::Update() {
 	Time::UpdateTime();
 
 	Scene::loadedScene.get()->sceneScript->Update();
+	GameObject::UpdateAllObjectScripts();
 
 	Input::mouseOffX = Input::mousePosX - Input::lastX;
 	Input::mouseOffY = Input::mousePosY - Input::lastY;

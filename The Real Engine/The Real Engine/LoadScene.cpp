@@ -1,5 +1,6 @@
 #include "LoadScene.h"
 #include "Scene.h"
+#include "TestObjectScript.h"
 
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"test", new LoadScene()}
@@ -11,6 +12,8 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 	obj = new GameObject("test", { 0, 0, 0 });
 	obj2 = new GameObject("test", { 0, 0, -0.5f });
+
+	obj->AddScript(new TestObjectScript());
 
 	return std::shared_ptr<Scene>(scene);
 }

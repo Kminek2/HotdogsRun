@@ -14,9 +14,21 @@ GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation
 
 GameObject::~GameObject()
 {
+	for (int i = 0; i < objectScripts.size(); i++)
+	{
+		objectScripts[i]->OnDestroy();
+		delete objectScripts[i];
+	}
 	createdGameObject.erase(i);
 	delete transform;
 	delete model;
+}
+
+void GameObject::AddScript(ObjectScript* script)
+{
+	script->gameObject = this;
+	objectScripts.push_back(script);
+	script->Init();
 }
 
 void GameObject::DeleteAll()
@@ -26,6 +38,20 @@ void GameObject::DeleteAll()
 	while (it != createdGameObject.end())
 	{
 		delete *it;
+		it = std::next(it);
+	}
+}
+
+void GameObject::UpdateAllObjectScripts()
+{
+	std::list<GameObject*>::iterator it = createdGameObject.begin();
+
+	while (it != createdGameObject.end())
+	{
+		for (int i = 0; i < (*it)->objectScripts.size(); i++)
+		{
+			(*it)->objectScripts[i]->Update();
+		}
 		it = std::next(it);
 	}
 }

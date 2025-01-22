@@ -1,0 +1,13 @@
+#pragma once
+
+class GameObject;
+
+class ObjectScript
+{
+public:
+	virtual void Init() = 0;
+	virtual void Update() = 0;
+	virtual void OnDestroy() = 0;
+
+	GameObject* gameObject;
+};

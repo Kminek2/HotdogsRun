@@ -149,12 +149,14 @@
     <ClCompile Include="LoadScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ObjectScript.cpp" />
     <ClCompile Include="Queues.cpp" />
     <ClCompile Include="RenderPass.cpp" />
     <ClCompile Include="SceeneScript.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SwapChain.cpp" />
+    <ClCompile Include="TestObjectScript.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Uniform.cpp" />
@@ -178,6 +180,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="LoadScene.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ObjectScript.h" />
     <ClInclude Include="Queues.h" />
     <ClInclude Include="RenderPass.h" />
     <ClInclude Include="resource.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SwapChain.h" />
+    <ClInclude Include="TestObjectScript.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Uniform.h" />
