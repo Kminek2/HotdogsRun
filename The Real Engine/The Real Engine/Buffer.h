@@ -17,6 +17,7 @@ template <typename T>
 class Buffer
 {
 private:
+    bool createdBuffer = false;
 	VkBuffer buffer;
 	VkDeviceMemory bufferMemory;
 
@@ -123,7 +124,12 @@ void Buffer<T>::SendBufferToMemory()
     memcpy(data, this->data.data(), (size_t)bufferSize);
     vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
 
-    CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | bufferUsage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, buffer, bufferMemory);
+    if (!createdBuffer) {
+        vkDestroyBuffer(Device::getDevice(), buffer, nullptr);
+        vkFreeMemory(Device::getDevice(), bufferMemory, nullptr);
+        CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | bufferUsage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, buffer, bufferMemory);
+        createdBuffer = true;
+    }
 
     CopyBuffer(stagingBuffer, buffer, bufferSize);
 
