@@ -16,6 +16,8 @@ private:
 	static std::list<GameObject*> createdGameObject;
 
 	std::list<GameObject*>::iterator i;
+
+	static bool deletingAll;
 public:
 	GameObject(std::string model, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1));
 	~GameObject();

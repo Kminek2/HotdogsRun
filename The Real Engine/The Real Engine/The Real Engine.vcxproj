@@ -157,6 +157,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="TestObjectScript.cpp" />
+    <ClCompile Include="TestObjectScript2.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Uniform.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="TestObjectScript.h" />
+    <ClInclude Include="TestObjectScript2.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Uniform.h" />

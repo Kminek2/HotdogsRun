@@ -1,4 +1,7 @@
 #pragma once
+#include "Time.h"
+#include "Camera.h"
+#include "Input.h"
 
 class GameObject;
 
