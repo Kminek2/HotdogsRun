@@ -102,8 +102,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
 
     vkCmdEndRenderPass(commandBuffer);
 
-    if(swapChain.getImage(currentImage))
-    TransitionToPresent(commandBuffer, *swapChain.getImage(currentImage));
+    //TransitionToPresent(commandBuffer, *swapChain.getImage(currentImage));
 
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
         throw std::runtime_error("failed to record command buffer!");
@@ -151,7 +150,7 @@ void Commands::EndSingleTimeCommands(VkCommandBuffer commandBuffer) {
 void Commands::TransitionToPresent(VkCommandBuffer commandBuffer, VkImage& swapchainImage) {
     VkImageMemoryBarrier barrier = {};
     barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    barrier.oldLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR; // Adjust based on your use case
+    barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED; // Adjust based on your use case
     barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;

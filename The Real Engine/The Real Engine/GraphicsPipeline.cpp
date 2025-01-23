@@ -89,7 +89,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     uniform = new Uniform();
     uniform->AddUniforms(1);
-    auto descriptorSetLayout = uniform->BindUniforms();
+    std::vector<VkDescriptorSetLayout> descriptorSetLayout = uniform->BindUniforms();
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;

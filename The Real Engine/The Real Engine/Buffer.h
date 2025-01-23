@@ -8,6 +8,8 @@
 #include "Commands.h"
 #include <stdexcept>
 
+#include <cstring>
+
 template <typename T>
 class UniformBuffer;
 

@@ -58,8 +58,8 @@ RenderPass::RenderPass(SwapChain* swapChain)
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
     renderPassInfo.pAttachments = attachments.data();
-    renderPassInfo.subpassCount = 1;
-    renderPassInfo.pSubpasses = &subpasses[0];
+    renderPassInfo.subpassCount = static_cast<uint32_t>(subpasses.size());
+    renderPassInfo.pSubpasses = subpasses.data();
     renderPassInfo.dependencyCount = 1;
     renderPassInfo.pDependencies = &dependency;
 
@@ -67,9 +67,9 @@ RenderPass::RenderPass(SwapChain* swapChain)
         throw std::runtime_error("failed to create render pass!");
     }
 
-    CreateDepthResources();
-
     mainPipeline = new GraphicsPipeline("shaders/main.vert.spv", "shaders/main.frag.spv", 0, *this);
+
+    CreateDepthResources();
 }
 
 RenderPass::~RenderPass() {

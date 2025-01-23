@@ -42,7 +42,7 @@ public:
 
 	static VkSurfaceKHR& getSurface() { return surface; }
 	VkExtent2D getExtend() const { return swapChainExtent; }
-	VkSwapchainKHR& getSwapChain() { return swapChain; }
+	VkSwapchainKHR getSwapChain() { return swapChain; }
 
 	RenderPass* getRenderPass() const { return renderPass; }
 	Framebuffer* getFramebuffer(unsigned int frame) { return framebuffers[frame]; }

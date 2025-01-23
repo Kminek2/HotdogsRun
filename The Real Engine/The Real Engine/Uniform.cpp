@@ -31,7 +31,7 @@ std::vector<VkDescriptorSetLayout> Uniform::BindUniforms()
         throw std::runtime_error("failed to create descriptor set layout!");
     }
 
-    return { &*descriptorSetLayout };
+    return { descriptorSetLayout };
 }
 
 Uniform::~Uniform() {

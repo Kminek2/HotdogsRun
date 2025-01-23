@@ -28,7 +28,7 @@ public:
 	RenderPass(SwapChain* swapChain);
 	~RenderPass();
 
-	VkRenderPass& getRenderPass() { return renderPass; }
+	VkRenderPass getRenderPass() { return renderPass; }
 	Image getDepthImage() const { return depthImage; }
 	GraphicsPipeline* getMainPipeline() const { return mainPipeline; }
 

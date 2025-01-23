@@ -12,8 +12,8 @@ private:
 	VkFramebuffer framebuffer;
 public:
 	~Framebuffer();
-	void CreateFramebuffer(VkImageView swapChainImageView, RenderPass* renderPass, SwapChain* swapChain);
+	void CreateFramebuffer(VkImageView imageView, RenderPass* renderPass, SwapChain* swapChain);
 
-	VkFramebuffer& getFramebuffer() { return framebuffer; }
+	VkFramebuffer getFramebuffer() { return framebuffer; }
 };
 

@@ -67,19 +67,21 @@ struct Image
 struct Images
 {
     std::vector<VkImage> images;
-    std::vector<VkImageView*> imageViews;
+    std::vector<VkImageView> imageViews;
 
     void resize(uint16_t size)
     {
+        for (int i = 0; i < imageViews.size(); i++) {
+            vkDestroyImageView(Device::getDevice(), imageViews[i], nullptr);
+        }
+
         images.resize(size);
         imageViews.resize(size);
-
-        for (int i = 0; i < size; i++) {
-            imageViews[i] = new VkImageView();
-        }
     }
 
-    static void CreateImageView(VkImage& image, VkImageView& imageView, VkFormat format, VkImageAspectFlags aspectFlags) {
+    static VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags) {
+        VkImageView imageView;
+
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = image;
@@ -94,5 +96,9 @@ struct Images
         if (vkCreateImageView(Device::getDevice(), &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
             throw std::runtime_error("failed to create texture image view!");
         }
+
+        return imageView;
     }
+
+
 };

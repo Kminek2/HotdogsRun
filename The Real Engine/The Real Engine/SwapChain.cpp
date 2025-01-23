@@ -30,9 +30,7 @@ void SwapChain::CleanUp() {
         delete framebuffers[i];
     }
 
-    for (size_t i = 0; i < swapChainImages->imageViews.size(); i++) {
-        vkDestroyImageView(Device::getDevice(), *swapChainImages->imageViews[i], nullptr);
-    }
+    swapChainImages->resize(0);
 
     vkDestroySwapchainKHR(Device::getDevice(), swapChain, nullptr);
 }
@@ -79,7 +77,7 @@ void SwapChain::CreateFrameBuffers() {
     for (int i = 0; i < swapChainImages->imageViews.size(); i++)
     {
         framebuffers[i] = new Framebuffer();
-        framebuffers[i]->CreateFramebuffer(*swapChainImages->imageViews[i], renderPass, this);
+        framebuffers[i]->CreateFramebuffer(swapChainImages->imageViews[i], renderPass, this);
     }
 }
 
@@ -90,7 +88,7 @@ void SwapChain::CreateSwapChain() {
     VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
     VkExtent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
 
-    uint32_t imageCount = swapChainSupport.capabilities.minImageCount; // + 3 <- (my prefared reserve count)
+    uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 3; // + 3 <- (my prefared reserve count)
     if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
         imageCount = swapChainSupport.capabilities.maxImageCount;
     }
@@ -179,7 +177,7 @@ VkExtent2D SwapChain::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilit
 
 void SwapChain::CreateImageViews() {
     for (size_t i = 0; i < swapChainImages->imageViews.size(); i++) {
-        Images::CreateImageView(swapChainImages->images[i], *swapChainImages->imageViews[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+        swapChainImages->imageViews[i] = Images::CreateImageView(swapChainImages->images[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
     }
 }
 

@@ -101,7 +101,8 @@ void Engine::DrawFrame() {
 
     application->UpdateBuffer(currentFrame);
 
-    commands->RecordCommands(currentFrame, swapChain->getFramebuffer(currentFrame)->getFramebuffer(), *swapChain, imageIndex);
+    commands->ResetCommands(currentFrame);
+    commands->RecordCommands(currentFrame, swapChain->getFramebuffer(imageIndex)->getFramebuffer(), *swapChain, imageIndex);
 
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
