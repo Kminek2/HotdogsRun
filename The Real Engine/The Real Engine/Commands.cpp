@@ -96,7 +96,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         {
             std::list<Model*>::iterator iterator;
             iterator = std::next(Model::createdModels.begin(), i);
-            vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>((*iterator)->indicies.size()), 1, static_cast<uint32_t>((*iterator)->indexOffset), 0, i);
+            vkCmdDrawIndexed(commandBuffer, (*iterator)->indexSize, 1, (*iterator)->indexOffset, 0, i);
         }
     }
 

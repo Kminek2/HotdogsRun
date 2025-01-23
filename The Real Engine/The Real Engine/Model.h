@@ -23,8 +23,6 @@ const std::vector<uint16_t> indices = {
 
 struct Model
 {
-	std::vector<Vertex> verticies;
-	std::vector<uint16_t> indicies;
 
 	static void LoadModelFromFile(std::string name, std::string filePath)
 	{
@@ -52,10 +50,9 @@ struct Model
 	}
 
 	Model(Model& model, std::list<Model*>::iterator iterator) {
-		verticies = model.verticies;
-		indicies = model.indicies;
 		this->iterator = iterator;
 		this->indexOffset = model.indexOffset;
+		this->indexSize = model.indexSize;
 	}
 
 	static void SendBuffers() {
@@ -69,18 +66,17 @@ struct Model
 	}
 private:
 	Model(std::vector<Vertex> verticies, std::vector<uint16_t>indicies) {
-		this->verticies = verticies;
-		this->indicies.resize(indicies.size());
-		uint16_t indexBufferSize = indexBuffer->getSize();
+		uint32_t indexBufferSize = static_cast<uint32_t>(indexBuffer->getSize());
 		this->indexOffset = indexBufferSize;
+		this->indexSize = static_cast<uint32_t>(indicies.size());
 
 		for (int i = 0; i < indicies.size(); i++)
 		{
-			this->indicies[i] = indicies[i] + indexBufferSize;
+			indicies[i] = indicies[i] + indexBufferSize;
 		}
 
-		vertexBuffer->AddToBuffer(this->verticies);
-		indexBuffer->AddToBuffer(this->indicies);
+		vertexBuffer->AddToBuffer(verticies);
+		indexBuffer->AddToBuffer(indicies);
 	}
 
 	static std::map<std::string, Model*> loadedModels;
@@ -89,8 +85,10 @@ private:
 	static Buffer<Vertex>* vertexBuffer;
 	static Buffer<uint16_t>* indexBuffer;
 
-	uint16_t indexOffset;
+	uint32_t indexOffset;
 	std::list<Model*>::iterator iterator;
+
+	uint32_t indexSize;
 
 	friend Commands;
 };
