@@ -63,8 +63,28 @@ void Application::UpdateBuffer(uint16_t frame)
 	camera->UpdateBuffer(frame);
 }
 
+std::list <float> frameTimes;
+
 void Application::Update() {
 	Time::UpdateTime();
+	frameTimes.push_back(1 / Time::deltaTime);
+
+	if (frameTimes.size() >= 500) {
+		std::list <float>::iterator it = frameTimes.begin();
+
+		float times = 0;
+
+		while (it != frameTimes.end())
+		{
+			times += *it;
+			it = std::next(it);
+		}
+
+		times /= frameTimes.size();
+		std::cout << "fps: " << times << '\n';
+
+		frameTimes.clear();
+	}
 
 	Scene::loadedScene.get()->sceneScript->Update();
 	GameObject::UpdateAllObjectScripts();
