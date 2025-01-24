@@ -1,3 +1,0 @@
-/home/pawel/Coding/C++/motorola/2025/build/CMakeFiles/HotdogsRun.dir
-/home/pawel/Coding/C++/motorola/2025/build/CMakeFiles/edit_cache.dir
-/home/pawel/Coding/C++/motorola/2025/build/CMakeFiles/rebuild_cache.dir
