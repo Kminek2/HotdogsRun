@@ -1,6 +1,6 @@
 #include "TestObjectScript.h"
 #include "GameObject.h"
-#include "Time.h"
+#include "AppTime.h"
 
 void TestObjectScript::Init()
 {

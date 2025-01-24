@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
+#include <unordered_map>
 
 #include "SceeneScript.h"
 

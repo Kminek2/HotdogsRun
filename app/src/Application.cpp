@@ -3,7 +3,7 @@
 #include "Model.h"
 #include "GameObject.h"
 
-#include "Time.h"
+#include "AppTime.h"
 #include "Input.h"
 
 #include <iostream>
