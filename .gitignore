@@ -82,8 +82,6 @@ StyleCopReport.xml
 *.pgc
 *.pgd
 *.rsp
-*.sln
-*.vcxproj*
 # but not Directory.Build.rsp, as it configures directory-level build defaults
 !Directory.Build.rsp
 *.sbr
@@ -403,3 +401,4 @@ FodyWeavers.xsd
 
 build/
 vox/
+/shaders/

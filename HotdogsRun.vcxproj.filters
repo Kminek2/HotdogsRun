@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\vox">
+      <UniqueIdentifier>{77cd2c27-b2f6-48e5-88f2-d33af022ede0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\app">
+      <UniqueIdentifier>{e4b7281a-7880-4d54-8ca2-8c6684962df8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects">
+      <UniqueIdentifier>{9731dbae-9ed8-4ddc-ac7b-ce2fb433200f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scenes">
+      <UniqueIdentifier>{bf623d1a-ad73-4731-bc77-c56fdce510fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders">
+      <UniqueIdentifier>{042434c8-425f-4aa3-ae7c-9c215bd72bde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\vox">
+      <UniqueIdentifier>{2df7f143-4c79-4835-8ae1-303fc1418e6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\apps">
+      <UniqueIdentifier>{de1cb574-8960-4fdd-a69c-081841bc3fe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\objects">
+      <UniqueIdentifier>{1933f2f9-f273-4529-a908-c2e628e9651d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\scenes">
+      <UniqueIdentifier>{836b04ef-b5a9-443f-ac70-24abce986f22}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="vox\src\calc.cpp">
+      <Filter>Source Files\vox</Filter>
+    </ClCompile>
+    <ClCompile Include="vox\src\merge.cpp">
+      <Filter>Source Files\vox</Filter>
+    </ClCompile>
+    <ClCompile Include="vox\src\read.cpp">
+      <Filter>Source Files\vox</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Application.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\AppTime.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Buffer.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Camera.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Commands.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Descriptior.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Device.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Engine.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Framebuffer.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\GameObject.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\GraphicsPipeline.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Input.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\main.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Model.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\ObjectScript.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Queues.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\RenderPass.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\SceeneScript.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Scene.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Shader.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\SwapChain.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Transform.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Uniform.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\UniformBuffer.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\ValidationLayers.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\scenes\DebugScene.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\scenes\LoadScene.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\TestObjectScript.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\TestObjectScript2.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="vox\include\calc.hpp">
+      <Filter>Header Files\vox</Filter>
+    </ClInclude>
+    <ClInclude Include="vox\include\merge.hpp">
+      <Filter>Header Files\vox</Filter>
+    </ClInclude>
+    <ClInclude Include="vox\include\read.hpp">
+      <Filter>Header Files\vox</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\TestObjectScript.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\TestObjectScript2.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\scenes\DebugScene.h">
+      <Filter>Header Files\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\scenes\LoadScene.h">
+      <Filter>Header Files\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Application.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\AppTime.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Buffer.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Camera.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\CameraStructures.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Commands.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Descriptior.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Device.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Engine.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\FileReader.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Framebuffer.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\GameObject.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\GraphicsPipeline.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Image.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Input.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Model.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\ObjectScript.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Queues.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\RenderPass.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\resource.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\SceeneScript.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Scene.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Shader.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\SwapChain.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Transform.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Uniform.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\UniformBuffer.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\ValidationLayers.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Vertex.h">
+      <Filter>Header Files\apps</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app\shaders\compile.bat">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\compile.sh">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\main.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\main.frag.spv">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\main.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\main.vert.spv">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
