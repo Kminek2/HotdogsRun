@@ -1,13 +1,11 @@
-#include "scenes/LoadScene.h"
-#include "scenes/DebugScene.h"
+#include "LoadScene.h"
 #include "Scene.h"
-#include "objects/TestObjectScript.h"
+#include "TestObjectScript.h"
 #include "Application.h"
-#include "objects/TestObjectScript2.h"
+#include "TestObjectScript2.h"
 
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"load", new LoadScene()},
-	{"debug", new DebugScene()}
 };
 
 std::shared_ptr<Scene> LoadScene::Init() {
@@ -28,12 +26,13 @@ void LoadScene::Update() {
 	else if (Input::getKeyPressed(GLFW_KEY_S))
 		Camera::main->MoveCamera(-Time::deltaTime);
 
-	if (Input::getKeyClicked(GLFW_KEY_R)) {
-		Application::LoadScene("debug");
+	if (Input::getKeyPressed(GLFW_KEY_R)) {
+		Application::LoadScene("load");
 		return;
 	}
 
 }
 
 void LoadScene::UnLoad() {
+
 }

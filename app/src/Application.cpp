@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "Scene.h"
-#include "scenes/LoadScene.h"
+#include "LoadScene.h"
 
 uint16_t Application::width, Application::height;
 
@@ -33,7 +33,6 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 		Scene::registerTemplate(LoadScene::scenes[i].first, LoadScene::scenes[i].second);
 	}
 
-	Input::startKeyCallback();
 	Scene::loadedScene = Scene::Load(LoadScene::scenes[0].first)->Init();
 }
 
@@ -51,12 +50,10 @@ void Application::UpdateCamera(uint16_t width, uint16_t height) {
 void Application::LoadScene(std::string scene)
 {
 	Scene::loadedScene.get()->sceneScript->UnLoad();
-	Input::stopKeyCallback();
 
 	GameObject::DeleteAll();
 	Camera::main->Reload(width, height);
 
-	Input::startKeyCallback();
 	Scene::loadedScene = Scene::Load(scene)->Init();
 }
 

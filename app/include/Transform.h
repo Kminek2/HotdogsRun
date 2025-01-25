@@ -130,7 +130,6 @@ struct Transform {
 		UpdateVectors();
 		UpdateMatrix();
 	}
-
 private:
 
 	glm::vec3 ModuloRotation(glm::vec3 rotation) {

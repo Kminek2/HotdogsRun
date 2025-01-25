@@ -11,7 +11,6 @@
 #include "vox/Vox.hpp"
 
 class Commands;
-class DebugScene;
 
 struct Model
 {
@@ -44,23 +43,32 @@ struct Model
 
 	Model(Model& model, std::list<Model*>::iterator iterator) {
 		this->iterator = iterator;
-		this->vertexOffset = model.vertexOffset;
-		this->vertexSize = model.vertexSize;
+		this->indexOffset = model.indexOffset;
+		this->indexSize = model.indexSize;
 	}
 
 	static void SendBuffers() {
 		vertexBuffer->SendBufferToMemory();
+		indexBuffer->SendBufferToMemory();
 	}
 
 	static void Unload() {
 		delete vertexBuffer;
+		delete indexBuffer;
 	}
 private:
-	Model(std::vector<Vertex> verticies) {
-		this->vertexOffset = static_cast<uint32_t>(vertexBuffer->getSize());
-		this->vertexSize = static_cast<uint32_t>(verticies.size());
+	Model(std::vector<Vertex> verticies, std::vector<uint16_t>indicies) {
+		uint32_t indexBufferSize = static_cast<uint32_t>(indexBuffer->getSize());
+		this->indexOffset = indexBufferSize;
+		this->indexSize = static_cast<uint32_t>(indicies.size());
+
+		for (int i = 0; i < indicies.size(); i++)
+		{
+			indicies[i] = indicies[i] + indexBufferSize;
+		}
 
 		vertexBuffer->AddToBuffer(verticies);
+		indexBuffer->AddToBuffer(indicies);
 	}
 
 	Model(const vox::model_data model_data) : Model(convert_model_data(model_data), model_data.indices) {};
@@ -70,12 +78,12 @@ private:
 	static std::list<Model*> createdModels;
 
 	static Buffer<Vertex>* vertexBuffer;
+	static Buffer<uint16_t>* indexBuffer;
 
-	uint32_t vertexOffset;
+	uint32_t indexOffset;
 	std::list<Model*>::iterator iterator;
 
-	uint32_t vertexSize;
+	uint32_t indexSize;
 
 	friend Commands;
-	friend DebugScene;
 };

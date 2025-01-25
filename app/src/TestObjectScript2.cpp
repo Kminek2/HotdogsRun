@@ -1,4 +1,4 @@
-#include "objects/TestObjectScript2.h"
+#include "TestObjectScript2.h"
 #include "Input.h"
 #include "GameObject.h"
 
