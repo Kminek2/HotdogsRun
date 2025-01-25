@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "Scene.h"
-#include "LoadScene.h"
+#include "scenes/LoadScene.h"
 
 uint16_t Application::width, Application::height;
 
