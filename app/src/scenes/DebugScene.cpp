@@ -4,8 +4,12 @@
 
 std::shared_ptr<Scene> DebugScene::Init() {
 	Scene* scene = new Scene(this);
-	Input::startKeyCallback();
 
+	float position_offset = 0;
+	for (auto model : Model::loadedModels) {
+		objs.push_back(new GameObject(model.first, { 0, position_offset, 0 }));
+		position_offset += 50.0f;
+	}
 
 	return std::shared_ptr<Scene>(scene);
 }
@@ -25,5 +29,5 @@ void DebugScene::Update() {
 }
 
 void DebugScene::UnLoad() {
-	Input::stopKeyCallback();
+	objs.clear();
 }

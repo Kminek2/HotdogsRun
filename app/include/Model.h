@@ -9,12 +9,15 @@
 #include <list>
 
 class Commands;
+class DebugScene;
 
 const std::vector<Vertex> vertices = {
 	{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
-{{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
-{{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-{{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}}
+	{{0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+	{{0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+	{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+	{{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+	{{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}
 };
 
 const std::vector<uint16_t> indices = {
@@ -27,7 +30,7 @@ struct Model
 	static void LoadModelFromFile(std::string name, std::string filePath)
 	{
 
-		loadedModels[name] = new Model(vertices, indices);
+		loadedModels[name] = new Model(vertices);
 	}
 
 	static Model* Create(std::string model) {
@@ -51,44 +54,35 @@ struct Model
 
 	Model(Model& model, std::list<Model*>::iterator iterator) {
 		this->iterator = iterator;
-		this->indexOffset = model.indexOffset;
-		this->indexSize = model.indexSize;
+		this->vertexOffset = model.vertexOffset;
+		this->vertexSize = model.vertexSize;
 	}
 
 	static void SendBuffers() {
 		vertexBuffer->SendBufferToMemory();
-		indexBuffer->SendBufferToMemory();
 	}
 
 	static void Unload() {
 		delete vertexBuffer;
-		delete indexBuffer;
 	}
 private:
-	Model(std::vector<Vertex> verticies, std::vector<uint16_t>indicies) {
-		uint32_t indexBufferSize = static_cast<uint32_t>(indexBuffer->getSize());
-		this->indexOffset = indexBufferSize;
-		this->indexSize = static_cast<uint32_t>(indicies.size());
-
-		for (int i = 0; i < indicies.size(); i++)
-		{
-			indicies[i] = indicies[i] + indexBufferSize;
-		}
+	Model(std::vector<Vertex> verticies) {
+		this->vertexOffset = static_cast<uint32_t>(vertexBuffer->getSize());
+		this->vertexSize = static_cast<uint32_t>(verticies.size());
 
 		vertexBuffer->AddToBuffer(verticies);
-		indexBuffer->AddToBuffer(indicies);
 	}
 
 	static std::map<std::string, Model*> loadedModels;
 	static std::list<Model*> createdModels;
 
 	static Buffer<Vertex>* vertexBuffer;
-	static Buffer<uint16_t>* indexBuffer;
 
-	uint32_t indexOffset;
+	uint32_t vertexOffset;
 	std::list<Model*>::iterator iterator;
 
-	uint32_t indexSize;
+	uint32_t vertexSize;
 
 	friend Commands;
+	friend DebugScene;
 };

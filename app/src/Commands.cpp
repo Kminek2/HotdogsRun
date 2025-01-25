@@ -88,15 +88,13 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         VkDeviceSize offsets[] = { 0, 0 };
         vkCmdBindVertexBuffers(commandBuffer, 0, 2, vertexBuffers, offsets);
 
-        vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
-
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
 
         for (int i = 0; i < Model::createdModels.size(); i++)
         {
             std::list<Model*>::iterator iterator;
             iterator = std::next(Model::createdModels.begin(), i);
-            vkCmdDrawIndexed(commandBuffer, (*iterator)->indexSize, 1, (*iterator)->indexOffset, 0, i);
+            vkCmdDraw(commandBuffer, (*iterator)->vertexSize, 1, (*iterator)->vertexOffset, i);
         }
     }
 
