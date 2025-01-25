@@ -19,6 +19,8 @@ private:
 	glm::vec3 direction;
 	glm::vec3 front;
 	glm::vec3 up;
+
+	const float render_distance = 100.0f;
 public:
 
 	glm::vec3 pos;

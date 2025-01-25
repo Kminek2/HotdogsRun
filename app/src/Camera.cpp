@@ -22,7 +22,7 @@ Camera::Camera(uint16_t frameNum, uint16_t width, uint16_t height)
 	cameraBuffer = new UniformBuffer<UniformCameraBuffer>(frameNum);
 	view = Perspective;
 	if (view == Perspective)
-		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, 10.0f);
+		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, Camera::render_distance);
 	else
 		cameraBufferStruct.proj = glm::ortho(-16, 16, -8, 8);
 
@@ -37,7 +37,7 @@ Camera::~Camera() {
 void Camera::UpdateCamera(uint16_t width, uint16_t height)
 {
 	if (view == Perspective)
-		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, 10.0f);
+		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, Camera::render_distance);
 	else
 		cameraBufferStruct.proj = glm::ortho(-16, 16, -8, 8);
 	cameraBufferStruct.proj[1][1] *= -1;
@@ -99,7 +99,7 @@ void Camera::Reload(uint16_t width, uint16_t height)
 
 	view = Perspective;
 	if (view == Perspective)
-		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, 10.0f);
+		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, Camera::render_distance);
 	else
 		cameraBufferStruct.proj = glm::ortho(-16, 16, -8, 8);
 

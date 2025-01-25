@@ -16,7 +16,7 @@ uint16_t Application::width, Application::height;
 Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	this->width = width;
 	this->height = height;
-	Model::LoadModelFromFile("test", "s");
+	Model::LoadModelFromFile("test", "3x3x3.vox");
 
 	Model::SendBuffers();
 
@@ -81,7 +81,7 @@ void Application::Update() {
 		}
 
 		times /= frameTimes.size();
-		std::cout << "fps: " << times << '\n';
+		// std::cout << "fps: " << times << '\n';
 
 		frameTimes.clear();
 	}
