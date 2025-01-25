@@ -8,6 +8,8 @@
 #include <string>
 #include <list>
 
+#include "vox/Vox.hpp"
+
 class Commands;
 
 const std::vector<Vertex> vertices = {
@@ -41,9 +43,7 @@ struct Model
 		createdModels.erase(iterator);
 	}
 
-	Model() {
-
-	}
+	Model() {}
 
 	~Model() {
 		Delete();
@@ -78,6 +78,9 @@ private:
 		vertexBuffer->AddToBuffer(verticies);
 		indexBuffer->AddToBuffer(indicies);
 	}
+
+	Model(const vox::model_data model_data) : Model(convert_model_data(model_data), model_data.indices) {};
+	std::vector<Vertex> convert_model_data(const vox::model_data model_data);
 
 	static std::map<std::string, Model*> loadedModels;
 	static std::list<Model*> createdModels;
