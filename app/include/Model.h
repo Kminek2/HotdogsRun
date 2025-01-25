@@ -63,7 +63,7 @@ private:
 		vertexBuffer->AddToBuffer(verticies);
 	}
 
-	Model(const vox::model_data model_data) : Model(convert_model_data(model_data), model_data.indices) {};
+	Model(const vox::model_data model_data) : Model(convert_model_data(model_data)) {};
 	std::vector<Vertex> convert_model_data(const vox::model_data model_data);
 
 	static std::map<std::string, Model*> loadedModels;
