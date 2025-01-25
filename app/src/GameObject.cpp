@@ -70,5 +70,8 @@ void GameObject::TransformTransformsToMemory()
 		it = std::next(it);
 	}
 
+	if (transforms.size() == 0)
+		return;
+
 	Transform::TransformToMemory(transforms);
 }
