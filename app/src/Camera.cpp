@@ -24,7 +24,7 @@ Camera::Camera(uint16_t frameNum, uint16_t width, uint16_t height)
 	if (view == Perspective)
 		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, Camera::render_distance);
 	else
-		cameraBufferStruct.proj = glm::ortho(-16, 16, -8, 8);
+		cameraBufferStruct.proj = glm::ortho(-160.0f, 160.0f, -80.0f, 80.0f, 0.1f, Camera::render_distance);
 
 	cameraBufferStruct.proj[1][1] *= -1;
 	cameraBufferStruct.view = glm::lookAt(pos, pos + front, up);
@@ -39,30 +39,34 @@ void Camera::UpdateCamera(uint16_t width, uint16_t height)
 	if (view == Perspective)
 		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, Camera::render_distance);
 	else
-		cameraBufferStruct.proj = glm::ortho(-16, 16, -8, 8);
+		cameraBufferStruct.proj = glm::ortho(-160.0f, 160.0f, -80.0f, 80.0f, 0.1f, Camera::render_distance);
 	cameraBufferStruct.proj[1][1] *= -1;
 	cameraBufferStruct.view = glm::lookAt(pos, pos + front, up);
 }
 
-void Camera::RotateCamera(float x, float y)
+void Camera::RotateCamera(float yaw, float pitch)
 {
-	pitch -= y;
-	yaw -= x;
+	RotateCameraTo(this->yaw-yaw, this->pitch-pitch);
+}
 
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
+void Camera::RotateCameraTo(float yaw, float pitch) {
+	this->yaw = yaw;
+	this->pitch = pitch;
 
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.z = sin(glm::radians(pitch));
-	direction.y = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	if (this->pitch > 89.0f)
+		this->pitch = 89.0f;
+	if (this->pitch < -89.0f)
+		this->pitch = -89.0f;
+
+	direction.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+	direction.z = sin(glm::radians(this->pitch));
+	direction.y = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
 	front = glm::normalize(direction);
 	glm::vec3 upDir;
 
-	upDir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch + 90));
-	upDir.z = sin(glm::radians(pitch + 90));
-	upDir.y = sin(glm::radians(yaw)) * cos(glm::radians(pitch + 90));
+	upDir.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch + 90));
+	upDir.z = sin(glm::radians(this->pitch + 90));
+	upDir.y = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch + 90));
 
 	up = glm::normalize(upDir);
 }

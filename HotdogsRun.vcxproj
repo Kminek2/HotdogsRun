@@ -34,8 +34,7 @@
     <ClCompile Include="app\src\main.cpp" />
     <ClCompile Include="app\src\Model.cpp" />
     <ClCompile Include="app\src\ObjectScript.cpp" />
-    <ClCompile Include="app\src\objects\TestObjectScript.cpp" />
-    <ClCompile Include="app\src\objects\TestObjectScript2.cpp" />
+    <ClCompile Include="app\src\objects\CameraLockScript.cpp" />
     <ClCompile Include="app\src\Queues.cpp" />
     <ClCompile Include="app\src\RenderPass.cpp" />
     <ClCompile Include="app\src\SceeneScript.cpp" />
@@ -70,8 +69,7 @@
     <ClInclude Include="app\include\Input.h" />
     <ClInclude Include="app\include\Model.h" />
     <ClInclude Include="app\include\ObjectScript.h" />
-    <ClInclude Include="app\include\objects\TestObjectScript.h" />
-    <ClInclude Include="app\include\objects\TestObjectScript2.h" />
+    <ClInclude Include="app\include\objects\CameraLockScript.h" />
     <ClInclude Include="app\include\Queues.h" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />
@@ -151,7 +149,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\LIB\glfw-3.4.bin.WIN64\include;C:\LIB\VulkanSDK\1.4.304.0\Include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun\app\include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath)</IncludePath>
     <SourcePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -198,7 +196,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

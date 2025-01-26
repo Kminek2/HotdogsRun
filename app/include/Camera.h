@@ -20,7 +20,7 @@ private:
 	glm::vec3 front;
 	glm::vec3 up;
 
-	const float render_distance = 100.0f;
+	const float render_distance = 1000.0f;
 public:
 
 	glm::vec3 pos;
@@ -31,7 +31,8 @@ public:
 	void UpdateBuffer(uint16_t frame);
 	void UpdateCamera(uint16_t width, uint16_t height);
 
-	void RotateCamera(float x, float y);
+	void RotateCamera(float yaw, float pitch);
+	void RotateCameraTo(float yaw, float pitch);
 	void MoveCameraTo(glm::vec3 pos);
 	void MoveCamera(glm::vec3 by);
 	void MoveCamera(float by);

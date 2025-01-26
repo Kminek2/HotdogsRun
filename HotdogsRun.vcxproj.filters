@@ -31,14 +31,14 @@
     <Filter Include="Header Files\vox">
       <UniqueIdentifier>{2df7f143-4c79-4835-8ae1-303fc1418e6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\apps">
-      <UniqueIdentifier>{de1cb574-8960-4fdd-a69c-081841bc3fe6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\objects">
       <UniqueIdentifier>{1933f2f9-f273-4529-a908-c2e628e9651d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\scenes">
       <UniqueIdentifier>{836b04ef-b5a9-443f-ac70-24abce986f22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\app">
+      <UniqueIdentifier>{de1cb574-8960-4fdd-a69c-081841bc3fe6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,10 +132,7 @@
     <ClCompile Include="app\src\scenes\LoadScene.cpp">
       <Filter>Source Files\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\objects\TestObjectScript.cpp">
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\objects\TestObjectScript2.cpp">
+    <ClCompile Include="app\src\objects\CameraLockScript.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,12 +146,6 @@
     <ClInclude Include="vox\include\read.hpp">
       <Filter>Header Files\vox</Filter>
     </ClInclude>
-    <ClInclude Include="app\include\objects\TestObjectScript.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\objects\TestObjectScript2.h">
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
     <ClInclude Include="app\include\scenes\DebugScene.h">
       <Filter>Header Files\scenes</Filter>
     </ClInclude>
@@ -162,91 +153,94 @@
       <Filter>Header Files\scenes</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Application.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\AppTime.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Buffer.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Camera.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\CameraStructures.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Commands.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Descriptior.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Device.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Engine.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\FileReader.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Framebuffer.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\GameObject.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\GraphicsPipeline.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Image.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Input.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Model.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\ObjectScript.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Queues.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\RenderPass.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\resource.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\SceeneScript.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Scene.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Shader.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\SwapChain.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Transform.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Uniform.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\UniformBuffer.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\ValidationLayers.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Vertex.h">
-      <Filter>Header Files\apps</Filter>
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\CameraLockScript.h">
+      <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
