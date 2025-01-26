@@ -4,11 +4,10 @@
 #include <vector>
 
 #include <map>
-
+#include <algorithm>
+#include <iterator>
 #include <string>
 #include <list>
-
-#include "vox/Vox.hpp"
 
 class Commands;
 class DebugScene;
@@ -18,11 +17,15 @@ struct Model
 
 	static void LoadModelFromFile(std::string name, std::string filePath)
 	{
-		vox::model_data tmp;
+		std::vector<vox::vertex> tmp;
 		if (vox::load_model("models/"+filePath, tmp) != 0)
 			throw std::runtime_error("Failed to load model from file");
 
-		loadedModels[name] = new Model(tmp);
+		std::vector<Vertex> vertices;
+		vertices.reserve(tmp.size());
+		std::transform(tmp.begin(), tmp.end(), std::back_inserter(vertices), [](const vox::vertex& v) { return Vertex(v); });
+
+		loadedModels[name] = new Model(std::move(vertices));
 	}
 
 	static Model* Create(std::string model) {
@@ -62,9 +65,6 @@ private:
 
 		vertexBuffer->AddToBuffer(verticies);
 	}
-
-	Model(const vox::model_data model_data) : Model(convert_model_data(model_data)) {};
-	std::vector<Vertex> convert_model_data(const vox::model_data model_data);
 
 	static std::map<std::string, Model*> loadedModels;
 	static std::list<Model*> createdModels;

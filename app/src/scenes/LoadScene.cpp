@@ -20,13 +20,14 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	return std::shared_ptr<Scene>(scene);
 }
 
+const float cam_speed = 100.0f;
 void LoadScene::Update() {
 	Camera::main->RotateCamera(Input::mouseOffX, Input::mouseOffY);
 
 	if (Input::getKeyPressed(GLFW_KEY_W))
-		Camera::main->MoveCamera(Time::deltaTime);
+		Camera::main->MoveCamera(cam_speed * Time::deltaTime);
 	else if (Input::getKeyPressed(GLFW_KEY_S))
-		Camera::main->MoveCamera(-Time::deltaTime);
+		Camera::main->MoveCamera(cam_speed * -Time::deltaTime);
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
 		Application::LoadScene("debug");

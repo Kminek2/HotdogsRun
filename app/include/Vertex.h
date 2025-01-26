@@ -7,10 +7,16 @@
 #include <glm/glm.hpp>
 
 #include <vector>
+#include "vox/Vox.hpp"
 
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
+    
+    Vertex(const vox::vertex& v)
+        : pos(std::get<0>(v.pos), std::get<1>(v.pos), std::get<2>(v.pos)),
+        color(std::get<0>(v.col), std::get<1>(v.col), std::get<2>(v.col))
+    {}
 
     static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 0) {
         VkVertexInputBindingDescription bindingDescription{};
