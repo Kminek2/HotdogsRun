@@ -92,8 +92,7 @@ void Engine::DrawFrame() {
         swapChain->ReCreate();
         application->UpdateCamera(swapChain->width, swapChain->height);
         return;
-    }
-    else if (result != VK_SUCCESS || result == VK_SUBOPTIMAL_KHR) {
+    } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
 
