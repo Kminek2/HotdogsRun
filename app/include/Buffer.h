@@ -20,6 +20,7 @@ private:
     bool createdBuffer = false;
 	VkBuffer buffer;
 	VkDeviceMemory bufferMemory;
+    uint64_t actBufferSize = 0;
 
 	std::vector<T> data;
 
@@ -124,7 +125,8 @@ void Buffer<T>::SendBufferToMemory()
     memcpy(data, this->data.data(), (size_t)bufferSize);
     vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
 
-    if (!createdBuffer) {
+    if (!createdBuffer || bufferSize > actBufferSize) {
+        vkDeviceWaitIdle(Device::getDevice());
         vkDestroyBuffer(Device::getDevice(), buffer, nullptr);
         vkFreeMemory(Device::getDevice(), bufferMemory, nullptr);
         CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | bufferUsage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, buffer, bufferMemory);
@@ -132,6 +134,8 @@ void Buffer<T>::SendBufferToMemory()
     }
 
     CopyBuffer(stagingBuffer, buffer, bufferSize);
+
+    actBufferSize = bufferSize;
 
     vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
     vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);

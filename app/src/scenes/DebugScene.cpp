@@ -12,7 +12,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 		position_offset += 50.0f;
 	}
 
-	objs[0]->AddScript(new CameraLockScript());
+	objs[0]->AddScript(new CameraLockScript);
 
 	return std::shared_ptr<Scene>(scene);
 }
