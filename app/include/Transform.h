@@ -84,9 +84,12 @@ struct Transform {
 		UpdateMatrix();
 	}
 
+	void Translate(glm::vec3 by);
+
 	void Rotate(glm::vec3 by) {
 		this->rotation += by;
 		rotation = ModuloRotation(rotation);
+		UpdateVectors();
 		UpdateMatrix();
 	}
 
@@ -101,19 +104,19 @@ struct Transform {
 	}
 
 	void UpdateVectors() {
-		glm::vec3 front;
+		glm::vec3 up;
 		float x, y, z;
-		front.x = -cos(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(this->rotation.x));
-		front.y = sin(glm::radians(rotation.x));
-		front.z = sin(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(this->rotation.x));
-		this->front = glm::normalize(front);
+		up.x = -cos(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(this->rotation.x));
+		up.y = sin(glm::radians(rotation.x));
+		up.z = sin(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(this->rotation.x));
+		this->up = -glm::normalize(up);
 
-		right.x = cos(glm::radians(rotation.z));
-		right.y = sin(glm::radians(rotation.z));
-		right.z = 0.0f;
-		right = glm::normalize(right);
+		front.x = cos(glm::radians(rotation.z));
+		front.y = sin(glm::radians(rotation.z));
+		front.z = 0.0f;
+		front = -glm::normalize(front);
 
-		this->up = -glm::normalize(glm::cross(this->front, this->right));
+		this->right = -glm::normalize(glm::cross(this->up, this->front));
 	}
 
 	static void TransformToMemory(const std::vector<glm::mat4>& transforms) {
