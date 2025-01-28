@@ -138,7 +138,10 @@
     <ClCompile Include="app\src\objects\CarMovement.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\objects\LockToAxis.cpp">
+    <ClCompile Include="app\src\objects\LockPosition.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\LockRotation.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -251,7 +254,10 @@
     <ClInclude Include="app\include\objects\CarMovement.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
-    <ClInclude Include="app\include\objects\LockToAxis.h">
+    <ClInclude Include="app\include\objects\LockPosition.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\LockRotation.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>

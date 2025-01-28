@@ -25,8 +25,8 @@ struct Transform {
 	glm::vec3 scale;
 
 	glm::vec3 front = { 0, 0, 1 };
-	glm::vec3 right = { 1, 0, 0};
-	glm::vec3 up = {0, 1, 0};
+	glm::vec3 right = { 1, 0, 0 };
+	glm::vec3 up    = { 0, 1, 0 };
 
 	static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 0)
 	{
@@ -133,20 +133,25 @@ struct Transform {
 	}
 
 	void UpdateVectors() {
-		glm::vec3 up;
-		float x, y, z;
+		glm::mat4 rot(1.0f);
+		rot = glm::rotate(rot, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		rot = glm::rotate(rot, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		rot = glm::rotate(rot, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
-		up.x = -cos(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(rotation.x));
-		up.y = sin(glm::radians(rotation.x));
-		up.z = sin(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(rotation.x));
-		this->up = -glm::normalize(up);
+		glm::vec3 baseForward = glm::vec3(-1.0f, 0.0f, 0.0f);
+		glm::vec3 baseUp = glm::vec3(0.0f, 0.0f, 1.0f);
 
-		front.x = cos(glm::radians(rotation.z));
-		front.y = sin(glm::radians(rotation.z));
-		front.z = 0.0f;
-		front = -glm::normalize(front);
+		glm::vec3 newFront = glm::vec3(rot * glm::vec4(baseForward, 0.0f));
+		glm::vec3 newUp = glm::vec3(rot * glm::vec4(baseUp, 0.0f));
 
-		this->right = -glm::normalize(glm::cross(this->up, this->front));
+		newFront = glm::normalize(newFront);
+		newUp = glm::normalize(newUp);
+
+		glm::vec3 newRight = glm::normalize(glm::cross(newFront, newUp));
+
+		this->front = newFront;
+		this->up = newUp;
+		this->right = newRight;
 	}
 
 	static void TransformToMemory(const std::vector<glm::mat4>& transforms) {

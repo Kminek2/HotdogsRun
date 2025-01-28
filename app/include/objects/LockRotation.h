@@ -1,15 +1,17 @@
 #pragma once
+
 #include "ObjectScript.h"
 #include "GameObject.h"
 
-class LockToAxis :
+class LockRotation :
 	public ObjectScript
 {
 private:
-	glm::vec3 axis;
-	GameObject* obj;
+	Transform* transform;
+	glm::vec3 offset;
+
 public:
-	LockToAxis(GameObject* obj, glm::vec3 axis = glm::vec3(0.0f, 0.0f, 1.0f));
+	LockRotation(Transform* transform, glm::vec3 offset = glm::vec3(0.0f));
 	void Init() override;
 	void Update() override;
 	void OnDestroy() override;

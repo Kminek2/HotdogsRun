@@ -2,7 +2,8 @@
 #include "Scene.h"
 #include "Application.h"
 #include "objects/CameraLockScript.h"
-#include "objects/LockToAxis.h"
+#include "objects/LockPosition.h"
+#include "objects/LockRotation.h"
 
 const std::vector<std::string> models = {
 	"racing_car", "test", "arrow"
@@ -25,8 +26,8 @@ std::shared_ptr<Scene> DebugScene::Init() {
 
 	objs[0]->AddScript(new CameraLockScript);
 
-	objs[2]->AddScript(new LockToAxis(objs[0], { 0,0,1 }));
-	// objs[3]->AddScript([](GameObject* obj) { return new LockToAxis(obj, { 0,1,0 }); }(objs[0]));
+	objs[2]->AddScript(new LockPosition(objs[0]->transform));
+	objs[2]->AddScript(new LockRotation(objs[0]->transform));
 
 	return std::shared_ptr<Scene>(scene);
 }
