@@ -7,18 +7,27 @@
 #include "Input.h"
 
 #include <iostream>
+#include <filesystem>
 
 #include "Scene.h"
 #include "scenes/LoadScene.h"
+
+namespace fs = std::filesystem;
 
 uint16_t Application::width, Application::height;
 
 Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	this->width = width;
 	this->height = height;
-	Model::LoadModelFromFile("test", "3x3x3.vox");
+
+	for(const auto& entry : fs::directory_iterator("models")) {
+		std::cout << entry.path().filename().stem().string() << " : " << entry.path().string() << '\n';
+		Model::LoadModelFromFile(entry.path().filename().stem().string(), entry.path().string());
+	}
+
+	/* Model::LoadModelFromFile("test", "3x3x3.vox");
 	Model::LoadModelFromFile("racing_car", "racing_car.vox");
-	Model::LoadModelFromFile("arrow", "arrow.vox");
+	Model::LoadModelFromFile("arrow", "arrow.vox"); */
 
 	Model::SendBuffers();
 

@@ -7,7 +7,7 @@
 #include "objects/CarMovement.h"
 
 const std::vector<std::string> models = {
-	"racing_car", "test", "arrow"
+	"racing_car", "3x3x3", "arrow", "ska"
 };
 
 std::shared_ptr<Scene> DebugScene::Init() {
@@ -30,6 +30,8 @@ std::shared_ptr<Scene> DebugScene::Init() {
 
 	objs[2]->AddScript(new LockPosition(objs[1]->transform));
 	objs[2]->AddScript(new LockRotation(objs[1]->transform));
+	objs[2]->AddScript(new LockPosition(objs[3]->transform));
+	objs[2]->AddScript(new LockRotation(objs[3]->transform));
 
 	return std::shared_ptr<Scene>(scene);
 }

@@ -11,7 +11,7 @@ std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 std::shared_ptr<Scene> LoadScene::Init() {
 	Scene* scene = new Scene(this);
 
-	obj2 = new GameObject("test", { 0, 0, 0 });
+	obj2 = new GameObject("3x3x3", { 0, 0, 0 });
 
 	return std::shared_ptr<Scene>(scene);
 }

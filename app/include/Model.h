@@ -18,7 +18,7 @@ struct Model
 	static void LoadModelFromFile(std::string name, std::string filePath)
 	{
 		std::vector<vox::vertex> tmp;
-		if (vox::load_model("models/"+filePath, tmp) != 0)
+		if (vox::load_model(filePath, tmp) != 0)
 			throw std::runtime_error("Failed to load model from file");
 
 		std::vector<Vertex> vertices;
@@ -29,7 +29,11 @@ struct Model
 	}
 
 	static Model* Create(std::string model) {
-		Model* newModel = new Model(*loadedModels[model], createdModels.end());;
+		Model* newModel;
+
+		try { newModel = new Model(*loadedModels.at(model), createdModels.end()); } 
+		catch (std::out_of_range) { throw std::runtime_error("Model not found"); }
+
 		createdModels.push_back(newModel);
 		newModel->iterator = std::next(createdModels.end(), -1);
 		return newModel;
