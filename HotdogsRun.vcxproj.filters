@@ -135,6 +135,12 @@
     <ClCompile Include="app\src\objects\CameraLockScript.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\objects\CarMovement.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\LockToAxis.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vox\include\calc.hpp">
@@ -240,6 +246,12 @@
       <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\objects\CameraLockScript.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\CarMovement.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\LockToAxis.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>
