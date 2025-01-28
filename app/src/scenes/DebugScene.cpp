@@ -26,7 +26,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	}
 
 	objs[0]->AddScript(new CameraLockScript);
-	objs[0]->AddScript(new CarMovement(1.0f, 1.0f, 300.0f, -100.0f, 40.0f, 10.0f, false));
+	objs[0]->AddScript(new CarMovement(1.0f, 1.0f, 300.0f, -100.0f, 40.0f, 20.0f, false));
 
 	objs[2]->AddScript(new LockPosition(objs[0]->transform));
 	objs[2]->AddScript(new LockRotation(objs[0]->transform));

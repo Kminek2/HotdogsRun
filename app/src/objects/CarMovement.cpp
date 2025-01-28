@@ -22,8 +22,6 @@ void CarMovement::Update() {
 	handleForces();
 	gameObject->transform->Rotate(glm::vec3(0.0f, 0.0f, axleAngle * (actSpeed / maxSpeed) * Time::deltaTime * 3.0f));
 	gameObject->transform->Translate((actSpeed*Time::deltaTime)*forces);
-	//std::cout << actSpeed << '\n';
-	std::cout << forces.x << ' ' << forces.y << ' ' << forces.z << '\n';
 }
 
 void CarMovement::OnDestroy() {
@@ -33,7 +31,7 @@ void CarMovement::OnDestroy() {
 void CarMovement::handleGas() {
 	if (maxSpeed == 0) return;
 	if (Input::getKeyPressed(GLFW_KEY_W)) {
-		if (actSpeed < -10.0f) {
+		if (actSpeed < -40.0f) {
 			std::cout << "GEARBOX DESTROYED!" << '\n';
 			//destroyGearbox();
 			return;
@@ -45,7 +43,7 @@ void CarMovement::handleGas() {
 		actSpeed = std::min(actSpeed, maxSpeed);
 	}
 	if (Input::getKeyPressed(GLFW_KEY_S)) {
-		if (actSpeed > 10.0f) {
+		if (actSpeed > 40.0f) {
 			std::cout << "GEARBOX DESTROYED!" << '\n';
 			//destroyGearbox();
 			return;
@@ -103,20 +101,18 @@ void CarMovement::handleForces() {
 	if (axleAngle < 0.0f+EPSILON && axleAngle > 0.0f-EPSILON) {
 		forces.y -= (yNeg ? -0.4 * Time::deltaTime : 0.4 * Time::deltaTime);
 		forces.y = (yNeg ? std::min(forces.y, 0.0f) : std::max(forces.y, 0.0f));
-		if (actSpeed > 0) {
-			actSpeed -= carWeight * 20.0f * Time::deltaTime;
-			actSpeed = std::max(actSpeed, 0.0f);
-		} else {
-			actSpeed += carWeight * 20.0f * Time::deltaTime;
-			actSpeed = std::min(actSpeed, 0.0f);
-		}
-	}
-	
-	if (abs(forces.y * (axleAngle/15.0f)) < 0.5f) {
+	} else if (abs(forces.y * (axleAngle/15.0f)) < 0.5f) {
 		if (axleAngle < 0.0f-EPSILON) {
 			forces.y += 0.1*(axleAngle/45.0f)*Time::deltaTime;
 		} else if (axleAngle > 0.0f+EPSILON) {
 			forces.y -= 0.1f*(axleAngle/45.0f)*Time::deltaTime;
+		}
+		if (actSpeed > 40.0f) {
+			actSpeed -= carWeight * Time::deltaTime * accelFront;
+			actSpeed = std::max(actSpeed, 0.0f);
+		} else if (actSpeed < -40.0f) {
+			actSpeed += carWeight * Time::deltaTime * accelBack;
+			actSpeed = std::min(actSpeed, 0.0f);
 		}
 	}
 }
