@@ -4,17 +4,25 @@
 #include "objects/CameraLockScript.h"
 #include "objects/LockToAxis.h"
 
+const std::vector<std::string> models = {
+	"racing_car", "test", "arrow"
+	// , "arrow"
+};
+
 std::shared_ptr<Scene> DebugScene::Init() {
 	Scene* scene = new Scene(this);
+	objs.reserve(models.size());
 
 	float position_offset = 0;
-	for (auto model : Model::loadedModels) {
-		objs.push_back(new GameObject(model.first, { 0, position_offset, 0 }));
+	for (const std::string& model : models) {
+		objs.push_back(new GameObject(model, {0, position_offset, 0}));
 		position_offset += 50.0f;
 	}
 
 	objs[0]->AddScript(new CameraLockScript);
+
 	objs[2]->AddScript([](GameObject* obj) { return new LockToAxis(obj, { 0,0,1 }); }(objs[0]));
+	// objs[3]->AddScript([](GameObject* obj) { return new LockToAxis(obj, { 0,1,0 }); }(objs[0]));
 
 	return std::shared_ptr<Scene>(scene);
 }
