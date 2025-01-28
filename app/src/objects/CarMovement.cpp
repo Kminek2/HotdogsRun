@@ -83,14 +83,23 @@ void CarMovement::handleSteeringWheel() {
 	bool left = Input::getKeyPressed(GLFW_KEY_A);
 	bool right = Input::getKeyPressed(GLFW_KEY_D);
 	if (expertMode) {
+		return;
+	}
 
-	} else {
-		if (left == right)
-			axleAngle = 0.0f;
-		else if (left)
-			axleAngle = 30.0f;
-		else if (right)
-			axleAngle = -30.0f;
+	if (left == right) {
+		if (axleAngle > 0) {
+			axleAngle -= 100.0f * Time::deltaTime;
+			axleAngle = std::max(axleAngle, 0.0f);
+		} else {
+			axleAngle += 100.0f * Time::deltaTime;
+			axleAngle = std::min(axleAngle, 0.0f);
+		}
+	} else if (left) {
+		axleAngle += 100.0f * Time::deltaTime;
+		axleAngle = std::min(axleAngle, 30.0f);
+	} else if (right) {
+		axleAngle -= 100.0f * Time::deltaTime;
+		axleAngle = std::max(axleAngle, -30.0f);
 	}
 }
 
