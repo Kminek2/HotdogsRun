@@ -4,19 +4,27 @@
 #include "objects/CameraLockScript.h"
 #include "objects/LockToAxis.h"
 
+const std::vector<std::string> models = {
+	"racing_car", "test", "arrow"
+};
+
 std::shared_ptr<Scene> DebugScene::Init() {
 	Scene* scene = new Scene(this);
-	objs.reserve(Model::loadedModels.size());
+	objs.reserve(models.size());
 
 	float position_offset = 0;
+	for (const std::string& model : models) {
+		objs.push_back(new GameObject(model, {0, position_offset, 0}));
+		position_offset += 50.0f;
+	}
 	for (const auto model : Model::loadedModels) {
 		objs.push_back(new GameObject(model.first, {0, position_offset, 0}));
 		position_offset += 50.0f;
 	}
 
-	objs[1]->AddScript(new CameraLockScript);
+	objs[0]->AddScript(new CameraLockScript);
 
-	objs[0]->AddScript(new LockToAxis(objs[1], { 0,0,1 }));
+	objs[2]->AddScript(new LockToAxis(objs[0], { 0,0,1 }));
 	// objs[3]->AddScript([](GameObject* obj) { return new LockToAxis(obj, { 0,1,0 }); }(objs[0]));
 
 	return std::shared_ptr<Scene>(scene);
@@ -27,23 +35,23 @@ void DebugScene::Update() {
 	Camera::main->RotateCamera(Input::mouseOffX, Input::mouseOffY);
 
 	if (Input::getKeyPressed(GLFW_KEY_W))
-		objs[1]->transform->Translate(glm::vec3(cam_speed * Time::deltaTime, 0.0f, 0.0f));
+		objs[0]->transform->Translate(glm::vec3(cam_speed * Time::deltaTime, 0.0f, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_S))
-		objs[1]->transform->Translate(glm::vec3(cam_speed * -Time::deltaTime, 0.0f, 0.0f));
+		objs[0]->transform->Translate(glm::vec3(cam_speed * -Time::deltaTime, 0.0f, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_A))
-		objs[1]->transform->Translate(glm::vec3(0.0f, -cam_speed * Time::deltaTime, 0.0f));
+		objs[0]->transform->Translate(glm::vec3(0.0f, -cam_speed * Time::deltaTime, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_D))
-		objs[1]->transform->Translate(glm::vec3(0.0f, cam_speed * Time::deltaTime, 0.0f));
+		objs[0]->transform->Translate(glm::vec3(0.0f, cam_speed * Time::deltaTime, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_SPACE))
-		objs[1]->transform->Translate(glm::vec3(0.0f, 0.0f, cam_speed * Time::deltaTime));
+		objs[0]->transform->Translate(glm::vec3(0.0f, 0.0f, cam_speed * Time::deltaTime));
 	if (Input::getKeyPressed(GLFW_KEY_LEFT_SHIFT))
-		objs[1]->transform->Translate(glm::vec3(0.0f, 0.0f, -cam_speed * Time::deltaTime));
+		objs[0]->transform->Translate(glm::vec3(0.0f, 0.0f, -cam_speed * Time::deltaTime));
 	if (Input::getKeyPressed(GLFW_KEY_Z))
-		objs[1]->transform->Rotate(glm::vec3(cam_speed * Time::deltaTime, 0.0f, 0.0f));
+		objs[0]->transform->Rotate(glm::vec3(cam_speed * Time::deltaTime, 0.0f, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_X))
-		objs[1]->transform->Rotate(glm::vec3(0.0f, cam_speed * Time::deltaTime, 0.0f));
+		objs[0]->transform->Rotate(glm::vec3(0.0f, cam_speed * Time::deltaTime, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_C))
-		objs[1]->transform->Rotate(glm::vec3(0.0f, 0.0f, cam_speed * Time::deltaTime));
+		objs[0]->transform->Rotate(glm::vec3(0.0f, 0.0f, cam_speed * Time::deltaTime));
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
 		Application::LoadScene("load");
