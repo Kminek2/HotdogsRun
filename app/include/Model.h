@@ -39,8 +39,6 @@ struct Model
 		createdModels.erase(iterator);
 	}
 
-	Model() {}
-
 	~Model() {
 		Delete();
 	}

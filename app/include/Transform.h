@@ -9,10 +9,15 @@
 
 #include <vector>
 #include <list>
+#include <algorithm>
 
 #include "Buffer.h"
 
 class GameObject;
+
+namespace glm {
+	constexpr uint8_t elements(const glm::vec3& v) { return std::count_if(&v.x, &v.x + 3, [](float f) { return f != 0; }); }
+};
 
 struct Transform {
 	glm::vec3 position;
@@ -58,27 +63,42 @@ struct Transform {
 		return attributeDescription;
 	}
 
+	/// <summary>
+	/// Set position to the given vector, in world space
+	/// </summary>
 	void MoveTo(glm::vec3 position) {
 		this->position = position;
 		UpdateMatrix();
 	}
 
+	/// <summary>
+	/// Set rotation to the given vector in degrees
+	/// </summary>
 	void RotateTo(glm::vec3 rotation) {
 		this->rotation = ModuloRotation(rotation);
 		UpdateVectors();
 		UpdateMatrix();
 	}
 
+	/// <summary>
+	/// Set scale to the given vector
+	/// </summary>
 	void ScaleTo(glm::vec3 scale) {
 		this->scale = scale;
 		UpdateMatrix();
 	}
 
+	/// <summary>
+	/// Move the object by the given vector, in world space
+	/// </summary>
 	void Move(glm::vec3 by) {
 		this->position += by;
 		UpdateMatrix();
 	}
 
+	/// <summary>
+	/// Move the object by the given amount in the direction of the front vector
+	/// </summary>
 	void Translate(float by) {
 		this->position += this->front * by;
 		UpdateMatrix();
@@ -86,18 +106,27 @@ struct Transform {
 
 	void Translate(glm::vec3 by);
 
+	/// <summary>
+	/// Rotates the object by the given amount on each axis, in degrees
+	/// </summary>
 	void Rotate(glm::vec3 by) {
-		this->rotation += by;
-		rotation = ModuloRotation(rotation);
+		this->rotation = ModuloRotation(this->rotation + by);
+
 		UpdateVectors();
 		UpdateMatrix();
 	}
 
+	/// <summary>
+	/// Increases the scale of the object by the given amount on each axis
+	/// </summary>
 	void Scale(glm::vec3 by) {
 		this->scale += by;
 		UpdateMatrix();
 	}
 
+	/// <summary>
+	/// Increases the scale of the object by the given amount on all axes
+	/// </summary>
 	void Scale(float by) {
 		this->scale += glm::vec3(by);
 		UpdateMatrix();
@@ -106,9 +135,10 @@ struct Transform {
 	void UpdateVectors() {
 		glm::vec3 up;
 		float x, y, z;
-		up.x = -cos(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(this->rotation.x));
+
+		up.x = -cos(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(rotation.x));
 		up.y = sin(glm::radians(rotation.x));
-		up.z = sin(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(this->rotation.x));
+		up.z = sin(glm::radians(rotation.y - 90.0f)) * cos(glm::radians(rotation.x));
 		this->up = -glm::normalize(up);
 
 		front.x = cos(glm::radians(rotation.z));
@@ -135,18 +165,22 @@ struct Transform {
 	}
 
 private:
-
+	/// <summary>
+	/// Takes in a rotation vector in degrees, and clamps each angle to [0, 360)
+	/// </summary>
+	/// <returns>(glm::vec3) -> (glm::vec3)</returns>
 	glm::vec3 ModuloRotation(glm::vec3 rotation) {
 		rotation = glm::vec3(ClampRotation(rotation.x), ClampRotation(rotation.y), ClampRotation(rotation.z));
 		return rotation;
 	}
 
+	/// <summary>
+	/// Takes in an angle in degrees, and returns the angle clamped to [0, 360)
+	/// </summary>
+	/// <returns>(float) -> (float)</returns>
 	float ClampRotation(float r) {
-		if (r > 360)
-			r -= 360;
-		else if (r < 360)
-			r += 360;
-
+		while (r >= 360.0f) r -= 360.0f;
+		while (r <    0.0f) r += 360.0f;
 		return r;
 	}
 

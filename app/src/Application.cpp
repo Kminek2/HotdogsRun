@@ -18,6 +18,7 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	this->height = height;
 	Model::LoadModelFromFile("test", "3x3x3.vox");
 	Model::LoadModelFromFile("racing_car", "racing_car.vox");
+	Model::LoadModelFromFile("arrow", "arrow.vox");
 
 	Model::SendBuffers();
 

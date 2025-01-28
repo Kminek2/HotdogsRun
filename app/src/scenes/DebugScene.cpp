@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Application.h"
 #include "objects/CameraLockScript.h"
+#include "objects/LockToAxis.h"
 
 std::shared_ptr<Scene> DebugScene::Init() {
 	Scene* scene = new Scene(this);
@@ -13,6 +14,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	}
 
 	objs[0]->AddScript(new CameraLockScript);
+	objs[2]->AddScript([](GameObject* obj) { return new LockToAxis(obj, { 0,0,1 }); }(objs[0]));
 
 	return std::shared_ptr<Scene>(scene);
 }

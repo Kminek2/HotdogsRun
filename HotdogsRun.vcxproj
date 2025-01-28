@@ -35,6 +35,7 @@
     <ClCompile Include="app\src\Model.cpp" />
     <ClCompile Include="app\src\ObjectScript.cpp" />
     <ClCompile Include="app\src\objects\CameraLockScript.cpp" />
+    <ClCompile Include="app\src\objects\LockToAxis.cpp" />
     <ClCompile Include="app\src\Queues.cpp" />
     <ClCompile Include="app\src\RenderPass.cpp" />
     <ClCompile Include="app\src\SceeneScript.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="app\include\Model.h" />
     <ClInclude Include="app\include\ObjectScript.h" />
     <ClInclude Include="app\include\objects\CameraLockScript.h" />
+    <ClInclude Include="app\include\objects\LockToAxis.h" />
     <ClInclude Include="app\include\Queues.h" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />
