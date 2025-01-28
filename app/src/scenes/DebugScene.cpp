@@ -4,6 +4,7 @@
 #include "objects/CameraLockScript.h"
 #include "objects/LockPosition.h"
 #include "objects/LockRotation.h"
+#include "objects/CarMovement.h"
 
 const std::vector<std::string> models = {
 	"racing_car", "test", "arrow"
@@ -25,6 +26,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	}
 
 	objs[0]->AddScript(new CameraLockScript);
+	objs[0]->AddScript(new CarMovement(1.0f, 1.0f, 300.0f, -100.0f, 40.0f, 10.0f, false));
 
 	objs[2]->AddScript(new LockPosition(objs[0]->transform));
 	objs[2]->AddScript(new LockRotation(objs[0]->transform));
@@ -36,7 +38,7 @@ const float cam_speed = 100.0f;
 void DebugScene::Update() {
 	Camera::main->RotateCamera(Input::mouseOffX, Input::mouseOffY);
 
-	if (Input::getKeyPressed(GLFW_KEY_W))
+	/*if (Input::getKeyPressed(GLFW_KEY_W))
 		objs[0]->transform->Translate(glm::vec3(cam_speed * Time::deltaTime, 0.0f, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_S))
 		objs[0]->transform->Translate(glm::vec3(cam_speed * -Time::deltaTime, 0.0f, 0.0f));
@@ -53,7 +55,7 @@ void DebugScene::Update() {
 	if (Input::getKeyPressed(GLFW_KEY_X))
 		objs[0]->transform->Rotate(glm::vec3(0.0f, cam_speed * Time::deltaTime, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_C))
-		objs[0]->transform->Rotate(glm::vec3(0.0f, 0.0f, cam_speed * Time::deltaTime));
+		objs[0]->transform->Rotate(glm::vec3(0.0f, 0.0f, cam_speed * Time::deltaTime));*/
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
 		Application::LoadScene("load");
