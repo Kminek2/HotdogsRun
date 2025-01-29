@@ -20,7 +20,7 @@ void CarMovement::Update() {
 	handleGas();
 	handleSteeringWheel();
 	handleForces();
-	gameObject->transform->Rotate(glm::vec3(0.0f, 0.0f, axleAngle * (actSpeed / maxSpeed) * Time::deltaTime * 3.0f));
+	if (actSpeed > 10.0f || actSpeed < -10.0f) gameObject->transform->Rotate(glm::vec3(0.0f, 0.0f, axleAngle * (std::max(actSpeed,200.0f) / maxSpeed) * Time::deltaTime * 3.0f));
 	gameObject->transform->Translate((actSpeed*Time::deltaTime)*forces);
 }
 
