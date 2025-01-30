@@ -144,6 +144,9 @@
     <ClCompile Include="app\src\objects\LockRotation.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\Collisions.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vox\include\calc.hpp">
@@ -259,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="app\include\objects\LockRotation.h">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Collisions.h">
+      <Filter>Header Files\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -23,6 +23,7 @@
     <ClCompile Include="app\src\AppTime.cpp" />
     <ClCompile Include="app\src\Buffer.cpp" />
     <ClCompile Include="app\src\Camera.cpp" />
+    <ClCompile Include="app\src\Collisions.cpp" />
     <ClCompile Include="app\src\Commands.cpp" />
     <ClCompile Include="app\src\Descriptior.cpp" />
     <ClCompile Include="app\src\Device.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="app\include\Buffer.h" />
     <ClInclude Include="app\include\Camera.h" />
     <ClInclude Include="app\include\CameraStructures.h" />
+    <ClInclude Include="app\include\Collisions.h" />
     <ClInclude Include="app\include\Commands.h" />
     <ClInclude Include="app\include\Descriptior.h" />
     <ClInclude Include="app\include\Device.h" />

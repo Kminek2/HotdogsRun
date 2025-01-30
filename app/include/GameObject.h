@@ -5,8 +5,19 @@
 
 #include <list>
 #include <vector>
+#include <array>
 
 class Commands;
+class Collisions;
+
+struct OBB {
+	OBB(glm::vec3 center = glm::vec3(0.0f),
+		glm::vec3 sizes = glm::vec3(1.0f),
+		std::array<glm::vec3, 3> axes = {glm::vec3(1.0f,0.0f,0.0f), glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f,0.0f,1.0f)});
+	glm::vec3 center;
+	glm::vec3 sizes;
+	std::array<glm::vec3, 3> axes;
+};
 
 class GameObject
 {
@@ -16,6 +27,7 @@ private:
 	static std::list<GameObject*> createdGameObject;
 
 	std::list<GameObject*>::iterator i;
+	std::vector<OBB> obbs;
 
 	static bool deletingAll;
 public:
@@ -27,11 +39,13 @@ public:
 	std::vector<ObjectScript*> objectScripts;
 
 	void AddScript(ObjectScript* script);
+	void addOBB(OBB obb);
 
 	static void DeleteAll();
 	static void UpdateAllObjectScripts();
 
 	static void TransformTransformsToMemory();
 	friend Commands;
+	friend Collisions;
 };
 
