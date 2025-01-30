@@ -67,6 +67,10 @@ void DebugScene::Update() {
 	std::cout << (Collisions::checkCollision(*objs[0], *objs[1]) ? "YES!\n" : "NO\n");
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
+		Application::LoadScene("debug");
+		return;
+	}
+	if (Input::getKeyClicked(GLFW_KEY_Q)) {
 		Application::LoadScene("load");
 		return;
 	}

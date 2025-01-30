@@ -1,11 +1,15 @@
 #include "scenes/LoadScene.h"
 #include "scenes/DebugScene.h"
+#include "scenes/MapDemo.h"
+
 #include "Scene.h"
 #include "Application.h"
+#include "QuickCamera.h"
 
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"load", new LoadScene()},
-	{"debug", new DebugScene()}
+	{"debug", new DebugScene()},
+	{"map_demo", new MapDemo()}
 };
 
 std::shared_ptr<Scene> LoadScene::Init() {
@@ -18,18 +22,17 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 const float cam_speed = 100.0f;
 void LoadScene::Update() {
-	Camera::main->RotateCamera(Input::mouseOffX, Input::mouseOffY);
-
-	if (Input::getKeyPressed(GLFW_KEY_W))
-		Camera::main->MoveCamera(cam_speed * Time::deltaTime);
-	else if (Input::getKeyPressed(GLFW_KEY_S))
-		Camera::main->MoveCamera(cam_speed * -Time::deltaTime);
+	qc::HandleRotate();
+	qc::HandleMove();
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
 		Application::LoadScene("debug");
 		return;
 	}
-
+	if (Input::getKeyClicked(GLFW_KEY_M)) {
+		Application::LoadScene("map_demo");
+		return;
+	}
 }
 
 void LoadScene::UnLoad() {

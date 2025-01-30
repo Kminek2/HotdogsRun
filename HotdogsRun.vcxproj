@@ -33,6 +33,7 @@
     <ClCompile Include="app\src\GraphicsPipeline.cpp" />
     <ClCompile Include="app\src\Input.cpp" />
     <ClCompile Include="app\src\main.cpp" />
+    <ClCompile Include="app\src\mapgen.cpp" />
     <ClCompile Include="app\src\Model.cpp" />
     <ClCompile Include="app\src\ObjectScript.cpp" />
     <ClCompile Include="app\src\objects\CameraLockScript.cpp" />
@@ -40,11 +41,13 @@
     <ClCompile Include="app\src\objects\LockPosition.cpp" />
     <ClCompile Include="app\src\objects\LockRotation.cpp" />
     <ClCompile Include="app\src\Queues.cpp" />
+    <ClCompile Include="app\src\QuickCamera.cpp" />
     <ClCompile Include="app\src\RenderPass.cpp" />
     <ClCompile Include="app\src\SceeneScript.cpp" />
     <ClCompile Include="app\src\Scene.cpp" />
     <ClCompile Include="app\src\scenes\DebugScene.cpp" />
     <ClCompile Include="app\src\scenes\LoadScene.cpp" />
+    <ClCompile Include="app\src\scenes\MapDemo.cpp" />
     <ClCompile Include="app\src\Shader.cpp" />
     <ClCompile Include="app\src\SwapChain.cpp" />
     <ClCompile Include="app\src\Transform.cpp" />
@@ -72,6 +75,7 @@
     <ClInclude Include="app\include\GraphicsPipeline.h" />
     <ClInclude Include="app\include\Image.h" />
     <ClInclude Include="app\include\Input.h" />
+    <ClInclude Include="app\include\mapgen.h" />
     <ClInclude Include="app\include\Model.h" />
     <ClInclude Include="app\include\ObjectScript.h" />
     <ClInclude Include="app\include\objects\CameraLockScript.h" />
@@ -79,12 +83,14 @@
     <ClInclude Include="app\include\objects\LockPosition.h" />
     <ClInclude Include="app\include\objects\LockRotation.h" />
     <ClInclude Include="app\include\Queues.h" />
+    <ClInclude Include="app\include\QuickCamera.h" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />
     <ClInclude Include="app\include\SceeneScript.h" />
     <ClInclude Include="app\include\Scene.h" />
     <ClInclude Include="app\include\scenes\DebugScene.h" />
     <ClInclude Include="app\include\scenes\LoadScene.h" />
+    <ClInclude Include="app\include\scenes\MapDemo.h" />
     <ClInclude Include="app\include\Shader.h" />
     <ClInclude Include="app\include\SwapChain.h" />
     <ClInclude Include="app\include\Transform.h" />

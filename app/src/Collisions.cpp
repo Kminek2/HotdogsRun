@@ -76,8 +76,8 @@ glm::mat3 Collisions::getRotationMatrix(glm::vec3 rot) {
 	float y = -v.y;
 	float r = -v.z;
 
-	glm::mat3 Rx(1, 0, 0, 0, cos(p), -sin(p), 0, sin(p), cos(p));
-	glm::mat3 Ry(cos(y), 0, sin(y), 0, 1, 0, -sin(y), 0, cos(y));
-	glm::mat3 Rz(cos(r), -sin(r), 0, sin(r), cos(r), 0, 0, 0, 1);
+	glm::mat3 Rx(1.0f, 0.0f, 0.0f, 0.0f, cos(p), -sin(p), 0.0f, sin(p), cos(p));
+	glm::mat3 Ry(cos(y), 0.0f, sin(y), 0.0f, 1.0f, 0.0f, -sin(y), 0.0f, cos(y));
+	glm::mat3 Rz(cos(r), -sin(r), 0.0f, sin(r), cos(r), 0.0f, 0.0f, 0.0f, 1.0f);
 	return Rx*Ry*Rz;
 }

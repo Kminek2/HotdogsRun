@@ -25,10 +25,6 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 		Model::LoadModelFromFile(entry.path().filename().stem().string(), entry.path().string());
 	}
 
-	/* Model::LoadModelFromFile("test", "3x3x3.vox");
-	Model::LoadModelFromFile("racing_car", "racing_car.vox");
-	Model::LoadModelFromFile("arrow", "arrow.vox"); */
-
 	Model::SendBuffers();
 
 	camera = new Camera(FRAMES_IN_FLIGHT, width, height);

@@ -147,6 +147,15 @@
     <ClCompile Include="app\src\Collisions.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\mapgen.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\scenes\MapDemo.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\QuickCamera.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vox\include\calc.hpp">
@@ -264,6 +273,15 @@
       <Filter>Header Files\objects</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Collisions.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\mapgen.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\scenes\MapDemo.h">
+      <Filter>Header Files\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\QuickCamera.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
   </ItemGroup>
