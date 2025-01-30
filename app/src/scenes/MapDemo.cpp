@@ -5,8 +5,6 @@
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
 
-
-
 	return std::shared_ptr<Scene>(scene);
 }
 

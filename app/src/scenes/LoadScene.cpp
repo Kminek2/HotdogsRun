@@ -23,7 +23,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 const float cam_speed = 100.0f;
 void LoadScene::Update() {
 	qc::HandleRotate();
-	qc::HandleMove();
+	qc::HandleMove(100.0f);
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
 		Application::LoadScene("debug");

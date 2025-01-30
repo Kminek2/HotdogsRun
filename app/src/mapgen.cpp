@@ -10,8 +10,8 @@ const glm::vec2 MapGen::neighbor_map[8] = {
 	{-1,-1}, {0,-1}, {1,-1}
 };
 
-bool MapGen::shortest_path(const glm::vec2& start/*, std::set<glm::vec2>& taken*/, uint16_t steps) {
-	/*std::queue<std::pair<glm::vec2, uint16_t>> q;
+bool MapGen::shortest_path(const glm::vec2& start, std::set<glm::vec2>& taken, uint16_t steps) {
+	std::queue<std::pair<glm::vec2, uint16_t>> q;
 
 	glm::vec2 v = start;
 	q.emplace(v, steps);
@@ -24,13 +24,13 @@ bool MapGen::shortest_path(const glm::vec2& start/*, std::set<glm::vec2>& taken*
 
 		for (uint8_t i = 0; i < 8; i++)
 			q.emplace(v + neighbor_map[i], steps - 1);
-	}*/
+	}
 
 	return false;
 }
 
 std::vector<glm::vec2> MapGen::generateMap(uint16_t len, size_t seed) {
-	/*assert(len >= 3);
+	assert(len >= 3);
 
 	if (seed == -1)
 		return MapGen::generateMap(len, std::random_device()());
@@ -62,13 +62,13 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, size_t seed) {
 		--left;
 	}
 
-	return points;*/
+	return points;
 	return {};
 }
 
 void MapGen::spreadMapPoints(std::vector<glm::vec2>& points, float spread) {
-	//std::transform(points.begin(), points.end(), points.begin(), [&spread](glm::vec2& a) { a *= spread; });
+	std::transform(points.begin(), points.end(), points.begin(), [&spread](glm::vec2& a) { return a*spread; });
 }
 void MapGen::offsetMapPoints(std::vector<glm::vec2>& points, float offset) {
-	//std::transform(points.begin(), points.end(), points.begin(), [&offset](glm::vec2& a) { a += glm::vec2(offset); }); 
+	std::transform(points.begin(), points.end(), points.begin(), [&offset](glm::vec2& a) { return a + glm::vec2(offset); }); 
 }

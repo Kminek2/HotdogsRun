@@ -1,8 +1,10 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include <array>
 #include <cstdint>
+#include "Camera.h"
+#include "Input.h"
+#include "AppTime.h"
 
 namespace qc {
 	void HandleRotate(float s = 1);
