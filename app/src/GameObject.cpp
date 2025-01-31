@@ -79,9 +79,3 @@ void GameObject::TransformTransformsToMemory()
 void GameObject::addOBB(OBB obb) {
 	obbs.push_back(obb);
 }
-
-OBB::OBB(glm::vec3 center, glm::vec3 sizes, std::array<glm::vec3, 3> axes) {
-	this->center = center;
-	this->sizes = sizes;
-	this->axes = axes;
-}

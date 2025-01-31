@@ -11,12 +11,20 @@ class Commands;
 class Collisions;
 
 struct OBB {
-	OBB(glm::vec3 center = glm::vec3(0.0f),
-		glm::vec3 sizes = glm::vec3(1.0f),
-		std::array<glm::vec3, 3> axes = {glm::vec3(1.0f,0.0f,0.0f), glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f,0.0f,1.0f)});
 	glm::vec3 center;
 	glm::vec3 sizes;
 	std::array<glm::vec3, 3> axes;
+
+	static constexpr std::array<glm::vec3, 3> DefaultAxes = {
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 1.0f)
+	};
+
+	OBB(glm::vec3 _center = glm::vec3(0.0f),
+		glm::vec3 _sizes = glm::vec3(1.0f),
+		std::array<glm::vec3, 3> _axes = DefaultAxes)
+		: center(_center), sizes(_sizes), axes(_axes) {}
 };
 
 class GameObject
