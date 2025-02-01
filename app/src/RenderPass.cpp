@@ -67,7 +67,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
         throw std::runtime_error("failed to create render pass!");
     }
 
-    mainPipeline = new GraphicsPipeline("shaders/main.vert.spv", "shaders/main.frag.spv", 0, *this);
+    mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this);
 
     CreateDepthResources();
 }

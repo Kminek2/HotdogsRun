@@ -210,7 +210,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -230,7 +230,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
