@@ -11,15 +11,17 @@ class Application
 {
 private:
 	Camera* camera;
+	static GLFWwindow* window;
 public:
 	Application(uint16_t width, uint16_t height, GLFWwindow* window);
 	~Application();
 
 	void Update();
 	void UpdateBuffer(uint16_t frame);
-	void UpdateCamera(uint16_t width, uint16_t height);
+	void UpdateWindowSizes(uint16_t width, uint16_t height);
 
 	static void LoadScene(std::string scene);
+	static void Quit();
 
 	static uint16_t width, height;
 

@@ -1,6 +1,6 @@
 #include "QuickCamera.h"
 
-void qc::HandleRotate(float sx, float sy) { Camera::main->RotateCamera(Input::mouseOffX * sx, Input::mouseOffY * sy); }
+void qc::HandleRotate(float sx, float sy) { Camera::main->RotateCamera(Input::mouseOff.x * sx, Input::mouseOff.y * sy); }
 void qc::HandleRotate(float s) { qc::HandleRotate(s, s); }
 
 void qc::HandleMove(float s, std::array<uint16_t, 6> mappings) {

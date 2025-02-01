@@ -2,21 +2,17 @@
 
 GLFWwindow* Input::window;
 uint16_t Input::width, Input::height;
-double Input::lastX = 400, Input::lastY = 300;
-double Input::mousePosX, Input::mousePosY;
-double Input::mouseOffX, Input::mouseOffY;
+glm::vec2 Input::lastPos = glm::vec2(400, 300);
+glm::vec2 Input::mousePos, Input::mousePercPos, Input::mouseOff;
 uint16_t* Input::keyEventMap = nullptr;
 
 void Input::MouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
-	mousePosX = xpos;
-	mousePosY = ypos;
+	mousePos = glm::vec2(xpos, ypos);
+	mousePercPos = mousePos / glm::vec2(width, height);
+	mouseOff = glm::vec2(xpos - lastPos.x, ypos - lastPos.y);
 
-	mouseOffX = xpos - lastX;
-	mouseOffY = ypos - lastY;
-
-	lastX = xpos;
-	lastY = ypos;
+	lastPos = glm::vec2(xpos, ypos);
 }
 
 bool Input::getKeyPressed(uint16_t keyKode)

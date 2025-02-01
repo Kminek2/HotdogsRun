@@ -90,7 +90,7 @@ void Engine::DrawFrame() {
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR) {
         swapChain->ReCreate();
-        application->UpdateCamera(swapChain->width, swapChain->height);
+        application->UpdateWindowSizes(swapChain->width, swapChain->height);
         return;
     } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         throw std::runtime_error("failed to acquire swap chain image!");
@@ -136,7 +136,7 @@ void Engine::DrawFrame() {
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
         framebufferResized = false;
         swapChain->ReCreate();
-        application->UpdateCamera(swapChain->width, swapChain->height);
+        application->UpdateWindowSizes(swapChain->width, swapChain->height);
     }
     else if (result != VK_SUCCESS) {
         throw std::runtime_error("failed to present swap chain image!");

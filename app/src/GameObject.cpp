@@ -61,6 +61,20 @@ void GameObject::UpdateAllObjectScripts()
 	}
 }
 
+void GameObject::LateUpdateAllObjectScripts()
+{
+	std::list<GameObject*>::iterator it = createdGameObject.begin();
+
+	while (it != createdGameObject.end())
+	{
+		for (int i = 0; i < (*it)->objectScripts.size(); i++)
+		{
+			(*it)->objectScripts[i]->LateUpdate();
+		}
+		it = std::next(it);
+	}
+}
+
 void GameObject::TransformTransformsToMemory()
 {
 	std::vector<glm::mat4> transforms;

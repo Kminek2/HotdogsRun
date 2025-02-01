@@ -43,7 +43,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 
 const float cam_speed = 100.0f;
 void DebugScene::Update() {
-	Camera::main->RotateCamera(Input::mouseOffX, Input::mouseOffY);
+	Camera::main->RotateCamera(Input::mouseOff.x, Input::mouseOff.y);
 
 	if (Input::getKeyPressed(GLFW_KEY_W))
 		objs[0]->transform->Translate(glm::vec3(cam_speed * Time::deltaTime, 0.0f, 0.0f));
@@ -72,6 +72,10 @@ void DebugScene::Update() {
 	}
 	if (Input::getKeyClicked(GLFW_KEY_Q)) {
 		Application::LoadScene("load");
+		return;
+	}
+	if (Input::getKeyClicked(GLFW_KEY_ESCAPE)) {
+		Application::Quit();
 		return;
 	}
 }

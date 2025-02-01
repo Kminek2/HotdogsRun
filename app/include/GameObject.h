@@ -51,6 +51,7 @@ public:
 
 	static void DeleteAll();
 	static void UpdateAllObjectScripts();
+	static void LateUpdateAllObjectScripts();
 
 	static void TransformTransformsToMemory();
 	friend Commands;

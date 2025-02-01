@@ -15,10 +15,12 @@
 namespace fs = std::filesystem;
 
 uint16_t Application::width, Application::height;
+GLFWwindow* Application::window;
 
 Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	this->width = width;
 	this->height = height;
+	this->window = window;
 
 	for(const auto& entry : fs::directory_iterator("models")) {
 		std::cout << entry.path().filename().stem().string() << " : " << entry.path().string() << '\n';
@@ -49,10 +51,13 @@ Application::~Application() {
 	delete camera;
 }
 
-void Application::UpdateCamera(uint16_t width, uint16_t height) {
+void Application::UpdateWindowSizes(uint16_t width, uint16_t height) {
 	this->width = width;
 	this->height = height;
 	camera->UpdateCamera(width, height);
+
+	Input::width = width;
+	Input::height = height;
 }
 
 void Application::LoadScene(std::string scene)
@@ -65,6 +70,11 @@ void Application::LoadScene(std::string scene)
 
 	Input::startKeyCallback();
 	Scene::loadedScene = Scene::Load(scene)->Init();
+}
+
+void Application::Quit()
+{
+	glfwSetWindowShouldClose(window, true);
 }
 
 void Application::UpdateBuffer(uint16_t frame)
@@ -98,8 +108,9 @@ void Application::Update() {
 
 	Scene::loadedScene.get()->sceneScript->Update();
 	GameObject::UpdateAllObjectScripts();
+	Scene::loadedScene.get()->sceneScript->LateUpdate();
+	GameObject::LateUpdateAllObjectScripts();
 
-	Input::mouseOffX = Input::mousePosX - Input::lastX;
-	Input::mouseOffY = Input::mousePosY - Input::lastY;
+	Input::mouseOff = Input::mousePos - Input::lastPos;
 	GameObject::TransformTransformsToMemory();
 }

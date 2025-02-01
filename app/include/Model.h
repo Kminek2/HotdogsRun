@@ -9,6 +9,8 @@
 #include <string>
 #include <list>
 
+#include <iostream>
+
 class Commands;
 class DebugScene;
 
@@ -66,6 +68,22 @@ private:
 		this->vertexSize = static_cast<uint32_t>(verticies.size());
 
 		vertexBuffer->AddToBuffer(verticies);
+
+		MemoryCout();
+	}
+
+	void MemoryCout() {
+		static const std::vector<char> after = { ' ', 'k', 'M', 'G' };
+
+		double size = vertexSize * sizeof(Vertex);
+		int iii = 0;
+		while (size >= 1024)
+		{
+			size /= 1024;
+			iii++;
+		}
+
+		std::cout << "memory taken = " << size << ' ' << after[iii] << "B\n\n\n";
 	}
 
 	static std::map<std::string, Model*> loadedModels;
