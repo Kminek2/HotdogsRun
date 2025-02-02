@@ -1,8 +1,10 @@
 #include "mapgen.h"
 
 #include <queue>
+#include <stack>
 #include <random>
 #include <algorithm>
+#include <iterator>
 
 #include <iostream>
 
@@ -12,30 +14,31 @@ const std::array<glm::vec2, 8> MapGen::neighbor_map = { {
     {-1,-1}, {0,-1}, {1,-1}
 } };
 
-bool MapGen::shortest_path(const glm::vec2& start, const std::set<glm::vec2, std::less<glm::vec2>>& taken, uint16_t steps) {
-    std::queue<std::pair<glm::vec2, uint16_t>> q;
-    q.emplace(start, steps);
+bool dfs(glm::vec2& start, uint16_t n, std::vector<glm::vec2>& points, std::set<glm::vec2>& taken, std::mt19937& gen) {
+    if (n == 0) return true;
 
-    while (!q.empty()) {
-        auto [v, steps_left] = q.front();
-        q.pop();
+    std::array<glm::vec2, 8> n_map = MapGen::neighbor_map;
+    std::shuffle(std::begin(n_map), std::end(n_map), gen);
 
-        if (steps_left == 0) continue;
+    points.push_back(start);
+    taken.insert(start);
 
-        for (const auto& dir : neighbor_map) {
-            glm::vec2 neighbor = v + dir;
+    for (glm::vec2 neighbor : n_map) {
+        glm::vec2 cur = start + neighbor;
 
-            if (neighbor == glm::vec2(0, 0) && steps_left == 1) return true; 
-            if (taken.count(neighbor)) continue;
-
-            q.emplace(neighbor, steps_left - 1);
-        }
+        if (!taken.count(cur)) 
+            if (dfs(cur, n - 1, points, taken, gen))
+                return true;
     }
+
+    points.pop_back();
+    taken.erase(taken.find(start));
 
     return false;
 }
 
 std::vector<glm::vec2> MapGen::generateMap(uint16_t len, size_t seed) {
+    // -- init --
     assert(len >= 3);
 
     if (seed == static_cast<size_t>(-1)) {
@@ -46,30 +49,23 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, size_t seed) {
     std::mt19937 gen(seed);
     std::uniform_int_distribution<> dis(0, 7);
 
-    std::vector<glm::vec2> points = { {0, 0}, {1, 0} };
-    std::set<glm::vec2> taken = { {0, 0}, {1, 0} };
+    std::vector<glm::vec2> points = { {0, 0} };
+    points.reserve(2 * len);
 
-    glm::vec2 current = { 1, 0 };
-    uint16_t remaining = len - 2;
+    std::set<glm::vec2> taken = { {0, 0} };
+    glm::vec2 current = { 1, 0 }; // will be inserted in the dfs
 
-    while (remaining) {
-        glm::vec2 neighbor = current + neighbor_map[dis(gen)];
+    // -- dfs --
+    std::cout << (int)dfs(current, len - 1, points, taken, gen) << '\n';
 
-        if (taken.count(neighbor) || !shortest_path(neighbor, taken, remaining))
-            continue;
+    // -- bfs --
 
-        points.push_back(neighbor);
-        taken.insert(neighbor);
-        current = neighbor;
-
-        --remaining;
-    }
-
+    points.shrink_to_fit();
     return points;
 }
 
 void MapGen::spreadMapPoints(std::vector<glm::vec2>& points, float spread) {
-	std::transform(points.begin(), points.end(), points.begin(), [&spread](glm::vec2& a) { return a*spread; });
+	std::transform(points.begin(), points.end(), points.begin(), [&spread](glm::vec2& a) { return a * spread; });
 }
 void MapGen::offsetMapPoints(std::vector<glm::vec2>& points, float offset) {
 	std::transform(points.begin(), points.end(), points.begin(), [&offset](glm::vec2& a) { return a + glm::vec2(offset); }); 

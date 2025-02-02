@@ -17,10 +17,11 @@ namespace std {
 
 struct MapGen {
 private:
+	static bool shortest_path(const glm::vec2& start, const std::set<glm::vec2, std::less<glm::vec2>>& taken, uint16_t steps);
+
+public:
 	static const std::array<glm::vec2, 8> neighbor_map;
 
-	static bool shortest_path(const glm::vec2& start, const std::set<glm::vec2, std::less<glm::vec2>>& taken, uint16_t steps);
-public:
 	static std::vector<glm::vec2> generateMap(uint16_t len, size_t seed = -1);
 
 	static void spreadMapPoints(std::vector<glm::vec2>& points, float spread);
