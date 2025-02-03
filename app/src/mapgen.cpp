@@ -5,6 +5,7 @@
 #include <random>
 #include <algorithm>
 #include <iterator>
+#include "glm/gtc/constants.hpp"
 
 #include <iostream>
 
@@ -70,26 +71,28 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, size_t seed) {
     // -- init --
     assert(len >= 3);
 
+std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_data, size_t seed) {
     if (seed == static_cast<size_t>(-1)) {
         std::random_device rd;
         seed = rd();
     }
 
     std::mt19937 gen(seed);
-    std::uniform_int_distribution<> dis(0, 7);
 
-    std::vector<glm::vec2> points = { {0, 0} };
-    points.reserve(2 * len);
+    std::vector<glm::vec2> points;
+    points.reserve(len);
 
-    std::set<glm::vec2> taken = { {0, 0} };
-    glm::vec2 current = { 1, 0 }; // will be inserted in the dfs
+    std::uniform_real_distribution<double> offset_dist(ellipse_data.min_offset, ellipse_data.max_offset);
 
-    // -- dfs --
-    std::cout << (int)dfs(current, len - 1, points, taken, gen) << '\n';
+    const double theta_offset = 2 * glm::pi<double>() / len;
 
-    // -- bfs --
+    for (uint16_t i = 0; i < len; i++) {
+        double theta = theta_offset * i;
+        double offset = offset_dist(gen);
 
-    points.shrink_to_fit();
+        points.emplace_back((ellipse_data.a + offset) * std::cos(theta), (ellipse_data.b + offset) * std::sin(theta));
+    }
+
     return points;
 }
 
