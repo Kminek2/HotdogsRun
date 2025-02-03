@@ -3,7 +3,9 @@
 void qc::HandleRotate(float sx, float sy) { Camera::main->RotateCamera(Input::mouseOff.x * sx, Input::mouseOff.y * sy); }
 void qc::HandleRotate(float s) { qc::HandleRotate(s, s); }
 
-void qc::HandleMove(float s, std::array<uint16_t, 6> mappings) {
+void qc::HandleMove(float s, std::array<uint16_t, 7> mappings) {
+	if (Input::getKeyPressed(mappings[6])) s *= 2; // sprint
+
 	if (Input::getKeyPressed(mappings[0])) Camera::main->MoveCamera(Time::deltaTime *  s); // front
 	if (Input::getKeyPressed(mappings[1])) Camera::main->MoveCamera(Time::deltaTime * -s); // back
 	

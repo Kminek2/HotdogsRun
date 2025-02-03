@@ -1,4 +1,4 @@
-#include "mapgen.h"
+﻿#include "mapgen.h"
 
 #include <queue>
 #include <stack>
@@ -15,7 +15,10 @@ const std::array<glm::vec2, 8> MapGen::neighbor_map = { {
     {-1,-1}, {0,-1}, {1,-1}
 } };
 
-std::vector<glm::vec2> bresenham(glm::vec2 start, glm::vec2 end) {
+/// <summary>
+/// Implementation of Beresenham's algorithm. Includes `start` and `end` in the result.
+/// </summary>
+std::vector<glm::vec2> bresenham(const glm::ivec2& start, const glm::ivec2& end) {
     std::vector<glm::vec2> result;
 
     int dx = abs(end.x - start.x);
@@ -39,29 +42,6 @@ std::vector<glm::vec2> bresenham(glm::vec2 start, glm::vec2 end) {
     return result;
 }
 
-bool dfs(glm::vec2& start, uint16_t n, std::vector<glm::vec2>& points, std::set<glm::vec2>& taken, std::mt19937& gen) {
-    if (n == 0) return true;
-
-    std::array<glm::vec2, 8> n_map = MapGen::neighbor_map;
-    std::shuffle(std::begin(n_map), std::end(n_map), gen);
-
-    points.push_back(start);
-    taken.insert(start);
-
-    for (glm::vec2 neighbor : n_map) {
-        glm::vec2 cur = start + neighbor;
-
-        if (!taken.count(cur)) 
-            if (dfs(cur, n - 1, points, taken, gen))
-                return true;
-    }
-
-    points.pop_back();
-    taken.erase(taken.find(start));
-
-    return false;
-}
-
 std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_data, size_t seed) {
     if (seed == static_cast<size_t>(-1)) {
         std::random_device rd;
@@ -71,17 +51,28 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_
     std::mt19937 gen(seed);
 
     std::vector<glm::vec2> points;
-    points.reserve(len);
 
     std::uniform_real_distribution<double> offset_dist(ellipse_data.min_offset, ellipse_data.max_offset);
 
-    const double theta_offset = 2 * glm::pi<double>() / len;
+    const double Δθ = 2 * glm::pi<double>() / len;
+    double Δx = offset_dist(gen);
 
-    for (uint16_t i = 0; i < len; i++) {
-        double theta = theta_offset * i;
-        double offset = offset_dist(gen);
+    for (uint16_t i = 0; i < len-1; i++) {
+        double θ1 = Δθ * i;
+        double Δx1 = Δx;
 
-        points.emplace_back((ellipse_data.a + offset) * std::cos(theta), (ellipse_data.b + offset) * std::sin(theta));
+        double θ2 = θ1 + Δθ;
+        double Δx2 = offset_dist(gen);
+
+        std::vector<glm::vec2> line(bresenham(
+            { (ellipse_data.a + Δx1) * std::cos(θ1), (ellipse_data.b + Δx1) * std::sin(θ1) },
+            { (ellipse_data.a + Δx2) * std::cos(θ2), (ellipse_data.b + Δx2) * std::sin(θ2) }
+        ));
+
+        line.pop_back();
+        points.insert(points.end(), line.begin(), line.end());
+
+        Δx = Δx2;
     }
 
     return points;
