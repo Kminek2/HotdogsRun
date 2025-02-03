@@ -15,31 +15,25 @@ const std::array<glm::vec2, 8> MapGen::neighbor_map = { {
     {-1,-1}, {0,-1}, {1,-1}
 } };
 
-std::vector<glm::vec2> Bresenham(glm::vec2 start, glm::vec2 end) {
-    int dx = start[0] - end[0];
-    int dy = start[1] - end[1];
-
-    int yi = 1;
-
-    if (dy < 0) {
-        yi = -1;
-        dy = -dy;
-    }
-
-    int D = 2 * dy - dx;
-    int y = end[0];
-
+std::vector<glm::vec2> bresenham(glm::vec2 start, glm::vec2 end) {
     std::vector<glm::vec2> result;
 
-    for (int x = start[0]; x < end[0]; x++) {
-        result.emplace_back(x,y);
-        std::cout << 'x:' << x << ' y:' << y << '\n';
+    int dx = abs(end.x - start.x);
+    int dy = abs(end.y - start.y);
+    int sx = (start.x < end.x) ? 1 : -1;
+    int sy = (start.y < end.y) ? 1 : -1;
 
-        if (D > 0) {
-            y += 1;
-            D = D +(2 * (dy-dx));
-        }
-        else D = D + 2 * dy;
+    int err = dx - dy;
+    int x = start.x, y = start.y;
+
+    while (true) {
+        result.emplace_back(x, y);
+
+        if (x == end.x && y == end.y) break;
+
+        int e2 = 2 * err;
+        if (e2 > -dy) { err -= dy; x += sx; }
+        if (e2 < dx) { err += dx; y += sy; }
     }
 
     return result;
@@ -73,6 +67,7 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_
         std::random_device rd;
         seed = rd();
     }
+    bresenham(glm::vec2(0, 0), glm::vec2(3, 13));
 
     std::mt19937 gen(seed);
 

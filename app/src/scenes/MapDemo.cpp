@@ -24,6 +24,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	for (uint16_t i = 0; i < map_points.size(); i++)
 		points.push_back(new GameObject("debug_star", glm::vec3({ map_points[i].x, map_points[i].y, 0})));
 
+	
 	return std::shared_ptr<Scene>(scene);
 }
 
