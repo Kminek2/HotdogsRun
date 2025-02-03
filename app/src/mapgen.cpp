@@ -49,15 +49,16 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_
     }
 
     std::mt19937 gen(seed);
+    std::uniform_real_distribution<double> offset_dist(ellipse_data.min_offset, ellipse_data.max_offset);
 
     std::vector<glm::vec2> points;
 
-    std::uniform_real_distribution<double> offset_dist(ellipse_data.min_offset, ellipse_data.max_offset);
-
     const double Δθ = 2 * glm::pi<double>() / len;
-    double Δx = offset_dist(gen);
 
-    for (uint16_t i = 0; i < len-1; i++) {
+    double Δx, Δx0;
+    Δx = Δx0 = offset_dist(gen);
+
+    for (uint16_t i = 1; i < len; i++) {
         double θ1 = Δθ * i;
         double Δx1 = Δx;
 
@@ -74,6 +75,14 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_
 
         Δx = Δx2;
     }
+
+    std::vector<glm::vec2> f_line(bresenham(
+        { (ellipse_data.a + Δx ) * std::cos(0 ), (ellipse_data.b + Δx ) * std::sin(0 ) },
+        { (ellipse_data.a + Δx0) * std::cos(Δθ), (ellipse_data.b + Δx0) * std::sin(Δθ) }
+    ));
+
+    f_line.pop_back();
+    points.insert(points.end(), f_line.begin(), f_line.end());
 
     return points;
 }
