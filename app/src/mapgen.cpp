@@ -67,7 +67,6 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_
         std::random_device rd;
         seed = rd();
     }
-    bresenham(glm::vec2(0, 0), glm::vec2(3, 13));
 
     std::mt19937 gen(seed);
 
