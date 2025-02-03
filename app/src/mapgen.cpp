@@ -15,25 +15,25 @@ const std::array<glm::vec2, 8> MapGen::neighbor_map = { {
     {-1,-1}, {0,-1}, {1,-1}
 } };
 
-std::vector<glm::vec2> MapGen::Bresenham(glm::vec2 start, glm::vec2 end) {
+std::vector<glm::vec2> Bresenham(glm::vec2 start, glm::vec2 end) {
     int dx = start[0] - end[0];
     int dy = start[1] - end[1];
+
     int yi = 1;
+
     if (dy < 0) {
         yi = -1;
         dy = -dy;
     }
+
     int D = 2 * dy - dx;
     int y = end[0];
-   
-    
-        
 
     std::vector<glm::vec2> result;
 
     for (int x = start[0]; x < end[0]; x++) {
         result.emplace_back(x,y);
-        std::cout << 'x:' << x << ' y:' << y << std::endl;
+        std::cout << 'x:' << x << ' y:' << y << '\n';
 
         if (D > 0) {
             y += 1;
@@ -41,6 +41,7 @@ std::vector<glm::vec2> MapGen::Bresenham(glm::vec2 start, glm::vec2 end) {
         }
         else D = D + 2 * dy;
     }
+
     return result;
 }
 
@@ -66,10 +67,6 @@ bool dfs(glm::vec2& start, uint16_t n, std::vector<glm::vec2>& points, std::set<
 
     return false;
 }
-
-std::vector<glm::vec2> MapGen::generateMap(uint16_t len, size_t seed) {
-    // -- init --
-    assert(len >= 3);
 
 std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_data, size_t seed) {
     if (seed == static_cast<size_t>(-1)) {
