@@ -26,4 +26,5 @@ public:
 
 	static void spreadMapPoints(std::vector<glm::vec2>& points, float spread);
 	static void offsetMapPoints(std::vector<glm::vec2>& points, float offset);
+	static std::vector<glm::vec2> Bresenham(glm::vec2 start, glm::vec2 end);
 };
