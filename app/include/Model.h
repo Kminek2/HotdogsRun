@@ -41,6 +41,17 @@ struct Model
 		return newModel;
 	}
 
+	static Model* CreateUI(std::string model) {
+		Model* newModel;
+
+		try { newModel = new Model(*loadedModels.at(model), createdUiModels.end()); }
+		catch (std::out_of_range) { throw std::runtime_error("Model not found"); }
+
+		createdUiModels.push_back(newModel);
+		newModel->iterator = std::next(createdUiModels.end(), -1);
+		return newModel;
+	}
+
 	void Delete() {
 		createdModels.erase(iterator);
 	}
@@ -72,7 +83,7 @@ private:
 		MemoryCout();
 	}
 
-	void MemoryCout() {
+	void MemoryCout() const {
 		static const std::vector<char> after = { ' ', 'k', 'M', 'G' };
 
 		double size = vertexSize * sizeof(Vertex);
@@ -88,6 +99,7 @@ private:
 
 	static std::map<std::string, Model*> loadedModels;
 	static std::list<Model*> createdModels;
+	static std::list<Model*> createdUiModels;
 
 	static Buffer<Vertex>* vertexBuffer;
 

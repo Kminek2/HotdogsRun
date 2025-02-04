@@ -8,6 +8,7 @@ class LoadScene :
 private:
     GameObject* obj;
     GameObject* obj2;
+    UiObject* uiObj;
 public:
 
     static std::vector<std::pair<std::string, SceeneScript*>> scenes;

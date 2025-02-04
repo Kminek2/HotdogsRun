@@ -24,9 +24,9 @@ struct Transform {
 	glm::vec3 rotation;
 	glm::vec3 scale;
 
-	glm::vec3 front = { 0, 0, 1 };
-	glm::vec3 right = { 1, 0, 0 };
-	glm::vec3 up    = { 0, 1, 0 };
+	glm::vec3 front = { -1, 0, 0 };
+	glm::vec3 right = { 0, 1, 0 };
+	glm::vec3 up    = { 0, 0, 1 };
 
 	static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 0)
 	{

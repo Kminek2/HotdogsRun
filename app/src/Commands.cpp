@@ -58,9 +58,10 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
     renderPassInfo.renderArea.offset = { 0, 0 };
     renderPassInfo.renderArea.extent = swapChain.getExtend();
 
-    std::array<VkClearValue, 2> clearValues{};
+    std::array<VkClearValue, 3> clearValues{};
     clearValues[0].color = { {0.0f, 0.0f, 0.0f, 1.0f} };
     clearValues[1].depthStencil = { 1.0f, 0 };
+    clearValues[2].depthStencil = { 1.0f, 0 };
 
     renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
     renderPassInfo.pClearValues = clearValues.data();
@@ -95,6 +96,23 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             std::list<Model*>::iterator iterator;
             iterator = std::next(Model::createdModels.begin(), i);
             vkCmdDraw(commandBuffer, (*iterator)->vertexSize, 1, (*iterator)->vertexOffset, i);
+        }
+
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
+
+        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+        vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+        vkCmdBindVertexBuffers(commandBuffer, 0, 2, vertexBuffers, offsets);
+
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+
+        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+
+        for (int i = 0; i < Model::createdUiModels.size(); i++)
+        {
+            std::list<Model*>::iterator iterator;
+            iterator = std::next(Model::createdUiModels.begin(), i);
+            vkCmdDraw(commandBuffer, (*iterator)->vertexSize, 1, (*iterator)->vertexOffset, i + Model::createdModels.size());
         }
     }
 

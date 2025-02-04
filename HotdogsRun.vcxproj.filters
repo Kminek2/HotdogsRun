@@ -40,6 +40,12 @@
     <Filter Include="Header Files\app">
       <UniqueIdentifier>{de1cb574-8960-4fdd-a69c-081841bc3fe6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\The Real Engine">
+      <UniqueIdentifier>{d96ba5b9-db59-4cdc-981a-7f21cdd2ba63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\The Real Engine">
+      <UniqueIdentifier>{d2ca70f9-a8aa-408e-abee-be57a547e544}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vox\src\calc.cpp">
@@ -50,81 +56,6 @@
     </ClCompile>
     <ClCompile Include="vox\src\read.cpp">
       <Filter>Source Files\vox</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Application.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\AppTime.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Buffer.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Camera.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Commands.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Descriptior.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Device.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Engine.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Framebuffer.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\GameObject.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\GraphicsPipeline.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Input.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\main.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Model.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\ObjectScript.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Queues.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\RenderPass.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\SceeneScript.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Scene.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Shader.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\SwapChain.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Transform.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\Uniform.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\UniformBuffer.cpp">
-      <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="app\src\ValidationLayers.cpp">
-      <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="app\src\scenes\DebugScene.cpp">
       <Filter>Source Files\scenes</Filter>
@@ -156,6 +87,84 @@
     <ClCompile Include="app\src\QuickCamera.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\ValidationLayers.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\UniformBuffer.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Uniform.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\UiObject.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Transform.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\SwapChain.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Shader.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Scene.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\SceeneScript.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\RenderPass.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Queues.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\ObjectScript.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Model.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\main.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Input.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\GraphicsPipeline.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\GameObject.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Framebuffer.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Engine.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Device.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Descriptior.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Commands.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Camera.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Buffer.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\AppTime.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Application.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vox\include\calc.hpp">
@@ -172,93 +181,6 @@
     </ClInclude>
     <ClInclude Include="app\include\scenes\LoadScene.h">
       <Filter>Header Files\scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Application.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\AppTime.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Buffer.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Camera.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\CameraStructures.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Commands.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Descriptior.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Device.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Engine.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\FileReader.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Framebuffer.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\GameObject.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\GraphicsPipeline.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Image.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Input.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Model.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\ObjectScript.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Queues.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\RenderPass.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\resource.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\SceeneScript.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Scene.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Shader.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\SwapChain.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Transform.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Uniform.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\UniformBuffer.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\ValidationLayers.h">
-      <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="app\include\Vertex.h">
-      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\objects\CameraLockScript.h">
       <Filter>Header Files\objects</Filter>
@@ -284,6 +206,96 @@
     <ClInclude Include="app\include\QuickCamera.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
+    <ClInclude Include="app\include\resource.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\SceeneScript.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Scene.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Shader.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\SwapChain.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Transform.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\UiObject.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Uniform.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\UniformBuffer.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\ValidationLayers.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Vertex.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\RenderPass.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Queues.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\ObjectScript.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Model.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Input.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Image.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\GraphicsPipeline.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\GameObject.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Framebuffer.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\FileReader.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Engine.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Device.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Descriptior.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Commands.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\CameraStructures.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Camera.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Buffer.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\AppTime.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Application.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="app\shaders\compile.bat">
@@ -302,6 +314,12 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="app\shaders\main.vert.spv">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\ui.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\ui.vert.spv">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

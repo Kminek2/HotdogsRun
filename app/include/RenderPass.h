@@ -15,10 +15,13 @@ private:
 	SwapChain* swapChain;
 	VkRenderPass renderPass;
 	GraphicsPipeline* mainPipeline;
-	//GraphicsPipeline UIPipeline;
+	GraphicsPipeline* UIPipeline;
 
 	Image depthImage;
 	VkDeviceMemory depthImageMemory;
+
+	Image uiDepthImage;
+	VkDeviceMemory uiDepthImageMemory;
 	static VkFormat FindDepthFormat();
 
 	void CreateDepthResources();
@@ -30,7 +33,9 @@ public:
 
 	VkRenderPass getRenderPass() { return renderPass; }
 	Image getDepthImage() const { return depthImage; }
+	Image getUIDepthImage() const { return uiDepthImage; }
 	GraphicsPipeline* getMainPipeline() const { return mainPipeline; }
+	GraphicsPipeline* getUiPipeline() const { return UIPipeline; }
 
 	void RecreateDepthResource();
 };

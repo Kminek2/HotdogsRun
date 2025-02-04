@@ -51,6 +51,7 @@
     <ClCompile Include="app\src\Shader.cpp" />
     <ClCompile Include="app\src\SwapChain.cpp" />
     <ClCompile Include="app\src\Transform.cpp" />
+    <ClCompile Include="app\src\UiObject.cpp" />
     <ClCompile Include="app\src\Uniform.cpp" />
     <ClCompile Include="app\src\UniformBuffer.cpp" />
     <ClCompile Include="app\src\ValidationLayers.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="app\include\Shader.h" />
     <ClInclude Include="app\include\SwapChain.h" />
     <ClInclude Include="app\include\Transform.h" />
+    <ClInclude Include="app\include\UiObject.h" />
     <ClInclude Include="app\include\Uniform.h" />
     <ClInclude Include="app\include\UniformBuffer.h" />
     <ClInclude Include="app\include\ValidationLayers.h" />
@@ -109,6 +111,8 @@
     <None Include="app\shaders\main.frag.spv" />
     <None Include="app\shaders\main.vert" />
     <None Include="app\shaders\main.vert.spv" />
+    <None Include="app\shaders\ui.vert" />
+    <None Include="app\shaders\ui.vert.spv" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -9,9 +9,10 @@ Framebuffer::~Framebuffer() {
 }
 
 void Framebuffer::CreateFramebuffer(VkImageView swapChainImageView, RenderPass* renderPass, SwapChain* swapChain) {
-    std::array<VkImageView, 2> attachments = {
+    std::array<VkImageView, 3> attachments = {
                 swapChainImageView,
-                renderPass->getDepthImage().imageView
+                renderPass->getDepthImage().imageView,
+                renderPass->getUIDepthImage().imageView
     };
 
     VkFramebufferCreateInfo framebufferInfo{};

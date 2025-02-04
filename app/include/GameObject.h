@@ -38,6 +38,8 @@ private:
 	std::vector<OBB> obbs;
 
 	static bool deletingAll;
+protected:
+	GameObject(std::string model, bool, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1));
 public:
 	GameObject(std::string model, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1));
 	~GameObject();
