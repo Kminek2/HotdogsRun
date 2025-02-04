@@ -49,11 +49,15 @@ struct Model
 
 		createdUiModels.push_back(newModel);
 		newModel->iterator = std::next(createdUiModels.end(), -1);
+		newModel->uiModel = true;
 		return newModel;
 	}
 
 	void Delete() {
-		createdModels.erase(iterator);
+		if (uiModel)
+			createdUiModels.erase(iterator);
+		else
+			createdModels.erase(iterator);
 	}
 
 	~Model() {
@@ -96,6 +100,8 @@ private:
 
 		std::cout << "memory taken = " << size << ' ' << after[iii] << "B\n\n\n";
 	}
+
+	bool uiModel = false;
 
 	static std::map<std::string, Model*> loadedModels;
 	static std::list<Model*> createdModels;
