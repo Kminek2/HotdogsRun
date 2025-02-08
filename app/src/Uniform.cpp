@@ -5,15 +5,15 @@
 
 VkDescriptorSetLayout Uniform::descriptorSetLayout;
 
-void Uniform::AddUniforms(uint16_t amount)
+void Uniform::AddUniforms(uint16_t amount, VkDescriptorType type, VkShaderStageFlags shaderStage)
 {
     for (int i = 0; i < amount; i++)
     {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = UBOs.size();
-        uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        uboLayoutBinding.descriptorType = type;
         uboLayoutBinding.descriptorCount = 1;
-        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        uboLayoutBinding.stageFlags = shaderStage;
         uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
 
         UBOs.push_back(uboLayoutBinding);

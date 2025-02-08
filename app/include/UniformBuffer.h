@@ -17,8 +17,10 @@ private:
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
+
+    VkBufferUsageFlags bufferUsage;
 public:
-	UniformBuffer(const uint16_t& numberOfFrames);
+	UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFlags bufferUsage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 	~UniformBuffer();
 	void UpdateBuffer(uint16_t currentFrame, const T& data);
 
@@ -26,7 +28,7 @@ public:
 };
 
 template<typename T>
-UniformBuffer<T>::UniformBuffer(const uint16_t& numberOfFrames)
+UniformBuffer<T>::UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFlags bufferUsage)
 {
     VkDeviceSize bufferSize = sizeof(T);
 
@@ -35,7 +37,7 @@ UniformBuffer<T>::UniformBuffer(const uint16_t& numberOfFrames)
     uniformBuffersMapped.resize(numberOfFrames);
 
     for (size_t i = 0; i < numberOfFrames; i++) {
-        Buffer<T>::CreateBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+        Buffer<T>::CreateBuffer(bufferSize, bufferUsage, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 
         vkMapMemory(Device::getDevice(), uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i]);
     }

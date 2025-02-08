@@ -33,6 +33,7 @@
     <ClCompile Include="app\src\GameObject.cpp" />
     <ClCompile Include="app\src\GraphicsPipeline.cpp" />
     <ClCompile Include="app\src\Input.cpp" />
+    <ClCompile Include="app\src\LightObject.cpp" />
     <ClCompile Include="app\src\main.cpp" />
     <ClCompile Include="app\src\mapgen.cpp" />
     <ClCompile Include="app\src\Model.cpp" />
@@ -78,6 +79,8 @@
     <ClInclude Include="app\include\GraphicsPipeline.h" />
     <ClInclude Include="app\include\Image.h" />
     <ClInclude Include="app\include\Input.h" />
+    <ClInclude Include="app\include\LightBufferStruct.h" />
+    <ClInclude Include="app\include\LightObject.h" />
     <ClInclude Include="app\include\mapgen.h" />
     <ClInclude Include="app\include\Model.h" />
     <ClInclude Include="app\include\ObjectScript.h" />
