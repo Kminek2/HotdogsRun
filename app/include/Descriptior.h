@@ -7,6 +7,8 @@
 #include "UniformBuffer.h"
 #include "CameraStructures.h"
 #include "Uniform.h"
+#include "LightBufferStruct.h"
+#include <array>
 //IDK, I really don't want to think anymore. It's to hard :(
 // I should merge Uniform and this class but I no longer think
 //ITs hardcoded for now
@@ -22,14 +24,17 @@ private:
     static std::vector<VkDescriptorSet> descriptorSets;
 public:
     void CreateDescriptorPool() {
-        VkDescriptorPoolSize poolSize{};
-        poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+        std::array<VkDescriptorPoolSize, 2> poolSize{};
+        poolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSize[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+        poolSize[1].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        poolSize[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = 1;
-        poolInfo.pPoolSizes = &poolSize;
+        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSize.size());
+        poolInfo.pPoolSizes = poolSize.data();
         poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
         if (vkCreateDescriptorPool(Device::getDevice(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
@@ -37,7 +42,7 @@ public:
         }
     }
 
-    void CreateDescriptorSets(const UniformBuffer<UniformCameraBuffer>& uniformBuffer) {
+    void CreateDescriptorSets(const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const UniformBuffer<LightBufferStruct>& uniformLightStruct) {
         std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, Uniform::descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -52,30 +57,44 @@ public:
 
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = uniformBuffer.uniformBuffers[i];
-            bufferInfo.offset = 0;
-            bufferInfo.range = sizeof(UniformCameraBuffer);
+            std::array<VkDescriptorBufferInfo, 2> bufferInfo{};
+            bufferInfo[0].buffer = uniformBuffer.uniformBuffers[i];
+            bufferInfo[0].offset = 0;
+            bufferInfo[0].range = sizeof(UniformCameraBuffer);
 
-            VkWriteDescriptorSet descriptorWrite{};
-            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrite.dstSet = descriptorSets[i];
-            descriptorWrite.dstBinding = 0;
-            descriptorWrite.dstArrayElement = 0;
-            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            descriptorWrite.descriptorCount = 1;
-            descriptorWrite.pBufferInfo = &bufferInfo;
-            descriptorWrite.pImageInfo = nullptr; // Optional
-            descriptorWrite.pTexelBufferView = nullptr; // Optional
+            bufferInfo[1].buffer = uniformLightStruct.uniformBuffers[i];
+            bufferInfo[1].offset = 0;
+            bufferInfo[1].range = sizeof(LightBufferStruct);
 
-            vkUpdateDescriptorSets(Device::getDevice(), 1, &descriptorWrite, 0, nullptr);
+            std::array<VkWriteDescriptorSet, 2> descriptorWrite{};
+            descriptorWrite[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrite[0].dstSet = descriptorSets[i];
+            descriptorWrite[0].dstBinding = 0;
+            descriptorWrite[0].dstArrayElement = 0;
+            descriptorWrite[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            descriptorWrite[0].descriptorCount = 1;
+            descriptorWrite[0].pBufferInfo = &bufferInfo[0];
+            descriptorWrite[0].pImageInfo = nullptr; // Optional
+            descriptorWrite[0].pTexelBufferView = nullptr; // Optional
+
+            descriptorWrite[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrite[1].dstSet = descriptorSets[i];
+            descriptorWrite[1].dstBinding = 1;
+            descriptorWrite[1].dstArrayElement = 0;
+            descriptorWrite[1].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+            descriptorWrite[1].descriptorCount = 1;
+            descriptorWrite[1].pBufferInfo = &bufferInfo[1];
+            descriptorWrite[1].pImageInfo = nullptr; // Optional
+            descriptorWrite[1].pTexelBufferView = nullptr; // Optional
+
+            vkUpdateDescriptorSets(Device::getDevice(), static_cast<uint32_t>(descriptorWrite.size()), descriptorWrite.data(), 0, nullptr);
         }
     }
 
-    Descriptior(unsigned int MAX_FRAMES_IN_FLIGHT, const UniformBuffer<UniformCameraBuffer>& uniformBuffer) : MAX_FRAMES_IN_FLIGHT(MAX_FRAMES_IN_FLIGHT)
+    Descriptior(unsigned int MAX_FRAMES_IN_FLIGHT, const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const UniformBuffer<LightBufferStruct>& uniformLightBuffer) : MAX_FRAMES_IN_FLIGHT(MAX_FRAMES_IN_FLIGHT)
     {
         CreateDescriptorPool();
-        CreateDescriptorSets(uniformBuffer);
+        CreateDescriptorSets(uniformBuffer, uniformLightBuffer);
     };
 
     ~Descriptior() {

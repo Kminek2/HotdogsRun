@@ -12,6 +12,8 @@
 #include "Scene.h"
 #include "scenes/LoadScene.h"
 
+#include "LightObject.h"
+
 namespace fs = std::filesystem;
 
 uint16_t Application::width, Application::height;
@@ -30,6 +32,7 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	Model::SendBuffers();
 
 	camera = new Camera(FRAMES_IN_FLIGHT, width, height);
+	LightObject::lightBuffer = new UniformBuffer<LightBufferStruct>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 	Input::window = window;
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

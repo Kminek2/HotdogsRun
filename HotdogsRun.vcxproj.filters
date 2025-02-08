@@ -168,6 +168,9 @@
     <ClCompile Include="app\src\CameraTransform.cpp">
       <Filter>Source Files\The Real Engine</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\LightObject.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vox\include\calc.hpp">
@@ -300,6 +303,12 @@
       <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
     <ClInclude Include="app\include\CameraTransform.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\LightBufferStruct.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\LightObject.h">
       <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
   </ItemGroup>
