@@ -165,6 +165,9 @@
     <ClCompile Include="app\src\Application.cpp">
       <Filter>Source Files\The Real Engine</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\CameraTransform.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vox\include\calc.hpp">
@@ -294,6 +297,9 @@
       <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
     <ClInclude Include="app\include\Application.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\CameraTransform.h">
       <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
   </ItemGroup>

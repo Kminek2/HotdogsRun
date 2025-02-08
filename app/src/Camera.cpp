@@ -15,9 +15,7 @@ Camera* Camera::main;
 Camera::Camera(uint16_t frameNum, uint16_t width, uint16_t height)
 {
 	main = this;
-	MoveCameraTo(glm::vec3(0.0f, 2.0f, 2.0f));
-	front = glm::vec3(0, -1, 0);
-	up = glm::vec3(0, 0, 1);
+	cameraTransform = new CameraTransform(glm::vec3(0.0f, 2.0f, 2.0f));
 
 	cameraBuffer = new UniformBuffer<UniformCameraBuffer>(frameNum);
 	view = Perspective;
@@ -27,10 +25,11 @@ Camera::Camera(uint16_t frameNum, uint16_t width, uint16_t height)
 		cameraBufferStruct.proj = glm::ortho(-160.0f, 160.0f, -80.0f, 80.0f, 0.1f, Camera::render_distance);
 
 	cameraBufferStruct.proj[1][1] *= -1;
-	cameraBufferStruct.view = glm::lookAt(pos, pos + front, up);
+	cameraBufferStruct.view = glm::lookAt(cameraTransform->position, cameraTransform->position + cameraTransform->front, cameraTransform->up);
 }
 
 Camera::~Camera() {
+	delete cameraTransform;
 	delete cameraBuffer;
 }
 
@@ -41,34 +40,7 @@ void Camera::UpdateCamera(uint16_t width, uint16_t height)
 	else
 		cameraBufferStruct.proj = glm::ortho(-160.0f, 160.0f, -80.0f, 80.0f, 0.1f, Camera::render_distance);
 	cameraBufferStruct.proj[1][1] *= -1;
-	cameraBufferStruct.view = glm::lookAt(pos, pos + front, up);
-}
-
-void Camera::RotateCamera(float yaw, float pitch)
-{
-	RotateCameraTo(this->yaw-yaw, this->pitch-pitch);
-}
-
-void Camera::RotateCameraTo(float yaw, float pitch) {
-	this->yaw = yaw;
-	this->pitch = pitch;
-
-	if (this->pitch > 89.0f)
-		this->pitch = 89.0f;
-	if (this->pitch < -89.0f)
-		this->pitch = -89.0f;
-
-	direction.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
-	direction.z = sin(glm::radians(this->pitch));
-	direction.y = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
-	front = glm::normalize(direction);
-	glm::vec3 upDir;
-
-	upDir.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch + 90));
-	upDir.z = sin(glm::radians(this->pitch + 90));
-	upDir.y = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch + 90));
-
-	up = glm::normalize(upDir);
+	cameraBufferStruct.view = glm::lookAt(cameraTransform->position, cameraTransform->position + cameraTransform->front, cameraTransform->up);
 }
 
 void Camera::UpdateBuffer(uint16_t frame)
@@ -86,20 +58,11 @@ void Camera::UpdateBuffer(uint16_t frame)
 	cameraBuffer->UpdateBuffer(frame, cameraBufferStruct);
 }
 
-void Camera::MoveCameraTo(glm::vec3 pos) {
-	this->pos = pos;
-}
-
-void Camera::MoveCamera(glm::vec3 by)
-{
-	this->pos += front * by;
-}
-
 void Camera::Reload(uint16_t width, uint16_t height)
 {
-	MoveCameraTo(glm::vec3(0.0f, 2.0f, 2.0f));
-	front = glm::vec3(0, -1, 0);
-	up = glm::vec3(0, 0, 1);
+	cameraTransform->MoveTo(glm::vec3(0.0f, 2.0f, 2.0f));
+	cameraTransform->front = glm::vec3(0, -1, 0);
+	cameraTransform->up = glm::vec3(0, 0, 1);
 
 	view = Perspective;
 	if (view == Perspective)
@@ -108,10 +71,5 @@ void Camera::Reload(uint16_t width, uint16_t height)
 		cameraBufferStruct.proj = glm::ortho(-16, 16, -8, 8);
 
 	cameraBufferStruct.proj[1][1] *= -1;
-	cameraBufferStruct.view = glm::lookAt(pos, pos + front, up);
-}
-
-void Camera::MoveCamera(float by)
-{
-	this->pos += front * by;
+	cameraBufferStruct.view = glm::lookAt(cameraTransform->position, cameraTransform->position + cameraTransform->front, cameraTransform->up);
 }

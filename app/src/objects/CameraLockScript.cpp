@@ -12,8 +12,8 @@ void CameraLockScript::Init() {
 }
 
 void CameraLockScript::Update() {
-	Camera::main->MoveCameraTo(gameObject->transform->position + offset);
-	Camera::main->RotateCameraTo(yaw, pitch);
+	Camera::main->cameraTransform->MoveTo(gameObject->transform->position + offset);
+	Camera::main->cameraTransform->RotateTo(yaw, pitch);
 }
 
 void CameraLockScript::OnDestroy() {

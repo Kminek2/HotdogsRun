@@ -104,6 +104,9 @@ struct Transform {
 		UpdateMatrix();
 	}
 
+	/// <summary>
+	/// Move the object by the given vector, in it's rotation
+	/// </summary>
 	void Translate(glm::vec3 by);
 
 	/// <summary>
