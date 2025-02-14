@@ -10,7 +10,7 @@ file(GLOB_RECURSE SOURCES "app/src/*.cpp" "vox/src/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE "app/include" ".")
+target_include_directories(${PROJECT_NAME} PRIVATE "app/include" "." "lib-include")
 
 target_link_libraries(${PROJECT_NAME}
 	vulkan

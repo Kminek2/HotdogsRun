@@ -402,3 +402,4 @@ FodyWeavers.xsd
 build/
 vox/
 /shaders/
+lib-include/
