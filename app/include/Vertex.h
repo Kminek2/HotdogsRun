@@ -9,7 +9,6 @@
 #include <glm/gtx/hash.hpp>
 
 #include <vector>
-#include "vox/Vox.hpp"
 
 struct Vertex {
     glm::vec3 pos;

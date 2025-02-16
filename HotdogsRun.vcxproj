@@ -58,9 +58,6 @@
     <ClCompile Include="app\src\Uniform.cpp" />
     <ClCompile Include="app\src\UniformBuffer.cpp" />
     <ClCompile Include="app\src\ValidationLayers.cpp" />
-    <ClCompile Include="vox\src\calc.cpp" />
-    <ClCompile Include="vox\src\merge.cpp" />
-    <ClCompile Include="vox\src\read.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\Application.h" />
@@ -106,9 +103,6 @@
     <ClInclude Include="app\include\UniformBuffer.h" />
     <ClInclude Include="app\include\ValidationLayers.h" />
     <ClInclude Include="app\include\Vertex.h" />
-    <ClInclude Include="vox\include\calc.hpp" />
-    <ClInclude Include="vox\include\merge.hpp" />
-    <ClInclude Include="vox\include\read.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app\shaders\compile.bat" />
