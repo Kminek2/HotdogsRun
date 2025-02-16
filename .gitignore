@@ -405,3 +405,6 @@ build/
 vox/
 /shaders/
 lib-include/
+
+stb/
+objLoader/
