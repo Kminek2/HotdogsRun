@@ -3,6 +3,13 @@
 #include <stdexcept>
 #include "FileReader.h"
 
+Shader::Shader(const std::string filePath, VkShaderStageFlagBits shaderStage, VkSpecializationInfo& specializationInfo)
+{
+    shaderCode = FileReader::Read(filePath);
+    shaderModule = CreateShaderModule(shaderCode);
+    shaderStageInfo = CreatePipelineShaderStageCreateInfo(shaderModule, shaderStage, specializationInfo);
+}
+
 Shader::Shader(const std::string filePath, VkShaderStageFlagBits shaderStage)
 {
     shaderCode = FileReader::Read(filePath);
@@ -26,6 +33,17 @@ VkShaderModule Shader::CreateShaderModule(const std::vector<char>& code) {
     }
 
     return shaderModule;
+}
+
+VkPipelineShaderStageCreateInfo Shader::CreatePipelineShaderStageCreateInfo(VkShaderModule shaderModule, VkShaderStageFlagBits shaderStage, VkSpecializationInfo& specializationInfo) {
+    VkPipelineShaderStageCreateInfo shaderStageInfo{};
+    shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStageInfo.stage = shaderStage;
+    shaderStageInfo.module = shaderModule;
+    shaderStageInfo.pName = "main";
+    shaderStageInfo.pSpecializationInfo = &specializationInfo; // Attach specialization info
+
+    return shaderStageInfo;
 }
 
 VkPipelineShaderStageCreateInfo Shader::CreatePipelineShaderStageCreateInfo(VkShaderModule shaderModule, VkShaderStageFlagBits shaderStage) {

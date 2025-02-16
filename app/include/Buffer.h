@@ -42,6 +42,7 @@ public:
 
     template <typename t>
     friend class UniformBuffer;
+    friend class Textures;
 };
 
 template<typename T>
@@ -144,5 +145,6 @@ void Buffer<T>::SendBufferToMemory()
 template<typename T>
 void Buffer<T>::ClearBuffer()
 {
-    data.clear();
+    if(!data.empty())
+        data.clear();
 }

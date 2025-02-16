@@ -7,17 +7,43 @@
 
 #include <vector>
 #include <stdexcept>
+#include <filesystem>
+
+#include "Model.h"
 
 GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass) {
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
-    Shader fragmentShader(fragmentShaderPath, VK_SHADER_STAGE_FRAGMENT_BIT);
+
+    //texturesConst
+    uint32_t maxTextures = 0;
+
+    for (const auto& entry : std::filesystem::directory_iterator("models_obj_test")) {
+        maxTextures++;
+    }
+
+    VkSpecializationMapEntry specializationEntry{};
+    specializationEntry.constantID = 0;
+    specializationEntry.offset = 0;
+    specializationEntry.size = sizeof(int);
+
+    VkSpecializationInfo specializationInfo{};
+    specializationInfo.mapEntryCount = 1;
+    specializationInfo.pMapEntries = &specializationEntry;
+    specializationInfo.dataSize = sizeof(int);
+    specializationInfo.pData = &maxTextures;
+
+    //
+
+    Shader fragmentShader(fragmentShaderPath, VK_SHADER_STAGE_FRAGMENT_BIT, specializationInfo);
 
     VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShader.getShaderStageInfo() , fragmentShader.getShaderStageInfo() };
 
-    std::vector<VkVertexInputBindingDescription> bindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1)};
+    std::vector<VkVertexInputBindingDescription> bindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2)};
     std::vector<VkVertexInputAttributeDescription> attributeDescriptions = Vertex::GetAttributeDescriptions(0);
     std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 2);
+    VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 6);
     attributeDescriptions.insert(attributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
+    attributeDescriptions.push_back(textureDescriptions);
 
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -89,6 +115,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     uniform = new Uniform();
     uniform->AddUniforms(1);
+    uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, maxTextures);
     uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
     std::vector<VkDescriptorSetLayout> descriptorSetLayout = uniform->BindUniforms();
 

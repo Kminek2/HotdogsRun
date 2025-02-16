@@ -32,6 +32,7 @@
     <ClCompile Include="app\src\Framebuffer.cpp" />
     <ClCompile Include="app\src\GameObject.cpp" />
     <ClCompile Include="app\src\GraphicsPipeline.cpp" />
+    <ClCompile Include="app\src\Image.cpp" />
     <ClCompile Include="app\src\Input.cpp" />
     <ClCompile Include="app\src\LightObject.cpp" />
     <ClCompile Include="app\src\main.cpp" />

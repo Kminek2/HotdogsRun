@@ -171,6 +171,9 @@
     <ClCompile Include="app\src\LightObject.cpp">
       <Filter>Source Files\The Real Engine</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\Image.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vox\include\calc.hpp">
