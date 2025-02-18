@@ -5,6 +5,8 @@
 #include "Queues.h"
 #include "LightObject.h"
 
+#include "Model.h"
+
 GLFWwindow* Engine::window;
 VkInstance Engine::instance;
 
@@ -39,7 +41,7 @@ void Engine::InitVulkan() {
     commands = new Commands();
     commands->CreateCommandBuffers(2);
     application = new Application(WIDTH, HEIGHT, window);
-    descriptor = new Descriptior(FRAMES_IN_FLIGHT, *application->camera->getBuffer(), *LightObject::getBuffer());
+    descriptor = new Descriptior(FRAMES_IN_FLIGHT, *application->camera->getBuffer(), *Model::textures, *LightObject::getBuffer());
     CreateSyncObjects();
 }
 

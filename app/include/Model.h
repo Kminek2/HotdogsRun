@@ -11,95 +11,54 @@
 
 #include <iostream>
 
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
 class Commands;
 class DebugScene;
 
 struct Model
 {
 
-	static void LoadModelFromFile(std::string name, std::string filePath)
+	static void LoadModelFromFile(std::string name, std::string filePath, std::string texturePath);
+
+	static Model* Create(std::string model);
+
+	static Model* CreateUI(std::string model);
+
+	void Delete();
+
+	~Model();
+
+	Model(Model& model, std::list<Model*>::iterator iterator);
+
+	static void SendBuffers();
+
+	static void Unload();
+
+	static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 2)
 	{
-		std::vector<vox::vertex> tmp;
-		if (vox::load_model(filePath, tmp) != 0)
-			throw std::runtime_error("Failed to load model from file");
-
-		std::vector<Vertex> vertices;
-		vertices.reserve(tmp.size());
-		std::transform(tmp.begin(), tmp.end(), std::back_inserter(vertices), [](const vox::vertex& v) { return Vertex(v); });
-
-		loadedModels[name] = new Model(std::move(vertices));
+		VkVertexInputBindingDescription bindingDescription{};
+		bindingDescription.binding = binding;
+		bindingDescription.stride = sizeof(uint32_t);
+		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
+		return bindingDescription;
 	}
 
-	static Model* Create(std::string model) {
-		Model* newModel;
+	static VkVertexInputAttributeDescription GetAttributeDescriptions(uint16_t binding = 2, uint16_t location = 6) {
+		VkVertexInputAttributeDescription attributeDescription{};
 
-		try { newModel = new Model(*loadedModels.at(model), createdModels.end()); } 
-		catch (std::out_of_range) { throw std::runtime_error("Model not found"); }
+		attributeDescription.binding = binding;
+		attributeDescription.location = location;
+		attributeDescription.format = VK_FORMAT_R32_UINT;
+		attributeDescription.offset = 0;
 
-		createdModels.push_back(newModel);
-		newModel->iterator = std::next(createdModels.end(), -1);
-		return newModel;
-	}
-
-	static Model* CreateUI(std::string model) {
-		Model* newModel;
-
-		try { newModel = new Model(*loadedModels.at(model), createdUiModels.end()); }
-		catch (std::out_of_range) { throw std::runtime_error("Model not found"); }
-
-		createdUiModels.push_back(newModel);
-		newModel->iterator = std::next(createdUiModels.end(), -1);
-		newModel->uiModel = true;
-		return newModel;
-	}
-
-	void Delete() {
-		if (uiModel)
-			createdUiModels.erase(iterator);
-		else
-			createdModels.erase(iterator);
-	}
-
-	~Model() {
-		Delete();
-	}
-
-	Model(Model& model, std::list<Model*>::iterator iterator) {
-		this->iterator = iterator;
-		this->vertexOffset = model.vertexOffset;
-		this->vertexSize = model.vertexSize;
-	}
-
-	static void SendBuffers() {
-		vertexBuffer->SendBufferToMemory();
-	}
-
-	static void Unload() {
-		delete vertexBuffer;
+		return attributeDescription;
 	}
 private:
-	Model(std::vector<Vertex> verticies) {
-		this->vertexOffset = static_cast<uint32_t>(vertexBuffer->getSize());
-		this->vertexSize = static_cast<uint32_t>(verticies.size());
+	Model(std::vector<Vertex> verticies, std::vector<uint32_t> indices);
 
-		vertexBuffer->AddToBuffer(verticies);
-
-		MemoryCout();
-	}
-
-	void MemoryCout() const {
-		static const std::vector<char> after = { ' ', 'k', 'M', 'G' };
-
-		double size = vertexSize * sizeof(Vertex);
-		int iii = 0;
-		while (size >= 1024)
-		{
-			size /= 1024;
-			iii++;
-		}
-
-		std::cout << "memory taken = " << size << ' ' << after[iii] << "B\n\n\n";
-	}
+	void MemoryCout(uint32_t verticies, uint32_t indicies) const;
 
 	bool uiModel = false;
 
@@ -108,12 +67,18 @@ private:
 	static std::list<Model*> createdUiModels;
 
 	static Buffer<Vertex>* vertexBuffer;
+	static Buffer<uint32_t>* indexBuffer;
+	static Buffer<uint32_t>* textureOffBuffer;
 
 	uint32_t vertexOffset;
+	uint32_t indexOffset;
+	uint32_t indexSize;
+	uint32_t textureOffset;
 	std::list<Model*>::iterator iterator;
 
-	uint32_t vertexSize;
+	static Textures* textures;
 
 	friend Commands;
 	friend DebugScene;
+	friend class Engine;
 };

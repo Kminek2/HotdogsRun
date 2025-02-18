@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\vox">
-      <UniqueIdentifier>{77cd2c27-b2f6-48e5-88f2-d33af022ede0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\app">
       <UniqueIdentifier>{e4b7281a-7880-4d54-8ca2-8c6684962df8}</UniqueIdentifier>
     </Filter>
@@ -27,9 +24,6 @@
     </Filter>
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{042434c8-425f-4aa3-ae7c-9c215bd72bde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\vox">
-      <UniqueIdentifier>{2df7f143-4c79-4835-8ae1-303fc1418e6c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\objects">
       <UniqueIdentifier>{1933f2f9-f273-4529-a908-c2e628e9651d}</UniqueIdentifier>
@@ -48,15 +42,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="vox\src\calc.cpp">
-      <Filter>Source Files\vox</Filter>
-    </ClCompile>
-    <ClCompile Include="vox\src\merge.cpp">
-      <Filter>Source Files\vox</Filter>
-    </ClCompile>
-    <ClCompile Include="vox\src\read.cpp">
-      <Filter>Source Files\vox</Filter>
-    </ClCompile>
     <ClCompile Include="app\src\scenes\DebugScene.cpp">
       <Filter>Source Files\scenes</Filter>
     </ClCompile>
@@ -171,17 +156,11 @@
     <ClCompile Include="app\src\LightObject.cpp">
       <Filter>Source Files\The Real Engine</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\Image.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vox\include\calc.hpp">
-      <Filter>Header Files\vox</Filter>
-    </ClInclude>
-    <ClInclude Include="vox\include\merge.hpp">
-      <Filter>Header Files\vox</Filter>
-    </ClInclude>
-    <ClInclude Include="vox\include\read.hpp">
-      <Filter>Header Files\vox</Filter>
-    </ClInclude>
     <ClInclude Include="app\include\scenes\DebugScene.h">
       <Filter>Header Files\scenes</Filter>
     </ClInclude>

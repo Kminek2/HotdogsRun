@@ -75,6 +75,8 @@ StyleCopReport.xml
 *.ilk
 *.meta
 *.obj
+!models_obj_test/*.obj
+!models/*.obj
 *.iobj
 *.pch
 *.pdb
@@ -402,3 +404,7 @@ FodyWeavers.xsd
 build/
 vox/
 /shaders/
+lib-include/
+
+stb/
+objLoader/

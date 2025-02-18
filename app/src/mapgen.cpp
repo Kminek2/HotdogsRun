@@ -36,13 +36,26 @@ std::vector<glm::vec2> bresenham(const glm::ivec2& start, const glm::ivec2& end)
 
         int e2 = 2 * err;
         if (e2 > -dy) { err -= dy; x += sx; }
-        if (e2 < dx) { err += dx; y += sy; }
+        if (e2 < dx)  { err += dx; y += sy; }
     }
 
     return result;
 }
 
-std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_data, size_t seed) {
+void emplace_vectors(std::vector<mapgen::MapPoint>& in, const std::vector<glm::vec2>& src) {
+    for (size_t i=0; i<src.size()-1; i++)
+        in.emplace_back(src[i]);
+}
+
+mapgen::direction points_direction(const glm::vec2& a, const glm::vec2& b) {
+    for (uint8_t i = 0; i < 8; i++)
+        if (a + MapGen::neighbor_map[i] == b)
+            return mapgen::direction((i + 3) % 8); // +3 is the right offset
+
+    return mapgen::direction(0);
+}
+
+std::vector<mapgen::MapPoint> MapGen::generateMap(uint16_t len, const mapgen::Ellipse& ellipse_data, size_t seed) {
     if (seed == static_cast<size_t>(-1)) {
         std::random_device rd;
         seed = rd();
@@ -51,7 +64,7 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_
     std::mt19937 gen(seed);
     std::uniform_real_distribution<double> offset_dist(ellipse_data.min_offset, ellipse_data.max_offset);
 
-    std::vector<glm::vec2> points;
+    std::vector<mapgen::MapPoint> points;
 
     const double Δθ = 2 * glm::pi<double>() / len;
 
@@ -70,8 +83,7 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_
             { (ellipse_data.a + Δx2) * std::cos(θ2), (ellipse_data.b + Δx2) * std::sin(θ2) }
         ));
 
-        line.pop_back();
-        points.insert(points.end(), line.begin(), line.end());
+        emplace_vectors(points, line);
 
         Δx = Δx2;
     }
@@ -81,8 +93,17 @@ std::vector<glm::vec2> MapGen::generateMap(uint16_t len, const Ellipse& ellipse_
         { (ellipse_data.a + Δx0) * std::cos(Δθ), (ellipse_data.b + Δx0) * std::sin(Δθ) }
     ));
 
-    f_line.pop_back();
-    points.insert(points.end(), f_line.begin(), f_line.end());
+    emplace_vectors(points, f_line);
+
+    // -- in --
+    for (size_t i = 1; i < points.size(); i++)
+        points[i].in = points_direction(points[i].pos, points[i].pos);
+    points[0].in = points_direction(points[points.size() - 1].pos, points[0].pos);
+
+    // -- out --
+    for (size_t i = 0; i < points.size() - 1; i++)
+        points[i].out = points_direction(points[i + 1].pos, points[i].pos);
+    points[points.size() - 1].out = points_direction(points[0].pos, points[points.size() - 1].pos);
 
     return points;
 }
@@ -92,4 +113,11 @@ void MapGen::spreadMapPoints(std::vector<glm::vec2>& points, float spread) {
 }
 void MapGen::offsetMapPoints(std::vector<glm::vec2>& points, float offset) {
 	std::transform(points.begin(), points.end(), points.begin(), [&offset](glm::vec2& a) { return a + glm::vec2(offset); }); 
+}
+
+void MapGen::spreadMapPoints(std::vector<mapgen::MapPoint>& points, float spread) {
+    std::transform(points.begin(), points.end(), points.begin(), [&spread](mapgen::MapPoint& a) { a.pos *= spread; return a; });
+}
+void MapGen::offsetMapPoints(std::vector<mapgen::MapPoint>& points, float offset) {
+    std::transform(points.begin(), points.end(), points.begin(), [&offset](mapgen::MapPoint& a) { a.pos += glm::vec2(offset); return a; });
 }

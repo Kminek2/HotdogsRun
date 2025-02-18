@@ -4,19 +4,15 @@
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
+#include <glm/gtx/hash.hpp>
 
 #include <vector>
-#include "vox/Vox.hpp"
 
 struct Vertex {
     glm::vec3 pos;
-    glm::vec3 color;
-    
-    Vertex(const vox::vertex& v)
-        : pos(std::get<0>(v.pos), std::get<1>(v.pos), std::get<2>(v.pos)),
-        color(std::get<0>(v.col), std::get<1>(v.col), std::get<2>(v.col))
-    {}
+    glm::vec2 texCoord;
 
     static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 0) {
         VkVertexInputBindingDescription bindingDescription{};
@@ -32,12 +28,25 @@ struct Vertex {
         attributeDescriptions[0].binding = binding;
         attributeDescriptions[0].location = location;
         attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-        attributeDescriptions[0].offset = static_cast<uint32_t>(0);// offsetof(Vertex, pos);
+        attributeDescriptions[0].offset = offsetof(Vertex, pos);
 
         attributeDescriptions[1].binding = binding;
         attributeDescriptions[1].location = location + 1;
-        attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-        attributeDescriptions[1].offset = static_cast<uint32_t>(sizeof(glm::vec3));// offsetof(Vertex, color);
+        attributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
+        attributeDescriptions[1].offset = offsetof(Vertex, texCoord);
         return attributeDescriptions;
     }
+
+    bool operator==(const Vertex& other) const {
+        return pos == other.pos && texCoord == other.texCoord;
+    }
 };
+
+namespace std {
+    template<> struct hash<Vertex> {
+        size_t operator()(Vertex const& vertex) const {
+            return (hash<glm::vec3>()(vertex.pos) ^
+                (hash<glm::vec2>()(vertex.texCoord) << 1));
+        }
+    };
+}
