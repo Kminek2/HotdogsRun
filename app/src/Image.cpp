@@ -109,11 +109,11 @@ void Image::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout 
     Commands::EndSingleTimeCommands(commandBuffer);
 }
 
-void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) {
+void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t& offset) {
     VkCommandBuffer commandBuffer = Commands::BeginSingleTimeCommands();
 
     VkBufferImageCopy region{};
-    region.bufferOffset = 0;
+    region.bufferOffset = offset;
     region.bufferRowLength = 0;
     region.bufferImageHeight = 0;
 
@@ -176,7 +176,7 @@ VkImageView Images::CreateImageView(VkImage image, VkFormat format, VkImageAspec
     return imageView;
 }
 
-void Images::CreateImages(std::vector<std::pair<int, int>> dimentions, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, std::vector<VkImage>& images, VkDeviceMemory& imageMemory)
+void Images::CreateImages(std::vector<std::pair<int, int>> dimentions, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, std::vector<VkImage>& images, VkDeviceMemory& imageMemory, std::vector<uint32_t>& offsets)
 {
     VkDeviceSize totalSize = 0;
     VkDeviceSize alignment = 0;
@@ -213,35 +213,20 @@ void Images::CreateImages(std::vector<std::pair<int, int>> dimentions, VkFormat 
     VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = totalSize;
-
-    // Find memory type index
-    VkPhysicalDeviceMemoryProperties memProperties;
-    vkGetPhysicalDeviceMemoryProperties(Device::getPhysicalDevice(), &memProperties);
-
-    uint32_t memoryTypeIndex = UINT32_MAX;
-    for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-        if ((memRequirements[0].memoryTypeBits & (1 << i)) &&
-            (memProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)) {
-            memoryTypeIndex = i;
-            break;
-        }
-    }
-
-    if (memoryTypeIndex == UINT32_MAX) {
-        throw std::runtime_error("Failed to find suitable memory type!");
-    }
-
-    allocInfo.memoryTypeIndex = memoryTypeIndex;
+    allocInfo.memoryTypeIndex = Device::FindMemoryType(memRequirements[0].memoryTypeBits, properties);
 
     if (vkAllocateMemory(Device::getDevice(), &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
         throw std::runtime_error("Failed to allocate device memory!");
     }
 
     VkDeviceSize offset = 0;
+    uint32_t stagingOffset = 0;
     for (size_t i = 0; i < images.size(); i++) {
         offset = (offset + memRequirements[i].alignment - 1) & ~(memRequirements[i].alignment - 1); // Align
+        offsets.push_back(stagingOffset);
         vkBindImageMemory(Device::getDevice(), images[i], imageMemory, offset);
         offset += memRequirements[i].size;
+        stagingOffset += dimentions[i].first * dimentions[i].second * 4;
     }
 }
 
@@ -311,11 +296,13 @@ void Textures::SendTexturesToMemory() {
 
     resize(dimentions.size());
 
-    Images::CreateImages(dimentions, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, images, textureMemory);
+    std::vector<uint32_t> offsets;
+
+    Images::CreateImages(dimentions, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, images, textureMemory, offsets);
 
     for (int i = 0; i < size; i++) {
         Image::transitionImageLayout(images[i], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        Image::copyBufferToImage(stagingBuffer, images[i], static_cast<uint32_t>(dimentions[i].first), static_cast<uint32_t>(dimentions[i].second));
+        Image::copyBufferToImage(stagingBuffer, images[i], static_cast<uint32_t>(dimentions[i].first), static_cast<uint32_t>(dimentions[i].second), offsets[i]);
         Image::transitionImageLayout(images[i], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
     }
     vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);

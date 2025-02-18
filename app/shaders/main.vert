@@ -11,7 +11,7 @@ layout(location = 2) in mat4 model;
 layout(location = 6) in uint textOff;
 
 layout(location = 0) out vec2 fragTexCoord;
-layout(location = 1) out uint textureNum;
+layout(location = 1) out flat uint textureNum;
 
 
 void main() {
