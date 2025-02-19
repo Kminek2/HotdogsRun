@@ -15,6 +15,13 @@ namespace std {
 			return std::tie(a.x, a.y) < std::tie(b.x, b.y);
 		}
 	};
+
+	template<typename T>
+	struct less<std::pair<T, T>> {
+		bool operator()(const std::pair<T, T>& a, const std::pair<T, T>& b) const {
+			return std::tie(a.first, a.second) < std::tie(b.first, b.second);
+		}
+	};
 }
 
 namespace mapgen {
