@@ -113,7 +113,7 @@ std::map<std::pair<direction, direction>, GameObject*> createRoadMap(std::string
     return roadMap;
 }
 
-std::map<std::pair<direction, direction>, GameObject*> MapGen::road_segements; //= createRoadMap("Asfalt");
+std::map<std::pair<direction, direction>, GameObject*> MapGen::road_segements = createRoadMap("Asfalt");
 
 /// <summary>
 /// Implementation of Beresenham's algorithm. Includes `start` and `end` in the result.
