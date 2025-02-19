@@ -37,6 +37,7 @@
     <ClCompile Include="app\src\LightObject.cpp" />
     <ClCompile Include="app\src\main.cpp" />
     <ClCompile Include="app\src\mapgen.cpp" />
+    <ClCompile Include="app\src\mapgen_road.cpp" />
     <ClCompile Include="app\src\Model.cpp" />
     <ClCompile Include="app\src\ObjectScript.cpp" />
     <ClCompile Include="app\src\objects\CameraLockScript.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="app\include\LightBufferStruct.h" />
     <ClInclude Include="app\include\LightObject.h" />
     <ClInclude Include="app\include\mapgen.h" />
+    <ClInclude Include="app\include\mapgen_road.hpp" />
     <ClInclude Include="app\include\Model.h" />
     <ClInclude Include="app\include\ObjectScript.h" />
     <ClInclude Include="app\include\objects\CameraLockScript.h" />

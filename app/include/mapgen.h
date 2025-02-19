@@ -5,8 +5,8 @@
 #include <vector>
 #include <set>
 #include <array>
-#include <map>
-#include "GameObject.h"
+
+#include "mapgen_road.hpp"
 
 namespace std {
 	template<>
@@ -35,32 +35,24 @@ namespace mapgen {
 		Ellipse(double _a, double _b, double _mio, double _mao) : a(_a), b(_b), min_offset(_mio), max_offset(_mao) {};
 	};
 
-	enum direction {
-		N, NE, E, SE, S, SW, W, NW
-	};
-
 	struct MapPoint {
 		glm::vec2 pos;
-		mapgen::direction in, out;
+		direction in, out;
 
-		MapPoint(glm::vec2 v) : pos(v), in(mapgen::direction::N), out(mapgen::direction::N) {};
+		MapPoint(glm::vec2 v) : pos(v), in(direction::N), out(direction::N) {};
 	};
+
+	const std::array<glm::vec2, 8> neighbor_map = { {
+		{-1, 1}, {0, 1}, {1, 1},
+		{-1, 0},         {1, 0},
+		{-1,-1}, {0,-1}, {1,-1}
+	} };
+
+	std::vector<MapPoint> generateMap(uint16_t len, const Ellipse& ellipse_data, size_t seed = -1);
+
+	void spreadMapPoints(std::vector<glm::vec2>& points, float spread);
+	void offsetMapPoints(std::vector<glm::vec2>& points, float offset);
+
+	void spreadMapPoints(std::vector<MapPoint>& points, float spread);
+	void offsetMapPoints(std::vector<MapPoint>& points, float offset);
 }
-
-using mapgen::direction;
-#define __road std::map<std::pair<direction, direction>, GameObject*>
-
-struct MapGen {
-public:
-	static const std::array<glm::vec2, 8> neighbor_map;
-
-	static __road createRoadMap(std::string type = "Asfalt");
-
-	static std::vector<mapgen::MapPoint> generateMap(uint16_t len, const mapgen::Ellipse& ellipse_data, size_t seed = -1);
-
-	static void spreadMapPoints(std::vector<glm::vec2>& points, float spread);
-	static void offsetMapPoints(std::vector<glm::vec2>& points, float offset);
-
-	static void spreadMapPoints(std::vector<mapgen::MapPoint>& points, float spread);
-	static void offsetMapPoints(std::vector<mapgen::MapPoint>& points, float offset);
-};

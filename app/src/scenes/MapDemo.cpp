@@ -13,16 +13,18 @@ const double b = 50;
 const double min_offset = -5;
 const double max_offset =  5;
 
+using namespace mapgen;
+
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
-	__road road_segements = MapGen::createRoadMap();
+	__road road_segements = createRoadMap();
 
-	std::vector<mapgen::MapPoint> map_points(MapGen::generateMap(map_len, { a,b,min_offset,max_offset }, 42));
-	MapGen::spreadMapPoints(map_points, 25.0f);
+	std::vector<MapPoint> map_points(generateMap(map_len, { a,b,min_offset,max_offset }, 42));
+	spreadMapPoints(map_points, 25.0f);
 
 	points.reserve(map_points.size());
 	
-	for (mapgen::MapPoint point : map_points) {
+	for (MapPoint point : map_points) {
 		points.emplace_back(road_segements[{point.in, point.out}]);
 		points[points.size() - 1]->transform->MoveTo({point.pos.x, point.pos.y, 0});
 	}
