@@ -48,11 +48,13 @@ namespace mapgen {
 }
 
 using mapgen::direction;
+#define __road std::map<std::pair<direction, direction>, GameObject*>
 
 struct MapGen {
 public:
 	static const std::array<glm::vec2, 8> neighbor_map;
-	static std::map<std::pair<direction, direction>, GameObject*> road_segements;
+
+	static __road createRoadMap(std::string type = "Asfalt");
 
 	static std::vector<mapgen::MapPoint> generateMap(uint16_t len, const mapgen::Ellipse& ellipse_data, size_t seed = -1);
 

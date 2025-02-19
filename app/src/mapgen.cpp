@@ -17,7 +17,7 @@ const std::array<glm::vec2, 8> MapGen::neighbor_map = { {
     {-1,-1}, {0,-1}, {1,-1}
 } };
 
-std::map<std::pair<direction, direction>, GameObject*> createRoadMap(std::string type = "Asfalt") {
+std::map<std::pair<direction, direction>, GameObject*> MapGen::createRoadMap(std::string type) {
     std::map<std::pair<direction, direction>, GameObject*> roadMap;
 
     // ========= STRAIGHT PIECES =========
@@ -112,8 +112,6 @@ std::map<std::pair<direction, direction>, GameObject*> createRoadMap(std::string
 
     return roadMap;
 }
-
-std::map<std::pair<direction, direction>, GameObject*> MapGen::road_segements = createRoadMap("Asfalt");
 
 /// <summary>
 /// Implementation of Beresenham's algorithm. Includes `start` and `end` in the result.
