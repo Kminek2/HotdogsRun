@@ -5,6 +5,8 @@
 #include <vector>
 #include <set>
 #include <array>
+#include <map>
+#include "GameObject.h"
 
 namespace std {
 	template<>
@@ -38,9 +40,12 @@ namespace mapgen {
 	};
 }
 
+using mapgen::direction;
+
 struct MapGen {
 public:
 	static const std::array<glm::vec2, 8> neighbor_map;
+	static std::map<std::pair<direction, direction>, GameObject*> road_segements;
 
 	static std::vector<mapgen::MapPoint> generateMap(uint16_t len, const mapgen::Ellipse& ellipse_data, size_t seed = -1);
 

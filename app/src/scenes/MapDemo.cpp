@@ -21,8 +21,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	points.reserve(map_points.size());
 	
-	for (uint16_t i = 0; i < map_points.size(); i++)
-		points.push_back(new GameObject("debug_star", glm::vec3({ map_points[i].pos.x, map_points[i].pos.y, i/20.0f})));
+	for (mapgen::MapPoint point : map_points) {
+		points.emplace_back(MapGen::road_segements[{point.in, point.out}]);
+		points[points.size() - 1]->transform->MoveTo({point.pos.x, point.pos.y, 0});
+	}
 	
 	return std::shared_ptr<Scene>(scene);
 }

@@ -9,11 +9,36 @@
 
 #include <iostream>
 
+using mapgen::direction;
+
 const std::array<glm::vec2, 8> MapGen::neighbor_map = { {
     {-1, 1}, {0, 1}, {1, 1},
     {-1, 0},         {1, 0},
     {-1,-1}, {0,-1}, {1,-1}
 } };
+
+std::map<std::pair<direction, direction>, GameObject*> createRoadMap() {
+    std::map<std::pair<direction, direction>, GameObject*> roadMap; 
+
+    roadMap[{direction::N, direction::S}] = new GameObject("prosta", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+    roadMap[{direction::S, direction::N}] = new GameObject("prosta", { 0,0,0 }, { 0,180,0 }, { 1,1,1 });
+
+    roadMap[{direction::NW, direction::SE}] = new GameObject("skos", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+    roadMap[{direction::SE, direction::NW}] = new GameObject("skos", { 0,0,0 }, { 0,180,0 }, { 1,1,1 });
+
+    roadMap[{direction::S, direction::W}] = new GameObject("zakret", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+    roadMap[{direction::W, direction::S}] = new GameObject("zakret", { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
+
+    roadMap[{direction::S, direction::SW}] = new GameObject("ostry_zakret", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+    roadMap[{direction::SW, direction::S}] = new GameObject("ostry_zakret", { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
+
+    roadMap[{direction::S, direction::NW}] = new GameObject("ladogdny_zakret", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+    roadMap[{direction::NW, direction::S}] = new GameObject("ladogdny_zakret", { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
+
+    return roadMap;
+}
+
+std::map<std::pair<direction, direction>, GameObject*> MapGen::road_segements = createRoadMap();
 
 /// <summary>
 /// Implementation of Beresenham's algorithm. Includes `start` and `end` in the result.
@@ -47,12 +72,12 @@ void emplace_vectors(std::vector<mapgen::MapPoint>& in, const std::vector<glm::v
         in.emplace_back(src[i]);
 }
 
-mapgen::direction points_direction(const glm::vec2& a, const glm::vec2& b) {
+direction points_direction(const glm::vec2& a, const glm::vec2& b) {
     for (uint8_t i = 0; i < 8; i++)
         if (a + MapGen::neighbor_map[i] == b)
-            return mapgen::direction((i + 3) % 8); // +3 is the right offset
+            return direction((i + 3) % 8); // +3 is the right offset
 
-    return mapgen::direction(0);
+    return direction(0);
 }
 
 std::vector<mapgen::MapPoint> MapGen::generateMap(uint16_t len, const mapgen::Ellipse& ellipse_data, size_t seed) {
