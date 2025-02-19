@@ -76,7 +76,7 @@ private:
 	uint32_t textureOffset;
 	std::list<Model*>::iterator iterator;
 
-	static Textures* textures;
+	static Texture* textures;
 
 	friend Commands;
 	friend DebugScene;

@@ -35,14 +35,14 @@ public:
 
 	void SendBufferToMemory();
 
-	uint16_t getSize() { return data.size(); }
+	uint32_t getSize() { return data.size(); }
 	VkBuffer& getBuffer() { return buffer; }
 
 	void ClearBuffer();
 
     template <typename t>
     friend class UniformBuffer;
-    friend class Textures;
+    friend class Texture;
 };
 
 template<typename T>

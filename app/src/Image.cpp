@@ -109,7 +109,7 @@ void Image::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout 
     Commands::EndSingleTimeCommands(commandBuffer);
 }
 
-void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t& offset) {
+void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset) {
     VkCommandBuffer commandBuffer = Commands::BeginSingleTimeCommands();
 
     VkBufferImageCopy region{};
@@ -122,7 +122,7 @@ void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, ui
     region.imageSubresource.baseArrayLayer = 0;
     region.imageSubresource.layerCount = 1;
 
-    region.imageOffset = { 0, 0, 0 };
+    region.imageOffset = { imageOffset.first, imageOffset.second, 0};
     region.imageExtent = {
         width,
         height,
@@ -232,7 +232,7 @@ void Images::CreateImages(std::vector<std::pair<int, int>> dimentions, VkFormat 
 
 //Textures
 
-void Textures::CreateSampler(VkFilter oversamplingFilter, VkFilter undersamplingFilter) {
+void Texture::CreateSampler(VkFilter oversamplingFilter, VkFilter undersamplingFilter) {
     //Change maxAnisotropy to some value: min(value, properties.limit)
     VkPhysicalDeviceProperties properties{};
     vkGetPhysicalDeviceProperties(Device::getPhysicalDevice(), &properties);
@@ -261,7 +261,7 @@ void Textures::CreateSampler(VkFilter oversamplingFilter, VkFilter undersampling
 
 }
 
-void Textures::AddTexture(const char* texturePath) {
+void Texture::AddTexture(const char* texturePath) {
     int texWidth, texHeight, texChannels;
     stbi_uc* pixels = stbi_load(texturePath, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
     VkDeviceSize imageSize = texWidth * texHeight * 4;
@@ -270,14 +270,21 @@ void Textures::AddTexture(const char* texturePath) {
         throw std::runtime_error("failed to load texture image!");
     }
 
-    allTextureSize += imageSize;
-    size++;
+    VkPhysicalDeviceProperties deviceProperties;
+    vkGetPhysicalDeviceProperties(Device::getPhysicalDevice(), &deviceProperties);
+    VkDeviceSize reqAlignment = deviceProperties.limits.nonCoherentAtomSize;
 
-    textures.push_back(pixels);
-    dimentions.push_back({ texWidth, texHeight });
+    VkDeviceSize totalSize = (imageSize + reqAlignment - 1) & ~(reqAlignment - 1);
+
+
+    allTextureSize += totalSize;
+
+    textures.push_back({ pixels, allTextureSize - totalSize});
+    dimention = std::pair<int, int>(std::max(dimention.first, texWidth), dimention.second + texHeight );
+    dimensions.push_back({ texWidth, texHeight });
 }
 
-void Textures::SendTexturesToMemory() {
+void Texture::SendTexturesToMemory() {
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
 
@@ -285,29 +292,29 @@ void Textures::SendTexturesToMemory() {
 
     void* data;
     vkMapMemory(Device::getDevice(), stagingBufferMemory, 0, allTextureSize, 0, &data);
-    memcpy(data, textures.data(), static_cast<size_t>(allTextureSize));
+    for(int i = 0; i < textures.size(); i++)
+        memcpy(data, textures[i].first, static_cast<size_t>(dimensions[i].first * dimensions[i].second * 4));
     vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
 
     for (auto& pixels : textures)
-        stbi_image_free(pixels);
+        stbi_image_free(pixels.first);
+
+    CreateImage(dimention.first, dimention.second, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, textureMemory);
+
+    int32_t bufferOffset = 0;
+    int32_t heightOffset = 0;
+    Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    for (int i = 0; i < dimensions.size(); i++) {
+        Image::copyBufferToImage(stagingBuffer, image, dimensions[i].first, dimensions[i].second, static_cast<int32_t>(textures[i].second), {0, heightOffset});
+        bufferOffset += textures[i].second; // dimensions[i].first * dimensions[i].second * 4;
+        heightOffset = dimensions[i].second;
+    }
+    Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     textures.clear();
-    //
 
-    resize(dimentions.size());
-
-    std::vector<uint32_t> offsets;
-
-    Images::CreateImages(dimentions, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, images, textureMemory, offsets);
-
-    for (int i = 0; i < size; i++) {
-        Image::transitionImageLayout(images[i], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        Image::copyBufferToImage(stagingBuffer, images[i], static_cast<uint32_t>(dimentions[i].first), static_cast<uint32_t>(dimentions[i].second), offsets[i]);
-        Image::transitionImageLayout(images[i], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-    }
     vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
     vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
 
-    for (int i = 0; i < size; i++)
-        imageViews[i] = Images::CreateImageView(images[i], VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
+    imageView = Images::CreateImageView(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
 }

@@ -115,7 +115,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     uniform = new Uniform();
     uniform->AddUniforms(1);
-    uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, maxTextures);
+    uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
     uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
     std::vector<VkDescriptorSetLayout> descriptorSetLayout = uniform->BindUniforms();
 

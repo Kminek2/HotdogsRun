@@ -11,7 +11,6 @@ layout(location = 2) in mat4 model;
 layout(location = 6) in uint textOff;
 
 layout(location = 0) out vec2 fragTexCoord;
-layout(location = 1) out flat uint textureNum;
 
 
 void main() {
@@ -21,5 +20,5 @@ void main() {
     else if(gl_Position.z > 1)
         gl_Position.z = 1;
 
-    textureNum = textOff;
+    fragTexCoord = texCoord;// + textOff;
 }

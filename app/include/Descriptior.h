@@ -45,7 +45,7 @@ public:
         }
     }
 
-    void CreateDescriptorSets(const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const Textures& textures, const UniformBuffer<LightBufferStruct>& uniformLightStruct) {
+    void CreateDescriptorSets(const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const Texture& texture, const UniformBuffer<LightBufferStruct>& uniformLightStruct) {
         std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, Uniform::descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -58,13 +58,11 @@ public:
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
-        std::vector<VkDescriptorImageInfo> imageInfos(textures.size);
+        VkDescriptorImageInfo imageInfo;
 
-        for (size_t i = 0; i < textures.size; i++) {
-            imageInfos[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfos[i].imageView = textures.imageViews[i];
-            imageInfos[i].sampler = textures.sampler;
-        }
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        imageInfo.imageView = texture.imageView;
+        imageInfo.sampler = texture.sampler;
 
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -93,8 +91,8 @@ public:
             descriptorWrite[1].dstBinding = 1;
             descriptorWrite[1].dstArrayElement = 0;
             descriptorWrite[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descriptorWrite[1].descriptorCount = static_cast<uint32_t>(imageInfos.size());
-            descriptorWrite[1].pImageInfo = imageInfos.data();
+            descriptorWrite[1].descriptorCount = 1;
+            descriptorWrite[1].pImageInfo = &imageInfo;
 
             descriptorWrite[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrite[2].dstSet = descriptorSets[i];
@@ -110,10 +108,10 @@ public:
         }
     }
 
-    Descriptior(unsigned int MAX_FRAMES_IN_FLIGHT, const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const Textures& textures, const UniformBuffer<LightBufferStruct>& uniformLightBuffer) : MAX_FRAMES_IN_FLIGHT(MAX_FRAMES_IN_FLIGHT)
+    Descriptior(unsigned int MAX_FRAMES_IN_FLIGHT, const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const Texture& texture, const UniformBuffer<LightBufferStruct>& uniformLightBuffer) : MAX_FRAMES_IN_FLIGHT(MAX_FRAMES_IN_FLIGHT)
     {
         CreateDescriptorPool();
-        CreateDescriptorSets(uniformBuffer, textures, uniformLightBuffer);
+        CreateDescriptorSets(uniformBuffer, texture, uniformLightBuffer);
     };
 
     ~Descriptior() {

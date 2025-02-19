@@ -11,13 +11,10 @@ layout(location = 2) in mat4 model;
 layout(location = 6) in uint textOff;
 
 layout(location = 0) out vec2 fragTexCoord;
-layout(location = 1) out flat uint textureNum;
 
 
 void main() {
 
     gl_Position = ubo.proj * ubo.view * model * vec4(inPosition, 1.0);
-    fragTexCoord = texCoord;
-
-    textureNum = textOff;
+    fragTexCoord = texCoord;// + vec2(0, textOff);
 }

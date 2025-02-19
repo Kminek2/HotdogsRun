@@ -7,7 +7,7 @@ std::list<Model*> Model::createdModels;
 std::list<Model*> Model::createdUiModels;
 Buffer<Vertex>* Model::vertexBuffer = new Buffer<Vertex>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 Buffer<uint32_t>* Model::indexBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
-Textures* Model::textures = new Textures();
+Texture* Model::textures = new Texture();
 Buffer<uint32_t>* Model::textureOffBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 
 void Model::LoadModelFromFile(std::string name, std::string filePath, std::string texturePath)
@@ -132,7 +132,7 @@ Model::Model(std::vector<Vertex> verticies, std::vector<uint32_t> indices) {
 	this->vertexOffset = static_cast<uint32_t>(vertexBuffer->getSize());
 	this->indexOffset = static_cast<uint32_t>(indexBuffer->getSize());
 	this->indexSize = static_cast<uint32_t>(indices.size());
-	this->textureOffset = static_cast<uint32_t>(textures->size);
+	this->textureOffset = static_cast<uint32_t>(textures->dimention.second);
 
 	vertexBuffer->AddToBuffer(verticies);
 	indexBuffer->AddToBuffer(indices);

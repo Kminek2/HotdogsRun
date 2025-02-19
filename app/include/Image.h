@@ -19,7 +19,7 @@ struct Image
 
     static void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
 
-    static void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t& offset);
+    static void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset);
 };
 
 struct Images
@@ -36,13 +36,14 @@ struct Images
     static void CreateImages(std::vector<std::pair<int, int>> dimentions, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, std::vector<VkImage>& images, VkDeviceMemory& imageMemory, std::vector<uint32_t>& offsets);
 };
 
-struct Textures : Images {
+struct Texture : Image {
     VkDeviceMemory textureMemory;
     VkSampler sampler;
 
-    std::vector<stbi_uc*> textures;
-    std::vector<std::pair<int, int>> dimentions;
-    uint32_t allTextureSize = 0;
+    std::vector<std::pair<stbi_uc*, VkDeviceSize>> textures;
+    std::pair<int, int> dimention = {0, 0};
+    std::vector<std::pair<int, int>> dimensions;
+    size_t allTextureSize = 0;
 
     void CreateSampler(VkFilter oversamplingFilter = VK_FILTER_NEAREST, VkFilter undersamplingFilter = VK_FILTER_LINEAR);
 
