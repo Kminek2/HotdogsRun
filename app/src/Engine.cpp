@@ -37,12 +37,20 @@ void Engine::InitVulkan() {
         validationLayers = new ValidationLayers(enValidationLayers);
     swapChain = new SwapChain(WIDTH, HEIGHT);
     device = new Device();
+    std::cout << "Found matching device" << '\n';
     swapChain->CreateWholeSwapChain();
+    std::cout << "Created swapChain" << '\n';
     commands = new Commands();
     commands->CreateCommandBuffers(2);
+    std::cout << "Created command buffers" << '\n';
     application = new Application(WIDTH, HEIGHT, window);
+    std::cout << "Initialized application" << '\n';
     descriptor = new Descriptior(FRAMES_IN_FLIGHT, *application->camera->getBuffer(), *Model::textures, *LightObject::getBuffer());
+    std::cout << "Created descriptors" << '\n';
     CreateSyncObjects();
+    std::cout << "Created syncingObjects" << '\n';
+
+    std::cout << "Init succesfull" << "\n\n";
 }
 
 void Engine::MainLoop() {

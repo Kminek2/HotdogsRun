@@ -2,6 +2,7 @@
 #include "Device.h"
 #include <stdexcept>
 #include "FileReader.h"
+#include <iostream>
 
 Shader::Shader(const std::string filePath, VkShaderStageFlagBits shaderStage, VkSpecializationInfo& specializationInfo)
 {
@@ -12,7 +13,9 @@ Shader::Shader(const std::string filePath, VkShaderStageFlagBits shaderStage, Vk
 
 Shader::Shader(const std::string filePath, VkShaderStageFlagBits shaderStage)
 {
+    std::cout << "Reading from path " << filePath << '\n';
     shaderCode = FileReader::Read(filePath);
+    std::cout << "Read file " << filePath << '\n';
     shaderModule = CreateShaderModule(shaderCode);
     shaderStageInfo = CreatePipelineShaderStageCreateInfo(shaderModule, shaderStage);
 }

@@ -3,6 +3,7 @@
 #include "Queues.h"
 #include "Device.h"
 #include <algorithm>
+#include <iostream>
 
 VkSurfaceKHR SwapChain::surface;
 
@@ -66,9 +67,13 @@ void SwapChain::CreateSurface()
 void SwapChain::CreateWholeSwapChain() {
     
     CreateSwapChain();
+    std::cout << "Created swapChain\n";
     CreateImageViews();
+    std::cout << "Created swapChain Image Views\n";
     renderPass = new RenderPass(this);
+    std::cout << "Created render pass\n";
     CreateFrameBuffers();
+    std::cout << "Created frame buffers\n";
 }
 
 void SwapChain::CreateFrameBuffers() {
@@ -124,7 +129,6 @@ void SwapChain::CreateSwapChain() {
     if (vkCreateSwapchainKHR(Device::getDevice(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
         throw std::runtime_error("failed to create swap chain!");
     }
-
     vkGetSwapchainImagesKHR(Device::getDevice(), swapChain, &imageCount, nullptr);
     swapChainImages->resize(imageCount);
     vkGetSwapchainImagesKHR(Device::getDevice(), swapChain, &imageCount, swapChainImages->images.data());

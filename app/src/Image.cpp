@@ -276,11 +276,11 @@ void Texture::AddTexture(const char* texturePath) {
 
     VkDeviceSize totalSize = (imageSize + reqAlignment - 1) & ~(reqAlignment - 1);
 
-
+    
     allTextureSize += totalSize;
 
     textures.push_back({ pixels, allTextureSize - totalSize});
-    dimention = std::pair<int, int>(std::max(dimention.first, texWidth), dimention.second + texHeight );
+    dimention = std::pair<uint32_t, uint32_t>(std::max(dimention.first, static_cast<uint32_t>(texWidth)), dimention.second + texHeight );
     dimensions.push_back({ texWidth, texHeight });
 }
 
@@ -291,11 +291,11 @@ void Texture::SendTexturesToMemory() {
     Buffer<bool>::CreateBuffer(allTextureSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
     void* data;
-    vkMapMemory(Device::getDevice(), stagingBufferMemory, 0, allTextureSize, 0, &data);
-    for(int i = 0; i < textures.size(); i++)
+    for (int i = 0; i < textures.size(); i++) {
+        vkMapMemory(Device::getDevice(), stagingBufferMemory, textures[i].second, dimensions[i].first * dimensions[i].second * 4, 0, &data);
         memcpy(data, textures[i].first, static_cast<size_t>(dimensions[i].first * dimensions[i].second * 4));
-    vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
-
+        vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
+    }
     for (auto& pixels : textures)
         stbi_image_free(pixels.first);
 
@@ -307,7 +307,7 @@ void Texture::SendTexturesToMemory() {
     for (int i = 0; i < dimensions.size(); i++) {
         Image::copyBufferToImage(stagingBuffer, image, dimensions[i].first, dimensions[i].second, static_cast<int32_t>(textures[i].second), {0, heightOffset});
         bufferOffset += textures[i].second; // dimensions[i].first * dimensions[i].second * 4;
-        heightOffset = dimensions[i].second;
+        heightOffset += dimensions[i].second;
     }
     Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 

@@ -2,6 +2,7 @@
 #include <array>
 #include "SwapChain.h"
 #include "Device.h"
+#include <iostream>
 
 RenderPass::RenderPass(SwapChain* swapChain)
 {
@@ -91,10 +92,15 @@ RenderPass::RenderPass(SwapChain* swapChain)
         throw std::runtime_error("failed to create render pass!");
     }
 
+    std::cout << "Created render pass\n";
+
     mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this);
+    std::cout << "Created main pipeline\n";
     UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/main.frag.spv", 1, *this);
+    std::cout << "Created UI pipeline\n";
 
     CreateDepthResources();
+    std::cout << "Created depth image";
 }
 
 RenderPass::~RenderPass() {

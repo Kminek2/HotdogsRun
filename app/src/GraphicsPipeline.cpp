@@ -12,7 +12,10 @@
 #include "Model.h"
 
 GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass) {
+    std::cout << "Creating pipeline\n";
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
+
+    std::cout << "Loaded vertex shader\n";
 
     //texturesConst
     uint32_t maxTextures = 0;
@@ -33,6 +36,8 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
     specializationInfo.pData = &maxTextures;
 
     //
+
+    std::cout << "Preparing to load " << maxTextures << " textures\n";
 
     Shader fragmentShader(fragmentShaderPath, VK_SHADER_STAGE_FRAGMENT_BIT, specializationInfo);
 
