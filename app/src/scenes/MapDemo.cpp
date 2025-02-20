@@ -20,13 +20,19 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	__road road_segements = createRoadMap();
 
 	std::vector<MapPoint> map_points(generateMap(map_len, { a,b,min_offset,max_offset }, 42));
-	spreadMapPoints(map_points, 25.0f);
+	spreadMapPoints(map_points, 255.0f);
 
 	points.reserve(map_points.size());
 	
 	for (MapPoint point : map_points) {
-		points.emplace_back(road_segements[{point.in, point.out}]);
-		points[points.size() - 1]->transform->MoveTo({point.pos.x, point.pos.y, 0});
+		GameObject* road = nullptr;
+
+		std::cout << (int)point.in << ' ' << (int)point.out << '\n';
+
+		try { road = road_segements.at({ point.in, point.out }); }
+		catch (std::exception& e) { road = road_segements.at({ point.out, point.in }); }
+
+		points.emplace_back(road)->transform->MoveTo({ point.pos.x, 0, point.pos.y });
 	}
 	
 	return std::shared_ptr<Scene>(scene);

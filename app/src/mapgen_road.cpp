@@ -31,30 +31,38 @@ namespace mapgen {
         // ========= 45° TURNS (Acute) =========
         // Cardinal -> Diagonal (where the turn is only 45°)
         roadMap[{direction::N, direction::NE}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::NE, direction::N}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
-
+        roadMap[{direction::E, direction::NE}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
         roadMap[{direction::E, direction::SE}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::SE, direction::E}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
-
+        roadMap[{direction::S, direction::SE}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
         roadMap[{direction::S, direction::SW}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::SW, direction::S}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
-
+        roadMap[{direction::W, direction::SW}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
         roadMap[{direction::W, direction::NW}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::NW, direction::W}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
+        roadMap[{direction::N, direction::NW}] = new GameObject("zakretSkosOstry" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
 
         // ========= 135° TURNS (Obtuse) =========
         // Cardinal -> Diagonal (non-adjacent; 135° turn)
-        roadMap[{direction::N, direction::NW}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::NW, direction::N}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
+        roadMap[{direction::N, direction::SW}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::N, direction::SE}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::E, direction::NW}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::E, direction::SW}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::S, direction::NE}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::S, direction::NW}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::W, direction::NE}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::W, direction::SE}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
 
-        roadMap[{direction::E, direction::NE}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::NE, direction::E}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
+        // ========= 0° TURNS =========
+        // Diagonal -> Diagonal (no turn)
+        roadMap[{direction::NW, direction::NW}] = new GameObject("prostySkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::SE, direction::SE}] = new GameObject("prostySkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::NE, direction::NE}] = new GameObject("prostySkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::SW, direction::SW}] = new GameObject("prostySkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
 
-        roadMap[{direction::S, direction::SE}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::SE, direction::S}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
+        // Cardinal -> Cardinal (no turn)
+        roadMap[{direction::N, direction::N}] = new GameObject("prosta" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::E, direction::E}] = new GameObject("prosta" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::S, direction::S}] = new GameObject("prosta" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::W, direction::W}] = new GameObject("prosta" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
 
-        roadMap[{direction::W, direction::SW}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::SW, direction::W}] = new GameObject("zakretPolSkos" + type, { 0,0,0 }, { 0,180,0 }, { -1,1,1 });
 
         return roadMap;
     }

@@ -110,8 +110,10 @@ void mapgen::offsetMapPoints(std::vector<glm::vec2>& points, float offset) {
 }
 
 void mapgen::spreadMapPoints(std::vector<mapgen::MapPoint>& points, float spread) {
-    std::transform(points.begin(), points.end(), points.begin(), [&spread](mapgen::MapPoint& a) { a.pos *= spread; return a; });
+    for (auto& point : points)
+        point.pos *= spread;
 }
 void mapgen::offsetMapPoints(std::vector<mapgen::MapPoint>& points, float offset) {
-    std::transform(points.begin(), points.end(), points.begin(), [&offset](mapgen::MapPoint& a) { a.pos += glm::vec2(offset); return a; });
+    for (auto& point : points)
+        point.pos += glm::vec2(offset);
 }
