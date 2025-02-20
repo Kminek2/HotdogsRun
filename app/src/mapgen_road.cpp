@@ -3,7 +3,7 @@
 using mapgen::direction;
 
 namespace mapgen {
-    __road mapgen::createRoadMap(std::string type) {
+    __road createRoadMap(std::string type) {
         __road roadMap;
 
         // ========= STRAIGHT PIECES =========
