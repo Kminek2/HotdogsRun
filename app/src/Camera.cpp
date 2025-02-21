@@ -22,7 +22,7 @@ Camera::Camera(uint16_t frameNum, uint16_t width, uint16_t height)
 	if (view == Perspective)
 		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, Camera::render_distance);
 	else
-		cameraBufferStruct.proj = glm::ortho(-160.0f, 160.0f, -80.0f, 80.0f, 0.1f, Camera::render_distance);
+		cameraBufferStruct.proj = glm::ortho(-16.0f, 16.0f, -8.0f, 8.0f, 0.1f, Camera::render_distance);
 
 	cameraBufferStruct.proj[1][1] *= -1;
 	cameraBufferStruct.view = glm::lookAt(cameraTransform->position, cameraTransform->position + cameraTransform->front, cameraTransform->up);
@@ -38,7 +38,7 @@ void Camera::UpdateCamera(uint16_t width, uint16_t height)
 	if (view == Perspective)
 		cameraBufferStruct.proj = glm::perspective(glm::radians(45.0f), width / (float)height, 0.1f, Camera::render_distance);
 	else
-		cameraBufferStruct.proj = glm::ortho(-160.0f, 160.0f, -80.0f, 80.0f, 0.1f, Camera::render_distance);
+		cameraBufferStruct.proj = glm::ortho(-16.0f, 16.0f, -8.0f, 8.0f, 0.1f, Camera::render_distance);
 	cameraBufferStruct.proj[1][1] *= -1;
 	cameraBufferStruct.view = glm::lookAt(cameraTransform->position, cameraTransform->position + cameraTransform->front, cameraTransform->up);
 }

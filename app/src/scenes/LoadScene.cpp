@@ -20,10 +20,10 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 	//uiObj = new UiObject("arrow", {0, 0, 0}, glm::vec3(0, 90, 0), glm::vec3(0.05));
 
-	obj = new GameObject("f1car", { 50, 50, 0 }, glm::vec3(0, 90, 0));
+	obj = new GameObject("f1car", { 50, 50, 0 }, glm::vec3(0, 0, 0));
 	obj2 = new GameObject("prostaAsfalt", { 0, 0, 0 });
 
-	uiObj = new UiObject("f1car", {0, 0, 0}, glm::vec3(0, 90, 0), glm::vec3(0.05));
+	uiObj = new UiObject("f1car", {0, 0.5, 0}, glm::vec3(0, 0, 0), glm::vec3(0.05));
 
 	return std::shared_ptr<Scene>(scene);
 }

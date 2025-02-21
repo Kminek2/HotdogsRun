@@ -20,7 +20,7 @@ class DebugScene;
 struct Model
 {
 
-	static void LoadModelFromFile(std::string name, std::string filePath, std::string texturePath);
+	static void LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords);
 
 	static Model* Create(std::string model);
 
@@ -77,6 +77,8 @@ private:
 	std::list<Model*>::iterator iterator;
 
 	static Texture* textures;
+
+	static const glm::mat4 startRot;
 
 	friend Commands;
 	friend DebugScene;

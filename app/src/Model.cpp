@@ -1,6 +1,9 @@
 #include "Model.h"
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <objLoader/tiny_obj_loader.h>
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 std::map<std::string, Model*> Model::loadedModels;
 std::list<Model*> Model::createdModels;
@@ -9,8 +12,9 @@ Buffer<Vertex>* Model::vertexBuffer = new Buffer<Vertex>(VK_BUFFER_USAGE_VERTEX_
 Buffer<uint32_t>* Model::indexBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
 Texture* Model::textures = new Texture();
 Buffer<uint32_t>* Model::textureOffBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+const glm::mat4 Model::startRot = glm::rotate(glm::mat4(1), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-void Model::LoadModelFromFile(std::string name, std::string filePath, std::string texturePath)
+void Model::LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords)
 {
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
@@ -25,7 +29,6 @@ void Model::LoadModelFromFile(std::string name, std::string filePath, std::strin
 
 	std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
-
 	for (const auto& shape : shapes) {
 		for (const auto& index : shape.mesh.indices) {
 			Vertex vertex{};
@@ -35,6 +38,9 @@ attrib.vertices[3 * index.vertex_index + 0],
 attrib.vertices[3 * index.vertex_index + 1],
 attrib.vertices[3 * index.vertex_index + 2]
 			};
+
+			if(swichYZCoords)
+				vertex.pos = startRot * glm::vec4(vertex.pos, 0);
 
 			vertex.texCoord = {
 attrib.texcoords[2 * index.texcoord_index + 0],

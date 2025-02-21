@@ -15,6 +15,7 @@ layout(location = 0) out vec2 fragTexCoord;
 
 void main() {
     gl_Position = model * vec4(inPosition, 1.0);
+    gl_Position.y = - gl_Position.y;
     if(gl_Position.z < 0)
         gl_Position.z = 0;
     else if(gl_Position.z > 1)

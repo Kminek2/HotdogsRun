@@ -26,7 +26,7 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 
 	for(const auto& entry : fs::directory_iterator("models_obj_test")) {
 		std::cout << entry.path().filename().stem().string() << " : " << entry.path().string() << ", " << "textures/" + entry.path().filename().stem().string() + ".png" << '\n';
-		Model::LoadModelFromFile(entry.path().filename().stem().string(), entry.path().string(), "textures/" + entry.path().filename().stem().string() + ".png");
+		Model::LoadModelFromFile(entry.path().filename().stem().string(), entry.path().string(), "textures/" + entry.path().filename().stem().string() + ".png", true);
 	}
 
 	Model::SendBuffers();
