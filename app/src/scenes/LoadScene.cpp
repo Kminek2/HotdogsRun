@@ -15,10 +15,8 @@ std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 std::shared_ptr<Scene> LoadScene::Init() {
 	Scene* scene = new Scene(this);
 
-	//obj = new GameObject("arrow", { 50, 50, 0 }, glm::vec3(0, 90, 0));
-	//obj2 = new GameObject("3x3x3", { 0, 0, 0 });
-
-	//uiObj = new UiObject("arrow", {0, 0, 0}, glm::vec3(0, 90, 0), glm::vec3(0.05));
+	qc = new QuickCamera();
+	qc->_sm(100.0f);
 
 	obj = new GameObject("f1car", { 50, 50, 0 }, glm::vec3(0, 0, 0));
 	obj2 = new GameObject("prostaAsfalt", { 0, 0, 0 });
@@ -30,8 +28,8 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 const float cam_speed = 100.0f;
 void LoadScene::Update() {
-	qc::HandleRotate();
-	qc::HandleMove(100.0f);
+	qc->HandleRotate();
+	qc->HandleMove();
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
 		Application::LoadScene("debug");
@@ -44,4 +42,5 @@ void LoadScene::Update() {
 }
 
 void LoadScene::UnLoad() {
+	delete qc;
 }

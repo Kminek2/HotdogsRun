@@ -52,16 +52,16 @@ namespace mapgen {
 
         // ========= 0° TURNS =========
         // Diagonal -> Diagonal (no turn)
-        roadMap[{direction::NW, direction::NW}] = new GameObject("prostySkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::SE, direction::SE}] = new GameObject("prostySkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::NE, direction::NE}] = new GameObject("prostySkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::SW, direction::SW}] = new GameObject("prostySkos" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::NW, direction::NW}] = new GameObject("arrow", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::SE, direction::SE}] = new GameObject("arrow", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::NE, direction::NE}] = new GameObject("arrow", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::SW, direction::SW}] = new GameObject("arrow", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
 
         // Cardinal -> Cardinal (no turn)
-        roadMap[{direction::N, direction::N}] = new GameObject("prosta" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::E, direction::E}] = new GameObject("prosta" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::S, direction::S}] = new GameObject("prosta" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
-        roadMap[{direction::W, direction::W}] = new GameObject("prosta" + type, { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::N, direction::N}] = new GameObject("debug_star", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::E, direction::E}] = new GameObject("debug_star", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::S, direction::S}] = new GameObject("debug_star", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
+        roadMap[{direction::W, direction::W}] = new GameObject("debug_star", { 0,0,0 }, { 0,0,0 }, { 1,1,1 });
 
 
         return roadMap;

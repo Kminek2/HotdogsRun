@@ -3,6 +3,7 @@
 #include "SceeneScript.h"
 #include "GameObject.h"
 #include "Model.h"
+#include "QuickCamera.h"
 
 #include <utility>
 #include <vector>
@@ -12,6 +13,7 @@ class MapDemo :
 {
 private:
 	std::vector<GameObject*> points;
+	QuickCamera* qc;
 
 public:
 	std::shared_ptr<Scene> Init() override;

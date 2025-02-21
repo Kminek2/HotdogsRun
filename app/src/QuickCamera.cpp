@@ -1,28 +1,42 @@
 #include "QuickCamera.h"
 
-void qc::HandleRotate(float sx, float sy) { Camera::main->cameraTransform->Rotate(Input::mouseOff.x * sx, Input::mouseOff.y * sy); }
-void qc::HandleRotate(float s) { qc::HandleRotate(s, s); }
+void QuickCamera::HandleRotate() { Camera::main->cameraTransform->Rotate(Input::mouseOff.x * srx, Input::mouseOff.y * sry); }
 
-void qc::HandleMove(float s, std::array<uint16_t, 7> mappings) {
+void QuickCamera::HandleMove() {
 	glm::vec3 movement = glm::vec3(0);
-	if (Input::getKeyPressed(mappings[6])) s *= 2; // sprint
+	if (Input::getKeyPressed(mappings[6])) sm *= 2; // sprint
 
-	if (Input::getKeyPressed(mappings[0])) movement += glm::vec3(Time::deltaTime * s, 0, 0); // front
-	if (Input::getKeyPressed(mappings[1])) movement += glm::vec3(Time::deltaTime * -s, 0, 0); // back
+	if (Input::getKeyPressed(mappings[0])) movement += glm::vec3(Time::deltaTime * sm, 0, 0);  // front
+	if (Input::getKeyPressed(mappings[1])) movement += glm::vec3(Time::deltaTime * -sm, 0, 0); // back
 	
-	if (Input::getKeyPressed(mappings[2])) { // left
-		movement += glm::vec3(0, Time::deltaTime * -s, 0);
-	}
-	if (Input::getKeyPressed(mappings[3])) { // right
-		movement += glm::vec3(0, Time::deltaTime * s, 0);
-	}
+	if (Input::getKeyPressed(mappings[2])) movement += glm::vec3(0, Time::deltaTime * -sm, 0); // left
+	if (Input::getKeyPressed(mappings[3])) movement += glm::vec3(0, Time::deltaTime * sm, 0);  // right
 
-	if (Input::getKeyPressed(mappings[4])) { // up
-		movement += glm::vec3(0, 0, Time::deltaTime * s);
-	}
-	if (Input::getKeyPressed(mappings[5])) { // down
-		movement += glm::vec3(0, 0, Time::deltaTime * -s);
-	}
+	if (Input::getKeyPressed(mappings[4])) movement += glm::vec3(0, 0, Time::deltaTime * sm);  // up
+	if (Input::getKeyPressed(mappings[5])) movement += glm::vec3(0, 0, Time::deltaTime * -sm); // down
 
 	Camera::main->cameraTransform->Translate(movement);
+}
+
+float QuickCamera::_srx(float srx) {
+	if (srx == -1) return this->srx;
+	return this->srx = srx;
+}
+float QuickCamera::_sry(float sry) {
+	if (sry == -1) return this->sry;
+	return this->sry = sry;
+}
+float QuickCamera::_sm(float sm) {
+	if (sm == -1) return this->sm;
+	return this->sm = sm;
+}
+bool QuickCamera::_sr(float sr) {
+	if (sr == -1) return srx == sry;
+	srx = sry = sr;
+	return true;
+}
+
+__keybinds QuickCamera::_mappings(__keybinds mappings) {
+	if (mappings == __keybinds({ 0,0,0,0,0,0,0 })) return this->mappings;
+	return this->mappings = mappings;
 }

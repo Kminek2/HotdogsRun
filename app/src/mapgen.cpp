@@ -43,7 +43,7 @@ void emplace_vectors(std::vector<mapgen::MapPoint>& in, const std::vector<glm::v
 
 direction points_direction(const glm::vec2& a, const glm::vec2& b) {
     for (uint8_t i = 0; i < 8; i++)
-        if (a + mapgen::neighbor_map[i] == b)
+        if ((a + mapgen::neighbor_map[i]) == b)
             return direction((i + 3) % 8); // +3 is the right offset
 
     return direction(0);
