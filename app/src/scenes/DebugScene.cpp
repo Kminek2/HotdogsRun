@@ -10,7 +10,7 @@
 #include <iostream>
 
 const std::vector<std::string> models = {
-	"racing_car", "3x3x3", "arrow", "ska"
+	"racing_car", "racing_car", "arrow", "racing_car"
 };
 
 std::shared_ptr<Scene> DebugScene::Init() {
