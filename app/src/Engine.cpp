@@ -74,9 +74,9 @@ void Engine::Cleanup() {
 
     delete swapChain;
 
-    delete commands;
-
     delete descriptor;
+
+    delete commands;
 
     delete device;
 

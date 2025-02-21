@@ -13,6 +13,7 @@ private:
 	static UniformBuffer<LightBufferStruct>* lightBuffer;
 
 	static UniformBuffer<LightBufferStruct>* getBuffer() { return lightBuffer; }
+	static void Unload();
 	friend Engine;
 	friend Application;
 };

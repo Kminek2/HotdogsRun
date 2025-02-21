@@ -172,6 +172,9 @@ struct Transform {
 		UpdateMatrix();
 	}
 
+	static void Unload() {
+		delete transformBuffer;
+	}
 private:
 	/// <summary>
 	/// Takes in a rotation vector in degrees, and clamps each angle to [0, 360)

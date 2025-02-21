@@ -318,3 +318,12 @@ void Texture::SendTexturesToMemory() {
 
     imageView = Images::CreateImageView(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
 }
+
+Texture::~Texture()
+{
+    vkDestroySampler(Device::getDevice(), sampler, nullptr);
+    vkDestroyImageView(Device::getDevice(), imageView, nullptr);
+    vkDestroyImage(Device::getDevice(), image, nullptr);
+    vkFreeMemory(Device::getDevice(), textureMemory, nullptr);
+
+}

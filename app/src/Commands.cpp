@@ -24,7 +24,6 @@ Commands::Commands() {
 }
 
 Commands::~Commands() {
-    delete Transform::transformBuffer;
     vkDestroyCommandPool(Device::getDevice(), commandPool, nullptr);
 }
 

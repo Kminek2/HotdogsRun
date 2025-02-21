@@ -34,6 +34,10 @@ std::vector<VkDescriptorSetLayout> Uniform::BindUniforms()
     return { descriptorSetLayout };
 }
 
+std::vector<VkDescriptorSetLayout> Uniform::GetUnfiorms() {
+    return { descriptorSetLayout };
+}
+
 Uniform::~Uniform() {
     vkDestroyDescriptorSetLayout(Device::getDevice(), descriptorSetLayout, nullptr);
 }

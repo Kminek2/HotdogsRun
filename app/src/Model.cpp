@@ -132,6 +132,9 @@ void Model::SendBuffers() {
 
 void Model::Unload() {
 	delete vertexBuffer;
+	delete indexBuffer;
+	delete textureOffBuffer;
+	delete textures;
 }
 
 Model::Model(std::vector<Vertex> verticies, std::vector<uint32_t> indices) {

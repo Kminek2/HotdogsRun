@@ -105,6 +105,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
 
 RenderPass::~RenderPass() {
     delete mainPipeline;
+    delete UIPipeline;
     vkDestroyRenderPass(Device::getDevice(), renderPass, nullptr);
 
     DestroyDepthResource();

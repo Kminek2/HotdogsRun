@@ -50,4 +50,6 @@ struct Texture : Image {
     void AddTexture(const char* texturePath);
 
     void SendTexturesToMemory();
+
+    ~Texture();
 };

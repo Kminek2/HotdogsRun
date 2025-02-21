@@ -11,6 +11,8 @@
 
 #include "Model.h"
 
+Uniform* GraphicsPipeline::uniform = nullptr;
+
 GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass) {
     std::cout << "Creating pipeline\n";
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
@@ -118,11 +120,15 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
     dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
     dynamicState.pDynamicStates = dynamicStates.data();
 
-    uniform = new Uniform();
-    uniform->AddUniforms(1);
-    uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
-    uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
-    std::vector<VkDescriptorSetLayout> descriptorSetLayout = uniform->BindUniforms();
+    std::vector<VkDescriptorSetLayout> descriptorSetLayout;
+    if (uniform == nullptr) {
+        uniform = new Uniform();
+        uniform->AddUniforms(1);
+        uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
+        uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
+        descriptorSetLayout = uniform->BindUniforms();
+    }
+    descriptorSetLayout = uniform->GetUnfiorms();
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -172,7 +178,10 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 }
 
 GraphicsPipeline::~GraphicsPipeline() {
-    delete uniform;
+    if (uniform != nullptr) {
+        delete uniform;
+        uniform = nullptr;
+    }
     vkDestroyPipeline(Device::getDevice(), graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(Device::getDevice(), pipelineLayout, nullptr);
 }

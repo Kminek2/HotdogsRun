@@ -51,6 +51,8 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 
 Application::~Application() {
 	Model::Unload();
+	Transform::Unload();
+	LightObject::Unload();
 	delete camera;
 }
 
