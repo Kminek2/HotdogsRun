@@ -6,6 +6,9 @@
 #include "Input.h"
 #include "AppTime.h"
 
+// for convinience
+#include "Application.h"
+
 class Scene;
 
 class SceeneScript

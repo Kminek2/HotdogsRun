@@ -25,7 +25,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	__road road_segements = createRoadMap();
 
 	std::vector<MapPoint> map_points(generateMap(map_len, { a,b,min_offset,max_offset }, 42));
-	spreadMapPoints(map_points, 5.0f);
+	spreadMapPoints(map_points, 50.0f);
 
 	points.reserve(map_points.size());
 	
@@ -46,6 +46,9 @@ std::shared_ptr<Scene> MapDemo::Init() {
 void MapDemo::Update() {
 	qc->HandleRotate();
 	qc->HandleMove();
+
+	if (Input::getKeyPressed(GLFW_KEY_R))
+		Application::LoadScene("map_demo");
 }
 
 void MapDemo::UnLoad() {

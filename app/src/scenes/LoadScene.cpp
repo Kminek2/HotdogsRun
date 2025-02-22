@@ -3,7 +3,6 @@
 #include "scenes/MapDemo.h"
 
 #include "Scene.h"
-#include "Application.h"
 #include "QuickCamera.h"
 
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
