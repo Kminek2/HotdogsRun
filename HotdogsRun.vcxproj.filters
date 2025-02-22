@@ -296,6 +296,9 @@
     <ClInclude Include="app\include\mapgen_road.hpp">
       <Filter>Header Files\app</Filter>
     </ClInclude>
+    <ClInclude Include="app\include\ObjectSchema.hpp">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="app\shaders\compile.bat">

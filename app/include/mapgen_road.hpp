@@ -6,7 +6,7 @@
 namespace mapgen {
 	enum direction { N, NE, E, SE, S, SW, W, NW };
 
-using __road = std::map<std::pair<mapgen::direction, mapgen::direction>, GameObject*>;
+	using __road = std::map<std::pair<mapgen::direction, mapgen::direction>, ObjectSchema*>;
 
 	__road createRoadMap(std::string type = "Asfalt");
 }

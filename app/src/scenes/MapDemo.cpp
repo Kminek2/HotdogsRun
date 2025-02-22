@@ -30,16 +30,12 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	points.reserve(map_points.size());
 	
 	for (MapPoint point : map_points) {
-		GameObject* road = nullptr;
+		ObjectSchema* data = nullptr;
 
-		try { road = road_segements.at({ point.in, point.out }); }
-		catch (std::exception& e) { road = road_segements.at({ point.out, point.in }); } // if this crashes out, then something is REALLY wrong
+		try { data = road_segements.at({ point.in, point.out }); }
+		catch (std::exception& e) { data = road_segements.at({ point.out, point.in }); } // if this crashes out, then something is REALLY wrong
 
-		road->transform->MoveTo({ point.pos.x, point.pos.y, 0 });
-
-		//road = new GameObject("debug_star", { point.pos.x,point.pos.y,0 });
-
-		points.push_back(road);
+		points.push_back(new GameObject(data, { point.pos.x, point.pos.y, 0 }));
 	}
 	
 	road_segements.clear();

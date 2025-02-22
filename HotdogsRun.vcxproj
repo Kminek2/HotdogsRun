@@ -83,6 +83,7 @@
     <ClInclude Include="app\include\mapgen.h" />
     <ClInclude Include="app\include\mapgen_road.hpp" />
     <ClInclude Include="app\include\Model.h" />
+    <ClInclude Include="app\include\ObjectSchema.hpp" />
     <ClInclude Include="app\include\ObjectScript.h" />
     <ClInclude Include="app\include\objects\CameraLockScript.h" />
     <ClInclude Include="app\include\objects\CarMovement.h" />
