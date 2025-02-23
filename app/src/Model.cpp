@@ -13,6 +13,8 @@ Buffer<uint32_t>* Model::indexBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_INDE
 Texture* Model::textures = new Texture();
 Buffer<uint32_t>* Model::textureOffBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 const glm::mat4 Model::startRot = glm::rotate(glm::mat4(1), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+std::map<Model*, std::pair<std::list<Model*>::iterator, uint32_t>> Model::modelsIndtaces;
+std::map<Model*, std::pair<std::list<Model*>::iterator, uint32_t>> Model::uiModelsIndtaces;
 
 void Model::LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords)
 {
@@ -63,13 +65,23 @@ attrib.texcoords[2 * index.texcoord_index + 0],
 
 }
 
-Model* Model::Create(std::string model) {
+std::pair<Model*, uint32_t> Model::Create(std::string model) {
 	Model* newModel;
 
 	try { newModel = new Model(*loadedModels.at(model), createdModels.end()); }
 	catch (std::out_of_range) { throw std::runtime_error("Model not found"); }
 
-	createdModels.push_back(newModel);
+	unsigned int index;
+	if (!modelsIndtaces.contains(loadedModels[model])) {
+		index = std::distance(createdModels.begin(), createdModels.end());
+		createdModels.push_back(newModel);
+		modelsIndtaces[loadedModels[model]] = { std::prev(createdModels.end()), 1 };
+	}
+	else {
+		index = std::distance(createdModels.begin(), modelsIndtaces[loadedModels[model]].first);
+		createdModels.insert(modelsIndtaces[loadedModels[model]].first, newModel);
+		modelsIndtaces[loadedModels[model]].second++;
+	}
 	newModel->iterator = std::next(createdModels.end(), -1);
 
 	textureOffBuffer->ClearBuffer();
@@ -79,16 +91,26 @@ Model* Model::Create(std::string model) {
 		textureOffBuffer->AddToBuffer(model->textureOffset);
 
 	textureOffBuffer->SendBufferToMemory();
-	return newModel;
+	return { newModel, index };
 }
 
-Model* Model::CreateUI(std::string model) {
+std::pair<Model*, uint32_t> Model::CreateUI(std::string model) {
 	Model* newModel;
 
 	try { newModel = new Model(*loadedModels.at(model), createdUiModels.end()); }
 	catch (std::out_of_range) { throw std::runtime_error("Model not found"); }
 
-	createdUiModels.push_back(newModel);
+	unsigned int index;
+	if (!uiModelsIndtaces.contains(loadedModels[model])) {
+		index = std::distance(createdModels.begin(), createdModels.end());
+		createdUiModels.push_back(newModel);
+		uiModelsIndtaces[loadedModels[model]] = { std::prev(createdUiModels.end()), 1 };
+	}
+	else {
+		index = std::distance(createdUiModels.begin(), uiModelsIndtaces[loadedModels[model]].first);
+		createdUiModels.insert(uiModelsIndtaces[loadedModels[model]].first, newModel);
+		uiModelsIndtaces[loadedModels[model]].second++;
+	}
 	newModel->iterator = std::next(createdUiModels.end(), -1);
 	newModel->uiModel = true;
 
@@ -100,7 +122,7 @@ Model* Model::CreateUI(std::string model) {
 
 	textureOffBuffer->SendBufferToMemory();
 
-	return newModel;
+	return { newModel, index };
 }
 
 void Model::Delete() {

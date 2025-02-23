@@ -92,11 +92,10 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
 
-        for (int i = 0; i < Model::createdModels.size(); i++)
-        {
-            std::list<Model*>::iterator iterator;
-            iterator = std::next(Model::createdModels.begin(), i);
-            vkCmdDrawIndexed(commandBuffer, (*iterator)->indexSize, 1, (*iterator)->indexOffset, (*iterator)->vertexOffset, i);
+        uint32_t instanceOff = 0;
+        for (const auto& instance : Model::modelsIndtaces) {
+            vkCmdDrawIndexed(commandBuffer, instance.first->indexSize, instance.second.second, instance.first->indexOffset, instance.first->vertexOffset, instanceOff);
+            instanceOff += instance.second.second;
         }
 
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
@@ -109,12 +108,9 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
 
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
-
-        for (int i = 0; i < Model::createdUiModels.size(); i++)
-        {
-            std::list<Model*>::iterator iterator;
-            iterator = std::next(Model::createdUiModels.begin(), i);
-            vkCmdDrawIndexed(commandBuffer, (*iterator)->indexSize, 1, (*iterator)->indexOffset, (*iterator)->vertexOffset, i + Model::createdModels.size());
+        for (const auto& instance : Model::modelsIndtaces) {
+            vkCmdDrawIndexed(commandBuffer, instance.first->indexSize, instance.second.second, instance.first->indexOffset, instance.first->vertexOffset, instanceOff);
+            instanceOff += instance.second.second;
         }
     }
 
