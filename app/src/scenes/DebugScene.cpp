@@ -64,7 +64,7 @@ void DebugScene::Update() {
 	if (Input::getKeyPressed(GLFW_KEY_C))
 		objs[0]->transform->Rotate(glm::vec3(0.0f, 0.0f, cam_speed * Time::deltaTime));
 
-	std::cout << (Collisions::checkCollision(*objs[0], *objs[1]) ? "YES!\n" : "NO\n");
+	//std::cout << (Collisions::checkCollision(*objs[0], *objs[1]) ? "YES!\n" : "NO\n");
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
 		Application::LoadScene("debug");
