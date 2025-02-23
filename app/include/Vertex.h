@@ -13,6 +13,7 @@
 struct Vertex {
     glm::vec3 pos;
     glm::vec2 texCoord;
+    glm::vec3 normal;
 
     static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 0) {
         VkVertexInputBindingDescription bindingDescription{};
@@ -23,7 +24,7 @@ struct Vertex {
     }
 
     static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions(uint16_t binding = 0, uint16_t location = 0) {
-        std::vector<VkVertexInputAttributeDescription> attributeDescriptions(2);
+        std::vector<VkVertexInputAttributeDescription> attributeDescriptions(3);
 
         attributeDescriptions[0].binding = binding;
         attributeDescriptions[0].location = location;
@@ -34,19 +35,25 @@ struct Vertex {
         attributeDescriptions[1].location = location + 1;
         attributeDescriptions[1].format = VK_FORMAT_R32G32_SFLOAT;
         attributeDescriptions[1].offset = offsetof(Vertex, texCoord);
+
+        attributeDescriptions[2].binding = binding;
+        attributeDescriptions[2].location = location + 2;
+        attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[2].offset = offsetof(Vertex, normal);
         return attributeDescriptions;
     }
 
     bool operator==(const Vertex& other) const {
-        return pos == other.pos && texCoord == other.texCoord;
+        return pos == other.pos && texCoord == other.texCoord && normal == other.normal;
     }
 };
 
 namespace std {
     template<> struct hash<Vertex> {
         size_t operator()(Vertex const& vertex) const {
-            return (hash<glm::vec3>()(vertex.pos) ^
-                (hash<glm::vec2>()(vertex.texCoord) << 1));
+            return ((hash<glm::vec3>()(vertex.pos) ^
+                (hash<glm::vec3>()(vertex.normal) << 1)) >> 1) ^
+                (hash<glm::vec2>()(vertex.texCoord) << 1);
         }
     };
 }

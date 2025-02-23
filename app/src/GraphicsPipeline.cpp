@@ -47,8 +47,8 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     std::vector<VkVertexInputBindingDescription> bindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2)};
     std::vector<VkVertexInputAttributeDescription> attributeDescriptions = Vertex::GetAttributeDescriptions(0);
-    std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 2);
-    VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 6);
+    std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
+    VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 7);
     attributeDescriptions.insert(attributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
     attributeDescriptions.push_back(textureDescriptions);
 
