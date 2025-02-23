@@ -4,16 +4,18 @@ void QuickCamera::HandleRotate() { Camera::main->cameraTransform->Rotate(Input::
 
 void QuickCamera::HandleMove() {
 	glm::vec3 movement = glm::vec3(0);
-	if (Input::getKeyPressed(mappings[6])) sm *= 2; // sprint
 
-	if (Input::getKeyPressed(mappings[0])) movement += glm::vec3(Time::deltaTime * sm, 0, 0);  // front
-	if (Input::getKeyPressed(mappings[1])) movement += glm::vec3(Time::deltaTime * -sm, 0, 0); // back
+	float _sm = sm;
+	if (Input::getKeyPressed(mappings[6])) _sm *= 2; // sprint
+
+	if (Input::getKeyPressed(mappings[0])) movement += glm::vec3(Time::deltaTime *  _sm, 0, 0);  // front
+	if (Input::getKeyPressed(mappings[1])) movement += glm::vec3(Time::deltaTime * -_sm, 0, 0); // back
 	
-	if (Input::getKeyPressed(mappings[2])) movement += glm::vec3(0, Time::deltaTime * -sm, 0); // left
-	if (Input::getKeyPressed(mappings[3])) movement += glm::vec3(0, Time::deltaTime * sm, 0);  // right
+	if (Input::getKeyPressed(mappings[2])) movement += glm::vec3(0, Time::deltaTime * -_sm, 0); // left
+	if (Input::getKeyPressed(mappings[3])) movement += glm::vec3(0, Time::deltaTime *  _sm, 0);  // right
 
-	if (Input::getKeyPressed(mappings[4])) movement += glm::vec3(0, 0, Time::deltaTime * sm);  // up
-	if (Input::getKeyPressed(mappings[5])) movement += glm::vec3(0, 0, Time::deltaTime * -sm); // down
+	if (Input::getKeyPressed(mappings[4])) movement += glm::vec3(0, 0, Time::deltaTime *  _sm);  // up
+	if (Input::getKeyPressed(mappings[5])) movement += glm::vec3(0, 0, Time::deltaTime * -_sm); // down
 
 	Camera::main->cameraTransform->Translate(movement);
 }
