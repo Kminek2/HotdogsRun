@@ -4,6 +4,7 @@
 #include "SwapChain.h"
 
 #include <set>
+#include <vector>
 
 VkDevice Device::device;
 VkPhysicalDevice Device::physicalDevice;
@@ -32,16 +33,33 @@ void Device::PickPhysicalDevice() {
     std::vector<VkPhysicalDevice> devices(deviceCount);  //zmieniæ na rêczny wybór lub sutability check przy s³abej wydajnoœci
     vkEnumeratePhysicalDevices(Engine::instance, &deviceCount, devices.data());
 
+    std::pair<uint32_t, VkPhysicalDevice> scores {0, nullptr};
+
     for (const auto& device : devices) {
         if (isDeviceSuitable(device)) {
-            physicalDevice = device;
-            break;
+            if (scores.first < GetScore(device))
+                scores = { GetScore(device), device };
         }
     }
+
+    physicalDevice = scores.second;
 
     if (physicalDevice == VK_NULL_HANDLE) {
         throw std::runtime_error("failed to find a suitable GPU!");
     }
+}
+
+uint32_t Device::GetScore(VkPhysicalDevice device) {
+    uint32_t score = 1;
+
+    VkPhysicalDeviceProperties deviceProperites;
+    vkGetPhysicalDeviceProperties(device, &deviceProperites);
+
+    if (deviceProperites.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+        score += 1000;
+    }
+
+    return score;
 }
 
 bool Device::isDeviceSuitable(VkPhysicalDevice device) {

@@ -16,6 +16,7 @@ private:
 
 	void PickPhysicalDevice();
 	static bool isDeviceSuitable(VkPhysicalDevice device);
+	static uint32_t GetScore(VkPhysicalDevice device);
 	static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 
 	void CreateLogicalDevice();
