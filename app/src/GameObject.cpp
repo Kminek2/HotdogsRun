@@ -3,7 +3,7 @@
 bool GameObject::deletingAll = false;
 std::list<GameObject*> GameObject::createdGameObject;
 
-GameObject::GameObject(std::string model, bool, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
+GameObject::GameObject(int, std::string model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
 	std::pair<Model*, uint32_t> newModel = Model::CreateUI(model);
 	this->model = newModel.first;
 

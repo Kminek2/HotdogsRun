@@ -94,7 +94,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
 
         uint32_t instanceOff = 0;
         for (const auto& instance : Model::modelsIndtaces) {
-            vkCmdDrawIndexed(commandBuffer, instance.first->indexSize, instance.second.second, instance.first->indexOffset, instance.first->vertexOffset, instanceOff);
+            vkCmdDrawIndexed(commandBuffer, (*instance.second.first)->indexSize, instance.second.second, (*instance.second.first)->indexOffset, (*instance.second.first)->vertexOffset, instanceOff);
             instanceOff += instance.second.second;
         }
 
@@ -108,8 +108,8 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
 
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
-        for (const auto& instance : Model::modelsIndtaces) {
-            vkCmdDrawIndexed(commandBuffer, instance.first->indexSize, instance.second.second, instance.first->indexOffset, instance.first->vertexOffset, instanceOff);
+        for (const auto& instance : Model::uiModelsIndtaces) {
+            vkCmdDrawIndexed(commandBuffer, (*instance.second.first)->indexSize, instance.second.second, (*instance.second.first)->indexOffset, (*instance.second.first)->vertexOffset, instanceOff);
             instanceOff += instance.second.second;
         }
     }
