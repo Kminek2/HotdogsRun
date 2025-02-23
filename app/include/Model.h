@@ -8,6 +8,7 @@
 #include <iterator>
 #include <string>
 #include <list>
+#include <map>
 
 #include <iostream>
 
@@ -22,9 +23,9 @@ struct Model
 
 	static void LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords);
 
-	static Model* Create(std::string model);
+	static std::pair<Model*, uint32_t> Create(std::string model);
 
-	static Model* CreateUI(std::string model);
+	static std::pair<Model*, uint32_t> CreateUI(std::string model);
 
 	void Delete();
 
@@ -65,6 +66,8 @@ private:
 	static std::map<std::string, Model*> loadedModels;
 	static std::list<Model*> createdModels;
 	static std::list<Model*> createdUiModels;
+	static std::map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> modelsIndtaces;
+	static std::map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> uiModelsIndtaces;
 
 	static Buffer<Vertex>* vertexBuffer;
 	static Buffer<uint32_t>* indexBuffer;
@@ -75,6 +78,7 @@ private:
 	uint32_t indexSize;
 	uint32_t textureOffset;
 	std::list<Model*>::iterator iterator;
+	std::string modelName;
 
 	static Texture* textures;
 

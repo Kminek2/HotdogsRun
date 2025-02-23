@@ -3,24 +3,26 @@
 bool GameObject::deletingAll = false;
 std::list<GameObject*> GameObject::createdGameObject;
 
-GameObject::GameObject(std::string model, bool, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
-	this->model = Model::CreateUI(model);
+GameObject::GameObject(int, std::string model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
+	std::pair<Model*, uint32_t> newModel = Model::CreateUI(model);
+	this->model = newModel.first;
 
 	transform = new Transform(position, rotation, scale);
 
-	createdGameObject.push_back(this);
+	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
 
-	i = std::prev(createdGameObject.end());
+	i = std::next(createdGameObject.begin(), newModel.second);
 }
 
 GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) {
-	this->model = Model::Create(model);
+	std::pair<Model*, uint32_t> newModel = Model::Create(model);
+	this->model = newModel.first;
 
 	transform = new Transform(position, rotation, scale);
 
-	createdGameObject.push_back(this);
+	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
 
-	i = std::prev(createdGameObject.end());
+	i = std::next(createdGameObject.begin(), newModel.second);
 }
 
 GameObject::~GameObject()

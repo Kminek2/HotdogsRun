@@ -4,8 +4,12 @@
 
 #include <glm/glm.hpp>
 
+
 struct LightBufferStruct
 {
-	uint16_t lightCount;
-	glm::vec3 color;
+	glm::vec3 directionalLight;
+	glm::vec3 directionalLightColor;
+
+	uint32_t lightCount;
+	std::vector<std::pair<glm::vec3, uint32_t>> colorAndRadius;
 };

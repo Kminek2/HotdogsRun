@@ -27,6 +27,13 @@ private:
 	VkBufferUsageFlags bufferUsage;
 	static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	static void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+
+
+    VkDeviceSize stagingBufferSize = 0;
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
 public:
 	Buffer(const VkBufferUsageFlags& bufferUsage);
 	~Buffer();
@@ -50,6 +57,8 @@ Buffer<T>::~Buffer()
 {
 	vkDestroyBuffer(Device::getDevice(), buffer, nullptr);
 	vkFreeMemory(Device::getDevice(), bufferMemory, nullptr);
+    vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
+    vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
 }
 
 template<typename T>
@@ -116,10 +125,12 @@ template<typename T>
 void Buffer<T>::SendBufferToMemory()
 {
     VkDeviceSize bufferSize = sizeof(data[0]) * data.size();
-
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+    if (stagingBufferSize < bufferSize) {
+        vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
+        vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
+        CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+        stagingBufferSize = bufferSize;
+    }
 
     void* data;
     vkMapMemory(Device::getDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
@@ -137,9 +148,6 @@ void Buffer<T>::SendBufferToMemory()
     CopyBuffer(stagingBuffer, buffer, bufferSize);
 
     actBufferSize = bufferSize;
-
-    vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
-    vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
 }
 
 template<typename T>
