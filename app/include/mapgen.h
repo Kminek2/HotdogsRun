@@ -43,9 +43,7 @@ namespace mapgen {
 	};
 
 	const std::array<glm::vec2, 8> neighbor_map = { {
-		{-1, 1}, {0, 1}, {1, 1},
-		{-1, 0},         {1, 0},
-		{-1,-1}, {0,-1}, {1,-1}
+		{1,0}, {1, 1}, {0,1},{-1, 1},{-1, 0},{-1,-1}, {0,-1}, {1,-1}
 	} };
 
 	std::vector<MapPoint> generateMap(uint16_t len, const Ellipse& ellipse_data, size_t seed = -1);

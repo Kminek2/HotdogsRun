@@ -12,8 +12,8 @@ namespace mapgen {
         roadMap[{direction::E, direction::W}] = new ObjectSchema("prosta" + type, { 0,0,90 }); // E-W, obrót o 90° wokó³ Z
 
         // Diagonal opposites use "prostySkos"
-        roadMap[{direction::NE, direction::SW}] = new ObjectSchema("prostySkos" + type, { 0,0,45 }); // NE-SW, obrót o 45° wokó³ Z
-        roadMap[{direction::NW, direction::SE}] = new ObjectSchema("prostySkos" + type, { 0,0,-45 }); // NW-SE, obrót o -45° wokó³ Z
+        roadMap[{direction::NE, direction::SW}] = new ObjectSchema("prostySkos" + type, { 0,0,90 }); // NE-SW, obrót o 90° wokó³ Z
+        roadMap[{direction::NW, direction::SE}] = new ObjectSchema("prostySkos" + type, { 0,0,-90 }); // NW-SE, obrót o -90° wokó³ Z
 
         // ========= 90° TURNS =========
         // Among cardinal directions:

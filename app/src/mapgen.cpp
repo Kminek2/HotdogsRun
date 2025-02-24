@@ -44,8 +44,9 @@ void emplace_vectors(std::vector<mapgen::MapPoint>& in, const std::vector<glm::v
 direction points_direction(const glm::vec2& a, const glm::vec2& b) {
     for (uint8_t i = 0; i < 8; i++)
         if ((a + mapgen::neighbor_map[i]) == b)
-            return direction((i + 3) % 8); // +3 is the right offset
+            return direction((i + 4) % 8); // +0 is the right offset
 
+    throw std::invalid_argument("kys");
     return direction(0);
 }
 
@@ -91,12 +92,12 @@ std::vector<mapgen::MapPoint> mapgen::generateMap(uint16_t len, const mapgen::El
 
     // -- in --
     for (size_t i = 1; i < points.size(); i++)
-        points[i].in = points_direction(points[i].pos, points[i].pos);
+        points[i].in = points_direction(points[i-1].pos, points[i].pos);
     points[0].in = points_direction(points[points.size() - 1].pos, points[0].pos);
 
     // -- out --
     for (size_t i = 0; i < points.size() - 1; i++)
-        points[i].out = points_direction(points[i + 1].pos, points[i].pos);
+        points[i].out = points_direction(points[i].pos, points[i+1].pos);
     points[points.size() - 1].out = points_direction(points[0].pos, points[points.size() - 1].pos);
 
     return points;
