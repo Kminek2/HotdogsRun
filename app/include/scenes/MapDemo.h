@@ -9,7 +9,7 @@
 #include <vector>
 
 class MapDemo :
-	public SceeneScript 
+	public SceeneScript
 {
 private:
 	std::vector<GameObject*> points;
@@ -19,4 +19,6 @@ public:
 	std::shared_ptr<Scene> Init() override;
 	void Update() override;
 	void UnLoad() override;
+
+	void add_object();
 };
