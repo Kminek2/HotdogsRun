@@ -20,5 +20,5 @@ public:
 	void Update() override;
 	void UnLoad() override;
 
-	void add_object();
+	//void add_object();
 };

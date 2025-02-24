@@ -96,8 +96,9 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         for (const auto& instance : Model::modelsIndtaces) {
             vkCmdDrawIndexed(commandBuffer, (*instance.second.first)->indexSize, instance.second.second, (*instance.second.first)->indexOffset, (*instance.second.first)->vertexOffset, instanceOff);
             instanceOff += instance.second.second;
+            std::cout << instanceOff << ", ";
         }
-
+        std::cout << '\n';
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
