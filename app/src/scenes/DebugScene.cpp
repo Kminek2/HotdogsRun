@@ -24,10 +24,10 @@ std::shared_ptr<Scene> DebugScene::Init() {
 		position_offset += 10.0f;
 	}
 	position_offset = 0.0f;
-	/*for (const auto model : Model::loadedModels) {
+	for (const auto model : Model::loadedModels) {
 		objs.push_back(new GameObject(model.first, {100.0f, position_offset, 0.0f}));
 		position_offset += 10.0f;
-	}*/
+	}
 
 	objs[0]->AddScript(new CameraLockScript);
 	

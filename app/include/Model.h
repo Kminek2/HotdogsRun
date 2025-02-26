@@ -66,8 +66,8 @@ private:
 	static std::map<std::string, Model*> loadedModels;
 	static std::list<Model*> createdModels;
 	static std::list<Model*> createdUiModels;
-	static std::map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> modelsIndtaces;
-	static std::map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> uiModelsIndtaces;
+	static std::unordered_map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> modelsIndtaces;
+	static std::unordered_map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> uiModelsIndtaces;
 
 	static Buffer<Vertex>* vertexBuffer;
 	static Buffer<uint32_t>* indexBuffer;

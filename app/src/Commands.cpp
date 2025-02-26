@@ -93,12 +93,15 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
 
         uint32_t instanceOff = 0;
-        for (const auto& instance : Model::modelsIndtaces) {
-            vkCmdDrawIndexed(commandBuffer, (*instance.second.first)->indexSize, instance.second.second, (*instance.second.first)->indexOffset, (*instance.second.first)->vertexOffset, instanceOff);
-            instanceOff += instance.second.second;
-            //std::cout << instanceOff << ", ";
+        std::pair<std::list<Model*>::iterator, uint32_t> instance;
+        while (instanceOff < Model::createdModels.size())
+        {
+            Model* model = *std::next(Model::createdModels.begin(), instanceOff);
+            const auto& instance = Model::modelsIndtaces[model->modelName];
+
+            vkCmdDrawIndexed(commandBuffer, model->indexSize, instance.second, model->indexOffset, model->vertexOffset, instanceOff);
+            instanceOff += instance.second;
         }
-        //std::cout << '\n';
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
@@ -109,9 +112,13 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
 
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
-        for (const auto& instance : Model::uiModelsIndtaces) {
-            vkCmdDrawIndexed(commandBuffer, (*instance.second.first)->indexSize, instance.second.second, (*instance.second.first)->indexOffset, (*instance.second.first)->vertexOffset, instanceOff);
-            instanceOff += instance.second.second;
+        while (instanceOff < Model::createdModels.size() + Model::createdUiModels.size())
+        {
+            Model* model = *std::next(Model::createdUiModels.begin(), instanceOff - Model::createdModels.size());
+            const auto& instance = Model::uiModelsIndtaces[model->modelName];
+
+            vkCmdDrawIndexed(commandBuffer, model->indexSize, instance.second, model->indexOffset, model->vertexOffset, instanceOff);
+            instanceOff += instance.second;
         }
     }
 

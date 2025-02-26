@@ -13,8 +13,8 @@ Buffer<uint32_t>* Model::indexBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_INDE
 Texture* Model::textures = new Texture();
 Buffer<uint32_t>* Model::textureOffBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 const glm::mat4 Model::startRot = glm::rotate(glm::mat4(1), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-std::map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> Model::modelsIndtaces;
-std::map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> Model::uiModelsIndtaces;
+std::unordered_map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> Model::modelsIndtaces;
+std::unordered_map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> Model::uiModelsIndtaces;
 
 void Model::LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords)
 {
