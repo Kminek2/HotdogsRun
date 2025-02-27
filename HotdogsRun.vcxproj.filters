@@ -162,6 +162,12 @@
     <ClCompile Include="app\src\mapgen_road.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\PointLight.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\SpotLight.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -299,6 +305,12 @@
     <ClInclude Include="app\include\ObjectSchema.hpp">
       <Filter>Header Files\app</Filter>
     </ClInclude>
+    <ClInclude Include="app\include\PointLight.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\SpotLight.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="app\shaders\compile.bat">
@@ -323,6 +335,9 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="app\shaders\ui.vert.spv">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\ui.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

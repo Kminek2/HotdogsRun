@@ -10,6 +10,7 @@
 #include <filesystem>
 
 #include "Model.h"
+#include "LightBufferStruct.h"
 
 Uniform* GraphicsPipeline::uniform = nullptr;
 
@@ -125,17 +126,22 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
         uniform = new Uniform();
         uniform->AddUniforms(1);
         uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
-        uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
+        uniform->AddUniforms(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
         descriptorSetLayout = uniform->BindUniforms();
     }
     descriptorSetLayout = uniform->GetUnfiorms();
+
+    VkPushConstantRange range = {};
+    range.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    range.offset = 0;
+    range.size = sizeof(DirLightBuffer) + sizeof(unsigned int) * 2 + sizeof(glm::vec4);
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
     pipelineLayoutInfo.pSetLayouts = descriptorSetLayout.data();
-    pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
-    pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
+    pipelineLayoutInfo.pushConstantRangeCount = 1;
+    pipelineLayoutInfo.pPushConstantRanges = &range;
 
     if (vkCreatePipelineLayout(Device::getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create pipeline layout!");

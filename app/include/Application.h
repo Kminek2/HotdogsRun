@@ -12,6 +12,8 @@ class Application
 private:
 	Camera* camera;
 	static GLFWwindow* window;
+	unsigned int lastPointCount;
+	unsigned int lastSpotCount;
 public:
 	Application(uint16_t width, uint16_t height, GLFWwindow* window);
 	~Application();

@@ -96,7 +96,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
 
     mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this);
     std::cout << "Created main pipeline\n";
-    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/main.frag.spv", 1, *this);
+    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this);
     std::cout << "Created UI pipeline\n";
 
     CreateDepthResources();

@@ -30,24 +30,24 @@ namespace mapgen {
 
         // ========= 45° TURNS (Acute) =========
         // Cardinal -> Diagonal (where the turn is only 45°) (the famous 180° turn)
-        roadMap[{direction::N, direction::NE}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,270}, {1,-1,1});
+        roadMap[{direction::N, direction::NE}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,270}, {1,-1,-1});
         roadMap[{direction::E, direction::NE}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,180}, {1,1,1});
-        roadMap[{direction::E, direction::SE}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,0},   {1,-1,1});
+        roadMap[{direction::E, direction::SE}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,0},   {1,-1,-1});
         roadMap[{direction::S, direction::SE}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,270}, {1,1,1});
-        roadMap[{direction::S, direction::SW}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,90},  {1,-1,1});
+        roadMap[{direction::S, direction::SW}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,90},  {1,-1,-1});
         roadMap[{direction::W, direction::SW}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,0},   {1,1,1});
-        roadMap[{direction::W, direction::NW}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,0},   {-1,1,1});
+        roadMap[{direction::W, direction::NW}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,0},   {-1,1,-1});
         roadMap[{direction::N, direction::NW}] = new ObjectSchema("zakretSkosOstry" + type, { 0,0,90},  {1,1,1});
 
         // ========= 135° TURNS (Obtuse) =========
         // Cardinal -> Diagonal (non-adjacent; 135° turn)
         roadMap[{direction::N, direction::SW}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,90}, {1,1,1});
-        roadMap[{direction::N, direction::SE}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,90}, {-1,1,1 });
+        roadMap[{direction::N, direction::SE}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,90}, {-1,1,-1 });
         roadMap[{direction::E, direction::NW}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,180},{1,1,1});
-        roadMap[{direction::E, direction::SW}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,180},{-1,1,1});
+        roadMap[{direction::E, direction::SW}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,180},{-1,1,-1});
         roadMap[{direction::S, direction::NE}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,270},{1,1,1});
-        roadMap[{direction::S, direction::NW}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,270},{-1,1,1});
-        roadMap[{direction::W, direction::NE}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,0},  {-1,1,1});
+        roadMap[{direction::S, direction::NW}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,270},{-1,1,-1});
+        roadMap[{direction::W, direction::NE}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,0},  {-1,1,-1});
         roadMap[{direction::W, direction::SE}] = new ObjectSchema("zakretPolSkos" + type, { 0,0,0},   {1,1,1});
 
         // ========= 0° TURNS =========

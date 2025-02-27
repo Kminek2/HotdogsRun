@@ -8,6 +8,9 @@
 
 // for convinience
 #include "Application.h"
+#include "LightObject.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 class Scene;
 

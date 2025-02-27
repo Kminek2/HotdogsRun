@@ -19,10 +19,13 @@ private:
 	std::vector<void*> uniformBuffersMapped;
 
     VkBufferUsageFlags bufferUsage;
+    VkDeviceSize bufferSize;
 public:
 	UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFlags bufferUsage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 	~UniformBuffer();
 	void UpdateBuffer(uint16_t currentFrame, const T& data);
+    void UpdateBuffer(uint16_t currentFrame, const T& data, size_t dataSize);
+    VkDeviceSize getSize() { return bufferSize; };
 
 	friend Descriptior;
 };
@@ -30,7 +33,7 @@ public:
 template<typename T>
 UniformBuffer<T>::UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFlags bufferUsage)
 {
-    VkDeviceSize bufferSize = sizeof(T);
+    bufferSize = sizeof(T);
 
     uniformBuffers.resize(numberOfFrames);
     uniformBuffersMemory.resize(numberOfFrames);
@@ -55,5 +58,13 @@ UniformBuffer<T>::~UniformBuffer()
 template<typename T>
 void UniformBuffer<T>::UpdateBuffer(uint16_t currentFrame, const T& data)
 {
-    memcpy(uniformBuffersMapped[currentFrame], &data, sizeof(data));
+    bufferSize = sizeof(data);
+    memcpy(uniformBuffersMapped[currentFrame], &data, bufferSize);
+}
+
+template<typename T>
+void UniformBuffer<T>::UpdateBuffer(uint16_t currentFrame, const T& data, size_t dataSize)
+{
+    bufferSize = dataSize;
+    memcpy(uniformBuffersMapped[currentFrame], &data, bufferSize);
 }

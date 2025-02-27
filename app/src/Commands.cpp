@@ -7,6 +7,12 @@
 #include "Transform.h"
 
 #include "Descriptior.h"
+#include "LightObject.h"
+#include "PointLight.h"
+#include "SpotLight.h"
+#include "LightBufferStruct.h"
+
+#include "Camera.h"
 
 VkCommandPool Commands::commandPool;
 
@@ -91,6 +97,16 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+
+        glm::vec4 data[5] = { glm::vec4(LightObject::dirLight.dir, 0), glm::vec4(LightObject::dirLight.ambient, 0), glm::vec4(LightObject::dirLight.diffuse, 0), glm::vec4(LightObject::dirLight.specular, 0), glm::vec4(Camera::main->cameraTransform->position, 0) };
+        uint32_t data2[2] = { PointLight::lightNum, SpotLight::lightNum};
+        uint32_t offset = 0;
+        uint32_t size = sizeof(data);
+
+        vkCmdPushConstants(commandBuffer, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, data);
+        offset += size;
+        size = sizeof(data2);
+        vkCmdPushConstants(commandBuffer, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), VK_SHADER_STAGE_FRAGMENT_BIT, offset, size, data2);
 
         uint32_t instanceOff = 0;
         std::pair<std::list<Model*>::iterator, uint32_t> instance;

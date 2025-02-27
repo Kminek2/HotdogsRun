@@ -13,6 +13,9 @@
 #include "scenes/LoadScene.h"
 
 #include "LightObject.h"
+#include "PointLight.h"
+#include "SpotLight.h"
+#include "Descriptior.h"
 
 namespace fs = std::filesystem;
 
@@ -32,7 +35,8 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	Model::SendBuffers();
 
 	camera = new Camera(FRAMES_IN_FLIGHT, width, height);
-	LightObject::lightBuffer = new UniformBuffer<LightBufferStruct>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+	LightObject::pointLightBuffer = new UniformBuffer<PointLightBuffer*>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+	LightObject::spotLightBuffer = new UniformBuffer<SpotLightBuffer*>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 	Input::window = window;
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -86,6 +90,8 @@ void Application::UpdateBuffer(uint16_t frame)
 {
 	camera->UpdateCamera(width, height);
 	camera->UpdateBuffer(frame);
+	PointLight::SendData(frame);
+	SpotLight::SendData(frame);
 }
 
 std::list <float> frameTimes;

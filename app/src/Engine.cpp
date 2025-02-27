@@ -6,6 +6,8 @@
 #include "LightObject.h"
 
 #include "Model.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 GLFWwindow* Engine::window;
 VkInstance Engine::instance;
@@ -31,6 +33,15 @@ void Engine::InitWindow() {
     glfwSetFramebufferSizeCallback(window, FramebufferResizeCallback);
 }
 
+void Engine::UpdateDescriptor()
+{
+    if(LightObject::pointLightBuffer->getSize() != PointLight::lightNum)
+        descriptor->UpdateDescriptor(*LightObject::pointLightBuffer, 2, glm::max(PointLight::lightNum, static_cast<uint32_t>(1)));
+
+    if(LightObject::spotLightBuffer->getSize() != SpotLight::lightNum)
+        descriptor->UpdateDescriptor(*LightObject::spotLightBuffer, 3, glm::max(SpotLight::lightNum, static_cast<uint32_t>(1)));
+}
+
 void Engine::InitVulkan() {
     CreateInstance();
     if(enableValidationLayers)
@@ -45,7 +56,7 @@ void Engine::InitVulkan() {
     std::cout << "Created command buffers" << '\n';
     application = new Application(WIDTH, HEIGHT, window);
     std::cout << "Initialized application" << '\n';
-    descriptor = new Descriptior(FRAMES_IN_FLIGHT, *application->camera->getBuffer(), *Model::textures, *LightObject::getBuffer());
+    descriptor = new Descriptior(FRAMES_IN_FLIGHT, *application->camera->getBuffer(), *Model::textures, *LightObject::getPointBuffer(), *LightObject::getSpotBuffer());
     std::cout << "Created descriptors" << '\n';
     CreateSyncObjects();
     std::cout << "Created syncingObjects" << '\n';
@@ -56,6 +67,7 @@ void Engine::InitVulkan() {
 void Engine::MainLoop() {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+        UpdateDescriptor();
         application->Update();
         DrawFrame();
     }

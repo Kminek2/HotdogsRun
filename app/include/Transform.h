@@ -213,4 +213,6 @@ private:
 
 	friend class Commands;
 	friend class GameObject;
+	friend class PointLight;
+	friend class SpotLight;
 };

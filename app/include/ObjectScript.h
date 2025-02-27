@@ -2,6 +2,7 @@
 #include "AppTime.h"
 #include "Camera.h"
 #include "Input.h"
+#include "LightObject.h"
 
 class GameObject;
 
