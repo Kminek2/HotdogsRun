@@ -30,7 +30,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 		position_offset += 10.0f;
 	}
 
-	objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true));
+	objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true, GLFW_KEY_Z, GLFW_KEY_C));
 	
 	objs[0]->AddScript(new ShowOBB);
 	objs[1]->AddScript(new ShowOBB);
@@ -69,8 +69,6 @@ void DebugScene::Update() {
 		objs[0]->transform->Rotate(glm::vec3(0.0f, cam_speed * Time::deltaTime, 0.0f));
 	if (Input::getKeyPressed(GLFW_KEY_C))
 		objs[0]->transform->Rotate(glm::vec3(0.0f, 0.0f, cam_speed * Time::deltaTime));*/
-
-	std::cout << (Collisions::checkCollision(*objs[0], *objs[1]) ? "YES!\n" : "NO\n");
 
 	if (Input::getKeyClicked(GLFW_KEY_R)) {
 		Application::LoadScene("debug");

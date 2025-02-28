@@ -11,6 +11,7 @@
 class Commands;
 class Collisions;
 class ShowOBB;
+class CarMovement;
 
 struct OBB {
 	glm::vec3 center;
@@ -60,6 +61,7 @@ public:
 	friend Commands;
 	friend Collisions;
 	friend ShowOBB;
+	friend CarMovement;
 protected:
 	GameObject(int, std::string model, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1));
 };

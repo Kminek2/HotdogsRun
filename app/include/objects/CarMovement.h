@@ -1,6 +1,7 @@
 #pragma once
 #include "ObjectScript.h"
 #include "GameObject.h"
+#include "Collisions.h"
 
 constexpr float EPSILON = 1e-3;
 

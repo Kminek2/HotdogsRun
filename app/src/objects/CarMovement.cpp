@@ -20,8 +20,30 @@ void CarMovement::Update() {
 	handleGas();
 	handleSteeringWheel();
 	handleForces();
+	auto old_rot = gameObject->transform->rotation;
+	auto old_pos = gameObject->transform->position;
 	gameObject->transform->Rotate(glm::vec3(0.0f, 0.0f, (axleAngle * (actSpeed < 200.0f*multiplier ? std::min(200.0f*multiplier, actSpeed*4) : actSpeed) / (maxSpeed*multiplier)) * Time::deltaTime * 3.0f));
 	gameObject->transform->Translate((actSpeed*Time::deltaTime)*forces);
+	bool coll = false;
+	for (auto const& obj : GameObject::createdGameObject) {
+		if (obj == gameObject)
+			continue;
+
+		if (Collisions::checkCollision(*gameObject, *obj)) {
+			coll = true;
+			break;
+		}
+	}
+	if (coll) {
+		gameObject->transform->MoveTo(old_pos);
+		gameObject->transform->RotateTo(old_rot);
+		forces.x = -forces.x;
+		if (actSpeed > 0) {
+			actSpeed = std::min(actSpeed/2.5f, 20.0f);
+		} else {
+			actSpeed = std::max(actSpeed/2.5f, -20.0f);
+		}
+	}
 }
 
 void CarMovement::OnDestroy() {
@@ -29,6 +51,7 @@ void CarMovement::OnDestroy() {
 }
 
 void CarMovement::handleGas() {
+	if (forces.x != 1.0f) return;
 	if (maxSpeed == 0) return;
 	if (Input::getKeyPressed(GLFW_KEY_W)) {
 		if (actSpeed < -40.0f*multiplier) {
@@ -105,8 +128,17 @@ void CarMovement::handleSteeringWheel() {
 
 //Please don't read this part. It would make you feel a lot of pain.
 void CarMovement::handleForces() {
+	if (forces.x < 1.0f) {
+		forces.x += 0.7f*Time::deltaTime;
+		forces.x = std::min(forces.x, 1.0f);
+		if (forces.x > 0.0f) {
+			forces.x = 1.0f;
+			actSpeed = 0.0f;
+		}
+	}
+	
 	bool yNeg = (forces.y < 0 ? true : false);
-
+	
 	if (axleAngle < 0.0f+EPSILON && axleAngle > 0.0f-EPSILON) {
 		forces.y -= (yNeg ? -0.4 * Time::deltaTime : 0.4 * Time::deltaTime);
 		forces.y = (yNeg ? std::min(forces.y, 0.0f) : std::max(forces.y, 0.0f));
@@ -124,4 +156,5 @@ void CarMovement::handleForces() {
 			actSpeed = std::min(actSpeed, 0.0f);
 		}
 	}
+	std::cout << forces.x << '\n';
 }
