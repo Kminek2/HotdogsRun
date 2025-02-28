@@ -1,8 +1,13 @@
 #include "LightObject.h"
 
-UniformBuffer<PointLightBuffer*>* LightObject::pointLightBuffer;
-UniformBuffer<SpotLightBuffer*>* LightObject::spotLightBuffer;
+UniformBuffer<PointLightBuffer>* LightObject::pointLightBuffer;
+UniformBuffer<SpotLightBuffer>* LightObject::spotLightBuffer;
 DirLightBuffer LightObject::dirLight;
+
+void LightObject::SetDirLight()
+{
+	dirLight.dir = glm::vec3(0);
+}
 
 LightObject::LightObject(GameObject* gameObject, glm::vec3 pos)
 {
@@ -28,4 +33,10 @@ void LightObject::Unload()
 {
 	delete pointLightBuffer;
 	delete spotLightBuffer;
+}
+
+void LightObject::DeleteAll()
+{
+	SetDirLight();
+
 }

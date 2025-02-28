@@ -47,7 +47,6 @@ private:
     void Cleanup();
     void InitWindow();
 
-    void UpdateDescriptor();
     static VkInstance& getInstance() { return instance; };
     static GLFWwindow* getWindow() { return window; };
     static void FramebufferResizeCallback(GLFWwindow* window, int width, int height);

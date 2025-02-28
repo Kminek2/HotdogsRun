@@ -15,8 +15,14 @@ uint32_t SpotLight::SendData(uint16_t currentFrame)
 		i = std::next(i);
 	}
 
-	spotLightBuffer->UpdateBuffer(currentFrame, spotLights.data(), spotLights.size() * sizeof(SpotLightBuffer));
+	spotLightBuffer->UpdateBuffer(currentFrame, *spotLights.data(), spotLights.size() * sizeof(SpotLightBuffer));
 	return spotLights.size() * sizeof(SpotLightBuffer);
+}
+
+void SpotLight::DeleteAll()
+{
+	while (lightNum > 0)
+		delete *createdLightObjects.begin();
 }
 
 SpotLight::SpotLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 dir, glm::vec3 col, glm::vec2 cutOffs, float constant, float linear, float quadratic) : LightObject(gameObjec, pos)
@@ -24,10 +30,16 @@ SpotLight::SpotLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 dir, glm::v
 	lightNum++;
 	light.pos = pos;
 	light.col = col;
-	light.direction = dir;
+	light.direction = glm::normalize(dir);
 	light.functions = glm::vec3(constant, linear, quadratic);
 	light.cutOffs = cutOffs;
 
 	createdLightObjects.push_back(this);
 	i = std::prev(createdLightObjects.end());
+}
+
+SpotLight::~SpotLight()
+{
+	lightNum--;
+	createdLightObjects.erase(i);
 }

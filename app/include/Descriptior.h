@@ -48,7 +48,7 @@ public:
         }
     }
 
-    void CreateDescriptorSets(const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const Texture& texture, const UniformBuffer<PointLightBuffer*>& uniformPointLightStruct, const UniformBuffer<SpotLightBuffer*>& uniformSpotLightStruct) {
+    void CreateDescriptorSets(const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const Texture& texture, const UniformBuffer<PointLightBuffer>& uniformPointLightStruct, const UniformBuffer<SpotLightBuffer>& uniformSpotLightStruct) {
         std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, Uniform::descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -125,7 +125,7 @@ public:
         }
     }
 
-    Descriptior(unsigned int MAX_FRAMES_IN_FLIGHT, const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const Texture& texture, const UniformBuffer<PointLightBuffer*>& uniformPointLightStruct, const UniformBuffer<SpotLightBuffer*>& uniformSpotLightStruct) : MAX_FRAMES_IN_FLIGHT(MAX_FRAMES_IN_FLIGHT)
+    Descriptior(unsigned int MAX_FRAMES_IN_FLIGHT, const UniformBuffer<UniformCameraBuffer>& uniformBuffer, const Texture& texture, const UniformBuffer<PointLightBuffer>& uniformPointLightStruct, const UniformBuffer<SpotLightBuffer>& uniformSpotLightStruct) : MAX_FRAMES_IN_FLIGHT(MAX_FRAMES_IN_FLIGHT)
     {
         CreateDescriptorPool();
         CreateDescriptorSets(uniformBuffer, texture, uniformPointLightStruct, uniformSpotLightStruct);

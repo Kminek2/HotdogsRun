@@ -88,9 +88,7 @@ void main() {
     {
         result += CalcSpotLight(spotLights[i], norm, fragPos, viewDir);
     }
-
-    //outColor = vec4(result * texColor, 1.0);
-    outColor = vec4(pointLights[0].pos, 1.0);
+    outColor = vec4(result * texColor, 1.0);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

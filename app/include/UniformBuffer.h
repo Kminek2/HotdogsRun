@@ -20,6 +20,8 @@ private:
 
     VkBufferUsageFlags bufferUsage;
     VkDeviceSize bufferSize;
+
+    void RecreateBuffer(size_t dataSize);
 public:
 	UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFlags bufferUsage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 	~UniformBuffer();
@@ -31,6 +33,18 @@ public:
 };
 
 template<typename T>
+inline void UniformBuffer<T>::RecreateBuffer(size_t dataSize)
+{
+    for (size_t i = 0; i < uniformBuffers.size(); i++) {
+        vkDestroyBuffer(Device::getDevice(), uniformBuffers[i], nullptr);
+        vkFreeMemory(Device::getDevice(), uniformBuffersMemory[i], nullptr);
+        Buffer<T>::CreateBuffer(dataSize, bufferUsage, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+
+        vkMapMemory(Device::getDevice(), uniformBuffersMemory[i], 0, dataSize, 0, &uniformBuffersMapped[i]);
+    }
+}
+
+template<typename T>
 UniformBuffer<T>::UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFlags bufferUsage)
 {
     bufferSize = sizeof(T);
@@ -38,6 +52,8 @@ UniformBuffer<T>::UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFla
     uniformBuffers.resize(numberOfFrames);
     uniformBuffersMemory.resize(numberOfFrames);
     uniformBuffersMapped.resize(numberOfFrames);
+
+    this->bufferUsage = bufferUsage;
 
     for (size_t i = 0; i < numberOfFrames; i++) {
         Buffer<T>::CreateBuffer(bufferSize, bufferUsage, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
@@ -58,13 +74,16 @@ UniformBuffer<T>::~UniformBuffer()
 template<typename T>
 void UniformBuffer<T>::UpdateBuffer(uint16_t currentFrame, const T& data)
 {
-    bufferSize = sizeof(data);
     memcpy(uniformBuffersMapped[currentFrame], &data, bufferSize);
 }
 
 template<typename T>
 void UniformBuffer<T>::UpdateBuffer(uint16_t currentFrame, const T& data, size_t dataSize)
 {
+    if (dataSize == 0)
+        return;
+    else if (dataSize != bufferSize)
+        RecreateBuffer(dataSize);
     bufferSize = dataSize;
     memcpy(uniformBuffersMapped[currentFrame], &data, bufferSize);
 }

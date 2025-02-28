@@ -35,8 +35,8 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	Model::SendBuffers();
 
 	camera = new Camera(FRAMES_IN_FLIGHT, width, height);
-	LightObject::pointLightBuffer = new UniformBuffer<PointLightBuffer*>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
-	LightObject::spotLightBuffer = new UniformBuffer<SpotLightBuffer*>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+	LightObject::pointLightBuffer = new UniformBuffer<PointLightBuffer>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+	LightObject::spotLightBuffer = new UniformBuffer<SpotLightBuffer>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 	Input::window = window;
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -75,6 +75,9 @@ void Application::LoadScene(std::string scene)
 	Input::stopKeyCallback();
 
 	GameObject::DeleteAll();
+	LightObject::DeleteAll();
+	PointLight::DeleteAll();
+	SpotLight::DeleteAll();
 	Camera::main->Reload(width, height);
 
 	Input::startKeyCallback();
@@ -86,12 +89,16 @@ void Application::Quit()
 	glfwSetWindowShouldClose(window, true);
 }
 
-void Application::UpdateBuffer(uint16_t frame)
+void Application::UpdateBuffer(uint16_t frame, Descriptior *descriptor)
 {
 	camera->UpdateCamera(width, height);
 	camera->UpdateBuffer(frame);
-	PointLight::SendData(frame);
-	SpotLight::SendData(frame);
+
+	if (LightObject::pointLightBuffer->getSize() != PointLight::SendData(frame) && PointLight::lightNum > 0)
+		descriptor->UpdateDescriptor(*LightObject::pointLightBuffer, 2, glm::max(static_cast<uint32_t>(PointLight::lightNum * sizeof(PointLightBuffer)), static_cast<uint32_t>(1)));
+
+	if (LightObject::spotLightBuffer->getSize() != SpotLight::SendData(frame) && SpotLight::lightNum > 0)
+		descriptor->UpdateDescriptor(*LightObject::spotLightBuffer, 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
 }
 
 std::list <float> frameTimes;

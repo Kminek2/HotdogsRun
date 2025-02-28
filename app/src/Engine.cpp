@@ -33,15 +33,6 @@ void Engine::InitWindow() {
     glfwSetFramebufferSizeCallback(window, FramebufferResizeCallback);
 }
 
-void Engine::UpdateDescriptor()
-{
-    if(LightObject::pointLightBuffer->getSize() != PointLight::lightNum)
-        descriptor->UpdateDescriptor(*LightObject::pointLightBuffer, 2, glm::max(PointLight::lightNum, static_cast<uint32_t>(1)));
-
-    if(LightObject::spotLightBuffer->getSize() != SpotLight::lightNum)
-        descriptor->UpdateDescriptor(*LightObject::spotLightBuffer, 3, glm::max(SpotLight::lightNum, static_cast<uint32_t>(1)));
-}
-
 void Engine::InitVulkan() {
     CreateInstance();
     if(enableValidationLayers)
@@ -67,7 +58,6 @@ void Engine::InitVulkan() {
 void Engine::MainLoop() {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        UpdateDescriptor();
         application->Update();
         DrawFrame();
     }
@@ -121,7 +111,7 @@ void Engine::DrawFrame() {
 
     vkResetFences(Device::getDevice(), 1, &inFlightFences[currentFrame]);
 
-    application->UpdateBuffer(currentFrame);
+    application->UpdateBuffer(currentFrame, descriptor);
 
     commands->ResetCommands(currentFrame);
     commands->RecordCommands(currentFrame, swapChain->getFramebuffer(imageIndex)->getFramebuffer(), *swapChain, imageIndex);

@@ -13,16 +13,16 @@ struct DirLightBuffer {
 };
 
 struct PointLightBuffer {
-	glm::vec3 pos;
-	glm::vec3 col;
-	glm::vec3 functions;
+	alignas(16) glm::vec3 pos;
+	alignas(16) glm::vec3 col;
+	alignas(16) glm::vec3 functions;
 };
 
 struct SpotLightBuffer {
-	glm::vec3 pos;
-	glm::vec3 col;
-	glm::vec3 functions;
+	alignas(16) glm::vec3 pos;
+	alignas(16) glm::vec3 col;
+	alignas(16) glm::vec3 functions;
 
-	glm::vec3 direction;
+	alignas(16) glm::vec3 direction;
 	glm::vec2 cutOffs;
 };

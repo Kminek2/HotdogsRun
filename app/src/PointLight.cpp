@@ -16,8 +16,14 @@ uint32_t PointLight::SendData(uint16_t currentFrame)
 		i = std::next(i);
 	}
 
-	pointLightBuffer->UpdateBuffer(currentFrame, pointLights.data(), pointLights.size() * sizeof(PointLightBuffer));
+	pointLightBuffer->UpdateBuffer(currentFrame, *pointLights.data(), pointLights.size() * sizeof(PointLightBuffer));
 	return pointLights.size() * sizeof(PointLightBuffer);
+}
+
+void PointLight::DeleteAll()
+{
+	while (lightNum > 0)
+		delete* createdLightObjects.begin();
 }
 
 PointLight::PointLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 col, float constant, float linear, float quadratic) : LightObject(gameObjec, pos)
@@ -29,4 +35,10 @@ PointLight::PointLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 col, floa
 
 	createdLightObjects.push_back(this);
 	i = std::prev(createdLightObjects.end());
+}
+
+PointLight::~PointLight()
+{
+	lightNum--;
+	createdLightObjects.erase(i);
 }
