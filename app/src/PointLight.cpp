@@ -11,7 +11,7 @@ uint32_t PointLight::SendData(uint16_t currentFrame)
 	std::vector<PointLightBuffer> pointLights;
 	while (i != createdLightObjects.end()) {
 		PointLightBuffer pointLight = (*i)->light;
-		pointLight.pos = (*i)->gameObject->transform->modelTransform * glm::vec4((*i)->light.pos, 0);
+		pointLight.pos = glm::vec3((*i)->gameObject->transform->getModelMatrix() * glm::vec4((*i)->light.pos, 1));
 		pointLights.push_back(pointLight);
 		i = std::next(i);
 	}

@@ -10,8 +10,8 @@ uint32_t SpotLight::SendData(uint16_t currentFrame)
 	std::vector<SpotLightBuffer> spotLights;
 	while (i != createdLightObjects.end()) {
 		SpotLightBuffer spotLight = (*i)->light;
-		spotLight.pos = (*i)->gameObject->transform->modelTransform * glm::vec4((*i)->light.pos, 1);
-		spotLights.push_back((*i)->light);
+		spotLight.pos = glm::vec3((*i)->gameObject->transform->getModelMatrix() * glm::vec4((*i)->light.pos, 1));
+		spotLights.push_back(spotLight);
 		i = std::next(i);
 	}
 

@@ -175,6 +175,8 @@ struct Transform {
 	static void Unload() {
 		delete transformBuffer;
 	}
+
+	glm::mat4 getModelMatrix() { return modelTransform; }
 private:
 	/// <summary>
 	/// Takes in a rotation vector in degrees, and clamps each angle to [0, 360)
