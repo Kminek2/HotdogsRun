@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include <cmath>
 
+class ShowOBB;
+
 class Collisions
 {
 	private:
@@ -10,4 +12,5 @@ class Collisions
 		static glm::mat3 getRotationMatrix(glm::vec3 v);
 	public:
 		static bool checkCollision(const GameObject& obj1, const GameObject& obj2);
+		friend ShowOBB;
 };

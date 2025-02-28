@@ -27,6 +27,8 @@ void DebugPoints::ClearLines()
 {
 	vertexBuffer->ClearBuffer();
 	indexBuffer->ClearBuffer();
+	verticies.clear();
+	indicies.clear();
 }
 
 void DebugPoints::DeleteBuffers()

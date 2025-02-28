@@ -6,6 +6,7 @@
 #include "objects/LockPosition.h"
 #include "objects/LockRotation.h"
 #include "objects/CarMovement.h"
+#include "objects/ShowOBB.h"
 
 #include <iostream>
 
@@ -29,11 +30,14 @@ std::shared_ptr<Scene> DebugScene::Init() {
 		position_offset += 10.0f;
 	}
 
-	objs[0]->AddScript(new CameraLockScript);
+	objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true));
 	
+	objs[0]->AddScript(new ShowOBB);
+	objs[1]->AddScript(new ShowOBB);
+
 	objs[0]->AddScript(new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false));
-	objs[0]->addOBB(OBB(glm::vec3(19.0f,0,0), glm::vec3(19.0f,8.0f,6.5f), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
-	objs[1]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(0.1,0.1,0.1), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
+	objs[0]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(1,1,1), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
+	objs[1]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(3,3,3), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
 
 	objs[2]->AddScript(new LockPosition(objs[1]->transform));
 	objs[2]->AddScript(new LockRotation(objs[1]->transform));

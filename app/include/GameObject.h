@@ -10,6 +10,7 @@
 
 class Commands;
 class Collisions;
+class ShowOBB;
 
 struct OBB {
 	glm::vec3 center;
@@ -58,6 +59,7 @@ public:
 	static void TransformTransformsToMemory();
 	friend Commands;
 	friend Collisions;
+	friend ShowOBB;
 protected:
 	GameObject(int, std::string model, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1));
 };
