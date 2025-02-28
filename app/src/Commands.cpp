@@ -13,6 +13,7 @@
 #include "LightBufferStruct.h"
 
 #include "Camera.h"
+#include "DebugPoints.h"
 
 VkCommandPool Commands::commandPool;
 
@@ -142,6 +143,21 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             vkCmdDrawIndexed(commandBuffer, model->indexSize, instance.second, model->indexOffset, model->vertexOffset, instanceOff);
             instanceOff += instance.second;
         }
+
+        if (DebugPoints::indicies.size() > 0) {
+            vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getDebugPipeline()->getPipeline());
+
+            vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+            vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+            vkCmdBindVertexBuffers(commandBuffer, 0, 1, &DebugPoints::vertexBuffer->getBuffer(), offsets);
+            vkCmdBindIndexBuffer(commandBuffer, DebugPoints::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getDebugPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+
+        }
+        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+        if (DebugPoints::indicies.size() > 0)
+            vkCmdDrawIndexed(commandBuffer, DebugPoints::indicies.size(), 1, 0, 0, 0);
     }
 
     vkCmdEndRenderPass(commandBuffer);

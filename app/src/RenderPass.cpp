@@ -49,7 +49,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
     uiDepthAttachmentRef.attachment = 2;
     uiDepthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    std::array<VkSubpassDescription, 2> subpasses{};
+    std::array<VkSubpassDescription, 3> subpasses{};
     subpasses[0].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[0].colorAttachmentCount = 1;
     subpasses[0].pColorAttachments = &colorAttachmentRef;
@@ -63,7 +63,12 @@ RenderPass::RenderPass(SwapChain* swapChain)
     //subpasses[1].inputAttachmentCount = 1;
     //subpasses[1].pInputAttachments = &inputAttachmentRef;
 
-    std::array<VkSubpassDependency, 2> dependencies{};
+    subpasses[2].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpasses[2].colorAttachmentCount = 1;
+    subpasses[2].pColorAttachments = &colorAttachmentRef;
+    subpasses[2].pDepthStencilAttachment = &depthAttachmentRef;
+
+    std::array<VkSubpassDependency, 3> dependencies{};
     dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     dependencies[0].dstSubpass = 0;
     dependencies[0].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
@@ -77,6 +82,13 @@ RenderPass::RenderPass(SwapChain* swapChain)
     dependencies[1].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
     dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     dependencies[1].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+    dependencies[2].srcSubpass = 1;
+    dependencies[2].dstSubpass = 2;
+    dependencies[2].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependencies[2].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    dependencies[2].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
     std::array<VkAttachmentDescription, 3> attachments = { colorAttachment, depthAttachment, uiDepthAttachment };
     VkRenderPassCreateInfo renderPassInfo{};
@@ -98,6 +110,9 @@ RenderPass::RenderPass(SwapChain* swapChain)
     std::cout << "Created main pipeline\n";
     UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this);
     std::cout << "Created UI pipeline\n";
+    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 2, *this, VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+    std::cout << "Created debbuging pipeline\n";
+
 
     CreateDepthResources();
     std::cout << "Created depth image";
@@ -106,6 +121,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
 RenderPass::~RenderPass() {
     delete mainPipeline;
     delete UIPipeline;
+    delete debugingPipeline;
     vkDestroyRenderPass(Device::getDevice(), renderPass, nullptr);
 
     DestroyDepthResource();

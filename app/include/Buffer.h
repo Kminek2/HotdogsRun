@@ -43,7 +43,7 @@ public:
 	void SendBufferToMemory();
 
 	uint32_t getSize() { return data.size(); }
-	VkBuffer& getBuffer() { return buffer; }
+    VkBuffer& getBuffer() { return buffer; }
 
 	void ClearBuffer();
 

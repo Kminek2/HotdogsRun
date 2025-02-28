@@ -17,6 +17,8 @@
 #include "SpotLight.h"
 #include "Descriptior.h"
 
+#include "DebugPoints.h"
+
 namespace fs = std::filesystem;
 
 uint16_t Application::width, Application::height;
@@ -57,6 +59,7 @@ Application::~Application() {
 	Model::Unload();
 	Transform::Unload();
 	LightObject::Unload();
+	DebugPoints::DeleteBuffers();
 	delete camera;
 }
 
@@ -78,6 +81,7 @@ void Application::LoadScene(std::string scene)
 	LightObject::DeleteAll();
 	PointLight::DeleteAll();
 	SpotLight::DeleteAll();
+	DebugPoints::ClearLines();
 	Camera::main->Reload(width, height);
 
 	Input::startKeyCallback();

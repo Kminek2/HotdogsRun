@@ -16,6 +16,7 @@ private:
 	VkRenderPass renderPass;
 	GraphicsPipeline* mainPipeline;
 	GraphicsPipeline* UIPipeline;
+	GraphicsPipeline* debugingPipeline;
 
 	Image depthImage;
 	VkDeviceMemory depthImageMemory;
@@ -36,6 +37,7 @@ public:
 	Image getUIDepthImage() const { return uiDepthImage; }
 	GraphicsPipeline* getMainPipeline() const { return mainPipeline; }
 	GraphicsPipeline* getUiPipeline() const { return UIPipeline; }
+	GraphicsPipeline* getDebugPipeline() const { return debugingPipeline; }
 
 	void RecreateDepthResource();
 };

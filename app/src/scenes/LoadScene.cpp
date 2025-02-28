@@ -4,12 +4,25 @@
 
 #include "Scene.h"
 #include "QuickCamera.h"
+#include "DebugPoints.h"
 
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"load", new LoadScene()},
 	{"debug", new DebugScene()},
 	{"map_demo", new MapDemo()}
 };
+
+const std::vector<Vertex> debugVerticies = {
+	{{-0.5f, -0.5f, 2}, {0.1f, 0.0f}, {0, 0, 0}},
+	{{0.5f, -0.5f, 2}, {0.1f, 0.0f}, {0, 0, 0}},
+	{{0.5f, 0.5f, 2}, {0.1f, 0.0f}, {0, 0, 0}},
+	{{-0.5f, 0.5f, 2}, {0.1f, 0.0f}, {0, 0, 0}}
+};
+
+const std::vector<uint32_t> debugIndices = {
+	0, 1, 1, 2, 2, 3, 3, 0
+};
+
 
 std::shared_ptr<Scene> LoadScene::Init() {
 	Scene* scene = new Scene(this);
@@ -27,6 +40,15 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	new PointLight(obj2, { 0, 1, 1 });
 	new PointLight(obj2, { 0, -1, 1 });
 	new SpotLight(obj2, { 0, 0, -1 }, {0, 1, 1});
+
+	GameObject* bilbord = new GameObject("bilboardHodDog", {0, 0, 10});
+	new SpotLight(bilbord, { 2.05f, 1.55f, 5.6f }, { 0, 1, 1 });
+	new SpotLight(bilbord, { 2.05f, 1.55f, 5.6f }, { 0, 1, 1 });
+	new SpotLight(bilbord, { 2.05f, 1.55f, 5.6f }, { 0, 1, 1 });
+	new SpotLight(bilbord, { 2.05f, 1.55f, 5.6f }, { 0, 1, 1 });
+	new SpotLight(bilbord, { 2.05f, 1.55f, 5.6f }, { 0, 1, 1 });
+
+	DebugPoints::AddLines(debugVerticies, debugIndices);
 
 	return std::shared_ptr<Scene>(scene);
 }

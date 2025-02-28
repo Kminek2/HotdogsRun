@@ -14,7 +14,7 @@
 
 Uniform* GraphicsPipeline::uniform = nullptr;
 
-GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass) {
+GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, VkPrimitiveTopology topology) {
     std::cout << "Creating pipeline\n";
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
 
@@ -63,7 +63,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    inputAssembly.topology = topology;
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
     VkPipelineViewportStateCreateInfo viewportState{};

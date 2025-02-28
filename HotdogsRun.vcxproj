@@ -26,6 +26,7 @@
     <ClCompile Include="app\src\CameraTransform.cpp" />
     <ClCompile Include="app\src\Collisions.cpp" />
     <ClCompile Include="app\src\Commands.cpp" />
+    <ClCompile Include="app\src\DebugPoints.cpp" />
     <ClCompile Include="app\src\Descriptior.cpp" />
     <ClCompile Include="app\src\Device.cpp" />
     <ClCompile Include="app\src\Engine.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="app\include\CameraTransform.h" />
     <ClInclude Include="app\include\Collisions.h" />
     <ClInclude Include="app\include\Commands.h" />
+    <ClInclude Include="app\include\DebugPoints.h" />
     <ClInclude Include="app\include\Descriptior.h" />
     <ClInclude Include="app\include\Device.h" />
     <ClInclude Include="app\include\Engine.h" />
@@ -114,6 +116,7 @@
   <ItemGroup>
     <None Include="app\shaders\compile.bat" />
     <None Include="app\shaders\compile.sh" />
+    <None Include="app\shaders\debug.vert" />
     <None Include="app\shaders\main.frag" />
     <None Include="app\shaders\main.frag.spv" />
     <None Include="app\shaders\main.vert" />
