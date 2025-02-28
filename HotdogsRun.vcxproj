@@ -175,8 +175,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\filip\Desktop\requires\include;C:\Users\Staszek\Documents\GitHub\HotdogsRun;C:\Users\Staszek\Documents\GitHub\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun;C:\LIB\glfw-3.4.bin.WIN64\include;C:\LIB\VulkanSDK\1.4.304.0\Include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun\app\include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes</IncludePath>
-    <SourcePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\src;C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\src;$(SourcePath)</SourcePath>
+    <IncludePath>C:\Users\filip\Desktop\requires\include;C:\Users\Staszek\Documents\GitHub\HotdogsRun;C:\Users\Staszek\Documents\GitHub\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun;C:\LIB\glfw-3.4.bin.WIN64\include;C:\LIB\VulkanSDK\1.4.304.0\Include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun\app\include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes;D:\GitHub\PirateJam\HotdogsRun\app\include;C:\Users\Gry\Desktop\vusual\includes</IncludePath>
+    <SourcePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\src;C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\src;D:\GitHub\PirateJam\HotdogsRun\app\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes</IncludePath>
@@ -217,12 +217,12 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);C:\Users\Gry\Desktop\vusual\includes;C:\VulkanSDK\1.4.304.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib;C:\Users\Gry\Desktop\vusual\lib;C:\VulkanSDK\1.4.304.1\Lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

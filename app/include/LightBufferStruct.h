@@ -5,24 +5,24 @@
 #include <glm/glm.hpp>
 
 struct DirLightBuffer {
-	alignas(16) glm::vec3 dir;
+	glm::vec3 dir;
 
-	alignas(16) glm::vec3 ambient;
-	alignas(16) glm::vec3 diffuse;
-	alignas(16) glm::vec3 specular;
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
 };
 
 struct PointLightBuffer {
-	alignas(16) glm::vec3 pos;
-	alignas(16) glm::vec3 col;
-	alignas(16) glm::vec3 functions;
+	glm::vec3 pos;
+	glm::vec3 col;
+	glm::vec3 functions;
 };
 
 struct SpotLightBuffer {
-	alignas(16) glm::vec3 pos;
-	alignas(16) glm::vec3 col;
-	alignas(16) glm::vec3 functions;
+	glm::vec3 pos;
+	glm::vec3 col;
+	glm::vec3 functions;
 
-	alignas(16) glm::vec3 direction;
+	glm::vec3 direction;
 	glm::vec2 cutOffs;
 };

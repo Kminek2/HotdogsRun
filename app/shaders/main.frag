@@ -27,13 +27,13 @@ struct SpotLight {
 layout(constant_id = 0) const int MAX_TEXTURES = 64;
 
 layout(push_constant, std430) uniform dirLightAndViewPos{
-    vec3 lDirection;
+    vec4 lDirection;
 	
-    vec3 lAmbient;
-    vec3 lDiffuse;
-    vec3 lSpecular;
+    vec4 lAmbient;
+    vec4 lDiffuse;
+    vec4 lSpecular;
 
-    vec3 cPos;
+    vec4 cPos;
 
     uint pLNum;
     uint sLNum;
@@ -62,15 +62,15 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir);
 
 void main() {
     vec3 norm = normalize(fragNormal);
-    vec3 viewDir = normalize(cPos - fragPos);
+    vec3 viewDir = normalize(cPos.xyz - fragPos);
     vec3 result = vec3(0);
     vec3 texColor = texture(samplers, vec2(fragTexCoord.x, fragTexCoord.y / MAX_TEXTURES)).xyz;
 
     DirLight dirLight;
-    dirLight.direction = lDirection;
-    dirLight.ambient = lAmbient;
-    dirLight.diffuse = lDiffuse;
-    dirLight.specular = lSpecular;
+    dirLight.direction = lDirection.xyz;
+    dirLight.ambient = lAmbient.xyz;
+    dirLight.diffuse = lDiffuse.xyz;
+    dirLight.specular = lSpecular.xyz;
 
     if(dirLight.direction != vec3(0, 0, 0))
     {
@@ -79,7 +79,7 @@ void main() {
         result += texColor;
     }
 
-    /*for(int i = 0; i < pLNum; i++)
+    for(int i = 0; i < pLNum; i++)
     {
         result += CalcPointLight(pointLights[i], norm, fragPos, viewDir);
     }
@@ -87,9 +87,10 @@ void main() {
     for(int i = 0; i < sLNum; i++)
     {
         result += CalcSpotLight(spotLights[i], norm, fragPos, viewDir);
-    }*/
+    }
 
-    outColor = vec4(result * texColor, 1.0);
+    //outColor = vec4(result * texColor, 1.0);
+    outColor = vec4(pointLights[0].pos, 1.0);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
