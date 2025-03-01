@@ -1,14 +1,12 @@
-#include "MapManager.h"
+#include "objects/MapManager.h"
 #include "GameObject.h"
-#include "MapManager.h"
-#include "MapManager.h"
 
 void MapManager::Init()
 {
 #pragma region map
 	__road road_segements = createRoadMap();
 
-	std::vector<MapPoint> map_points = generateMap(map_len, { a,b,min_offset,max_offset }, seed);
+	std::vector<MapPoint> map_points = generateMap(map_len, ellipse, seed);
 	spreadMapPoints(map_points, MAP_TILE_SIZE);
 
 	int n = map_points.size(); // number of map tiles
@@ -53,11 +51,5 @@ GameObject* MapManager::GetPoint(unsigned index) {
 	return points[index];
 }
 
-
-void MapManager::Update()
-{
-}
-
-void MapManager::OnDestroy()
-{
-}
+void MapManager::Update() {}
+void MapManager::OnDestroy() {}

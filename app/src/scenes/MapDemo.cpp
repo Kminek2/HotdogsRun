@@ -7,6 +7,8 @@
 
 using namespace mapgen;
 
+const size_t seed = 42;
+
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
 
@@ -15,7 +17,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	qc->_sm(100.0f);
 
 	GameObject* mapObj = new GameObject();
-	map = new MapManager();
+	map = new MapManager(seed);
 	mapObj->AddScript(map);
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
