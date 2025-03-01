@@ -39,6 +39,7 @@ void CarMovement::Update() {
 		gameObject->transform->MoveTo(old_pos);
 		gameObject->transform->RotateTo(old_rot);
 		forces.x = -forces.x;
+		axleAngle = 0.0f;
 		if (actSpeed > 0) {
 			actSpeed = std::min(actSpeed/2.5f, 20.0f);
 		} else {
@@ -97,7 +98,7 @@ void CarMovement::handleEngBreak() {
 void CarMovement::handleSteeringWheel() {
 	if (forces.x != 1.0)
 		return;
-		
+
 	if (expertMode) {
 		return;
 	}
