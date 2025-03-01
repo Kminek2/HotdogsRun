@@ -53,4 +53,7 @@ namespace mapgen {
 
 	void spreadMapPoints(std::vector<MapPoint>& points, float spread);
 	void offsetMapPoints(std::vector<MapPoint>& points, float offset);
+
+	std::vector<glm::vec2> getCheckPoints(const std::vector<glm::vec2>& points, unsigned int offset = 10);
+	std::vector<glm::vec2> getCheckPoints(const std::vector<MapPoint>& points, unsigned int offset = 10);
 }

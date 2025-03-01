@@ -52,10 +52,10 @@ namespace mapgen {
 
         // ========= 0° TURNS =========
         // Diagonal -> Diagonal (no turn)
-        roadMap[{direction::NW, direction::NW}] = new ObjectSchema("arrow");
-        roadMap[{direction::SE, direction::SE}] = new ObjectSchema("arrow");
-        roadMap[{direction::NE, direction::NE}] = new ObjectSchema("arrow");
-        roadMap[{direction::SW, direction::SW}] = new ObjectSchema("arrow");
+        roadMap[{direction::NW, direction::NW}] = new ObjectSchema("debug_star");
+        roadMap[{direction::SE, direction::SE}] = new ObjectSchema("debug_star");
+        roadMap[{direction::NE, direction::NE}] = new ObjectSchema("debug_star");
+        roadMap[{direction::SW, direction::SW}] = new ObjectSchema("debug_star");
 
         // Cardinal -> Cardinal (no turn)
         roadMap[{direction::N, direction::N}] = new ObjectSchema("debug_star");

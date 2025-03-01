@@ -118,3 +118,27 @@ void mapgen::offsetMapPoints(std::vector<mapgen::MapPoint>& points, float offset
     for (auto& point : points)
         point.pos += glm::vec2(offset);
 }
+
+std::vector<glm::vec2> mapgen::getCheckPoints(const std::vector<glm::vec2>& points, unsigned int offset) {
+    size_t n = points.size()/offset;
+
+    std::vector<glm::vec2> checkpoints;
+    checkpoints.reserve(n);
+
+    for (size_t i = 0; i < n; i++)
+        checkpoints.push_back(points[i * offset]);
+
+    return checkpoints;
+}
+std::vector<glm::vec2> mapgen::getCheckPoints(const std::vector<mapgen::MapPoint>& points, unsigned int offset) {
+    std::vector<glm::vec2> transformed;
+    transformed.reserve(points.size());
+
+    std::transform(
+        points.begin(), points.end(),
+        std::back_inserter(transformed),
+        [](const mapgen::MapPoint& mp) { return mp.pos; }
+    );
+
+    return mapgen::getCheckPoints(transformed, offset);
+}

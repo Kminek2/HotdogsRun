@@ -13,6 +13,10 @@ class MapDemo :
 {
 private:
 	std::vector<GameObject*> points;
+	std::vector<GameObject*> check_points;
+	std::vector<GameObject*> mini_decors;
+	std::vector<GameObject*> buildings;
+
 	QuickCamera* qc;
 
 public:
