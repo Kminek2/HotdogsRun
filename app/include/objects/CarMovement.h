@@ -5,6 +5,8 @@
 
 constexpr float EPSILON = 1e-3;
 
+class WheelsScript;
+
 class CarMovement :
     public ObjectScript {
 private:
@@ -42,4 +44,5 @@ public:
     void makeLeftTurn();
     void makeRightTurn();
     void useHandBreak();
+    friend WheelsScript;
 };

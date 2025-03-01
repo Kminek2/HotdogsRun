@@ -8,6 +8,7 @@
 #include "objects/CarMovement.h"
 #include "objects/ShowOBB.h"
 #include "objects/CarInputs.h"
+#include "objects/WheelsScript.h"
 
 #include <iostream>
 
@@ -39,6 +40,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false);
 		objs[0]->AddScript(cmv);
+		objs[0]->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.1f, 1.6f, 0.0f, 2.2f));
 		objs[0]->AddScript(new CarInputs(*cmv));
 	}
 	objs[0]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(1,1,1), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
