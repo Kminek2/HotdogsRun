@@ -50,6 +50,7 @@
     <ClCompile Include="app\src\objects\LockPosition.cpp" />
     <ClCompile Include="app\src\objects\LockRotation.cpp" />
     <ClCompile Include="app\src\objects\ShowOBB.cpp" />
+    <ClCompile Include="app\src\objects\WheelsScript.cpp" />
     <ClCompile Include="app\src\PointLight.cpp" />
     <ClCompile Include="app\src\Queues.cpp" />
     <ClCompile Include="app\src\QuickCamera.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="app\include\objects\LockPosition.h" />
     <ClInclude Include="app\include\objects\LockRotation.h" />
     <ClInclude Include="app\include\objects\ShowOBB.h" />
+    <ClInclude Include="app\include\objects\WheelsScript.h" />
     <ClInclude Include="app\include\PointLight.h" />
     <ClInclude Include="app\include\Queues.h" />
     <ClInclude Include="app\include\QuickCamera.h" />

@@ -186,6 +186,15 @@
     <ClCompile Include="app\src\objects\Lights.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\AudioSource2d.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\SoundEngine.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\WheelsScript.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -348,6 +357,15 @@
       <Filter>Header Files\objects</Filter>
     </ClInclude>
     <ClInclude Include="app\include\objects\Lights.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\AudioSource2d.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\SoundEngine.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\WheelsScript.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>

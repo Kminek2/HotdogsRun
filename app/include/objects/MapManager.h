@@ -36,7 +36,7 @@ public:
 	struct MapSettingsValues {
 		MapSettingsValues();
 		float decors_per_tile = 1.5f,
-			decor_max_dist = 20.0f;
+			decor_max_dist = 10.0f;
 
 		Ellipse ellipse = { 20, 50, -5, 5 };
 

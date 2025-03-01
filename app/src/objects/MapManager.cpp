@@ -3,7 +3,6 @@
 
 void MapManager::Init()
 {
-#pragma region map
 	__road road_segements = createRoadMap();
 
 	std::vector<MapPoint> map_points = generateMap(map_len, ellipse, seed);
@@ -24,7 +23,6 @@ void MapManager::Init()
 	check_points.reserve(map_points.size() / cp_offset);
 	for (const glm::vec2& checkpoint : getCheckPoints(map_points, cp_offset))
 		check_points.push_back(new GameObject("debug_star", { checkpoint.x, checkpoint.y, 5 }));
-#pragma endregion
 
 	unsigned int decors_count = n * decors_per_tile;
 	mini_decors.reserve(decors_count);
@@ -36,14 +34,13 @@ void MapManager::Init()
 }
 
 void MapManager::add_decor(_rand& rand, const std::vector<MapPoint>& map_points) {
-	glm::vec2 tile = rand.choice(map_points).pos * MAP_TILE_SIZE;
+	glm::vec2 tile = rand.choice(map_points).pos;
 
 	GameObject* decor = new GameObject(rand.choice(small_decors), {
-		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * rand.coin_toss() ? 1 : -1,
-		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * rand.coin_toss() ? 1 : -1, 0});
+		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1),
+		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), 0 });
 
 	mini_decors.push_back(decor);
-	std::cout << mini_decors.size() << " - " << tile.x << ", " << tile.y << '\n';
 }
 
 GameObject* MapManager::GetPoint(unsigned index) {
