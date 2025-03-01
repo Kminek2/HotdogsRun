@@ -31,7 +31,7 @@ private:
 
 	const std::vector<std::string> small_decors;
 
-	void add_decor(_rand rand, std::vector<MapPoint>& map_points);
+	void add_decor(_rand& rand, const std::vector<MapPoint>& map_points);
 public:
 	struct MapSettingsValues {
 		MapSettingsValues();
