@@ -14,7 +14,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	qc->_sr(0.75f);
 	qc->_sm(100.0f);
 
-	GameObject* mapObj = new GameObject("debug_star");
+	GameObject* mapObj = new GameObject();
 	map = new MapManager();
 	mapObj->AddScript(map);
 

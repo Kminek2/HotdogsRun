@@ -20,7 +20,7 @@ class DebugScene;
 
 struct Model
 {
-
+	static void LoadEmptyModel();
 	static void LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords);
 
 	static std::pair<Model*, uint32_t> Create(std::string model);

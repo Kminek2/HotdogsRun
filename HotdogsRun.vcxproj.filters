@@ -171,6 +171,12 @@
     <ClCompile Include="app\src\DebugPoints.cpp">
       <Filter>Source Files\The Real Engine</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\objects\ShowOBB.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\MapManager.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -319,6 +325,15 @@
     </ClInclude>
     <ClInclude Include="app\include\ColorChangeBuffer.h">
       <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\ShowOBB.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\_rand.hpp">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\MapManager.h">
+      <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

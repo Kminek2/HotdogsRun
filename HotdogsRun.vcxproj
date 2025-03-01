@@ -50,7 +50,6 @@
     <ClCompile Include="app\src\PointLight.cpp" />
     <ClCompile Include="app\src\Queues.cpp" />
     <ClCompile Include="app\src\QuickCamera.cpp" />
-    <ClCompile Include="app\src\_rand.cpp" />
     <ClCompile Include="app\src\RenderPass.cpp" />
     <ClCompile Include="app\src\SceeneScript.cpp" />
     <ClCompile Include="app\src\Scene.cpp" />

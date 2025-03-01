@@ -16,6 +16,11 @@ const glm::mat4 Model::startRot = glm::rotate(glm::mat4(1), glm::radians(90.0f),
 std::unordered_map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> Model::modelsIndtaces;
 std::unordered_map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> Model::uiModelsIndtaces;
 
+void Model::LoadEmptyModel() {
+	loadedModels[""] = new Model({}, {});
+	loadedModels[""]->modelName = "";
+}
+
 void Model::LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords)
 {
 	std::vector<Vertex> vertices;
@@ -69,7 +74,6 @@ attrib.texcoords[2 * index.texcoord_index + 0],
 	loadedModels[name] = new Model(std::move(vertices), std::move(indices));
 	loadedModels[name]->modelName = name;
 	textures->AddTexture(texturePath.c_str());
-
 }
 
 std::pair<Model*, uint32_t> Model::Create(std::string model) {
