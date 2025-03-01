@@ -34,6 +34,7 @@ private:
 	void add_decor(_rand rand, std::vector<MapPoint> map_points);
 public:
 	struct MapSettingsValues {
+		MapSettingsValues();
 		float decors_per_tile = 1.5f,
 			decor_max_dist = 20.0f;
 
@@ -46,7 +47,7 @@ public:
 	};
 
 	// i hate this
-	MapManager(size_t seed = 42, const MapSettingsValues& vals = {}) :
+	MapManager(size_t seed = 42, const MapSettingsValues& vals = MapSettingsValues()) :
 		seed(seed),
 		decors_per_tile(vals.decors_per_tile), 
 		decor_max_dist(vals.decor_max_dist), 

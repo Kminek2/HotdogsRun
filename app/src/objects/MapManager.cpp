@@ -53,3 +53,5 @@ GameObject* MapManager::GetPoint(unsigned index) {
 
 void MapManager::Update() {}
 void MapManager::OnDestroy() {}
+
+MapManager::MapSettingsValues::MapSettingsValues() {}

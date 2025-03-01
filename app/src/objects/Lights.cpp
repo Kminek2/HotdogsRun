@@ -1,4 +1,4 @@
-#include "objects\Lights.h"
+#include "objects/Lights.h"
 #include "GameObject.h"
 
 const std::map<std::string, std::vector<PointLightBuffer>> Lights::pointLights;
