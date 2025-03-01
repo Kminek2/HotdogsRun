@@ -25,7 +25,4 @@ void WheelsScript::LateUpdate() {
     }
 }
 
-void WheelsScript::OnDestroy() {
-    for (int i = 0; i < wheels.size(); ++i)
-        delete wheels[i];
-}
+void WheelsScript::OnDestroy() {}
