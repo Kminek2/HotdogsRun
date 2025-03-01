@@ -39,6 +39,7 @@
     <ClCompile Include="app\src\main.cpp" />
     <ClCompile Include="app\src\mapgen.cpp" />
     <ClCompile Include="app\src\mapgen_road.cpp" />
+    <ClCompile Include="app\src\objects\CarInputs.cpp" />
     <ClCompile Include="app\src\objects\Lights.cpp" />
     <ClCompile Include="app\src\objects\MapManager.cpp" />
     <ClCompile Include="app\src\Model.cpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="app\src\Uniform.cpp" />
     <ClCompile Include="app\src\UniformBuffer.cpp" />
     <ClCompile Include="app\src\ValidationLayers.cpp" />
+    <ClCompile Include="app\src\_rand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\Application.h" />
@@ -90,6 +92,7 @@
     <ClInclude Include="app\include\LightObject.h" />
     <ClInclude Include="app\include\mapgen.h" />
     <ClInclude Include="app\include\mapgen_road.hpp" />
+    <ClInclude Include="app\include\objects\CarInputs.h" />
     <ClInclude Include="app\include\objects\Lights.h" />
     <ClInclude Include="app\include\objects\MapManager.h" />
     <ClInclude Include="app\include\Model.h" />

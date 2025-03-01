@@ -177,6 +177,15 @@
     <ClCompile Include="app\src\objects\MapManager.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\_rand.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\CarInputs.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\Lights.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -333,6 +342,12 @@
       <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="app\include\objects\MapManager.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\CarInputs.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\Lights.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>

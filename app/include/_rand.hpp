@@ -10,6 +10,8 @@ public:
 	_rand() : gen(std::random_device{}()) {};
 	explicit _rand(size_t _seed) : gen(_seed) {};
 
+	bool coin_toss(double weight = 0.5);
+
 	template<typename T>
 	T random(T min, T max);
 

@@ -32,17 +32,16 @@ void MapManager::Init()
 
 	_rand rand(seed);
 
-	for (unsigned i = 0; i < decors_count; i++) {
+	for (unsigned i = 0; i < decors_count; i++) 
 		add_decor(rand, map_points);
-	}
 }
 
-void MapManager::add_decor(_rand rand, std::vector<MapPoint> map_points) {
+void MapManager::add_decor(_rand rand, std::vector<MapPoint>& map_points) {
 	glm::vec2 tile = rand.choice(map_points).pos;
 
 	GameObject* decor = new GameObject(rand.choice(small_decors), {
-		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist),
-		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist), 0 });
+		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * rand.coin_toss() ? 1 : -1,
+		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * rand.coin_toss() ? 1 : -1, 0});
 
 	mini_decors.push_back(decor);
 }

@@ -15,13 +15,10 @@ class MapDemo :
 	public SceeneScript
 {
 private:
-
 	QuickCamera* qc;
 	MapManager* map;
 
 	const float MAP_TILE_SIZE = 12.7f; // 127x127 mv size
-
-	void add_decor(_rand rand, std::vector<mapgen::MapPoint> map_points);
 
 public:
 	std::shared_ptr<Scene> Init() override;

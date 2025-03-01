@@ -16,8 +16,13 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	qc->_sr(0.75f);
 	qc->_sm(100.0f);
 
+	MapManager::MapSettingsValues svals;
+	svals.small_decors = {
+		"cube"
+	};
+
 	GameObject* mapObj = new GameObject();
-	map = new MapManager(seed);
+	map = new MapManager(seed, svals);
 	mapObj->AddScript(map);
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
