@@ -63,7 +63,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 co
 void main() {
     vec3 norm = normalize(fragNormal);
     vec3 viewDir = normalize(cPos.xyz - fragPos);
-    vec3 result = vec3(0);
+    vec3 result = vec3(0, 0, 0);
     vec3 texColor = texture(samplers, vec2(fragTexCoord.x, fragTexCoord.y / MAX_TEXTURES)).xyz;
 
     DirLight dirLight;
@@ -76,7 +76,7 @@ void main() {
     {
         result += CalcDirLight(dirLight, norm, viewDir);
     }else{
-        result += texColor;
+        result += vec3(0.5, 0.5, 0.5);
     }
 
     for(int i = 0; i < pLNum; i++)

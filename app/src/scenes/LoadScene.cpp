@@ -36,7 +36,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 	uiObj = new UiObject("f1car", {0, 0.5, 0}, glm::vec3(0, 0, 0), glm::vec3(0.05));
 
-	LightObject::SetDirLight({ glm::vec3(-0.2f, -0.3f, -1.0f), glm::vec3(0.02f, 0.02f, 0.02f), glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(0.15f, 0.15f, 0.15f) });
+	LightObject::SetDirLight({ glm::vec3(-0.2f, -0.3f, -1.0f), glm::vec3(0.005f, 0.005f, 0.005f), glm::vec3(0.04f, 0.04f, 0.04f), glm::vec3(0.05f, 0.05f, 0.05f) });
 	//LightObject::SetDirLight({ glm::vec3(-0.2f, -0.3f, -1.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.4f, 0.4f), glm::vec3(0.5f, 0.5f, 0.5f) });
 	//new PointLight(obj2, { 0, 1, 1 });
 	//new PointLight(obj2, { 0, -1, 1 });
