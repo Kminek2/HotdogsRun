@@ -1,12 +1,14 @@
 ﻿#include "scenes/MapDemo.h"
 #include "Scene.h"
-#include "mapgen.h"
 #include "QuickCamera.h"
 
 #include <glm/vec3.hpp>
-#include <random>
 #include <iostream>
 
+// -- general --
+const size_t seed = 42;
+
+// -- road --
 const uint16_t map_len = 100;
 
 const double a = 20;
@@ -14,9 +16,12 @@ const double b = 50;
 const double min_offset = -5;
 const double max_offset =  5;
 
+// -- checkpoints --
 const unsigned cp_offset = 15; // cp stands for checkpoint 💀
 
+// -- decors -- 
 const double decors_per_tile = 1.5f;
+const float decor_max_dist = 20.0f; // min_dist = MAP_TILE_SIZE
 
 const std::vector<std::string> small_decors = {
 	"cube"
@@ -24,20 +29,28 @@ const std::vector<std::string> small_decors = {
 
 using namespace mapgen;
 
+void MapDemo::add_decor(_rand rand, std::vector<mapgen::MapPoint> map_points) {
+	glm::vec2 tile = rand.choice(map_points).pos;
+
+	GameObject* decor = new GameObject(rand.choice(small_decors), {
+		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist), 
+		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist), 0});
+
+	mini_decors.push_back(decor);
+}
+
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
 
-#pragma region init qc
 	qc = new QuickCamera();
 	qc->_sr(0.75f);
 	qc->_sm(100.0f);
-#pragma endregion
 
 #pragma region map
 	__road road_segements = createRoadMap();
 
-	std::vector<MapPoint> map_points = generateMap(map_len, { a,b,min_offset,max_offset }, 42);
-	spreadMapPoints(map_points, 50.0f);
+	std::vector<MapPoint> map_points = generateMap(map_len, { a,b,min_offset,max_offset }, seed);
+	spreadMapPoints(map_points, MAP_TILE_SIZE);
 
 	int n = map_points.size(); // number of map tiles
 	points.reserve(n);
@@ -58,7 +71,13 @@ std::shared_ptr<Scene> MapDemo::Init() {
 #pragma endregion
 
 	unsigned int decors_count = n * decors_per_tile;
-	std::random_device rd;
+	mini_decors.reserve(decors_count);
+
+	_rand rand(seed);
+
+	for (unsigned i = 0; i < decors_count; i++) {
+		add_decor(rand, map_points);
+	}
 
 	Camera::main->cameraTransform->MoveTo(points[0]->transform->position);
 

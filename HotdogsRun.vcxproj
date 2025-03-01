@@ -49,6 +49,7 @@
     <ClCompile Include="app\src\PointLight.cpp" />
     <ClCompile Include="app\src\Queues.cpp" />
     <ClCompile Include="app\src\QuickCamera.cpp" />
+    <ClCompile Include="app\src\_rand.cpp" />
     <ClCompile Include="app\src\RenderPass.cpp" />
     <ClCompile Include="app\src\SceeneScript.cpp" />
     <ClCompile Include="app\src\Scene.cpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="app\include\PointLight.h" />
     <ClInclude Include="app\include\Queues.h" />
     <ClInclude Include="app\include\QuickCamera.h" />
+    <ClInclude Include="app\include\_rand.hpp" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />
     <ClInclude Include="app\include\SceeneScript.h" />
