@@ -6,7 +6,9 @@ LockPosition::LockPosition(Transform* transform, glm::vec3 offset) {
 }
 
 void LockPosition::Init() {}
-void LockPosition::Update() {
+void LockPosition::EarlyUpdate() {}
+void LockPosition::Update() {}
+void LockPosition::LateUpdate() {
 	gameObject->transform->MoveTo(this->transform->position + offset);
 }
 void LockPosition::OnDestroy() {}

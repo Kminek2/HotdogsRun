@@ -24,9 +24,22 @@ private:
     void handleSteeringWheel();
     void handleEngBreak();
     void handleForces();
+    struct actions {
+        bool forward;
+        bool backwards;
+        bool left_turn;
+        bool right_turn;
+        bool hand_break;
+    } actActions;
+    static const actions clearedActions;
 public:
     CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode = false, float multiplier = 0.1f);
     void Init() override;
     void Update() override;
     void OnDestroy() override;
+    void goForward();
+    void goBackwards();
+    void makeLeftTurn();
+    void makeRightTurn();
+    void useHandBreak();
 };

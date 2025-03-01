@@ -7,6 +7,7 @@
 #include "objects/LockRotation.h"
 #include "objects/CarMovement.h"
 #include "objects/ShowOBB.h"
+#include "objects/CarInputs.h"
 
 #include <iostream>
 
@@ -35,7 +36,11 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	objs[0]->AddScript(new ShowOBB);
 	objs[1]->AddScript(new ShowOBB);
 
-	objs[0]->AddScript(new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false));
+	{
+		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false);
+		objs[0]->AddScript(cmv);
+		objs[0]->AddScript(new CarInputs(*cmv));
+	}
 	objs[0]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(1,1,1), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
 	objs[1]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(3,3,3), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
 

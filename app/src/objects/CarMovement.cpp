@@ -1,7 +1,8 @@
 #include "objects/CarMovement.h"
-#include "Input.h"
 #include "AppTime.h"
 #include <iostream>
+
+const CarMovement::actions CarMovement::clearedActions = {false, false, false, false, false};
 
 CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode, float multiplier) :
 	carWeight(carWeight), breaksStrength(breaksStrength), maxSpeed(maxSpeed), minSpeed(minSpeed), accelFront(accelFront), accelBack(accelBack), expertMode(expertMode), multiplier(multiplier) {
@@ -44,6 +45,7 @@ void CarMovement::Update() {
 			actSpeed = std::max(actSpeed/2.5f, -20.0f);
 		}
 	}
+	actActions = clearedActions;
 }
 
 void CarMovement::OnDestroy() {
@@ -53,24 +55,14 @@ void CarMovement::OnDestroy() {
 void CarMovement::handleGas() {
 	if (forces.x != 1.0f) return;
 	if (maxSpeed == 0) return;
-	if (Input::getKeyPressed(GLFW_KEY_W)) {
-		if (actSpeed < -40.0f*multiplier) {
-			std::cout << "GEARBOX DESTROYED!" << '\n';
-			//destroyGearbox();
-			return;
-		}
+	if (actActions.forward) {
 		float speedPr = actSpeed / maxSpeed*multiplier;
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
 		actSpeed += Time::deltaTime * accelFront * (-1.6f * powf(speedPr, 2) + 1.6f) * multiplier; //y = -1.6x^2+1.6
 		actSpeed = std::min(actSpeed, maxSpeed*multiplier);
 	}
-	if (Input::getKeyPressed(GLFW_KEY_S)) {
-		if (actSpeed > 40.0f*multiplier) {
-			std::cout << "GEARBOX DESTROYED!" << '\n';
-			//destroyGearbox();
-			return;
-		}
+	if (actActions.backwards) {
 		float speedPr = actSpeed / minSpeed*multiplier;
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
@@ -80,7 +72,7 @@ void CarMovement::handleGas() {
 }
 
 void CarMovement::handleBreaks() {
-	if (Input::getKeyPressed(GLFW_KEY_SPACE)) {
+	if (actActions.hand_break) {
 		if (actSpeed > 0) {
 			actSpeed -= carWeight * breaksStrength * 200.0f * Time::deltaTime * multiplier;
 			actSpeed = std::max(actSpeed, 0.0f);
@@ -103,13 +95,11 @@ void CarMovement::handleEngBreak() {
 }
 
 void CarMovement::handleSteeringWheel() {
-	bool left = Input::getKeyPressed(GLFW_KEY_A);
-	bool right = Input::getKeyPressed(GLFW_KEY_D);
 	if (expertMode) {
 		return;
 	}
 
-	if (left == right) {
+	if (actActions.left_turn == actActions.right_turn) {
 		if (axleAngle > 0) {
 			axleAngle -= 100.0f * Time::deltaTime;
 			axleAngle = std::max(axleAngle, 0.0f);
@@ -117,10 +107,10 @@ void CarMovement::handleSteeringWheel() {
 			axleAngle += 100.0f * Time::deltaTime;
 			axleAngle = std::min(axleAngle, 0.0f);
 		}
-	} else if (left) {
+	} else if (actActions.left_turn) {
 		axleAngle += 100.0f * Time::deltaTime;
 		axleAngle = std::min(axleAngle, 30.0f);
-	} else if (right) {
+	} else if (actActions.right_turn) {
 		axleAngle -= 100.0f * Time::deltaTime;
 		axleAngle = std::max(axleAngle, -30.0f);
 	}
@@ -157,4 +147,24 @@ void CarMovement::handleForces() {
 		}
 	}
 	std::cout << forces.x << '\n';
+}
+
+void CarMovement::goForward() {
+	actActions.forward = true;
+}
+
+void CarMovement::goBackwards() {
+	actActions.backwards = true;
+}
+
+void CarMovement::makeLeftTurn() {
+	actActions.left_turn = true;
+}
+
+void CarMovement::makeRightTurn() {
+	actActions.right_turn = true;
+}
+
+void CarMovement::useHandBreak() {
+	actActions.hand_break = true;
 }
