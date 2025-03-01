@@ -10,6 +10,7 @@ class ObjectScript
 {
 public:
 	virtual void Init() = 0;
+	virtual void EarlyUpdate() {};
 	virtual void Update() = 0;
 	virtual void LateUpdate() {};
 	virtual void OnDestroy() = 0;

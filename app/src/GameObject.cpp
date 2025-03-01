@@ -64,6 +64,19 @@ void GameObject::DeleteAll()
 	deletingAll = false;
 }
 
+void GameObject::EarlyUpdateAllObjectScripts() {
+	std::list<GameObject*>::iterator it = createdGameObject.begin();
+
+	while (it != createdGameObject.end())
+	{
+		for (int i = 0; i < (*it)->objectScripts.size(); i++)
+		{
+			(*it)->objectScripts[i]->EarlyUpdate();
+		}
+		it = std::next(it);
+	}
+}
+
 void GameObject::UpdateAllObjectScripts()
 {
 	std::list<GameObject*>::iterator it = createdGameObject.begin();

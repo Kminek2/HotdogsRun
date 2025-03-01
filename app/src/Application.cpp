@@ -129,7 +129,8 @@ void Application::Update() {
 
 		frameTimes.clear();
 	}
-
+	Scene::loadedScene.get()->sceneScript->EarlyUpdate();
+	GameObject::EarlyUpdateAllObjectScripts();
 	Scene::loadedScene.get()->sceneScript->Update();
 	GameObject::UpdateAllObjectScripts();
 	Scene::loadedScene.get()->sceneScript->LateUpdate();

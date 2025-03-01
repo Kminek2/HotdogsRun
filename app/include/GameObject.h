@@ -60,6 +60,7 @@ public:
 	void AddColorChange(glm::vec3 from, glm::vec3 to);
 
 	static void DeleteAll();
+	static void EarlyUpdateAllObjectScripts();
 	static void UpdateAllObjectScripts();
 	static void LateUpdateAllObjectScripts();
 
