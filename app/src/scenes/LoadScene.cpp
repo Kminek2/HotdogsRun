@@ -6,6 +6,8 @@
 #include "QuickCamera.h"
 #include "DebugPoints.h"
 
+#include "objects/Lights.h"
+
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"load", new LoadScene()},
 	{"debug", new DebugScene()},
@@ -43,7 +45,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	//new SpotLight(obj2, { 0, 0, -1 }, {0, 1, 1});
 
 	GameObject* bilbord = new GameObject("bilboardHodDog", {0, 0, 10});
-	glm::vec3 direction = glm::vec3(0, 1, 1);
+	/*/glm::vec3 direction = glm::vec3(0, 1, 1);
 	glm::vec3 color = glm::vec3(0.2, 0.2, 0.05);
 	new SpotLight(bilbord, { 2.05f, -1.55f, 5.6f }, direction, color);
 	new SpotLight(bilbord, { 1.35f, -1.55f, 5.6f }, direction, color);
@@ -51,7 +53,9 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	new SpotLight(bilbord, { -0.05f, -1.55f, 5.6f }, direction, color);
 	new SpotLight(bilbord, { -0.75f, -1.55f, 5.6f }, direction, color);
 	new SpotLight(bilbord, { -1.45f, -1.55f, 5.6f }, direction, color);
-	new SpotLight(bilbord, { -2.15f, -1.55f, 5.6f }, direction, color);
+	new SpotLight(bilbord, { -2.15f, -1.55f, 5.6f }, direction, color);*/
+
+	bilbord->AddScript(new Lights());
 
 	//DebugPoints::AddLines(debugVerticies, debugIndices);
 	//DebugPoints::AddLines({

@@ -38,6 +38,15 @@ SpotLight::SpotLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 dir, glm::v
 	i = std::prev(createdLightObjects.end());
 }
 
+SpotLight::SpotLight(GameObject* gameObject, SpotLightBuffer spotLight) : LightObject(gameObject, spotLight.pos)
+{
+	lightNum++;
+	light = spotLight;
+
+	createdLightObjects.push_back(this);
+	i = std::prev(createdLightObjects.end());
+}
+
 SpotLight::~SpotLight()
 {
 	lightNum--;

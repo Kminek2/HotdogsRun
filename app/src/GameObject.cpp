@@ -45,6 +45,11 @@ void GameObject::AddScript(ObjectScript* script)
 	script->Init();
 }
 
+std::string GameObject::GetModelName()
+{
+	return model->GetName();
+}
+
 void GameObject::DeleteAll()
 {
 	deletingAll = true;

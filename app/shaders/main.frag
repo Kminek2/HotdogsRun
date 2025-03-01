@@ -110,6 +110,8 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 
     vec3 lightDir = normalize(light.pos - pos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
+    if(diff == 0 && length(light.pos - pos) <= 0.2 && length(normalize(col) - normalize(light.col)) <= 0.2)
+        return light.col * 100;
     // specular shading
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(viewDir, halfwayDir), 0.0), 2);

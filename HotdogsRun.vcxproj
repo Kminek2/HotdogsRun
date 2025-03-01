@@ -39,6 +39,7 @@
     <ClCompile Include="app\src\main.cpp" />
     <ClCompile Include="app\src\mapgen.cpp" />
     <ClCompile Include="app\src\mapgen_road.cpp" />
+    <ClCompile Include="app\src\objects\Lights.cpp" />
     <ClCompile Include="app\src\objects\MapManager.cpp" />
     <ClCompile Include="app\src\Model.cpp" />
     <ClCompile Include="app\src\ObjectScript.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="app\include\LightObject.h" />
     <ClInclude Include="app\include\mapgen.h" />
     <ClInclude Include="app\include\mapgen_road.hpp" />
+    <ClInclude Include="app\include\objects\Lights.h" />
     <ClInclude Include="app\include\objects\MapManager.h" />
     <ClInclude Include="app\include\Model.h" />
     <ClInclude Include="app\include\ObjectSchema.hpp" />

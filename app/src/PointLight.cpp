@@ -37,6 +37,15 @@ PointLight::PointLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 col, floa
 	i = std::prev(createdLightObjects.end());
 }
 
+PointLight::PointLight(GameObject* gameObject, const PointLightBuffer& pointLight) : LightObject(gameObject, pointLight.pos)
+{
+	lightNum++;
+	light = pointLight;
+
+	createdLightObjects.push_back(this);
+	i = std::prev(createdLightObjects.end());
+}
+
 PointLight::~PointLight()
 {
 	lightNum--;

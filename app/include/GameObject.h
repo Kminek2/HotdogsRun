@@ -54,6 +54,7 @@ public:
 	std::vector<ObjectScript*> objectScripts;
 
 	void AddScript(ObjectScript* script);
+	std::string GetModelName();
 	void addOBB(OBB obb);
 
 	void AddColorChange(glm::vec3 from, glm::vec3 to);

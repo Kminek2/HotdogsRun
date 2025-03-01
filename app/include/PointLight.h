@@ -16,6 +16,7 @@ private:
     friend Application;
 public:
     PointLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 col = glm::vec3(1), float constant = 1.0f, float linear = 0.09f, float quadratic = 0.032f);
+    PointLight(GameObject* gameObject, const PointLightBuffer& pointLight);
     ~PointLight();
 };
 

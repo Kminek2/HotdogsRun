@@ -191,6 +191,11 @@ Model::Model(Model& model, std::list<Model*>::iterator iterator) {
 	this->modelName = model.modelName;
 }
 
+std::string Model::GetName()
+{
+	return modelName;
+}
+
 void Model::SendBuffers() {
 	vertexBuffer->SendBufferToMemory();
 	indexBuffer->SendBufferToMemory();

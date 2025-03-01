@@ -33,6 +33,8 @@ struct Model
 
 	Model(Model& model, std::list<Model*>::iterator iterator);
 
+	std::string GetName();
+
 	static void SendBuffers();
 
 	static void Unload();
