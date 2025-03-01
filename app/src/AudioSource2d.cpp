@@ -158,23 +158,23 @@ bool AudioSource2d::StopTrack()
 
 bool AudioSource2d::LoadStereoWaveFile(const char* filename)
 {
-	FILE* filePtr;
 	RiffWaveHeaderType riffWaveFileHeader;
 	SubChunkHeaderType subChunkHeader;
 	FmtType fmtData;
 	unsigned int count, seekSize;
 	bool foundFormat, foundData;
-
+	
 	// Open the wave file for reading in binary.
-	filePtr = fopen(filename, "rb");
-	if (filePtr == NULL)
+	std::ifstream file(filename, std::ios::in | std::ios::binary);
+	if (!file.is_open())
 	{
 		return false;
 	}
 
 	// Read in the riff wave file header.
-	count = fread(&riffWaveFileHeader, sizeof(riffWaveFileHeader), 1, filePtr);
-	if (count != 1)
+	file.read(reinterpret_cast<char*>(&riffWaveFileHeader), sizeof(riffWaveFileHeader));
+	count = file.gcount();
+	if (count != sizeof(riffWaveFileHeader))
 	{
 		return false;
 	}
@@ -196,8 +196,9 @@ bool AudioSource2d::LoadStereoWaveFile(const char* filename)
 	while (foundFormat == false)
 	{
 		// Read in the sub chunk header.
-		count = fread(&subChunkHeader, sizeof(subChunkHeader), 1, filePtr);
-		if (count != 1)
+		file.read(reinterpret_cast<char*>(&subChunkHeader), sizeof(subChunkHeader));
+		count = file.gcount();
+		if (count != sizeof(subChunkHeader))
 		{
 			return false;
 		}
@@ -209,13 +210,14 @@ bool AudioSource2d::LoadStereoWaveFile(const char* filename)
 		}
 		else
 		{
-			fseek(filePtr, subChunkHeader.subChunkSize, SEEK_CUR);
+			file.seekg(subChunkHeader.subChunkSize, std::ios::cur);
 		}
 	}
 
 	// Read in the format data.
-	count = fread(&fmtData, sizeof(fmtData), 1, filePtr);
-	if (count != 1)
+	file.read(reinterpret_cast<char*>(&fmtData), sizeof(fmtData));
+	count = file.gcount();
+	if (count != sizeof(fmtData))
 	{
 		return false;
 	}
@@ -250,15 +252,15 @@ bool AudioSource2d::LoadStereoWaveFile(const char* filename)
 
 	// Seek up to the next sub chunk.
 	seekSize = subChunkHeader.subChunkSize - 16;
-	fseek(filePtr, seekSize, SEEK_CUR);
+	file.seekg(seekSize, std::ios::cur);
 
 	// Read in the sub chunk headers until you find the data chunk.
 	foundData = false;
 	while (foundData == false)
 	{
-		// Read in the sub chunk header.
-		count = fread(&subChunkHeader, sizeof(subChunkHeader), 1, filePtr);
-		if (count != 1)
+		file.read(reinterpret_cast<char*>(&subChunkHeader), sizeof(subChunkHeader));
+		count = file.gcount();
+		if (count != sizeof(subChunkHeader))
 		{
 			return false;
 		}
@@ -270,7 +272,7 @@ bool AudioSource2d::LoadStereoWaveFile(const char* filename)
 		}
 		else
 		{
-			fseek(filePtr, subChunkHeader.subChunkSize, SEEK_CUR);
+			file.seekg(subChunkHeader.subChunkSize, std::ios::cur);
 		}
 	}
 
@@ -281,14 +283,15 @@ bool AudioSource2d::LoadStereoWaveFile(const char* filename)
 	m_waveData = new unsigned char[m_waveSize];
 
 	// Read in the wave file data into the newly created buffer.
-	count = fread(m_waveData, 1, m_waveSize, filePtr);
+	file.read(reinterpret_cast<char*>(m_waveData), m_waveSize);
+	count = file.gcount();
 	if (count != m_waveSize)
 	{
 		return false;
 	}
 
 	// Close the file once done reading.
-	fclose(filePtr);
+	file.close();
 
 	return true;
 }
