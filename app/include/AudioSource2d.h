@@ -3,6 +3,7 @@
 
 #include <list>
 #include <string>
+#include <cstdio>
 class AudioSource2d
 {
 private:

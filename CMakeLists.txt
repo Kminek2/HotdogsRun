@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
+find_package(OpenAL REQUIRED)
 add_compile_options(-g)
 
 file(GLOB_RECURSE SOURCES "app/src/*.cpp")
@@ -16,4 +17,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE "app/include" "." "lib-includ
 target_link_libraries(${PROJECT_NAME}
 	vulkan
 	glfw
+	openal
 )

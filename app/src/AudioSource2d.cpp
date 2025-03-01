@@ -166,7 +166,7 @@ bool AudioSource2d::LoadStereoWaveFile(const char* filename)
 	bool foundFormat, foundData;
 
 	// Open the wave file for reading in binary.
-	fopen_s(&filePtr, filename, "rb");
+	filePtr = fopen(filename, "rb");
 	if (filePtr == NULL)
 	{
 		return false;

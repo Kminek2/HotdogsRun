@@ -1,6 +1,6 @@
 #pragma once
-#include <OpenAl/al.h>
-#include <OpenAl/alc.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 class SoundEngine
 {
 public:
