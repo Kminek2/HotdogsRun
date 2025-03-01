@@ -95,6 +95,9 @@ void CarMovement::handleEngBreak() {
 }
 
 void CarMovement::handleSteeringWheel() {
+	if (forces.x != 1.0)
+		return;
+		
 	if (expertMode) {
 		return;
 	}
