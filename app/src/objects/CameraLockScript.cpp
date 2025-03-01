@@ -10,8 +10,9 @@ CameraLockScript::CameraLockScript(ViewType view, glm::vec3 offset, float pitch,
 void CameraLockScript::Init() {
 	Camera::main->view = view;
 }
+void CameraLockScript::Update() {}
 
-void CameraLockScript::Update() {
+void CameraLockScript::LateUpdate() {
 	if (unlocked_rotation) {
 		if (Input::getKeyPressed(key_right)) {
 			yaw += 20*Time::deltaTime;

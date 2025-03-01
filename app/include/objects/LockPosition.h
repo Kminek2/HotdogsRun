@@ -13,8 +13,6 @@ private:
 public:
 	LockPosition(Transform* transform, glm::vec3 offset = glm::vec3(0.0f));
 	void Init() override;
-	void EarlyUpdate() override;
 	void Update() override;
-	void LateUpdate() override;
 	void OnDestroy() override;
 };

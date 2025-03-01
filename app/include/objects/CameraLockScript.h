@@ -15,6 +15,7 @@ class CameraLockScript :
         CameraLockScript(ViewType view = Isometric, glm::vec3 offset = glm::vec3(-300.0f, 0.0f, 0.0f), float pitch = -15.0f, float yaw = 45.0f, bool unlocked_rotation = false, uint16_t key_left = GLFW_KEY_Q, uint16_t key_right = GLFW_KEY_E);
         void Init() override;
         void Update() override;
+        void LateUpdate() override;
         void OnDestroy() override;
 };
 
