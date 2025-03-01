@@ -126,8 +126,10 @@ void Buffer<T>::SendBufferToMemory()
 {
     VkDeviceSize bufferSize = sizeof(data[0]) * data.size();
     if (stagingBufferSize < bufferSize) {
-        vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
-        vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
+        if (stagingBuffer != VK_NULL_HANDLE) {
+            vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
+            vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
+        }
         CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
         stagingBufferSize = bufferSize;
     }
@@ -139,8 +141,10 @@ void Buffer<T>::SendBufferToMemory()
 
     if (!createdBuffer || bufferSize > actBufferSize) {
         vkDeviceWaitIdle(Device::getDevice());
-        vkDestroyBuffer(Device::getDevice(), buffer, nullptr);
-        vkFreeMemory(Device::getDevice(), bufferMemory, nullptr);
+        if (buffer != VK_NULL_HANDLE) {
+            vkDestroyBuffer(Device::getDevice(), buffer, nullptr);
+            vkFreeMemory(Device::getDevice(), bufferMemory, nullptr);
+        }
         CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | bufferUsage, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, buffer, bufferMemory);
         createdBuffer = true;
     }
