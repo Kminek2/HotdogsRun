@@ -57,8 +57,8 @@ layout(location = 0) out vec4 outColor;
 
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir);
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col);
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col);
 
 void main() {
     vec3 norm = normalize(fragNormal);
@@ -81,12 +81,12 @@ void main() {
 
     for(int i = 0; i < pLNum; i++)
     {
-        result += CalcPointLight(pointLights[i], norm, fragPos, viewDir);
+        result += CalcPointLight(pointLights[i], norm, fragPos, viewDir, texColor);
     }
 
     for(int i = 0; i < sLNum; i++)
     {
-        result += CalcSpotLight(spotLights[i], norm, fragPos, viewDir);
+        result += CalcSpotLight(spotLights[i], norm, fragPos, viewDir, texColor);
     }
     outColor = vec4(result * texColor, 1.0);
 }
@@ -106,13 +106,13 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     return (ambient + diffuse + specular);
 }
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir){
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col){
     vec3 lightDir = normalize(light.pos - pos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 2);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(viewDir, halfwayDir), 0.0), 2);
     // attenuation
     float distance = length(light.pos - pos);
     float attenuation = 1.0 / (light.functions.x + light.functions.y * distance + light.functions.z * (distance * distance));    
@@ -126,13 +126,15 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir){
     return (ambient + diffuse + specular);
 }
 
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir){
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col){
     vec3 lightDir = normalize(light.pos - pos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
+    if(diff == 0 && length(light.pos - pos) <= 0.2 && length(normalize(col) - normalize(light.col)) <= 0.2)
+        return light.col * 100;
     // specular shading
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 2);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(viewDir, halfwayDir), 0.0), 2);
     // attenuation
     float distance = length(light.pos - pos);
     float attenuation = 1.0 / (light.functions.x + light.functions.y * distance + light.functions.z * (distance * distance));    

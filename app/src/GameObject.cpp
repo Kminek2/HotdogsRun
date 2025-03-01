@@ -105,3 +105,12 @@ void GameObject::TransformTransformsToMemory()
 void GameObject::addOBB(OBB obb) {
 	obbs.push_back(obb);
 }
+
+void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)
+{
+	ColorChangeBuffer colorChange;
+	colorChange.fromCol = from;
+	colorChange.toCol = to;
+
+	changeColor.push_back(colorChange);
+}

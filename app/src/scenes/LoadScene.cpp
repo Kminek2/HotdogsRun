@@ -44,7 +44,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 	GameObject* bilbord = new GameObject("bilboardHodDog", {0, 0, 10});
 	glm::vec3 direction = glm::vec3(0, 1, 1);
-	glm::vec3 color = glm::vec3(0.1, 0.1, 0.05);
+	glm::vec3 color = glm::vec3(0.2, 0.2, 0.05);
 	new SpotLight(bilbord, { 2.05f, -1.55f, 5.6f }, direction, color);
 	new SpotLight(bilbord, { 1.35f, -1.55f, 5.6f }, direction, color);
 	new SpotLight(bilbord, { 0.65f, -1.55f, 5.6f }, direction, color);

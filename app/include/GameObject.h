@@ -8,6 +8,7 @@
 #include <vector>
 #include <array>
 
+#include "ColorChangeBuffer.h"
 class Commands;
 class Collisions;
 class ShowOBB;
@@ -41,6 +42,8 @@ private:
 	std::vector<OBB> obbs;
 
 	static bool deletingAll;
+
+	std::vector<ColorChangeBuffer> changeColor;
 public:
 	GameObject(std::string model, glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1));
 	GameObject(ObjectSchema* schema, glm::vec3 position = glm::vec3(0)) : GameObject(schema->model, position, schema->rotation, schema->scale) {};
@@ -52,6 +55,8 @@ public:
 
 	void AddScript(ObjectScript* script);
 	void addOBB(OBB obb);
+
+	void AddColorChange(glm::vec3 from, glm::vec3 to);
 
 	static void DeleteAll();
 	static void UpdateAllObjectScripts();

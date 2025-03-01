@@ -317,6 +317,9 @@
     <ClInclude Include="app\include\DebugPoints.h">
       <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
+    <ClInclude Include="app\include\ColorChangeBuffer.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="app\shaders\compile.bat">
