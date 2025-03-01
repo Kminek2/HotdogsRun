@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="app\src\Application.cpp" />
     <ClCompile Include="app\src\AppTime.cpp" />
+    <ClCompile Include="app\src\AudioSource2d.cpp" />
     <ClCompile Include="app\src\Buffer.cpp" />
     <ClCompile Include="app\src\Camera.cpp" />
     <ClCompile Include="app\src\CameraTransform.cpp" />
@@ -59,6 +60,7 @@
     <ClCompile Include="app\src\scenes\LoadScene.cpp" />
     <ClCompile Include="app\src\scenes\MapDemo.cpp" />
     <ClCompile Include="app\src\Shader.cpp" />
+    <ClCompile Include="app\src\SoundEngine.cpp" />
     <ClCompile Include="app\src\SpotLight.cpp" />
     <ClCompile Include="app\src\SwapChain.cpp" />
     <ClCompile Include="app\src\Transform.cpp" />
@@ -71,6 +73,7 @@
   <ItemGroup>
     <ClInclude Include="app\include\Application.h" />
     <ClInclude Include="app\include\AppTime.h" />
+    <ClInclude Include="app\include\AudioSource2d.h" />
     <ClInclude Include="app\include\Buffer.h" />
     <ClInclude Include="app\include\Camera.h" />
     <ClInclude Include="app\include\CameraStructures.h" />
@@ -106,6 +109,7 @@
     <ClInclude Include="app\include\PointLight.h" />
     <ClInclude Include="app\include\Queues.h" />
     <ClInclude Include="app\include\QuickCamera.h" />
+    <ClInclude Include="app\include\SoundEngine.h" />
     <ClInclude Include="app\include\_rand.hpp" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />
@@ -237,7 +241,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib;C:\Users\Gry\Desktop\vusual\lib;C:\VulkanSDK\1.4.304.1\Lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -257,7 +261,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

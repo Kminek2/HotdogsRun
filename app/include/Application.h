@@ -2,6 +2,7 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include "Camera.h"
+#include "SoundEngine.h"
 
 #define FRAMES_IN_FLIGHT 2
 
@@ -11,6 +12,7 @@ class Application
 {
 private:
 	Camera* camera;
+	SoundEngine* soundEngine;
 	static GLFWwindow* window;
 public:
 	Application(uint16_t width, uint16_t height, GLFWwindow* window);

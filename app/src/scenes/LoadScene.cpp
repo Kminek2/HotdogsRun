@@ -56,6 +56,8 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	//{glm::vec3(bilbord->transform->getModelMatrix() * glm::vec4(2.05f, -1.55f, 5.6f, 1)), {0.6f, 0.0f}, {0, 0, 0}},
 	//{glm::vec3(bilbord->transform->getModelMatrix() * glm::vec4(2.05f, -1.55f, 5.6f, 1)) + glm::vec3(0, 1, 1), {0.6f, 0.0f}, {0, 0, 0}}}, {0, 1});
 
+	AudioSource2d* testSound = new AudioSource2d("test", 0.5f);
+	testSound->PlayTrack(true);
 	return std::shared_ptr<Scene>(scene);
 }
 

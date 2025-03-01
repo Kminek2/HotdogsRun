@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Input.h"
 #include "LightObject.h"
+#include "AudioSource2d.h"
 
 class GameObject;
 

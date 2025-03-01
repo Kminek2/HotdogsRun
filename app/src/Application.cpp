@@ -53,11 +53,14 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 		Scene::registerTemplate(LoadScene::scenes[i].first, LoadScene::scenes[i].second);
 	}
 
+	soundEngine = new SoundEngine();
+
 	Input::startKeyCallback();
 	Scene::loadedScene = Scene::Load(LoadScene::scenes[0].first)->Init();
 }
 
 Application::~Application() {
+	delete soundEngine;
 	Model::Unload();
 	Transform::Unload();
 	LightObject::Unload();
@@ -85,6 +88,7 @@ void Application::LoadScene(std::string scene)
 	SpotLight::DeleteAll();
 	DebugPoints::ClearLines();
 	Camera::main->Reload(width, height);
+	AudioSource2d::DeleteAllSources2d();
 
 	Input::startKeyCallback();
 	Scene::loadedScene = Scene::Load(scene)->Init();
