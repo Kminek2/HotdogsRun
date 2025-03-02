@@ -12,6 +12,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "AudioSource2d.h"
+#include "AudioSource3d.h"
 
 class Scene;
 

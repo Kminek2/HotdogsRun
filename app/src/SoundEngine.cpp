@@ -1,4 +1,6 @@
 #include "SoundEngine.h"
+#include "Camera.h"
+#include "Transform.h"
 
 SoundEngine::SoundEngine()
 {
@@ -12,6 +14,22 @@ SoundEngine::SoundEngine(const SoundEngine& soundEngine)
 SoundEngine::~SoundEngine()
 {
     Shutdown();
+}
+
+void SoundEngine::UpdatePos()
+{
+    float position[3];
+
+    // Set the initial position of the listener.
+    position[0] = Camera::main->cameraTransform->position.x;
+    position[1] = Camera::main->cameraTransform->position.z;
+    position[2] = Camera::main->cameraTransform->position.y;
+
+    // Clear any previous unaddressed error codes.
+    alGetError();
+
+    // Set the listener position.
+    alListenerfv(AL_POSITION, position);
 }
 
 bool SoundEngine::Initialize()

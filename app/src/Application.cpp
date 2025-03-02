@@ -18,6 +18,7 @@
 #include "Descriptior.h"
 
 #include "DebugPoints.h"
+#include "AudioSource3d.h"
 
 namespace fs = std::filesystem;
 
@@ -89,6 +90,7 @@ void Application::LoadScene(std::string scene)
 	DebugPoints::ClearLines();
 	Camera::main->Reload(width, height);
 	AudioSource2d::DeleteAllSources2d();
+	AudioSource3d::DeleteAllSources3d();
 
 	Input::startKeyCallback();
 	Scene::loadedScene = Scene::Load(scene)->Init();
@@ -140,6 +142,8 @@ void Application::Update() {
 	Scene::loadedScene.get()->sceneScript->LateUpdate();
 	GameObject::LateUpdateAllObjectScripts();
 
+	soundEngine->UpdatePos();
+	AudioSource3d::UpdateAllPosition();
 	Input::mouseOff = Input::mousePos - Input::lastPos;
 	GameObject::TransformTransformsToMemory();
 }

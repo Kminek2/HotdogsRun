@@ -22,6 +22,7 @@
     <ClCompile Include="app\src\Application.cpp" />
     <ClCompile Include="app\src\AppTime.cpp" />
     <ClCompile Include="app\src\AudioSource2d.cpp" />
+    <ClCompile Include="app\src\AudioSource3d.cpp" />
     <ClCompile Include="app\src\Buffer.cpp" />
     <ClCompile Include="app\src\Camera.cpp" />
     <ClCompile Include="app\src\CameraTransform.cpp" />
@@ -75,6 +76,7 @@
     <ClInclude Include="app\include\Application.h" />
     <ClInclude Include="app\include\AppTime.h" />
     <ClInclude Include="app\include\AudioSource2d.h" />
+    <ClInclude Include="app\include\AudioSource3d.h" />
     <ClInclude Include="app\include\Buffer.h" />
     <ClInclude Include="app\include\Camera.h" />
     <ClInclude Include="app\include\CameraStructures.h" />

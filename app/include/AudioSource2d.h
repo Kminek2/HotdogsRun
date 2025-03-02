@@ -30,7 +30,7 @@ private:
         unsigned short bitsPerSample;
     };
 public:
-    AudioSource2d(std::string filename, float volume);
+    AudioSource2d(std::string filename, float volume, unsigned short maxNumOfChanels = 2);
     AudioSource2d(const AudioSource2d&);
     ~AudioSource2d();
 
@@ -38,11 +38,11 @@ public:
 
     bool PlayTrack(bool looping);
     bool StopTrack();
-private:
+protected:
     static bool deleteingAll;
-    bool LoadTrack(const char* filename, float volume);
+    bool LoadTrack(const char* filename, float volume, unsigned short maxChanelNum);
 
-    bool LoadStereoWaveFile(const char* filename);
+    bool LoadWaveFile(const char* filename, unsigned short maxChanelNum);
     void ReleaseWaveFile();
 
     void ReleaseTrack();

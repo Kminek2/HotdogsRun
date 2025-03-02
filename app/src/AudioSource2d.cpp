@@ -5,10 +5,10 @@
 std::list<AudioSource2d*> AudioSource2d::createdAudio;
 bool AudioSource2d::deleteingAll = false;
 
-AudioSource2d::AudioSource2d(std::string filename, float volume)
+AudioSource2d::AudioSource2d(std::string filename, float volume, unsigned short maxNumOfChanels)
 {
 	m_waveData = 0;
-	if (!LoadTrack(("sounds/" + filename + ".wav").c_str(), volume))
+	if (!LoadTrack(("sounds/" + filename + ".wav").c_str(), volume, maxNumOfChanels))
 		throw std::runtime_error("CHeck these sounds");
 
 	createdAudio.push_back(this);
@@ -41,7 +41,7 @@ void AudioSource2d::DeleteAllSources2d()
 	deleteingAll = false;
 }
 
-bool AudioSource2d::LoadTrack(const char* filename, float volume)
+bool AudioSource2d::LoadTrack(const char* filename, float volume, unsigned short maxChanelNum)
 {
 	bool result;
 
@@ -56,14 +56,17 @@ bool AudioSource2d::LoadTrack(const char* filename, float volume)
 	}
 
 	// Load the wave file for the sound.
-	result = LoadStereoWaveFile(filename);
+	result = LoadWaveFile(filename, maxChanelNum);
 	if (!result)
 	{
 		return false;
 	}
 
 	// Copy the wav data into the audio buffer.
-	alBufferData(m_audioBufferId, AL_FORMAT_STEREO16, m_waveData, m_waveSize, 44100);
+	if(maxChanelNum == 2)
+		alBufferData(m_audioBufferId, AL_FORMAT_STEREO16, m_waveData, m_waveSize, 44100);
+	else if(maxChanelNum == 1)
+		alBufferData(m_audioBufferId, AL_FORMAT_MONO16, m_waveData, m_waveSize, 44100);
 	if (alGetError() != AL_NO_ERROR)
 	{
 		return false;
@@ -156,7 +159,7 @@ bool AudioSource2d::StopTrack()
 	return true;
 }
 
-bool AudioSource2d::LoadStereoWaveFile(const char* filename)
+bool AudioSource2d::LoadWaveFile(const char* filename, unsigned short maxChanelNum)
 {
 	RiffWaveHeaderType riffWaveFileHeader;
 	SubChunkHeaderType subChunkHeader;
@@ -229,7 +232,7 @@ bool AudioSource2d::LoadStereoWaveFile(const char* filename)
 	}
 
 	// Check that the wave file was recorded in stereo format.
-	if (fmtData.numChannels != 2)
+	if (fmtData.numChannels > maxChanelNum)
 	{
 		return false;
 	}

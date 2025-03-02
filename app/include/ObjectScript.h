@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "LightObject.h"
 #include "AudioSource2d.h"
+#include "AudioSource3d.h"
 
 class GameObject;
 

@@ -58,6 +58,9 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 	AudioSource2d* testSound = new AudioSource2d("test", 0.5f);
 	testSound->PlayTrack(true);
+
+	AudioSource3d* testSound3d = new AudioSource3d(bilbord, "car-horn-test", 0.2f);
+	testSound3d->PlayTrack(true);
 	return std::shared_ptr<Scene>(scene);
 }
 
