@@ -13,7 +13,7 @@
 #include <iostream>
 
 const std::vector<std::string> models = {
-	"racing_car", "znakParking", "arrow", "racing_car"
+	"racing_car", "racing_car", "arrow", "racing_car"
 };
 
 std::shared_ptr<Scene> DebugScene::Init() {
@@ -42,6 +42,13 @@ std::shared_ptr<Scene> DebugScene::Init() {
 		objs[0]->AddScript(cmv);
 		objs[0]->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.1f, 1.6f, 0.0f, 2.2f));
 		objs[0]->AddScript(new CarInputs(*cmv));
+	}
+
+	{
+		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false);
+		objs[1]->AddScript(cmv);
+		objs[1]->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.1f, 1.6f, 0.0f, 2.2f));
+		objs[1]->AddScript(new CarInputs(*cmv, GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_PAGE_DOWN));
 	}
 	objs[0]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(1,1,1), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
 	objs[1]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(3,3,3), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));

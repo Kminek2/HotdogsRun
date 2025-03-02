@@ -20,7 +20,7 @@ void WheelsScript::LateUpdate() {
         if (i&1) {
             x->transform->Rotate(glm::vec3(0.0f, 0.0f, movement_script.axleAngle));
         }
-        move_rot += movement_script.actSpeed*Time::deltaTime*30.0f;
+        move_rot += movement_script.actSpeed*movement_script.forces.x*Time::deltaTime*30.0f;
         x->transform->Rotate(glm::vec3(0.0f, move_rot, 0.0f));
     }
 }
