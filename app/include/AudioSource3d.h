@@ -18,9 +18,11 @@ private:
     static void DeleteAllSources3d();
     static void UpdateAllPosition();
 
-    static std::list<AudioSource3d*> createdAudio;
+    static std::list<AudioSource3d*> created3dAudio;
     std::list<AudioSource3d*>::iterator i;
     bool UpdatePos();
+
+    static bool deleteingAll3d;
 
     friend class Application;
 };

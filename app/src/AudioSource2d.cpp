@@ -17,16 +17,20 @@ AudioSource2d::AudioSource2d(std::string filename, float volume, unsigned short 
 
 AudioSource2d::AudioSource2d(const AudioSource2d&)
 {
+	m_waveSize = 0;
+	m_waveData = nullptr;
 }
 
 AudioSource2d::~AudioSource2d()
 {
-	StopTrack();
+	if (m_waveSize != 0) {
+		StopTrack();
 
-	ReleaseTrack();
+		ReleaseTrack();
 
-	if(!deleteingAll)
-		createdAudio.erase(i);
+		if(!deleteingAll)
+			createdAudio.erase(i);
+	}
 }
 
 void AudioSource2d::DeleteAllSources2d()
