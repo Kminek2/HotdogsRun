@@ -11,9 +11,20 @@ void MapManager::Init()
 	int n = map_points.size(); // number of map tiles
 	points.reserve(n);
 
-	for (MapPoint point : map_points) {
+	for (int i = 0; i < n; ++i) {
+		MapPoint point = map_points[i];
+		ObjectSchema* data;
+		if (i < (n-2) && map_points[i+1].in == map_points[i+1].out) {
+			data = (road_segements.find({ point.in, map_points[i+2].out }) == road_segements.end()
+				? road_segements.at({ map_points[i+2].out, point.in })
+				: road_segements.at({ point.in, map_points[i+2].out }));
+			i += 2;
+			
+			points.push_back(new GameObject(data, { point.pos.x, point.pos.y, 0 }));
+			continue;
+		}
 		// if this throws an error, you're looking for a connection that doesn't exist. Refer to `mapgen_road.cpp` or Kamil :)
-		ObjectSchema* data = (road_segements.find({ point.in, point.out }) == road_segements.end()
+		data = (road_segements.find({ point.in, point.out }) == road_segements.end()
 			? road_segements.at({ point.out, point.in })
 			: road_segements.at({ point.in, point.out }));
 
