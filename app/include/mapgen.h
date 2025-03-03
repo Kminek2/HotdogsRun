@@ -7,6 +7,7 @@
 #include <array>
 
 #include "mapgen_road.hpp"
+#include "GameObject.h"
 
 namespace std {
 	template<>
@@ -56,4 +57,5 @@ namespace mapgen {
 
 	std::vector<glm::vec2> getCheckPoints(const std::vector<glm::vec2>& points, unsigned int offset = 10);
 	std::vector<glm::vec2> getCheckPoints(const std::vector<MapPoint>& points, unsigned int offset = 10);
+	std::vector<glm::vec2> getCheckPoints(const std::vector<GameObject*>& points, unsigned int offset = 10);
 }

@@ -51,10 +51,8 @@ direction points_direction(const glm::vec2& a, const glm::vec2& b) {
 }
 
 std::vector<mapgen::MapPoint> mapgen::generateMap(uint16_t len, const mapgen::Ellipse& ellipse_data, size_t seed) {
-    if (seed == static_cast<size_t>(-1)) {
-        std::random_device rd;
-        seed = rd();
-    }
+    if (seed == static_cast<size_t>(-1))
+        seed = std::random_device{}();
 
     std::mt19937 gen(seed);
     std::uniform_real_distribution<double> offset_dist(ellipse_data.min_offset, ellipse_data.max_offset);
@@ -138,6 +136,18 @@ std::vector<glm::vec2> mapgen::getCheckPoints(const std::vector<mapgen::MapPoint
         points.begin(), points.end(),
         std::back_inserter(transformed),
         [](const mapgen::MapPoint& mp) { return mp.pos; }
+    );
+
+    return mapgen::getCheckPoints(transformed, offset);
+}
+std::vector<glm::vec2> mapgen::getCheckPoints(const std::vector<GameObject*>& points, unsigned int offset) {
+    std::vector<glm::vec2> transformed;
+    transformed.reserve(points.size());
+
+    std::transform(
+        points.begin(), points.end(),
+        std::back_inserter(transformed),
+        [](GameObject* mp) { return mp->transform->position; }
     );
 
     return mapgen::getCheckPoints(transformed, offset);

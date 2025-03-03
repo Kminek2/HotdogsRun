@@ -135,6 +135,22 @@ struct Transform {
 		UpdateMatrix();
 	}
 
+	/// <summary>
+	/// Multiplies the scale of the object by the given amount on each axis
+	/// </summary>
+	void ScaleTimes(glm::vec3 times) {
+		this->scale *= times;
+		UpdateMatrix();
+	}
+
+	/// <summary>
+	/// Multiplies the scale of the object by the given amount on all axes
+	/// </summary>
+	void ScaleTimes(float times) {
+		this->scale *= times;
+		UpdateMatrix();
+	}
+
 	void UpdateVectors() {
 		glm::mat4 rot(1.0f);
 		rot = glm::rotate(rot, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
