@@ -131,7 +131,7 @@ void Application::Update() {
 		}
 
 		times /= frameTimes.size();
-		std::cout << "fps: " << times << '\n';
+		//std::cout << "fps: " << times << '\n';
 
 		frameTimes.clear();
 	}

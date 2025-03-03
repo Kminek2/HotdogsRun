@@ -19,7 +19,7 @@ void CinematicCamera::Update() {}
 void CinematicCamera::LateUpdate() {
     if (ended)
         return;
-    if (time > 1.0f) {
+    if (time > animation_time) {
         CameraLockScript::disabled = false;
         ended = true;
         Camera::main->cameraTransform->MoveTo(old_data.position);
@@ -28,12 +28,15 @@ void CinematicCamera::LateUpdate() {
         return;
     }
 
+    std::cout << Camera::main->cameraTransform->position.x << ' '<< Camera::main->cameraTransform->position.y << ' '<< Camera::main->cameraTransform->position.z << ' ' << '\n';
+	std::cout << Camera::main->cameraTransform->rotation.x << ' '<< Camera::main->cameraTransform->rotation.y << '\n';
+
     obj_data now = position_in_time(time/animation_time);
     Camera::main->cameraTransform->MoveTo(now.position);
     Camera::main->cameraTransform->RotateTo(now.rotation);
 
     time += Time::deltaTime;
-    std::cout << time << '\n';
+    //std::cout << time << '\n';
 }
 
 void CinematicCamera::OnDestroy() {}

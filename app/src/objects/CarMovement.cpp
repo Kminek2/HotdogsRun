@@ -150,7 +150,7 @@ void CarMovement::handleForces() {
 			actSpeed = std::min(actSpeed, 0.0f);
 		}
 	}
-	std::cout << forces.x << '\n';
+	//std::cout << forces.x << '\n';
 }
 
 void CarMovement::goForward() {
