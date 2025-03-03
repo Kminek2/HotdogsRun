@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ObjectScript.h"
 #include "CameraStructures.h"
 #include "GameObject.h"

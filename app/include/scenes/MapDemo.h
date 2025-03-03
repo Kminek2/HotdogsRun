@@ -7,6 +7,7 @@
 #include "_rand.hpp"
 #include "mapgen.h"
 #include "objects/MapManager.h"
+#include "objects/BuildingManager.hpp"
 
 #include <utility>
 #include <vector>
@@ -17,6 +18,7 @@ class MapDemo :
 private:
 	QuickCamera* qc;
 	MapManager* map;
+	BuildingManager* build;
 
 	const float MAP_TILE_SIZE = 12.7f; // 127x127 mv size
 

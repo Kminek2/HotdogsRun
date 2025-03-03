@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include "ObjectScript.h"
 #include "_rand.hpp"
 #include "mapgen.h"

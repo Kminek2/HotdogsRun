@@ -201,6 +201,9 @@
     <ClCompile Include="app\src\objects\CinematicCamera.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\objects\BuildingManager.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -378,6 +381,9 @@
       <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
     <ClInclude Include="app\include\objects\CinematicCamera.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\BuildingManager.hpp">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>
