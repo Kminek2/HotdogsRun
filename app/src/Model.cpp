@@ -36,6 +36,8 @@ void Model::LoadModelFromFile(std::string name, std::string filePath, std::strin
 
 	std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
+	std::array<glm::vec2, 3> maxDist = {glm::vec2(0), glm::vec2(0) , glm::vec2(0) };
+
 	for (const auto& shape : shapes) {
 		for (const auto& index : shape.mesh.indices) {
 			Vertex vertex{};
@@ -48,6 +50,21 @@ attrib.vertices[3 * index.vertex_index + 2]
 
 			if(swichYZCoords)
 				vertex.pos = startRot * glm::vec4(vertex.pos, 0);
+
+			if (maxDist[0].x < vertex.pos.x)
+				maxDist[0].x = vertex.pos.x;
+			else if (maxDist[0].y > vertex.pos.x)
+				maxDist[0].y = vertex.pos.x;
+
+			if (maxDist[1].x < vertex.pos.y)
+				maxDist[1].x = vertex.pos.y;
+			else if (maxDist[1].y > vertex.pos.y)
+				maxDist[1].y = vertex.pos.y;
+
+			if (maxDist[2].x < vertex.pos.z)
+				maxDist[2].x = vertex.pos.z;
+			else if (maxDist[2].y > vertex.pos.z)
+				maxDist[2].y = vertex.pos.z;
 
 			vertex.texCoord = {
 attrib.texcoords[2 * index.texcoord_index + 0],
@@ -73,6 +90,7 @@ attrib.texcoords[2 * index.texcoord_index + 0],
 
 	loadedModels[name] = new Model(std::move(vertices), std::move(indices));
 	loadedModels[name]->modelName = name;
+	loadedModels[name]->maxDistVert = maxDist;
 	textures->AddTexture(texturePath.c_str());
 }
 
@@ -189,11 +207,18 @@ Model::Model(Model& model, std::list<Model*>::iterator iterator) {
 	this->indexSize = model.indexSize;
 	this->textureOffset = model.textureOffset;
 	this->modelName = model.modelName;
+
+	this->maxDistVert = model.maxDistVert;
 }
 
 std::string Model::GetName()
 {
 	return modelName;
+}
+
+std::array<glm::vec2, 3> Model::GetMaxDistVert()
+{
+	return maxDistVert;
 }
 
 void Model::SendBuffers() {

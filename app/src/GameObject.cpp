@@ -54,6 +54,11 @@ std::string GameObject::GetModelName()
 	return model->GetName();
 }
 
+std::array<glm::vec2, 3> GameObject::GetModelMaxDistVert()
+{
+	return model->GetMaxDistVert();
+}
+
 void GameObject::DeleteAll()
 {
 	deletingAll = true;
@@ -126,6 +131,17 @@ void GameObject::TransformTransformsToMemory()
 
 void GameObject::addOBB(OBB obb) {
 	obbs.push_back(obb);
+}
+
+void GameObject::AddDefaultOBB(glm::vec3 offset)
+{
+	std::array<glm::vec2, 3> maxD = GetModelMaxDistVert();
+	for (int i = 0; i < 3; i++)
+		maxD[i] += glm::vec2(offset[i], -offset[i]);
+	glm::vec3 c = { (maxD[0].x + maxD[0].y) / 2, (maxD[1].x + maxD[1].y) / 2, (maxD[2].x + maxD[2].y) / 2 };
+	glm::vec3 s = { (maxD[0].x + abs(maxD[0].y)) / 2, (maxD[1].x + abs(maxD[1].y)) / 2, (maxD[2].x + abs(maxD[2].y)) / 2 };
+
+	addOBB(OBB(c, s));
 }
 
 void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)

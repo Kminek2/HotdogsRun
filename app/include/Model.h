@@ -9,6 +9,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <array>
 
 #include <iostream>
 
@@ -34,6 +35,7 @@ struct Model
 	Model(Model& model, std::list<Model*>::iterator iterator);
 
 	std::string GetName();
+	std::array<glm::vec2, 3> GetMaxDistVert();
 
 	static void SendBuffers();
 
@@ -81,6 +83,7 @@ private:
 	uint32_t textureOffset;
 	std::list<Model*>::iterator iterator;
 	std::string modelName;
+	std::array<glm::vec2, 3> maxDistVert;
 
 	static Texture* textures;
 
