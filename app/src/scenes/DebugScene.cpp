@@ -9,7 +9,7 @@
 #include "objects/ShowOBB.h"
 #include "objects/CarInputs.h"
 #include "objects/WheelsScript.h"
-#include "objects/CinematicCamera.h"
+#include "objects/AnimationManager.h"
 
 #include <iostream>
 
@@ -34,18 +34,17 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	}
 
 	objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true, GLFW_KEY_Z, GLFW_KEY_C));
-	objs[0]->AddScript(new CinematicCamera({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
 	
 	objs[0]->AddScript(new ShowOBB);
 	objs[1]->AddScript(new ShowOBB);
-
+	
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false);
 		objs[0]->AddScript(cmv);
 		objs[0]->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
 		objs[0]->AddScript(new CarInputs(*cmv));
 	}
-
+	
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false);
 		objs[1]->AddScript(cmv);
@@ -54,12 +53,19 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	}
 	objs[0]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(1,1,1), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
 	objs[1]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(3,3,3), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
-
+	
 	objs[2]->AddScript(new LockPosition(objs[1]->transform));
 	objs[2]->AddScript(new LockRotation(objs[1]->transform));
 	objs[2]->AddScript(new LockPosition(objs[3]->transform));
 	objs[2]->AddScript(new LockRotation(objs[3]->transform));
-
+	
+	AnimationManager* am = new AnimationManager();
+	GameObject* am_obj = new GameObject();
+	am_obj->AddScript(am);
+	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
+	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {20.0f,0.0f,0.0f}));
+	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
+	
 	return std::shared_ptr<Scene>(scene);
 }
 

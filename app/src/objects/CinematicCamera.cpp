@@ -1,7 +1,7 @@
 #include "objects/CinematicCamera.h"
 
-CinematicCamera::CinematicCamera(obj_data begining, obj_data ending, float animation_time, glm::vec3 offset)
-: begining(begining), ending(ending), animation_time(animation_time), offset(offset)
+CinematicCamera::CinematicCamera(obj_data begining, obj_data ending, float animation_time, glm::vec3 offset, bool ret_to_pos)
+: begining(begining), ending(ending), animation_time(animation_time), offset(offset), ret_to_pos(ret_to_pos)
 {
     time = 0.0f;
     ended = false;
@@ -22,9 +22,11 @@ void CinematicCamera::LateUpdate() {
     if (time > animation_time) {
         CameraLockScript::disabled = false;
         ended = true;
-        Camera::main->cameraTransform->MoveTo(old_data.position);
-        Camera::main->cameraTransform->RotateTo(old_data.rotation);
-        Camera::main->view = old_view;
+        if (ret_to_pos) {
+            Camera::main->cameraTransform->MoveTo(old_data.position);
+            Camera::main->cameraTransform->RotateTo(old_data.rotation);
+            Camera::main->view = old_view;
+        }
         return;
     }
 
@@ -57,4 +59,8 @@ CinematicCamera::obj_data CinematicCamera::position_in_time(float t) {
     result.rotation.x = begining.rotation.x + t * (ending.rotation.x - begining.rotation.x);
     result.rotation.y = begining.rotation.y + t * (ending.rotation.y - begining.rotation.y);
     return result;
+}
+
+bool CinematicCamera::hasEnded() {
+    return time > animation_time;
 }

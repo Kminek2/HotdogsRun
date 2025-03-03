@@ -58,7 +58,7 @@ void CarMovement::Update() {
 		}
 	}
 	actActions = clearedActions;
-	std::cout << road_type << '\n';
+	//std::cout << road_type << '\n';
 }
 
 void CarMovement::OnDestroy() {
