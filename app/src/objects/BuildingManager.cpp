@@ -1,6 +1,7 @@
 #include "objects/BuildingManager.hpp"
 #include "_rand.hpp"
 
+const float BuildingManager::BUILDING_SIZE = 6.4;
 const std::array<std::array<uint8_t, 2>, 4> nmap = { {{0,1}, {1,1}, {1,0}, {0,0} } };
 
 std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<std::vector<bool>>& building_data) {
@@ -24,8 +25,8 @@ std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<st
 				if (building_data[y + nmap[i][1]][x + nmap[i][0]])
 					d |= 1 << i;
 
-			if(!tiles[d].empty())
-				buildings.push_back(new GameObject(rand.choice(tiles[d]), { x,y,0 }));
+			if (!tiles[d].empty())
+				buildings.push_back(new GameObject(rand.choice(tiles[d]), offset + glm::vec3(x, y, 0) * BUILDING_SIZE));
 		}
 
 	return buildings;

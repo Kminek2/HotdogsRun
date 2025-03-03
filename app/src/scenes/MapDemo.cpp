@@ -20,6 +20,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	qc->_sr(0.75f);
 	qc->_sm(100.0f);
 
+	_rand rand(seed);
+
 	MapManager::MapSettingsValues svals;
 	svals.small_decors = {
 		"cube"
@@ -38,7 +40,6 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		{"building_12"}, {"building_13"}, {"debug_star"}, {"debug_star"}
 	} });
 
-	_rand rand(seed);
 	std::vector<std::vector<bool>> builds(10);
 	for (std::vector<bool>& row : builds) {
 		row.resize(10);
