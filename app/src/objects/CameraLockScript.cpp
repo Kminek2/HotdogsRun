@@ -1,5 +1,7 @@
 #include "objects/CameraLockScript.h"
 
+bool CameraLockScript::disabled = false;
+
 CameraLockScript::CameraLockScript(ViewType view, glm::vec3 offset, float pitch, float yaw, bool unlocked_rotation, uint16_t key_left, uint16_t key_right)
 : unlocked_rotation(unlocked_rotation), view(view), key_left(key_left), key_right(key_right) {
 	this->offset = offset;
@@ -9,10 +11,14 @@ CameraLockScript::CameraLockScript(ViewType view, glm::vec3 offset, float pitch,
 
 void CameraLockScript::Init() {
 	Camera::main->view = view;
+	disabled = false;
 }
 void CameraLockScript::Update() {}
 
 void CameraLockScript::LateUpdate() {
+	if (disabled)
+		return;
+		
 	if (unlocked_rotation) {
 		if (Input::getKeyPressed(key_right)) {
 			yaw += 20*Time::deltaTime;
