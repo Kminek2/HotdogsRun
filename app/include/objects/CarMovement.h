@@ -33,7 +33,16 @@ private:
         bool right_turn;
         bool hand_break;
     } actActions;
+    struct road_type_data {
+        road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier);
+        float acc_multiplier;
+        float eng_break_multiplier;
+        float break_multiplier;
+        float steering_multiplier;
+    };
     static const actions clearedActions;
+    static const std::array<road_type_data,4> surfaces_data;
+    int road_type; // 0 - no surface (grass), 1 - classical road (asphalt), 2 - dirt road, 3 - icy road
 public:
     CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode = false, float multiplier = 0.1f);
     void Init() override;

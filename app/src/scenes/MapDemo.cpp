@@ -2,6 +2,10 @@
 #include "Scene.h"
 #include "QuickCamera.h"
 
+#include "objects/CameraLockScript.h"
+#include "objects/CarInputs.h"
+#include "objects/WheelsScript.h"
+
 #include <glm/vec3.hpp>
 #include <iostream>
 
@@ -46,6 +50,18 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	// -- end_tmp --
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
+
+	//
+	GameObject* car = new GameObject("f1car");
+	car->addOBB(OBB());
+	{
+		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false, 0.05f);
+		car->AddScript(cmv);
+		car->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
+		car->AddScript(new CarInputs(*cmv, GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_PAGE_DOWN));
+	}
+	car->transform->MoveTo(Camera::main->cameraTransform->position);
+	//
 
 	return std::shared_ptr<Scene>(scene);
 }

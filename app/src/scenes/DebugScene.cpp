@@ -34,7 +34,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	}
 
 	objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true, GLFW_KEY_Z, GLFW_KEY_C));
-	objs[0]->AddScript(new CinematicCamera({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 10.0f, {20.0f,0.0f,0.0f}));
+	objs[0]->AddScript(new CinematicCamera({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
 	
 	objs[0]->AddScript(new ShowOBB);
 	objs[1]->AddScript(new ShowOBB);
