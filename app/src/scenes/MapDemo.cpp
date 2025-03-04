@@ -23,9 +23,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	_rand rand(seed);
 
 	MapManager::MapSettingsValues svals;
-	svals.small_decors = {
-		"cube"
-	};
+	svals.small_decors = { {"cube"},{} };
 
 	GameObject* mapObj = new GameObject();
 	map = new MapManager(seed, svals);
