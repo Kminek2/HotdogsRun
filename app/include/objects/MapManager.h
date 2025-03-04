@@ -31,7 +31,10 @@ private:
 	const float MAP_TILE_SIZE = 12.7; // 127x127 mv size
 	const float decor_max_dist; // min_dist = MAP_TILE_SIZE
 
-	const std::vector<std::string> small_decors;
+	const std::pair<std::vector<std::string>, std::vector<float>> small_decors;
+	const std::pair<std::vector<std::string>, std::vector<float>> road_types;
+
+	int num_sur_changes = 0;
 
 	void add_decor(_rand& rand, const std::vector<MapPoint>& map_points);
 public:
@@ -42,7 +45,10 @@ public:
 
 		Ellipse ellipse = { 20, 50, -5, 5 };
 
-		std::vector<std::string> small_decors = {};
+		std::pair<std::vector<std::string>, std::vector<float>> small_decors = {};
+		std::pair<std::vector<std::string>, std::vector<float>> road_types = {};
+
+		int num_sur_changes = 0;
 
 		uint16_t map_len = 100;
 		unsigned checkpoint_offset = 15;
@@ -53,7 +59,8 @@ public:
 		seed(seed),
 		decors_per_tile(vals.decors_per_tile), 
 		decor_max_dist(vals.decor_max_dist), 
-		small_decors(vals.small_decors), 
+		small_decors(vals.small_decors),
+		num_sur_changes(vals.num_sur_changes),
 		map_len(vals.map_len), 
 		cp_offset(vals.checkpoint_offset), 
 		ellipse(vals.ellipse) {};
