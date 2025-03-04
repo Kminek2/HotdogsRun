@@ -34,10 +34,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	// -- tmp --
 	GameObject* buildObj = new GameObject();
 	build = new BuildingManager(seed, { {
-		{""}, {"building_1"}, {"building_2"}, {"building_3"},
-		{"building_4"}, {"building_5"}, {"building_6"}, {"building_7"},
-		{"building_8"}, {"building_9"}, {"building_10"}, {"building_11"},
-		{"building_12"}, {"building_13"}, {"debug_star"}, {"debug_star"}
+		{""}, {"case_1"}, {"case_2"}, {"case_3"},
+		{"case_4"}, {"case_5"}, {"case_6"}, {"case_7"},
+		{"case_8"}, {"case_9"}, {"case_10"}, {"case_11"},
+		{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
 	} });
 
 	std::vector<std::vector<bool>> builds(10);
