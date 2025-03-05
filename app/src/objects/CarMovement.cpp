@@ -10,6 +10,7 @@ const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
 	CarMovement::road_type_data(0.6f, 1.0f, 0.5f, 0.8f),
 	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.4f)
 };
+const float CarMovement::nitro_duration = 1.0f;
 
 CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode, float multiplier) :
 	carWeight(carWeight), breaksStrength(breaksStrength), maxSpeed(maxSpeed), minSpeed(minSpeed), accelFront(accelFront), accelBack(accelBack), expertMode(expertMode), multiplier(multiplier) {
@@ -17,6 +18,8 @@ CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, 
 	actSpeed = 0.0f;
 	axleAngle = 0.0f;
 	road_type = 0;
+	nitros_available = 3;
+	nitro_timer = 0.0f;
 }
 
 void CarMovement::Init() {
@@ -26,7 +29,10 @@ void CarMovement::Init() {
 void CarMovement::Update() {
 	handleBreaks();
 	handleEngBreak();
-	handleGas();
+	if (nitro_timer > 0)
+		handleNitroAcc();
+	else
+		handleGas();
 	handleSteeringWheel();
 	handleForces();
 	auto old_rot = gameObject->transform->rotation;
@@ -191,4 +197,21 @@ CarMovement::road_type_data::road_type_data(float acc_multiplier, float eng_brea
 	this->eng_break_multiplier = eng_break_multiplier;
 	this->break_multiplier = break_multiplier;
 	this->steering_multiplier = steering_multiplier;
+}
+
+void CarMovement::useNitro() {
+	if (nitros_available < 1)
+		return;
+	--nitros_available;
+	before_nitro_mem = actSpeed;
+	nitro_timer = nitro_duration;
+}
+
+void CarMovement::handleNitroAcc() {
+	nitro_timer -= Time::deltaTime;
+	std::cout << nitro_timer << '\n';
+	nitro_timer = std::max(0.0f, nitro_timer);
+	actSpeed += Time::deltaTime * accelFront * surfaces_data[road_type].acc_multiplier * 0.1f * multiplier * std::max(before_nitro_mem, 50.0f);
+	if (nitro_timer == 0.0f)
+		actSpeed = before_nitro_mem;
 }
