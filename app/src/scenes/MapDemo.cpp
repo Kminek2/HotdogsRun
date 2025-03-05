@@ -41,10 +41,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	} });
 
 	std::vector<std::vector<bool>> builds(10);
-	for (std::vector<bool>& row : builds) {
-		row.resize(10);
+	for (int j = 0; j < 10; j++) {
+		builds[j].resize(10);
 		for (int i = 0; i < 10; i++)
-			row[i] = rand.coin_toss(0.4);
+			builds[j][i] = (i == j);
 	}
 
 	auto vec_builds = build->generateBuildings(builds);

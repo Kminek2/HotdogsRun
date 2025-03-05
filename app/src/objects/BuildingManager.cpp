@@ -2,7 +2,7 @@
 #include "_rand.hpp"
 
 const float BuildingManager::BUILDING_SIZE = 6.4;
-const std::array<std::array<uint8_t, 2>, 4> nmap = { {{0,1}, {1,1}, {1,0}, {0,0} } };
+const std::array<std::array<uint8_t, 2>, 4> nmap = { {{0,0}, {1,0}, {1,1}, {0,1} } };
 
 std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<std::vector<bool>>& building_data) {
 	std::vector<GameObject*> buildings;
