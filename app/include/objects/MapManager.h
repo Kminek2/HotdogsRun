@@ -60,6 +60,7 @@ public:
 		decors_per_tile(vals.decors_per_tile), 
 		decor_max_dist(vals.decor_max_dist), 
 		small_decors(vals.small_decors),
+		road_types(vals.road_types),
 		num_sur_changes(vals.num_sur_changes),
 		map_len(vals.map_len), 
 		cp_offset(vals.checkpoint_offset), 

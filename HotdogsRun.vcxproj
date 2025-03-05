@@ -41,6 +41,7 @@
     <ClCompile Include="app\src\main.cpp" />
     <ClCompile Include="app\src\mapgen.cpp" />
     <ClCompile Include="app\src\mapgen_road.cpp" />
+    <ClCompile Include="app\src\ObjectSchema.cpp" />
     <ClCompile Include="app\src\objects\AnimationManager.cpp" />
     <ClCompile Include="app\src\objects\BuildingManager.cpp" />
     <ClCompile Include="app\src\objects\CarInputs.cpp" />

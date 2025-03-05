@@ -24,6 +24,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	MapManager::MapSettingsValues svals;
 	svals.small_decors = { {"cube"},{} };
+	svals.road_types = { {"Asfalt","Zwir","Lod"},{.6,.3,.1} };
+	svals.num_sur_changes = 10;
 
 	GameObject* mapObj = new GameObject();
 	map = new MapManager(seed, svals);

@@ -7,7 +7,7 @@ void MapManager::Init()
 
 	std::vector<__road> road_segments;
 	road_segments.reserve(road_types.first.size());
-	//for (const std::string& key : road_types.first) road_segments.push_back(createRoadMap(key));
+	for (const std::string& key : road_types.first) road_segments.push_back(createRoadMap(key));
 
 	std::vector<MapPoint> map_points = generateMap(map_len, ellipse, seed);
 	spreadMapPoints(map_points, MAP_TILE_SIZE * MAP_TILE_SCALE);
@@ -30,6 +30,16 @@ void MapManager::Init()
 		MapPoint point = map_points[i];
 		ObjectSchema* data;
 
+		if (sur_types_changes.find(i) != sur_types_changes.end()) { // change sur-type
+			const std::string sur_type = rand.choice(road_types.first, road_types.second);
+
+			cur_sur_type_id = 0;
+			while (road_types.first[cur_sur_type_id] != sur_type)
+				++cur_sur_type_id;
+
+			_cur_sur_type = ObjectSchema::GetSurfaceType(sur_type);
+		}
+
 		if (i < (n-2) && map_points[i+1].in == map_points[i+1].out) {
 			data = (road_segments[cur_sur_type_id].find({point.in, map_points[i + 2].out}) == road_segments[cur_sur_type_id].end()
 				? road_segments[cur_sur_type_id].at({map_points[i + 2].out, point.in})
@@ -41,19 +51,6 @@ void MapManager::Init()
 			data = (road_segments[cur_sur_type_id].find({ point.in, point.out }) == road_segments[cur_sur_type_id].end()
 				? road_segments[cur_sur_type_id].at({ point.out, point.in })
 				: road_segments[cur_sur_type_id].at({ point.in, point.out }));
-		}
-
-		if (sur_types_changes.find(i) != sur_types_changes.end()) { // change sur-type
-			const std::string sur_type = rand.choice(road_types.first, road_types.second);
-
-			cur_sur_type_id = 0;
-			while (road_types.first[cur_sur_type_id] != sur_type)
-				++cur_sur_type_id;
-
-			if (road_segments[cur_sur_type_id].empty())
-				road_segments[cur_sur_type_id] = createRoadMap(sur_type); // for (hypothetically) better memeory i think?
-
-			_cur_sur_type = ObjectSchema::GetSurfaceType(sur_type);
 		}
 
 		// so that the original doesn't get changed
