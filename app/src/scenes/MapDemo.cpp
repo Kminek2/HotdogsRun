@@ -27,9 +27,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	svals.road_types = { {"Asfalt","Zwir","Lod"},{.6,.3,.1} };
 	svals.num_sur_changes = 10;
 
-	GameObject* mapObj = new GameObject();
-	map = new MapManager(seed, svals);
-	mapObj->AddScript(map);
+	map = (new MapManager(seed, svals))->Init();
 
 	// -- tmp --
 	GameObject* buildObj = new GameObject();
@@ -44,7 +42,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	for (int j = 0; j < 10; j++) {
 		builds[j].resize(10);
 		for (int i = 0; i < 10; i++)
-			builds[j][i] = (i == j);
+			builds[j][i] = (i == 0 || i == 9 || j == 0 || j == 9);
 	}
 
 	auto vec_builds = build->generateBuildings(builds);
@@ -61,8 +59,11 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		car->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
 		car->AddScript(new CarInputs(*cmv, GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_PAGE_DOWN));
 	}
-	car->transform->MoveTo(Camera::main->cameraTransform->position);
+	//car->transform->MoveTo(Camera::main->cameraTransform->position);
 	//
+
+	RaceManager* race_manager = (new RaceManager())->SetMapManager(map);
+	race_manager->AddCar(car);
 
 	return std::shared_ptr<Scene>(scene);
 }

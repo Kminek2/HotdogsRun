@@ -8,6 +8,7 @@
 #include "mapgen.h"
 #include "objects/MapManager.h"
 #include "objects/BuildingManager.hpp"
+#include "objects/RaceManager.hpp"
 
 #include <utility>
 #include <vector>

@@ -1,7 +1,7 @@
 #include "objects/MapManager.h"
 #include "GameObject.h"
 
-void MapManager::Init()
+MapManager* MapManager::Init()
 {
 	_rand rand(seed);
 
@@ -70,6 +70,8 @@ void MapManager::Init()
 
 	for (unsigned i = 0; i < decors_count; i++) 
 		add_decor(rand, map_points);
+
+	return this;
 }
 
 void MapManager::add_decor(_rand& rand, const std::vector<MapPoint>& map_points) {
@@ -89,7 +91,18 @@ GameObject* MapManager::GetPoint(unsigned index) {
 	return points[index];
 }
 
-void MapManager::Update() {}
-void MapManager::OnDestroy() {}
+/// <summary>
+/// Returns the number of road tiles
+/// </summary>
+int MapManager::GetLen() {
+	return points.size();
+}
+
+/// <summary>
+/// Returns the MAP_TILE_SIZE const
+/// </summary>
+float MapManager::GetMapTileSize() {
+	return MAP_TILE_SIZE;
+}
 
 MapManager::MapSettingsValues::MapSettingsValues() {}

@@ -6,8 +6,7 @@
 
 using namespace mapgen;
 
-class MapManager :
-    public ObjectScript
+class MapManager
 {
 private:
 	std::vector<GameObject*> points;
@@ -37,6 +36,7 @@ private:
 	int num_sur_changes = 0;
 
 	void add_decor(_rand& rand, const std::vector<MapPoint>& map_points);
+
 public:
 	struct MapSettingsValues {
 		MapSettingsValues();
@@ -66,10 +66,10 @@ public:
 		cp_offset(vals.checkpoint_offset), 
 		ellipse(vals.ellipse) {};
 
-    void Init() override;
-	void Update() override;
-	void OnDestroy() override;
-
+	MapManager* Init();
 	GameObject* GetPoint(unsigned index);
+
+	int GetLen();
+	float GetMapTileSize();
 };
 

@@ -8,6 +8,9 @@ class CarInputs :
     public ObjectScript {
 private:
     CarMovement& script;
+
+    // this is so ugly
+    // im so tempted to add an std::array
     const uint16_t forward_key;
     const uint16_t backwards_key;
     const uint16_t left_turn_key;

@@ -7,18 +7,12 @@ CarInputs::CarInputs(CarMovement& script, uint16_t forward_key, uint16_t backwar
 void CarInputs::Init() {}
 
 void CarInputs::EarlyUpdate() {
-    if (Input::getKeyPressed(forward_key))
-        script.goForward();
-    if (Input::getKeyPressed(backwards_key))
-        script.goBackwards();
-    if (Input::getKeyPressed(left_turn_key))
-        script.makeLeftTurn();
-    if (Input::getKeyPressed(right_turn_key))
-        script.makeRightTurn();
-    if (Input::getKeyPressed(hand_break_key))
-        script.useHandBreak();
-    if (Input::getKeyClicked(nitro_key))
-        script.useNitro();
+    if (Input::getKeyPressed(forward_key)) script.goForward();
+    if (Input::getKeyPressed(backwards_key)) script.goBackwards();
+    if (Input::getKeyPressed(left_turn_key)) script.makeLeftTurn();
+    if (Input::getKeyPressed(right_turn_key)) script.makeRightTurn();
+    if (Input::getKeyPressed(hand_break_key)) script.useHandBreak();
+    if (Input::getKeyClicked(nitro_key)) script.useNitro();
 }
 
 void CarInputs::Update() {}
