@@ -62,7 +62,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	//car->transform->MoveTo(Camera::main->cameraTransform->position);
 	//
 
-	RaceManager* race_manager = (new RaceManager())->SetMapManager(map);
+	race_manager = (new RaceManager())->SetMapManager(map);
 	race_manager->AddCar(car);
 
 	return std::shared_ptr<Scene>(scene);
@@ -78,4 +78,7 @@ void MapDemo::Update() {
 
 void MapDemo::UnLoad() {
 	delete qc;
+	delete build;
+	delete race_manager;
+	delete map;
 }
