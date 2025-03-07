@@ -1,5 +1,6 @@
 #include "objects/MapManager.h"
 #include "GameObject.h"
+#include "objects/ShowOBB.h"
 
 MapManager* MapManager::Init()
 {
@@ -58,6 +59,7 @@ MapManager* MapManager::Init()
 		data->surface_type = _cur_sur_type;
 
 		points.push_back(new GameObject(data, { point.pos.x, point.pos.y, 0 }));
+		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
 	}
 
 	check_points.reserve(points.size() / cp_offset);
