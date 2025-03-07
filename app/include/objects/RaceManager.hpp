@@ -11,9 +11,11 @@ private:
 	MapManager* map_manager = nullptr;
 	int cars_placed = 0;
 
+	float cars_relative_offset = .25f;
 	const static std::array<glm::vec2, 4> offsets;
 
 public:
 	RaceManager* SetMapManager(MapManager* map_manager);
+	RaceManager* SetCarsRelativeOffset(float offset);
 	RaceManager* AddCar(GameObject* car);
 };

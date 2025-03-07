@@ -9,7 +9,7 @@ using namespace mapgen;
 class MapManager
 {
 private:
-	std::vector<GameObject*> points;
+	std::vector<GameObject*> points; // the final map tiles
 	std::vector<GameObject*> check_points;
 	std::vector<GameObject*> mini_decors;
 	std::vector<GameObject*> buildings;
@@ -71,5 +71,6 @@ public:
 
 	int GetLen();
 	float GetMapTileSize();
+	float GetMapScale();
 };
 

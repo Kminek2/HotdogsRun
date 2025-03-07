@@ -47,7 +47,6 @@ MapManager* MapManager::Init()
 
 			i += 2;
 		} else {
-			// if this throws an error, you're looking for a connection that doesn't exist. Refer to `mapgen_road.cpp` or Kamil :)
 			data = (road_segments[cur_sur_type_id].find({ point.in, point.out }) == road_segments[cur_sur_type_id].end()
 				? road_segments[cur_sur_type_id].at({ point.out, point.in })
 				: road_segments[cur_sur_type_id].at({ point.in, point.out }));
@@ -63,7 +62,7 @@ MapManager* MapManager::Init()
 
 	check_points.reserve(points.size() / cp_offset);
 	for (const glm::vec2& checkpoint : getCheckPoints(points, cp_offset))
-		check_points.push_back(new GameObject("debug_star", { checkpoint.x, checkpoint.y, 5 }));
+		check_points.push_back(new GameObject("", { checkpoint.x, checkpoint.y, 5 })); // tmp solution
 
 	unsigned int decors_count = n * decors_per_tile;
 	mini_decors.reserve(decors_count);
@@ -103,6 +102,13 @@ int MapManager::GetLen() {
 /// </summary>
 float MapManager::GetMapTileSize() {
 	return MAP_TILE_SIZE;
+}
+
+/// <summary>
+/// Returns the MAP_TILE_SCALE const
+/// </summary>
+float MapManager::GetMapScale() {
+	return MAP_TILE_SCALE;
 }
 
 MapManager::MapSettingsValues::MapSettingsValues() {}

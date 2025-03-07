@@ -9,6 +9,11 @@ RaceManager* RaceManager::SetMapManager(MapManager* map_manager) {
 	return this;
 }
 
+RaceManager* RaceManager::SetCarsRelativeOffset(float offset) {
+	this->cars_relative_offset = offset;
+	return this;
+}
+
 /// <summary>
 /// Return n normalized to [0, lim)
 /// </summary>
@@ -21,10 +26,10 @@ int normalize(int n, int lim) {
 /// Place the car in the right starting position. Returns the id of the car
 /// </summary>
 RaceManager* RaceManager::AddCar(GameObject* car) {
-	if (!map_manager) throw std::invalid_argument("init map_maneger first");
+	if (!map_manager) throw std::invalid_argument("init map_manager first");
 
 	const int n = map_manager->GetLen();
-	int point_id = normalize(n - cars_placed / 4, n);
+	int point_id = normalize(-cars_placed / 4, n);
 
 	glm::vec3 tile_points[2] = {
 		map_manager->GetPoint(point_id)->transform->position,
@@ -42,11 +47,11 @@ RaceManager* RaceManager::AddCar(GameObject* car) {
 	);
 
 	car->transform->MoveTo(glm::vec3(tile_points_transformed[0].x, tile_points_transformed[0].y, 1));
-	car->transform->RotateTo(glm::vec3(0, 0, glm::degrees(orient) - 90.0f));
+	car->transform->RotateTo(glm::vec3(0, 0, glm::degrees(orient) - 180.0f));
 
-	glm::vec2 offset = offsets[cars_placed % 4] * 0.0f * map_manager->GetMapTileSize() / 2.0f;
-	car->transform->Move(glm::vec3(offset.x, offset.y, 0));
+	glm::vec2 offset = offsets[cars_placed % 4] * map_manager->GetMapScale() * map_manager->GetMapTileSize() * cars_relative_offset;
+	car->transform->Translate(glm::vec3(offset.x, offset.y, 0));
 
-	++cars_placed;
+ 	++cars_placed;
 	return this;
 }

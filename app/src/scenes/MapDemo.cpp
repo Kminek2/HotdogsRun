@@ -11,7 +11,7 @@
 
 using namespace mapgen;
 
-const size_t seed = 42;
+const size_t seed = 41;
 
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
@@ -51,19 +51,24 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
 	//
-	GameObject* car = new GameObject("f1car");
+	/*GameObject* car = new GameObject("f1car");
 	car->addOBB(OBB());
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false, 0.05f);
 		car->AddScript(cmv);
 		car->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
 		car->AddScript(new CarInputs(*cmv, GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_PAGE_DOWN));
-	}
+	}*/
 	//car->transform->MoveTo(Camera::main->cameraTransform->position);
 	//
 
-	race_manager = (new RaceManager())->SetMapManager(map);
-	race_manager->AddCar(car);
+	race_manager = (new RaceManager())->SetMapManager(map)->SetCarsRelativeOffset(.1f);
+	for(int i=0; i<4; i++) race_manager->AddCar(new GameObject("f1car"));
+
+	GameObject** tmp_debug_objects = new GameObject*[] {
+		new GameObject("arrow", map->GetPoint(0)->transform->position),
+		new GameObject("debug_star", map->GetPoint(1)->transform->position)
+	};
 
 	return std::shared_ptr<Scene>(scene);
 }
