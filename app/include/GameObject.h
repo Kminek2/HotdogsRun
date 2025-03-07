@@ -58,7 +58,7 @@ public:
 	std::string GetModelName();
 	std::array<glm::vec2, 3> GetModelMaxDistVert();
 	void addOBB(OBB obb);
-	void AddDefaultOBB(glm::vec3 offset = {0.0f, 0.0f, 0.0f});
+	void AddDefaultOBB(glm::vec3 offset = {0.0f, 0.0f, 0.0f}, bool two_dim = false);
 
 	void AddColorChange(glm::vec3 from, glm::vec3 to);
 
