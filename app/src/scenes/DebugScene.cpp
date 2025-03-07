@@ -67,7 +67,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	am_obj->AddScript(am);
 	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
 	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {20.0f,0.0f,0.0f}));
-	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
+	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}, true));
 	
 	return std::shared_ptr<Scene>(scene);
 }

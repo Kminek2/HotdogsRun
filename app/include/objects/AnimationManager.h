@@ -11,12 +11,14 @@ class AnimationManager :
             CinematicCamera::obj_data end;
             float animation_time;
             glm::vec3 cur_offset;
+            bool stop_skip = false;
         };
         AnimationManager(std::vector<data> animation_queue = {});
         void Init() override;
         void Update() override;
         void OnDestroy() override;
         void addToQueue(data animation);
+        void skip();
     private:
         int id;
         CinematicCamera* last_animation;

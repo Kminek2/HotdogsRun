@@ -14,10 +14,21 @@ void AnimationManager::Update() {
         gameObject->AddScript(last_animation);
         ++id;
     }
+
+    if (Input::getKeyClicked(GLFW_KEY_SPACE))
+        skip();
 }
 
 void AnimationManager::OnDestroy() {}
 
 void AnimationManager::addToQueue(data animation) {
     animation_queue.push_back(animation);
+}
+
+void AnimationManager::skip() {
+    if (last_animation == nullptr)
+        return;
+    last_animation->skip();
+    while (id < animation_queue.size() && animation_queue[id].stop_skip == false)
+        ++id;
 }
