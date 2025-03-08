@@ -1,4 +1,4 @@
-	#pragma once
+#pragma once
 
 #include "SceeneScript.h"
 #include "GameObject.h"

@@ -1,4 +1,5 @@
 #include "objects/RaceManager.hpp"
+#include "Application.h"
 
 #include <glm/vec3.hpp>
 #include <algorithm>
@@ -68,11 +69,17 @@ void RaceManager::StartRace() {
 	car_objects.reserve(cars.size());
 	std::transform(cars.begin(), cars.end(), car_objects.begin(), [](GameObject* car) {return new CarObject(car, 0, 0); });
 
+	if (termination_condition == TIME) {
+		Application::Invoke(&RaceManager::EndRace, termination_condition_value, this, true);
+	} else {
+		// ...
+	}
+
 	// add checkpoint handling logic here
 }
 
 /// <summary>
-/// Sets the termination condition.
+/// Sets the termination condition. If the condition is LAPS, val is the number of laps to win. If the condition is TIME, val is the number of miliseconds to end the race.
 /// </summary>
 RaceManager* RaceManager::SetEndCondition(TerminationCondition condition, unsigned long long val) {
 	if (condition == undefined) throw std::invalid_argument("...really?");
@@ -84,14 +91,14 @@ RaceManager* RaceManager::SetEndCondition(TerminationCondition condition, unsign
 }
 
 /// <summary>
-/// Force-end the race. If executeCallbacks is set to false, the subscribers will not be called
+/// Force-end the race. If executeCallbacks is set to false, the subscribers will not be called. Also used by the main gameplay loop.
 /// </summary>
 RaceManager::CarObject* RaceManager::EndRace(bool executeCallbacks) {
-	if (!race_started) throw std::invalid_argument("race hasn't even started bruh");
+	if (!race_started) return nullptr; // race might have been force-ended already
 
 	std::sort(car_objects.begin(), car_objects.end(), [](CarObject* a, CarObject* b) {
 		if (a->lap == b->lap)
-			return a->time > b->time;
+			return a->time < b->time;
 		return a->lap > b->lap;
 	});
 

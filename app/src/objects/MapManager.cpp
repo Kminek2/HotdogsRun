@@ -64,7 +64,7 @@ MapManager* MapManager::Init()
 
 	check_points.reserve(points.size() / cp_offset);
 	for (const glm::vec2& checkpoint : getCheckPoints(points, cp_offset))
-		check_points.push_back(new GameObject("", { checkpoint.x, checkpoint.y, 5 })); // tmp solution
+		check_points.push_back(new GameObject("checkpoint", { checkpoint.x, checkpoint.y, 0 })); 
 
 	unsigned int decors_count = n * decors_per_tile;
 	mini_decors.reserve(decors_count);
@@ -80,7 +80,7 @@ void MapManager::add_decor(_rand& rand, const std::vector<MapPoint>& map_points)
 
 	GameObject* decor = new GameObject(rand.choice(small_decors.first, small_decors.second), {
 		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1),
-		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), 0 });
+		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), .1 }, { 0,0,rand.random(0.0f,360.0f) });
 
 	mini_decors.push_back(decor);
 }

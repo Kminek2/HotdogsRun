@@ -29,7 +29,8 @@ public:
 	void UpdateWindowSizes(uint16_t width, uint16_t height);
 
 	template<typename Function, typename... Args>
-	static void Invoke(Function&& func, int delayMs, Args&&... args);
+	static void Invoke(Function&& func, unsigned long long delayMs, Args&&... args);
+
 	static void LoadScene(std::string scene);
 	static void Quit();
 
@@ -39,13 +40,10 @@ public:
 };
 
 template<typename Function, typename ...Args>
-inline void Application::Invoke(Function&& func, int delayMs, Args && ...args)
+inline void Application::Invoke(Function&& func, unsigned long long delayMs, Args && ...args)
 {
 	std::thread([=]() {
-		// Sleep for the specified delay
-		std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
-		// Call the function with arguments
-		std::invoke(func, args...);
-		}).detach(); // Detach the thread to run independently
-
+		std::this_thread::sleep_for(std::chrono::milliseconds(delayMs)); // Sleep for the specified delay
+		std::invoke(func, args...); // Call the function with arguments
+	}).detach(); // Detach the thread to run independently
 }
