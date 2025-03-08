@@ -5,6 +5,8 @@
 #include "SoundEngine.h"
 
 #define FRAMES_IN_FLIGHT 2
+#define ASPECT_WIDTH 16
+#define ASPECT_HEIGHT 8
 
 class Engine;
 

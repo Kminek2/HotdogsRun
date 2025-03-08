@@ -210,6 +210,15 @@
     <ClCompile Include="app\src\ObjectSchema.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\objects\RaceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Sprite.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\RectTransform.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -394,6 +403,15 @@
     </ClInclude>
     <ClInclude Include="app\include\objects\AnimationManager.h">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\RaceManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Sprite.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\RectTransform.h">
+      <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
