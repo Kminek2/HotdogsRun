@@ -23,14 +23,18 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	_rand rand(seed);
 
 	MapManager::MapSettingsValues svals;
+	svals.map_len = 20;
+	svals.ellipse.a = 5; svals.ellipse.b = 10;
+	svals.ellipse.min_offset = -2.5; svals.ellipse.max_offset = 2.5;
 	svals.small_decors = { {"cube"},{} };
-	svals.road_types = { {"Asfalt","Zwir","Lod"},{.6,.3,.1} };
-	svals.num_sur_changes = 10;
+	svals.decors_per_tile = 5;
+	svals.decor_max_dist = 5;
+	svals.road_types = { {"Asfalt","Zwir","Lod"},{.8,.15,.05} };
+	svals.num_sur_changes = 5;
 
 	map = (new MapManager(seed, svals))->Init();
 
 	// -- tmp --
-	GameObject* buildObj = new GameObject();
 	build = new BuildingManager(seed, { {
 		{""}, {"case_1"}, {"case_2"}, {"case_3"},
 		{"case_4"}, {"case_5"}, {"case_6"}, {"case_7"},
@@ -38,11 +42,15 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
 	} });
 
-	std::vector<std::vector<bool>> builds(10);
-	for (int j = 0; j < 10; j++) {
-		builds[j].resize(10);
-		for (int i = 0; i < 10; i++)
-			builds[j][i] = (i == 0 || i == 9 || j == 0 || j == 9);
+	std::vector<std::vector<bool>> builds(20);
+	for (int j = 0; j < builds.size(); j++) {
+		builds[j].resize(builds.size());
+		for (int i = 0; i < builds.size(); i++) {
+			builds[j][i] = (
+				i == 4 || i == 14 || j == 4 || j == 14 ||
+				rand.coin_toss((i == 0 || i == 19 || j == 0 || j == 19) ? .1 : ((i < 3 || i > 16 || j < 3 || j > 16) ? .3 : .5))
+			);
+		}
 	}
 
 	auto vec_builds = build->generateBuildings(builds);

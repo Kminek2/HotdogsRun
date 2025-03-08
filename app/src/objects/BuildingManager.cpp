@@ -4,7 +4,7 @@
 const float BuildingManager::BUILDING_SIZE = 6.4;
 const std::array<std::array<uint8_t, 2>, 4> nmap = { {{0,0}, {1,0}, {1,1}, {0,1} } };
 
-std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<std::vector<bool>>& building_data) {
+std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<std::vector<bool>>& building_data, bool centerAtOffset) {
 	std::vector<GameObject*> buildings;
 
 	// -- assert -- 
@@ -16,6 +16,8 @@ std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<st
 
 	_rand rand(seed);
 
+	const glm::vec3 correction_offset = offset - (centerAtOffset ? glm::vec3((_w - 1) / 2) * glm::vec3(1, 1, 0) : glm::vec3(0)) * BUILDING_SIZE;
+
 	char d;
 	for (size_t y = 0; y < _w-1; y++)
 		for (size_t x = 0; x < _w-1; x++) {
@@ -26,7 +28,7 @@ std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<st
 					d |= 1 << i;
 
 			if (!tiles[d].empty())
-				buildings.push_back(new GameObject(rand.choice(tiles[d]), offset + glm::vec3(x, y, 0) * BUILDING_SIZE));
+				buildings.push_back(new GameObject(rand.choice(tiles[d]), correction_offset + glm::vec3(x, y, 0) * BUILDING_SIZE));
 		}
 
 	return buildings;

@@ -46,7 +46,7 @@ public:
 		Ellipse ellipse = { 20, 50, -5, 5 };
 
 		std::pair<std::vector<std::string>, std::vector<float>> small_decors = {};
-		std::pair<std::vector<std::string>, std::vector<float>> road_types = {};
+		std::pair<std::vector<std::string>, std::vector<float>> road_types = { {"Asfalt"}, {1} };
 
 		int num_sur_changes = 0;
 
