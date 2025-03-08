@@ -26,7 +26,14 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	svals.map_len = 20;
 	svals.ellipse.a = 5; svals.ellipse.b = 10;
 	svals.ellipse.min_offset = -2.5; svals.ellipse.max_offset = 2.5;
-	svals.small_decors = { {"cube"},{} };
+	svals.small_decors = {
+	{ "cube", "barrel", "bus", "crate",
+	  "fucked_up_car", "fucked_up_pickup", "goat", "hydrant",
+	  "smietnik", "TNT" },
+	{ 0.15f, 0.15f, 0.05f, 0.15f,
+	  0.04f, 0.04f, 0.04f, 0.16f,
+	  0.12f, 0.1f } // Wektor prawdopodobieństw (suma = 1.0f) (jak zrobisz więcej to kompilator {czytaj Paweł} cię pobije)
+	};
 	svals.decors_per_tile = 5;
 	svals.decor_max_dist = 5;
 	svals.road_types = { {"Asfalt","Zwir","Lod"},{.8,.15,.05} };
