@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 #include <stdexcept>
-
+#include <glm/glm.hpp>
 #include <vector>
 
 #include "Device.h"
@@ -47,6 +47,7 @@ struct Texture : Image {
 
     void CreateSampler(VkFilter oversamplingFilter = VK_FILTER_NEAREST, VkFilter undersamplingFilter = VK_FILTER_LINEAR);
 
+    glm::uvec2 GetImageSize(const char* texturePath);
     void AddTexture(const char* texturePath);
 
     void SendTexturesToMemory();

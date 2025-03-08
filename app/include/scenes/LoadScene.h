@@ -21,5 +21,7 @@ public:
     void Update() override;
 
     void UnLoad() override;
+    static void A() {
+        std::cout << "AAAAAAAAAAAA";
+    }
 };
-

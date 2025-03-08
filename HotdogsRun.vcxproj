@@ -60,6 +60,7 @@
     <ClCompile Include="app\src\PointLight.cpp" />
     <ClCompile Include="app\src\Queues.cpp" />
     <ClCompile Include="app\src\QuickCamera.cpp" />
+    <ClCompile Include="app\src\RectTransform.cpp" />
     <ClCompile Include="app\src\RenderPass.cpp" />
     <ClCompile Include="app\src\SceeneScript.cpp" />
     <ClCompile Include="app\src\Scene.cpp" />
@@ -69,6 +70,7 @@
     <ClCompile Include="app\src\Shader.cpp" />
     <ClCompile Include="app\src\SoundEngine.cpp" />
     <ClCompile Include="app\src\SpotLight.cpp" />
+    <ClCompile Include="app\src\Sprite.cpp" />
     <ClCompile Include="app\src\SwapChain.cpp" />
     <ClCompile Include="app\src\Transform.cpp" />
     <ClCompile Include="app\src\UiObject.cpp" />
@@ -122,7 +124,9 @@
     <ClInclude Include="app\include\PointLight.h" />
     <ClInclude Include="app\include\Queues.h" />
     <ClInclude Include="app\include\QuickCamera.h" />
+    <ClInclude Include="app\include\RectTransform.h" />
     <ClInclude Include="app\include\SoundEngine.h" />
+    <ClInclude Include="app\include\Sprite.h" />
     <ClInclude Include="app\include\_rand.hpp" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />

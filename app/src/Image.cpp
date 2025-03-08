@@ -261,6 +261,19 @@ void Texture::CreateSampler(VkFilter oversamplingFilter, VkFilter undersamplingF
 
 }
 
+glm::uvec2 Texture::GetImageSize(const char* texturePath) {
+    int texWidth, texHeight, texChannels;
+    stbi_uc* pixels = stbi_load(texturePath, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    VkDeviceSize imageSize = texWidth * texHeight * 4;
+
+    if (!pixels) {
+        throw std::runtime_error("failed to load texture image!");
+    }
+
+    stbi_image_free(pixels);
+    return glm::uvec2(texWidth, texHeight);
+}
+
 void Texture::AddTexture(const char* texturePath) {
     int texWidth, texHeight, texChannels;
     stbi_uc* pixels = stbi_load(texturePath, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
