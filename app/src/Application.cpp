@@ -20,6 +20,7 @@
 #include "DebugPoints.h"
 #include "AudioSource3d.h"
 
+#include "Sprite.h"
 namespace fs = std::filesystem;
 
 uint16_t Application::width, Application::height;
@@ -38,6 +39,13 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	Model::LoadEmptyModel();
 
 	Model::SendBuffers();
+
+	for (const auto& entry : fs::directory_iterator("images")) {
+		// std::cout << entry.path().filename().stem().string() << " : " << entry.path().string() << ", " << "textures/" + entry.path().filename().stem().string() + ".png" << '\n';
+		Sprite::LoadImageFromFile(entry.path().filename().stem().string(), entry.path().string());
+	}
+
+	Sprite::SendDataToGPU();
 
 	camera = new Camera(FRAMES_IN_FLIGHT, width, height);
 	LightObject::pointLightBuffer = new UniformBuffer<PointLightBuffer>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
@@ -66,10 +74,16 @@ Application::~Application() {
 	Transform::Unload();
 	LightObject::Unload();
 	DebugPoints::DeleteBuffers();
+	Sprite::Unload();
 	delete camera;
 }
 
 void Application::UpdateWindowSizes(uint16_t width, uint16_t height) {
+	float aspWidth = width / ASPECT_WIDTH;
+	float aspHeight = height / ASPECT_HEIGHT;
+	
+	width = std::min(aspHeight, aspWidth) * ASPECT_WIDTH;
+	height = std::min(aspHeight, aspWidth) * ASPECT_HEIGHT;
 	this->width = width;
 	this->height = height;
 	camera->UpdateCamera(width, height);
@@ -84,6 +98,7 @@ void Application::LoadScene(std::string scene)
 	Input::stopKeyCallback();
 
 	GameObject::DeleteAll();
+	Sprite::DeleteAll();
 	LightObject::DeleteAll();
 	PointLight::DeleteAll();
 	SpotLight::DeleteAll();

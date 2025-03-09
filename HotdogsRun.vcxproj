@@ -153,7 +153,12 @@
     <None Include="app\shaders\main.frag.spv" />
     <None Include="app\shaders\main.vert" />
     <None Include="app\shaders\main.vert.spv" />
+    <None Include="app\shaders\Sprite.frag" />
+    <None Include="app\shaders\Sprite.frag.spv" />
+    <None Include="app\shaders\Sprite.vert" />
+    <None Include="app\shaders\Sprite.vert.spv" />
     <None Include="app\shaders\ui.frag" />
+    <None Include="app\shaders\ui.frag.spv" />
     <None Include="app\shaders\ui.vert" />
     <None Include="app\shaders\ui.vert.spv" />
   </ItemGroup>

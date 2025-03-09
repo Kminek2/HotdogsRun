@@ -14,6 +14,7 @@
 
 #include "Camera.h"
 #include "DebugPoints.h"
+#include "Application.h"
 
 VkCommandPool Commands::commandPool;
 
@@ -80,8 +81,10 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
-        viewport.width = static_cast<float>(swapChain.getExtend().width);
-        viewport.height = static_cast<float>(swapChain.getExtend().height);
+        //viewport.width = static_cast<float>(swapChain.getExtend().width);
+        //viewport.height = static_cast<float>(swapChain.getExtend().height);
+        viewport.width = static_cast<float>(Application::width);
+        viewport.height = static_cast<float>(Application::height);
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);

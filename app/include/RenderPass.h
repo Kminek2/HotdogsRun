@@ -16,6 +16,7 @@ private:
 	VkRenderPass renderPass;
 	GraphicsPipeline* mainPipeline;
 	GraphicsPipeline* UIPipeline;
+	GraphicsPipeline* SpritePipeline;
 	GraphicsPipeline* debugingPipeline;
 
 	Image depthImage;

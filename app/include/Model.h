@@ -25,8 +25,9 @@ struct Model
 	static void LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords);
 
 	static std::pair<Model*, uint32_t> Create(std::string model);
-
 	static std::pair<Model*, uint32_t> CreateUI(std::string model);
+	static Model* CreateSprite();
+	void DeleteSprite();
 
 	void Delete();
 
@@ -70,6 +71,7 @@ private:
 	static std::map<std::string, Model*> loadedModels;
 	static std::list<Model*> createdModels;
 	static std::list<Model*> createdUiModels;
+	static uint32_t createdSprites;
 	static std::unordered_map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> modelsIndtaces;
 	static std::unordered_map<std::string, std::pair<std::list<Model*>::iterator, uint32_t>> uiModelsIndtaces;
 

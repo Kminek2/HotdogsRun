@@ -110,7 +110,9 @@ RenderPass::RenderPass(SwapChain* swapChain)
     std::cout << "Created main pipeline\n";
     UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this);
     std::cout << "Created UI pipeline\n";
-    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 2, *this, VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+    SpritePipeline = new GraphicsPipeline("app/shaders/Sprite.vert.spv", "app/shaders/Sprite.frag.spv", 2, *this);
+    std::cout << "Created Sprite Pipeline\n";
+    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 3, *this, VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
     std::cout << "Created debbuging pipeline\n";
 
 
