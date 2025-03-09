@@ -10,6 +10,7 @@
 #include <iostream>
 
 using namespace mapgen;
+using tc = RaceManager::TerminationCondition;
 
 const size_t seed = 41;
 
@@ -82,7 +83,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	//car->transform->MoveTo(Camera::main->cameraTransform->position);
 	//
 
-	race_manager = (new RaceManager())->SetMapManager(map)->SetCarsRelativeOffset(.1f);
+	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(tc::LAPS, 3)->SetCarsRelativeOffset(.1f);
 	for(int i=0; i<4; i++) race_manager->AddCar(new GameObject("f1car"));
 
 	return std::shared_ptr<Scene>(scene);

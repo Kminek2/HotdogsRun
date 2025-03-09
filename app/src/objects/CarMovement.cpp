@@ -42,15 +42,13 @@ void CarMovement::Update() {
 	bool coll = false;
 	road_type = 0;
 	for (auto const& obj : GameObject::createdGameObject) {
-		if (obj == gameObject)
+		if (obj == gameObject || !Collisions::checkCollision(*gameObject, *obj))
 			continue;
 
-		if (Collisions::checkCollision(*gameObject, *obj)) {
-			if (obj->surface_type < 0) {
-				coll = true;
-			} else {
-				road_type = std::max(road_type, obj->surface_type);
-			}
+		if (obj->surface_type < 0) {
+			coll = true;
+		} else {
+			road_type = std::max(road_type, obj->surface_type);
 		}
 	}
 	if (coll) {

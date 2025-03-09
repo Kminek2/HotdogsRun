@@ -10,7 +10,7 @@
 class RaceManager {
 public:
 	enum TerminationCondition {
-		LAPS, TIME, undefined
+		undefined, LAPS, TIME
 	};
 
 	struct CarObject {

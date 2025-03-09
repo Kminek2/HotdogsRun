@@ -43,16 +43,39 @@ bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
 	return true;
 }
 
-bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2) {
+bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, bool callback) {
+	bool coll = false;
+
 	for (int i = 0; i < obj1.obbs.size(); ++i) {
 		for (int j = 0; j < obj2.obbs.size(); ++j) {
 			OBB absOBB1 = getAbsOBB(obj1.obbs[i], obj1);
 			OBB absOBB2 = getAbsOBB(obj2.obbs[i], obj2);
 			if (checkOBBCollision(absOBB1, absOBB2))
-				return true;
+				coll = true;
+
+			if (coll)
+				break;
 		}
+
+		if (coll)
+			break;
 	}
-	return false;
+
+	if (!coll || !callback)
+		return coll;
+
+	const std::string name1 = obj1.model->GetName();
+	const std::string name2 = obj2.model->GetName();
+
+	const std::pair<std::string, std::string> colliders = { std::min(name1, name2), std::max(name1, name2) };
+
+	if (callbacks.find(colliders) != callbacks.end()) {
+		CollisionData* collision_data = new CollisionData(obj1, obj2);
+		for (const auto& cb : callbacks[colliders])
+			cb(collision_data);
+	}
+
+	return true;
 }
 
 OBB Collisions::getAbsOBB(const OBB& obb, const GameObject& obj) {
@@ -81,4 +104,9 @@ glm::mat3 Collisions::getRotationMatrix(glm::vec3 rot) {
 	glm::mat3 Ry(cos(y), 0.0f, sin(y), 0.0f, 1.0f, 0.0f, -sin(y), 0.0f, cos(y));
 	glm::mat3 Rz(cos(r), -sin(r), 0.0f, sin(r), cos(r), 0.0f, 0.0f, 0.0f, 1.0f);
 	return Rx*Ry*Rz;
+}
+
+std::map<std::pair<std::string, std::string>, std::vector<std::function<void(Collisions::CollisionData*)>>> Collisions::callbacks;
+void Collisions::addCallback(std::string a, std::string b, std::function<void(Collisions::CollisionData*)> callback) {
+	callbacks[{std::min(a, b), std::max(a, b)}].push_back(callback);
 }
