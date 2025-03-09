@@ -56,7 +56,7 @@ RaceManager* RaceManager::AddCar(GameObject* car) {
 	car->transform->Translate(glm::vec3(offset.x, offset.y, 0));
 
  	++cars_placed;
-	car_objects.emplace_back(car, 0, 0);
+	car_objects.push_back(new RaceManager::CarObject(car, 0, 0));
 	return this;
 }
 
@@ -71,7 +71,7 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData* collision_data) {
 		cp = collision_data->obj2;
 	}
 
-	CarObject* car_obj = *std::find_if(car_objects.begin(), car_objects.end(), [](CarObject* a, CarObject* b) { return a == b; });
+	CarObject* car_obj = *std::find_if(car_objects.begin(), car_objects.end(), [car](CarObject* a) { return a->car == car; });
 
 	if (map_manager->GetCheckPoint(normalize(car_obj->checkpoint + 1, map_manager->GetLen())) != cp)
 		return;
