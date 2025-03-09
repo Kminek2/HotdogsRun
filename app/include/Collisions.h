@@ -10,8 +10,7 @@ class Collisions
 {
 public:
 	struct CollisionData {
-		const GameObject& obj1;
-		const GameObject& obj2;
+		GameObject* obj1 = nullptr, * obj2 = nullptr;
 	};
 
 	static bool checkCollision(const GameObject& obj1, const GameObject& obj2, bool callback = true);

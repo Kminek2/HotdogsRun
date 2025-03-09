@@ -2,6 +2,7 @@
 
 #include "MapManager.h"
 #include "GameObject.h"
+#include "Collisions.h"
 
 #include <glm/vec2.hpp>
 #include <array>
@@ -15,7 +16,7 @@ public:
 
 	struct CarObject {
 		GameObject* car;
-		unsigned long long lap;
+		unsigned long long checkpoint;
 		double time;
 	};
 
@@ -27,13 +28,12 @@ public:
 	RaceManager* SetEndCondition(TerminationCondition condition, unsigned long long val);
 	CarObject* EndRace(bool executeCallbacks = true);
 
-	void SubscribeToRaceEnd(const std::function<void()>& callback);
+	void OnCheckpoint(Collisions::CollisionData* collision_data);
+	void SubscribeToRaceEnd(const std::function<void(CarObject*)>& callback);
 
 private:
 	MapManager* map_manager = nullptr;
 	int cars_placed = 0;
-
-	std::vector<GameObject*> cars;
 
 	std::vector<CarObject*> car_objects;
 
@@ -45,5 +45,5 @@ private:
 	TerminationCondition termination_condition = undefined;
 	unsigned long long termination_condition_value;
 
-	std::vector<std::function<void()>> subscribers;
+	std::vector<std::function<void(CarObject*)>> subscribers;
 };

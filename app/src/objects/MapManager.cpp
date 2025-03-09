@@ -88,8 +88,15 @@ void MapManager::add_decor(_rand& rand, const std::vector<MapPoint>& map_points)
 /// <summary>
 /// Return the pointer to the i-th tile's GameObject
 /// </summary>
-GameObject* MapManager::GetPoint(unsigned index) {
+GameObject* MapManager::GetPoint(unsigned long long index) {
 	return points[index];
+}
+
+/// <summary>
+/// Return the pointer to the i-th checkpoint's GameObject
+/// </summary>
+GameObject* MapManager::GetCheckPoint(unsigned long long index) {
+	return check_points[index];
 }
 
 /// <summary>
@@ -97,6 +104,13 @@ GameObject* MapManager::GetPoint(unsigned index) {
 /// </summary>
 int MapManager::GetLen() {
 	return points.size();
+}
+
+/// <summary>
+/// Returns the number of checkpoints
+/// </summary>
+int MapManager::GetCheckPoints() {
+	return check_points.size();
 }
 
 /// <summary>

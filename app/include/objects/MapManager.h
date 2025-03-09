@@ -67,9 +67,11 @@ public:
 		ellipse(vals.ellipse) {};
 
 	MapManager* Init();
-	GameObject* GetPoint(unsigned index);
+	GameObject* GetPoint(unsigned long long index);
+	GameObject* GetCheckPoint(unsigned long long index);
 
 	int GetLen();
+	int GetCheckPoints();
 	float GetMapTileSize();
 	float GetMapScale();
 };

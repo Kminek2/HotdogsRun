@@ -70,7 +70,7 @@ bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, 
 	const std::pair<std::string, std::string> colliders = { std::min(name1, name2), std::max(name1, name2) };
 
 	if (callbacks.find(colliders) != callbacks.end()) {
-		CollisionData* collision_data = new CollisionData(obj1, obj2);
+		CollisionData* collision_data = new CollisionData(const_cast<GameObject*>(&obj1), const_cast<GameObject*>(&obj2));
 		for (const auto& cb : callbacks[colliders])
 			cb(collision_data);
 	}
