@@ -7,6 +7,7 @@
 #include <utility>
 #include <thread>
 #include <chrono>
+#include <functional>
 
 #define FRAMES_IN_FLIGHT 2
 #define ASPECT_WIDTH 16
