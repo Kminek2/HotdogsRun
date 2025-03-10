@@ -82,6 +82,7 @@ void MapManager::add_decor(_rand& rand, const std::vector<MapPoint>& map_points)
 		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1),
 		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), .1 }, { 0,0,rand.random(0.0f,360.0f) });
 
+	decor->AddDefaultOBB();
 	mini_decors.push_back(decor);
 }
 

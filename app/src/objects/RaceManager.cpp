@@ -1,5 +1,6 @@
 #include "objects/RaceManager.hpp"
 #include "Application.h"
+#include "objects/ShowOBB.h"
 
 #include <glm/vec3.hpp>
 #include <algorithm>
@@ -79,6 +80,8 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData* collision_data) {
 	car_obj->checkpoint++;
 	car_obj->time = Time::lastTime;
 
+	std::cout << car->GetModelName() << " reached " << car_obj->checkpoint << "-th chekpoint at " << car_obj->time << '\n';
+
 	if (termination_condition == LAPS && (car_obj->checkpoint / map_manager->GetCheckPoints()) == termination_condition_value)
 		EndRace();
 }
@@ -90,14 +93,22 @@ void RaceManager::StartRace() {
 	if (car_objects.size() < 2) throw std::invalid_argument("add more cars");
 	if (termination_condition == undefined) throw std::invalid_argument("define a condition");
 
+	std::cout << "Race stared with the termination condition of " << (termination_condition == TIME ? "TIME" : "LAPS") << " (" << termination_condition_value << ")\n";
+
 	if (termination_condition == TIME)
 		Application::Invoke(&RaceManager::EndRace, termination_condition_value, this, true);
 
 	std::set<std::string> car_names;
+	
+	for (int i = 0; i < map_manager->GetCheckPoints(); i++) {
+		map_manager->GetCheckPoint(i)->AddDefaultOBB(glm::vec3(1), true)->AddScript(new ShowOBB())->surface_type = NEVER_COLLIDE;
+	}
 
 	for (CarObject* car : car_objects)
-		if (car_names.insert(car->car->GetModelName()).second)
+		if (car_names.insert(car->car->GetModelName()).second) {
 			Collisions::addCallback("checkpoint", car->car->GetModelName(), std::bind(&RaceManager::OnCheckpoint, this, std::placeholders::_1));
+			std::cout << "Added callback to [checkpoint - " << car->car->GetModelName() << "] collision\n";
+		}
 }
 
 /// <summary>
@@ -123,6 +134,8 @@ RaceManager::CarObject* RaceManager::EndRace(bool executeCallbacks) {
 			return a->time < b->time;
 		return a->checkpoint > b->checkpoint;
 	});
+
+	std::cout << "Race ended.\n";
 
 	if (!executeCallbacks) 
 		return car_objects[0];

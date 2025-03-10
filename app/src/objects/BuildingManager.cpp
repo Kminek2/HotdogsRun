@@ -27,8 +27,10 @@ std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<st
 				if (building_data[y + nmap[i][1]][x + nmap[i][0]])
 					d |= 1 << i;
 
-			if (!tiles[d].empty())
+			if (!tiles[d].empty()) {
 				buildings.push_back(new GameObject(rand.choice(tiles[d]), correction_offset + glm::vec3(x, y, 0) * BUILDING_SIZE));
+				buildings[buildings.size()-1]->AddDefaultOBB();
+			}
 		}
 
 	return buildings;

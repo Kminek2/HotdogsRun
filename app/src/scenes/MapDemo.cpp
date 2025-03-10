@@ -20,6 +20,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	qc = new QuickCamera();
 	qc->_sr(0.75f);
 	qc->_sm(100.0f);
+	qc->_mappings(__keybinds({GLFW_KEY_I, GLFW_KEY_K, GLFW_KEY_J, GLFW_KEY_L, GLFW_KEY_U, GLFW_KEY_O, GLFW_KEY_P}));
 
 	_rand rand(seed);
 
@@ -33,8 +34,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 			"smietnik", "TNT" },
 		{ 0.15f, 0.15f, 0.05f, 0.15f,
 			0.04f, 0.04f, 0.04f, 0.16f,
-			0.12f, 0.1f } // Wektor prawdopodobieństw (suma = 1.0f) (jak zrobisz więcej to kompilator {czytaj Paweł} cię pobije) - Filip
-	};					  // (1) suma = 1.0f ± ε 🤓; (2) nie Paweł, tylko ja													 - Kamil
+			0.12f, 0.1f }
+	};
 
 	svals.decors_per_tile = 1.25f;
 	svals.decor_max_dist = 5;
@@ -71,22 +72,28 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	//
-	/*GameObject* car = new GameObject("f1car");
+	GameObject* car = new GameObject("f1car");
 	car->addOBB(OBB());
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false, 0.05f);
 		car->AddScript(cmv);
 		car->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
-		car->AddScript(new CarInputs(*cmv, GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_PAGE_DOWN));
-	}*/
-	//car->transform->MoveTo(Camera::main->cameraTransform->position);
-	//
+		car->AddScript(new CarInputs(*cmv, GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL));
+	}
 
 	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(tc::LAPS, 3)->SetCarsRelativeOffset(.1f);
-	for(int i=0; i<4; i++) race_manager->AddCar(new GameObject("f1car"));
+	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
+
+	race_manager->AddCar(car);
+	for(int i=0; i<3; i++) race_manager->AddCar(new GameObject("f1car"));
+
+	race_manager->StartRace();
 
 	return std::shared_ptr<Scene>(scene);
+}
+
+void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
+	std::cout << "===\n\t" << winner->car->GetModelName() << "\n\t" << winner->checkpoint << "\n\t" << winner->time << '\n';
 }
 
 void MapDemo::Update() {
