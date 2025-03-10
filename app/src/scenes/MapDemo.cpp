@@ -81,7 +81,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		car->AddScript(new CarInputs(*cmv, GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL));
 	}
 
-	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(tc::LAPS, 3)->SetCarsRelativeOffset(.1f);
+	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(tc::LAPS, 1)->SetCarsRelativeOffset(.1f);
 	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
 
 	race_manager->AddCar(car);

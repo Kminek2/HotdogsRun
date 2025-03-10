@@ -74,7 +74,7 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData* collision_data) {
 
 	CarObject* car_obj = *std::find_if(car_objects.begin(), car_objects.end(), [car](CarObject* a) { return a->car == car; });
 
-	if (map_manager->GetCheckPoint(normalize(car_obj->checkpoint + 1, map_manager->GetLen())) != cp)
+	if (map_manager->GetCheckPoint(normalize(car_obj->checkpoint + 1, map_manager->GetCheckPoints())) != cp)
 		return;
 
 	car_obj->checkpoint++;
@@ -82,7 +82,7 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData* collision_data) {
 
 	std::cout << car->GetModelName() << " reached " << car_obj->checkpoint << "-th chekpoint at " << car_obj->time << '\n';
 
-	if (termination_condition == LAPS && (car_obj->checkpoint / map_manager->GetCheckPoints()) == termination_condition_value)
+	if (termination_condition == LAPS && (car_obj->checkpoint / map_manager->GetCheckPoints()) >= termination_condition_value)
 		EndRace();
 }
 
@@ -93,6 +93,7 @@ void RaceManager::StartRace() {
 	if (car_objects.size() < 2) throw std::invalid_argument("add more cars");
 	if (termination_condition == undefined) throw std::invalid_argument("define a condition");
 
+	race_started = true;
 	std::cout << "Race stared with the termination condition of " << (termination_condition == TIME ? "TIME" : "LAPS") << " (" << termination_condition_value << ")\n";
 
 	if (termination_condition == TIME)
