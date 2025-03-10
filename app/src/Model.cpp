@@ -8,7 +8,7 @@
 std::map<std::string, Model*> Model::loadedModels;
 std::list<Model*> Model::createdModels;
 std::list<Model*> Model::createdUiModels;
-std::list<Model*> Model::createdSprites;
+uint32_t Model::createdSprites;
 Buffer<Vertex>* Model::vertexBuffer = new Buffer<Vertex>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 Buffer<uint32_t>* Model::indexBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
 Texture* Model::textures = new Texture();

@@ -7,7 +7,7 @@ class RenderPass;
 class GraphicsPipeline
 {
 private:
-	static Uniform* uniform;
+	Uniform* uniform;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 public:

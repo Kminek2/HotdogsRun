@@ -161,6 +161,8 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
         if (DebugPoints::indicies.size() > 0)
             vkCmdDrawIndexed(commandBuffer, DebugPoints::indicies.size(), 1, 0, 0, 0);
+
+        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
     }
 
     vkCmdEndRenderPass(commandBuffer);
