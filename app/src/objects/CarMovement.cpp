@@ -46,7 +46,7 @@ void CarMovement::Update() {
 			continue;
 
 		if (obj->surface_type < 0) {
-			coll = true;
+			coll = (obj->surface_type == ALWAYS_COLLIDE);
 		} else {
 			road_type = std::max(road_type, obj->surface_type);
 		}

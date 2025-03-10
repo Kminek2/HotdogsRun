@@ -28,4 +28,6 @@ public:
 	std::shared_ptr<Scene> Init() override;
 	void Update() override;
 	void UnLoad() override;
+
+	void OnRaceEnd(RaceManager::CarObject* winner);
 };
