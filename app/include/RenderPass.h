@@ -3,8 +3,6 @@
 #include <GLFW/glfw3.h>
 #include "GraphicsPipeline.h"
 
-#include "Uniform.h"
-
 #include "Image.h"
 
 class SwapChain;

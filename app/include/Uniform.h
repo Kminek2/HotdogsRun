@@ -5,8 +5,7 @@
 #include <vector>
 #include "Image.h"
 #include "UniformBuffer.h"
-
-class Descriptior;
+#include "Application.h"
 
 class Uniform
 {
@@ -23,19 +22,19 @@ public:
 	void AddUniforms(uint16_t amount = 1, VkDescriptorType type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VkShaderStageFlags shaderStage = VK_SHADER_STAGE_VERTEX_BIT, uint32_t descriptorSize = 1);
 	std::vector<VkDescriptorSetLayout> BindUniforms();
 	std::vector<VkDescriptorSetLayout> GetUnfiorms();
+	VkDescriptorSet& GetDescriptorSet(unsigned int frame) { return descriptorSets.at(frame); };
 	~Uniform();
 
 	template <typename T>
 	void UpdateDescriptorSets(const UniformBuffer<T>& buffer, uint32_t binding, VkDeviceSize size);
 	void UpdateImageInDescriptorSets(const Texture& texture, const uint32_t& binding);
-	friend Descriptior;
 };
 
 template<typename T>
 inline void Uniform::UpdateDescriptorSets(const UniformBuffer<T>& buffer, uint32_t binding, VkDeviceSize size)
 {
 	vkDeviceWaitIdle(Device::getDevice());
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+	for (size_t i = 0; i < FRAMES_IN_FLIGHT; i++) {
 		VkDescriptorBufferInfo bufferInfo = {};
 		bufferInfo.buffer = buffer.uniformBuffers[i];
 		bufferInfo.offset = 0;

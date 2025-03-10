@@ -2,7 +2,7 @@
 
 std::map<std::string, Sprite*> Sprite::loadedSprites;
 std::list<Sprite*> Sprite::createdSprites;
-Texture* Sprite::textures;
+Texture* Sprite::textures = new Texture();
 
 Sprite::Sprite(std::string name, glm::vec3 color)
 {
@@ -33,7 +33,8 @@ void Sprite::LoadImageFromFile(std::string name, std::string filePath)
 
 Sprite::~Sprite()
 {
-	createdSprites.erase(i);
+	if (!createdSprites.empty())
+		createdSprites.erase(i);
 	model->DeleteSprite();
 
 	if(rectTransform != nullptr)

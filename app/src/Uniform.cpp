@@ -49,7 +49,7 @@ void Uniform::UpdateImageInDescriptorSets(const Texture& texture, const uint32_t
 
 
     for (size_t i = 0; i < FRAMES_IN_FLIGHT; i++) {
-        VkWriteDescriptorSet descriptorWrite;
+        VkWriteDescriptorSet descriptorWrite{};
 
         descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         descriptorWrite.dstSet = descriptorSets[i];
@@ -101,5 +101,10 @@ std::vector<VkDescriptorSetLayout> Uniform::GetUnfiorms() {
 }
 
 Uniform::~Uniform() {
-    vkDestroyDescriptorSetLayout(Device::getDevice(), descriptorSetLayout, nullptr);
+    if (descriptorPool != nullptr) {
+        vkDestroyDescriptorPool(Device::getDevice(), descriptorPool, nullptr);
+        vkDestroyDescriptorSetLayout(Device::getDevice(), descriptorSetLayout, nullptr);
+
+        descriptorPool = nullptr;
+    }
 }

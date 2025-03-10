@@ -13,8 +13,9 @@
 #include "LightBufferStruct.h"
 #include "Application.h"
 #include "LightObject.h"
+#include "Uniform.h"
 
-GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, VkPrimitiveTopology topology) {
+GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, Uniform* createdUniform, VkPrimitiveTopology topology) {
     std::cout << "Creating pipeline\n";
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
 
@@ -123,16 +124,25 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     std::vector<VkDescriptorSetLayout> descriptorSetLayout;
 
-    uniform = new Uniform();
-    uniform->AddUniforms(1);
-    uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
-    uniform->AddUniforms(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
-    descriptorSetLayout = uniform->BindUniforms();
+    if (createdUniform == nullptr) {
+        uniform = new Uniform();
+        uniform->AddUniforms(1);
+        uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
+        uniform->AddUniforms(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
+        descriptorSetLayout = uniform->BindUniforms();
 
-    uniform->UpdateDescriptorSets(*Camera::main->getBuffer(), 0, Camera::main->getBuffer()->getSize());
-    uniform->UpdateImageInDescriptorSets(*Model::textures, 1);
-    uniform->UpdateDescriptorSets(*LightObject::getPointBuffer(), 2, LightObject::getPointBuffer()->getSize());
-    uniform->UpdateDescriptorSets(*LightObject::getSpotBuffer(), 3, LightObject::getSpotBuffer()->getSize());
+        uniform->UpdateDescriptorSets(*Camera::main->getBuffer(), 0, Camera::main->getBuffer()->getSize());
+        uniform->UpdateImageInDescriptorSets(*Model::textures, 1);
+        uniform->UpdateDescriptorSets(*LightObject::getPointBuffer(), 2, LightObject::getPointBuffer()->getSize());
+        uniform->UpdateDescriptorSets(*LightObject::getSpotBuffer(), 3, LightObject::getSpotBuffer()->getSize());
+
+        gotUniform = false;
+    }
+    else {
+        uniform = createdUniform;
+        descriptorSetLayout = uniform->GetUnfiorms();
+        gotUniform = true;
+    }
 
     VkPushConstantRange range = {};
     range.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -187,9 +197,8 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 }
 
 GraphicsPipeline::~GraphicsPipeline() {
-    if (uniform != nullptr) {
+    if(!gotUniform){
         delete uniform;
-        uniform = nullptr;
     }
     vkDestroyPipeline(Device::getDevice(), graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(Device::getDevice(), pipelineLayout, nullptr);

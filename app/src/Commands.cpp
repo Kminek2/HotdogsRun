@@ -15,6 +15,7 @@
 #include "Camera.h"
 #include "DebugPoints.h"
 #include "Application.h"
+#include "Uniform.h"
 
 VkCommandPool Commands::commandPool;
 
@@ -76,6 +77,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
     {
+        //MAIN
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipeline());
 
         VkViewport viewport{};
@@ -100,7 +102,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
 
         vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getMainPipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
 
         struct PushConstantData {
             glm::vec4 dir = glm::vec4(LightObject::dirLight.dir, 0);
@@ -128,6 +130,8 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             vkCmdDrawIndexed(commandBuffer, model->indexSize, instance.second, model->indexOffset, model->vertexOffset, instanceOff);
             instanceOff += instance.second;
         }
+
+        //UI
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
@@ -135,7 +139,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         vkCmdBindVertexBuffers(commandBuffer, 0, 3, vertexBuffers, offsets);
         vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getUiPipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
 
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
         while (instanceOff < Model::createdModels.size() + Model::createdUiModels.size())
@@ -147,6 +151,10 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             instanceOff += instance.second;
         }
 
+        //SPRITES
+        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+
+        //DEEBUG POINTS
         if (DebugPoints::indicies.size() > 0) {
             vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getDebugPipeline()->getPipeline());
 
@@ -155,14 +163,12 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             vkCmdBindVertexBuffers(commandBuffer, 0, 1, &DebugPoints::vertexBuffer->getBuffer(), offsets);
             vkCmdBindIndexBuffer(commandBuffer, DebugPoints::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getDebugPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getDebugPipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getDebugPipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
 
         }
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
         if (DebugPoints::indicies.size() > 0)
             vkCmdDrawIndexed(commandBuffer, DebugPoints::indicies.size(), 1, 0, 0, 0);
-
-        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
     }
 
     vkCmdEndRenderPass(commandBuffer);

@@ -76,8 +76,6 @@ void Engine::Cleanup() {
 
     delete swapChain;
 
-    delete descriptor;
-
     delete commands;
 
     delete device;
@@ -111,7 +109,7 @@ void Engine::DrawFrame() {
 
     vkResetFences(Device::getDevice(), 1, &inFlightFences[currentFrame]);
 
-    application->UpdateBuffer(currentFrame, descriptor);
+    application->UpdateBuffer(currentFrame, swapChain->getRenderPass()->getMainPipeline()->GetUniform());
 
     commands->ResetCommands(currentFrame);
     commands->RecordCommands(currentFrame, swapChain->getFramebuffer(imageIndex)->getFramebuffer(), *swapChain, imageIndex);

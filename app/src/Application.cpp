@@ -21,6 +21,8 @@
 #include "AudioSource3d.h"
 
 #include "Sprite.h"
+#include "Uniform.h"
+
 namespace fs = std::filesystem;
 
 uint16_t Application::width, Application::height;
@@ -116,16 +118,16 @@ void Application::Quit()
 	glfwSetWindowShouldClose(window, true);
 }
 
-void Application::UpdateBuffer(uint16_t frame, Descriptior *descriptor)
+void Application::UpdateBuffer(uint16_t frame, Uniform *uniform)
 {
 	camera->UpdateCamera(width, height);
 	camera->UpdateBuffer(frame);
 
 	if (LightObject::pointLightBuffer->getSize() != PointLight::SendData(frame) && PointLight::lightNum > 0)
-		descriptor->UpdateDescriptor(*LightObject::pointLightBuffer, 2, glm::max(static_cast<uint32_t>(PointLight::lightNum * sizeof(PointLightBuffer)), static_cast<uint32_t>(1)));
+		uniform->UpdateDescriptorSets(*LightObject::pointLightBuffer, 2, glm::max(static_cast<uint32_t>(PointLight::lightNum * sizeof(PointLightBuffer)), static_cast<uint32_t>(1)));
 
 	if (LightObject::spotLightBuffer->getSize() != SpotLight::SendData(frame) && SpotLight::lightNum > 0)
-		descriptor->UpdateDescriptor(*LightObject::spotLightBuffer, 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
+		uniform->UpdateDescriptorSets(*LightObject::spotLightBuffer, 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
 }
 
 std::list <float> frameTimes;
