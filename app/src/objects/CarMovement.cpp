@@ -12,14 +12,15 @@ const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
 };
 const float CarMovement::nitro_duration = 1.0f;
 
-CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode, float multiplier) :
-	carWeight(carWeight), breaksStrength(breaksStrength), maxSpeed(maxSpeed), minSpeed(minSpeed), accelFront(accelFront), accelBack(accelBack), expertMode(expertMode), multiplier(multiplier) {
+CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode, float multiplier, glm::vec3 nitro_trail_offset) :
+	carWeight(carWeight), breaksStrength(breaksStrength), maxSpeed(maxSpeed), minSpeed(minSpeed), accelFront(accelFront), accelBack(accelBack), expertMode(expertMode), multiplier(multiplier), nitro_trail_offset(nitro_trail_offset) {
 	forces = { 1, 0, 0 };
 	actSpeed = 0.0f;
 	axleAngle = 0.0f;
 	road_type = 0;
 	nitros_available = 3;
 	nitro_timer = 0.0f;
+	nitro_trail = nullptr;
 }
 
 void CarMovement::Init() {
@@ -203,6 +204,8 @@ void CarMovement::useNitro() {
 	--nitros_available;
 	before_nitro_mem = actSpeed;
 	nitro_timer = nitro_duration;
+	nitro_trail = new GameObject("nitroOgien");
+	nitro_trail->AddScript(new LockPosition(gameObject->transform, nitro_trail_offset))->AddScript(new LockRotation(gameObject->transform));
 }
 
 void CarMovement::handleNitroAcc() {
@@ -210,6 +213,11 @@ void CarMovement::handleNitroAcc() {
 	std::cout << nitro_timer << '\n';
 	nitro_timer = std::max(0.0f, nitro_timer);
 	actSpeed += Time::deltaTime * accelFront * surfaces_data[road_type].acc_multiplier * 0.1f * multiplier * std::max(before_nitro_mem, 50.0f);
-	if (nitro_timer == 0.0f)
+	if (nitro_timer == 0.0f) {
 		actSpeed = before_nitro_mem;
+		if (nitro_trail != nullptr) {
+			delete nitro_trail;
+			nitro_trail = nullptr;
+		}
+	}
 }
