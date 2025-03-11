@@ -17,11 +17,11 @@ const size_t seed = 41;
 const unsigned int cityNum = 3;
 
 const std::array<std::vector<std::string>, 16> defaultBuildings = { {
-		{""}, {"case_1"}, {"case_2"}, {"case_3"},
-		{"case_4"}, {"case_5"}, {"case_6"}, {"case_7"},
-		{"case_8"}, {"case_9"}, {"case_10"}, {"case_11"},
-		{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
-	} };
+	{""}, {"case_1"}, {"case_2"}, {"case_3"},
+	{"case_4"}, {"case_5"}, {"case_6"}, {"case_7"},
+	{"case_8"}, {"case_9"}, {"case_10"}, {"case_11"},
+	{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
+} };
 
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
@@ -52,32 +52,12 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	svals.num_sur_changes = 5;
 
 	map = (new MapManager(seed, svals))->Init();
-
-	build = new BuildingManager(seed, defaultBuildings);
-
-	// this makes me want to kms
-	/*for (int j = 0; j < builds.size(); j++) {
-		builds[j].resize(builds.size());
-		for (int i = 0; i < builds.size(); i++) {
-			builds[j][i] = (
-				i == 4 || i == 14 || j == 4 || j == 14 || // always on the 4-14 square border
-				rand.coin_toss((i == 0 || i == 19 || j == 0 || j == 19) 
-					? .1 // 10% on the 0-19 square border
-					: ((i < 3 || i > 16 || j < 3 || j > 16) 
-						? .4 // 40% outside the 3-16 square
-						: .6) // 60% otherwise
-				)
-			);
-		}
-	}*/
-
-	build->setMap(map->GetPoints());
+	build = (new BuildingManager(seed, defaultBuildings))->setMap(map->GetPoints());
 
 	unsigned int mapCityTile = rand.random(0, map->GetLen());
 	for (int i = 0; i < cityNum; i++) {
 		build->setOffset(map->GetPoint(mapCityTile)->transform->position);
 		build->generateBuildings(build->generateBuildingsVector(mapCityTile, 20));
-		//build->generateBuildingsVector(mapCityTile, 20);
 		mapCityTile = (mapCityTile + map->GetLen() / cityNum) % map->GetLen();
 	}
 

@@ -126,6 +126,9 @@ float MapManager::GetMapScale() {
 	return MAP_TILE_SCALE;
 }
 
+/// <summary>
+/// Returns the reference (pointer) to the whole vector of map tiles (unadviced to use).
+/// </summary>
 std::vector<GameObject*>* MapManager::GetPoints()
 {
 	return &points;

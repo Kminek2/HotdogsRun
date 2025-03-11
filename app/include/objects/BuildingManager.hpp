@@ -5,11 +5,12 @@
 #include <string>
 
 #include "GameObject.h"
+#include "_rand.hpp"
 
 class BuildingManager {
 private:
 private:
-	const size_t seed;
+	_rand rand;
 	const std::array<std::vector<std::string>, 16> tiles;
 
 	glm::vec3 offset = glm::vec3(0);
@@ -18,10 +19,10 @@ private:
 
 	static const float BUILDING_SIZE;
 
-	std::vector<GameObject*>* map;
+	std::vector<GameObject*>* map = nullptr;
 
 public:
-	BuildingManager(size_t seed, const std::array<std::vector<std::string>, 16>& building_tiles) : seed(seed), tiles(building_tiles) {};
+	BuildingManager(size_t seed, const std::array<std::vector<std::string>, 16>& building_tiles) : rand(seed), tiles(building_tiles) {};
 
 	BuildingManager* setOffset(glm::vec3 offset);
 	BuildingManager* setRotation(glm::vec3 rotation);
@@ -32,6 +33,6 @@ public:
 	glm::vec3 getRotation();
 	glm::vec3 getScale();
 
-	std::vector<GameObject*> generateBuildings(const std::vector<std::vector<bool>>& building_data, bool centerAtOffset = true);
+	std::vector<GameObject*> generateBuildings(const std::vector<std::vector<bool>>& building_data);
 	std::vector<std::vector<bool>> generateBuildingsVector(unsigned int centerRoad, unsigned int citySize);
 };
