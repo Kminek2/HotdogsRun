@@ -11,8 +11,6 @@ class MapManager
 private:
 	std::vector<GameObject*> points; // the final map tiles
 	std::vector<GameObject*> check_points;
-	std::vector<GameObject*> mini_decors;
-	std::vector<GameObject*> buildings;
 
 	// -- general --
 	const size_t seed;
@@ -74,5 +72,6 @@ public:
 	int GetCheckPoints();
 	float GetMapTileSize();
 	float GetMapScale();
+	std::vector<GameObject*>* GetPoints();
 };
 

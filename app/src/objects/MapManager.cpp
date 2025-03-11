@@ -67,7 +67,6 @@ MapManager* MapManager::Init()
 		check_points.push_back(new GameObject("checkpoint", { checkpoint.x, checkpoint.y, 0 })); 
 
 	unsigned int decors_count = n * decors_per_tile;
-	mini_decors.reserve(decors_count);
 
 	for (unsigned i = 0; i < decors_count; i++) 
 		add_decor(rand, map_points);
@@ -83,7 +82,6 @@ void MapManager::add_decor(_rand& rand, const std::vector<MapPoint>& map_points)
 		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), .1 }, { 0,0,rand.random(0.0f,360.0f) });
 
 	decor->AddDefaultOBB();
-	mini_decors.push_back(decor);
 }
 
 /// <summary>
@@ -126,6 +124,11 @@ float MapManager::GetMapTileSize() {
 /// </summary>
 float MapManager::GetMapScale() {
 	return MAP_TILE_SCALE;
+}
+
+std::vector<GameObject*>* MapManager::GetPoints()
+{
+	return &points;
 }
 
 MapManager::MapSettingsValues::MapSettingsValues() {}

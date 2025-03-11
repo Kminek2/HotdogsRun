@@ -5,6 +5,7 @@
 #include "objects/CameraLockScript.h"
 #include "objects/CarInputs.h"
 #include "objects/WheelsScript.h"
+#include "objects/ShowOBB.h"
 
 #include <glm/vec3.hpp>
 #include <iostream>
@@ -13,6 +14,14 @@ using namespace mapgen;
 using tc = RaceManager::TerminationCondition;
 
 const size_t seed = 41;
+const unsigned int cityNum = 3;
+
+const std::array<std::vector<std::string>, 16> defaultBuildings = { {
+		{""}, {"case_1"}, {"case_2"}, {"case_3"},
+		{"case_4"}, {"case_5"}, {"case_6"}, {"case_7"},
+		{"case_8"}, {"case_9"}, {"case_10"}, {"case_11"},
+		{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
+	} };
 
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
@@ -44,16 +53,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	map = (new MapManager(seed, svals))->Init();
 
-	build = new BuildingManager(seed, { {
-		{""}, {"case_1"}, {"case_2"}, {"case_3"},
-		{"case_4"}, {"case_5"}, {"case_6"}, {"case_7"},
-		{"case_8"}, {"case_9"}, {"case_10"}, {"case_11"},
-		{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
-	} });
+	build = new BuildingManager(seed, defaultBuildings);
 
 	// this makes me want to kms
-	std::vector<std::vector<bool>> builds(20);
-	for (int j = 0; j < builds.size(); j++) {
+	/*for (int j = 0; j < builds.size(); j++) {
 		builds[j].resize(builds.size());
 		for (int i = 0; i < builds.size(); i++) {
 			builds[j][i] = (
@@ -66,9 +69,17 @@ std::shared_ptr<Scene> MapDemo::Init() {
 				)
 			);
 		}
-	}
+	}*/
 
-	auto vec_builds = build->generateBuildings(builds);
+	build->setMap(map->GetPoints());
+
+	unsigned int mapCityTile = rand.random(0, map->GetLen());
+	for (int i = 0; i < cityNum; i++) {
+		build->setOffset(map->GetPoint(mapCityTile)->transform->position);
+		build->generateBuildings(build->generateBuildingsVector(mapCityTile, 20));
+		//build->generateBuildingsVector(mapCityTile, 20);
+		mapCityTile = (mapCityTile + map->GetLen() / cityNum) % map->GetLen();
+	}
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 

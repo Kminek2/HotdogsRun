@@ -14,7 +14,7 @@
 #include <iostream>
 
 const std::vector<std::string> models = {
-	"racing_car", "racing_car", "arrow", "racing_car"
+	"racing_car", "racing_car", "arrow", "racing_car", "zakretPolSkosAsfalt"
 };
 
 std::shared_ptr<Scene> DebugScene::Init() {
@@ -61,6 +61,8 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	objs[2]->AddScript(new LockRotation(objs[1]->transform));
 	objs[2]->AddScript(new LockPosition(objs[3]->transform));
 	objs[2]->AddScript(new LockRotation(objs[3]->transform));
+
+	objs[4]->AddDefaultOBB()->AddScript(new ShowOBB());
 	
 	AnimationManager* am = new AnimationManager();
 	GameObject* am_obj = new GameObject();
