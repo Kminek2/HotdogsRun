@@ -1,6 +1,5 @@
 #include "objects/BuildingManager.hpp"
 #include "Collisions.h"
-#include "_rand.hpp"
 
 const float BuildingManager::BUILDING_SIZE = 6.4;
 const std::array<std::array<uint8_t, 2>, 4> nmap = { {{0,0}, {1,0}, {1,1}, {0,1} } };
@@ -30,7 +29,7 @@ glm::vec3 BuildingManager::getOffset() { return offset; }
 glm::vec3 BuildingManager::getRotation() { return rotation; }
 glm::vec3 BuildingManager::getScale() { return scale; }
 
-std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<std::vector<bool>>& building_data, bool centerAtOffset) {
+std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<std::vector<bool>>& building_data) {
 	std::vector<GameObject*> buildings;
 
 	// -- assert -- 
@@ -40,9 +39,7 @@ std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<st
 
 	buildings.reserve((_w - 1) * (_w - 1));
 
-	_rand rand(seed);
-
-	const glm::vec3 correction_offset = offset - (centerAtOffset ? glm::vec3((_w - 1) / 2) * glm::vec3(1, 1, 0) : glm::vec3(0)) * BUILDING_SIZE;
+	const glm::vec3 correction_offset = offset - glm::vec3((_w - 1) / 2) * glm::vec3(1, 1, 0) * BUILDING_SIZE;
 
 	char d;
 	for (size_t y = 0; y < _w-1; y++)
@@ -64,37 +61,39 @@ std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<st
 
 std::vector<std::vector<bool>> BuildingManager::generateBuildingsVector(unsigned int centerRoad, unsigned int citySize)
 {
-
-	_rand rand(seed);
-
 	std::vector<std::vector<bool>> points(citySize);
+
 	glm::vec3 posNow = glm::vec3(map->at(centerRoad)->transform->position) - glm::vec3(BUILDING_SIZE * citySize / 2);
+
 	for (int y = 0; y < citySize; y++) {
-		points[y] = std::vector<bool>(citySize);
+		points[y].resize(citySize);
+
 		for (int x = 0; x < citySize; x++) {
-			GameObject* building = new GameObject("case_15", posNow, glm::vec3(0), glm::vec3(.5f));
-			GameObject* buildingCloser = new GameObject("case_15", posNow);
-			building->AddDefaultOBB(glm::vec3(0), true);
-			buildingCloser->AddDefaultOBB(glm::vec3(BUILDING_SIZE), true);
+			GameObject* building = (new GameObject("case_15", posNow, glm::vec3(0), glm::vec3(.5f)))->AddDefaultOBB(glm::vec3(0), true);
+			GameObject* buildingCloser = (new GameObject("case_15", posNow))->AddDefaultOBB(glm::vec3(BUILDING_SIZE), true);
+
 			bool canPlace = true;
 			bool closeToRoad = false;
-			for(GameObject* road : *map)
+
+			for (GameObject* road : *map) {
 				if (Collisions::checkCollision(*road, *buildingCloser))
 					closeToRoad = true;
-			for (GameObject* road : *map) {
-				//Collisions::checkCollision(building, )
-				//MAKE DOING FALSE IF COOLISION IS TRUE AND CONTINUE IN HEIGHER FOR
-				if (Collisions::checkCollision(*road, *building)) {
+
+				if (Collisions::checkCollision(*road, *building)) 
 					canPlace = false;
+
+				if(closeToRoad && !canPlace)
 					break;
-				}
 			}
+
 			delete building;
 			delete buildingCloser;
+
 			points[y][x] = canPlace && (closeToRoad || rand.coin_toss((1 - std::abs((y - citySize / 2.0f) / (citySize / 2.0f))) * (1 - std::abs((x - citySize / 2.0f) / (citySize / 2.0f)))));
 
 			posNow.x += BUILDING_SIZE;
 		}
+
 		posNow.y += BUILDING_SIZE;
 		posNow.x -= BUILDING_SIZE * citySize;
 	}
