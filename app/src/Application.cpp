@@ -124,10 +124,10 @@ void Application::UpdateBuffer(uint16_t frame, Uniform *uniform)
 	camera->UpdateBuffer(frame);
 
 	if (LightObject::pointLightBuffer->getSize() != PointLight::SendData(frame) && PointLight::lightNum > 0)
-		uniform->UpdateDescriptorSets(*LightObject::pointLightBuffer, 2, glm::max(static_cast<uint32_t>(PointLight::lightNum * sizeof(PointLightBuffer)), static_cast<uint32_t>(1)));
+		uniform->UpdateDescriptorSets(*LightObject::getPointBuffer()->GetBuffer(), 2, glm::max(static_cast<uint32_t>(PointLight::lightNum * sizeof(PointLightBuffer)), static_cast<uint32_t>(1)));
 
 	if (LightObject::spotLightBuffer->getSize() != SpotLight::SendData(frame) && SpotLight::lightNum > 0)
-		uniform->UpdateDescriptorSets(*LightObject::spotLightBuffer, 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
+		uniform->UpdateDescriptorSets(*LightObject::getSpotBuffer()->GetBuffer(), 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
 }
 
 std::list <float> frameTimes;

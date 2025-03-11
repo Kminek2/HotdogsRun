@@ -36,6 +36,7 @@ public:
 	Image getUIDepthImage() const { return uiDepthImage; }
 	GraphicsPipeline* getMainPipeline() const { return mainPipeline; }
 	GraphicsPipeline* getUiPipeline() const { return UIPipeline; }
+	GraphicsPipeline* getSpritePipeline() const { return SpritePipeline; }
 	GraphicsPipeline* getDebugPipeline() const { return debugingPipeline; }
 
 	void RecreateDepthResource();

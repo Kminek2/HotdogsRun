@@ -46,6 +46,6 @@ private:
 	friend Engine;
 	friend Application;
 	friend Commands;
-	friend class GraphicsPipeline;
+	friend class RenderPass;
 };
 

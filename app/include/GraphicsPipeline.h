@@ -22,11 +22,13 @@ public:
 
 	struct BindingStruct
 	{
+		BindingStruct() {};
+		BindingStruct(VkDescriptorType descType, VkShaderStageFlagBits shaderStage, Texture* texture = nullptr, std::vector<VkBuffer>* unfiormBuffer = nullptr, VkDeviceSize size = 0) : descType(descType), shaderStage(shaderStage), texture(texture), unfiormBuffer(unfiormBuffer), size(size) {}
 		VkDescriptorType descType;
 		VkShaderStageFlagBits shaderStage;
 
 		Texture* texture = nullptr;
-		UniformBuffer* unfiormBuffer = nullptr;
+		std::vector<VkBuffer>* unfiormBuffer = nullptr;
 		VkDeviceSize size = 0;
 	};
 

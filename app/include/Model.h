@@ -94,5 +94,5 @@ private:
 	friend Commands;
 	friend DebugScene;
 	friend class Engine;
-	friend class GraphicsPipeline;
+	friend class RenderPass;
 };

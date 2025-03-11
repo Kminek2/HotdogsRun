@@ -3,6 +3,10 @@
 #include "SwapChain.h"
 #include "Device.h"
 #include <iostream>
+#include "Camera.h"
+#include "Model.h"
+#include "LightObject.h"
+#include "Sprite.h"
 
 RenderPass::RenderPass(SwapChain* swapChain)
 {
@@ -118,13 +122,33 @@ RenderPass::RenderPass(SwapChain* swapChain)
 
     std::cout << "Created render pass\n";
 
-    mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this);
+    //uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+    //uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
+    //uniform->AddUniforms(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
+
+    /*uniform->UpdateDescriptorSets(Camera::main->getBuffer()->GetBuffer(), 0, Camera::main->getBuffer()->getSize());
+    uniform->UpdateImageInDescriptorSets(*Model::textures, 1);
+    uniform->UpdateDescriptorSets(LightObject::getPointBuffer()->GetBuffer(), 2, LightObject::getPointBuffer()->getSize());
+    uniform->UpdateDescriptorSets(LightObject::getSpotBuffer()->GetBuffer(), 3, LightObject::getSpotBuffer()->getSize());*/
+
+    std::vector<GraphicsPipeline::BindingStruct> mainBindings = {
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, nullptr, Camera::main->getBuffer()->GetBuffer(), Camera::main->getBuffer()->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, Model::textures, nullptr, 0),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr, LightObject::getPointBuffer()->GetBuffer(), LightObject::getPointBuffer()->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr, LightObject::getSpotBuffer()->GetBuffer(), LightObject::getSpotBuffer()->getSize()),
+    };
+
+    std::vector<GraphicsPipeline::BindingStruct> spriteBindings = {
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, Sprite::textures, nullptr, 0),
+    };
+
+    mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this, mainBindings);
     std::cout << "Created main pipeline\n";
-    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this, mainPipeline->GetUniform());
+    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this, {}, mainPipeline->GetUniform());
     std::cout << "Created UI pipeline\n";
-    SpritePipeline = new GraphicsPipeline("app/shaders/Sprite.vert.spv", "app/shaders/Sprite.frag.spv", 2, *this, mainPipeline->GetUniform());
+    SpritePipeline = new GraphicsPipeline("app/shaders/Sprite.vert.spv", "app/shaders/Sprite.frag.spv", 2, *this, spriteBindings);
     std::cout << "Created Sprite Pipeline\n";
-    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 3, *this, mainPipeline->GetUniform(), VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 3, *this, {}, mainPipeline->GetUniform(), VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
     std::cout << "Created debbuging pipeline\n";
 
 

@@ -15,7 +15,7 @@
 #include "LightObject.h"
 #include "Uniform.h"
 
-GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, Uniform* createdUniform, VkPrimitiveTopology topology) {
+GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, std::vector<BindingStruct> bindings, Uniform* createdUniform, VkPrimitiveTopology topology) {
     std::cout << "Creating pipeline\n";
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
 
@@ -47,6 +47,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShader.getShaderStageInfo() , fragmentShader.getShaderStageInfo() };
 
+    //TODO: make it also take vector in constructor
     std::vector<VkVertexInputBindingDescription> bindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2)};
     std::vector<VkVertexInputAttributeDescription> attributeDescriptions = Vertex::GetAttributeDescriptions(0);
     std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
@@ -126,15 +127,18 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     if (createdUniform == nullptr) {
         uniform = new Uniform();
-        uniform->AddUniforms(1);
-        uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
-        uniform->AddUniforms(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
+
+        for (auto& bind : bindings)
+            uniform->AddUniforms(1, bind.descType, bind.shaderStage);
         descriptorSetLayout = uniform->BindUniforms();
 
-        uniform->UpdateDescriptorSets(*Camera::main->getBuffer(), 0, Camera::main->getBuffer()->getSize());
-        uniform->UpdateImageInDescriptorSets(*Model::textures, 1);
-        uniform->UpdateDescriptorSets(*LightObject::getPointBuffer(), 2, LightObject::getPointBuffer()->getSize());
-        uniform->UpdateDescriptorSets(*LightObject::getSpotBuffer(), 3, LightObject::getSpotBuffer()->getSize());
+        for (int i = 0; i < bindings.size(); i++) {
+            BindingStruct bind = bindings[i];
+            if (bind.texture == nullptr)
+                uniform->UpdateDescriptorSets(*bind.unfiormBuffer, i, bind.size);
+            else
+                uniform->UpdateImageInDescriptorSets(*bind.texture, i);
+        }
 
         gotUniform = false;
     }

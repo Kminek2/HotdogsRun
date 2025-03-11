@@ -25,6 +25,7 @@ public:
 	void UpdateBuffer(uint16_t currentFrame, const T& data);
     void UpdateBuffer(uint16_t currentFrame, const T& data, size_t dataSize);
     VkDeviceSize getSize() { return bufferSize; };
+    std::vector<VkBuffer>* GetBuffer() { return &uniformBuffers; }
 
 	friend class Uniform;
 };

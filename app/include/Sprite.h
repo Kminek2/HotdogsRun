@@ -42,5 +42,6 @@ private:
 	static Buffer<SpriteSendData> spriteBuffer;
 
 	friend class Application;
+	friend class RenderPass;
 };
 
