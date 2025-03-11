@@ -153,7 +153,12 @@
     <None Include="app\shaders\main.frag.spv" />
     <None Include="app\shaders\main.vert" />
     <None Include="app\shaders\main.vert.spv" />
+    <None Include="app\shaders\Sprite.frag" />
+    <None Include="app\shaders\Sprite.frag.spv" />
+    <None Include="app\shaders\Sprite.vert" />
+    <None Include="app\shaders\Sprite.vert.spv" />
     <None Include="app\shaders\ui.frag" />
+    <None Include="app\shaders\ui.frag.spv" />
     <None Include="app\shaders\ui.vert" />
     <None Include="app\shaders\ui.vert.spv" />
   </ItemGroup>
@@ -210,8 +215,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\filip\Desktop\requires\include;C:\Users\Staszek\Documents\GitHub\HotdogsRun;C:\Users\Staszek\Documents\GitHub\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun;C:\LIB\glfw-3.4.bin.WIN64\include;C:\LIB\VulkanSDK\1.4.304.0\Include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun\app\include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes;D:\GitHub\PirateJam\HotdogsRun\app\include;C:\Users\Gry\Desktop\vusual\includes</IncludePath>
-    <SourcePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\src;C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\src;D:\GitHub\PirateJam\HotdogsRun\app\src;$(SourcePath)</SourcePath>
+    <IncludePath>C:\Users\filip\Desktop\requires\include;C:\Users\Staszek\Documents\GitHub\HotdogsRun;C:\Users\Staszek\Documents\GitHub\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun;C:\LIB\glfw-3.4.bin.WIN64\include;C:\LIB\VulkanSDK\1.4.304.0\Include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun\app\include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes;D:\GitHub\PirateJam\HotdogsRun\app\include;C:\Users\Gry\Desktop\vusual\includes;C:\Users\michalik krzysztof\Documents\GitHub\HotdogsRun\app\include;C:\Users\michalik krzysztof\Desktop\visual\include</IncludePath>
+    <SourcePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\src;C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\src;D:\GitHub\PirateJam\HotdogsRun\app\src;C:\Users\michalik krzysztof\Documents\GitHub\HotdogsRun\app\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes</IncludePath>
@@ -257,7 +262,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib;C:\Users\Gry\Desktop\vusual\lib;C:\VulkanSDK\1.4.304.1\Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib;C:\Users\Gry\Desktop\vusual\lib;C:\VulkanSDK\1.4.304.1\Lib;C:\Users\michalik krzysztof\Desktop\visual\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

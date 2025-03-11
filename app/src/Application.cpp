@@ -20,6 +20,9 @@
 #include "DebugPoints.h"
 #include "AudioSource3d.h"
 
+#include "Sprite.h"
+#include "Uniform.h"
+
 namespace fs = std::filesystem;
 
 uint16_t Application::width, Application::height;
@@ -38,6 +41,13 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	Model::LoadEmptyModel();
 
 	Model::SendBuffers();
+
+	for (const auto& entry : fs::directory_iterator("images")) {
+		// std::cout << entry.path().filename().stem().string() << " : " << entry.path().string() << ", " << "textures/" + entry.path().filename().stem().string() + ".png" << '\n';
+		Sprite::LoadImageFromFile(entry.path().filename().stem().string(), entry.path().string());
+	}
+
+	Sprite::SendDataToGPU();
 
 	camera = new Camera(FRAMES_IN_FLIGHT, width, height);
 	LightObject::pointLightBuffer = new UniformBuffer<PointLightBuffer>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
@@ -66,10 +76,16 @@ Application::~Application() {
 	Transform::Unload();
 	LightObject::Unload();
 	DebugPoints::DeleteBuffers();
+	Sprite::Unload();
 	delete camera;
 }
 
 void Application::UpdateWindowSizes(uint16_t width, uint16_t height) {
+	float aspWidth = width / ASPECT_WIDTH;
+	float aspHeight = height / ASPECT_HEIGHT;
+	
+	width = std::min(aspHeight, aspWidth) * ASPECT_WIDTH;
+	height = std::min(aspHeight, aspWidth) * ASPECT_HEIGHT;
 	this->width = width;
 	this->height = height;
 	camera->UpdateCamera(width, height);
@@ -84,6 +100,7 @@ void Application::LoadScene(std::string scene)
 	Input::stopKeyCallback();
 
 	GameObject::DeleteAll();
+	Sprite::DeleteAll();
 	LightObject::DeleteAll();
 	PointLight::DeleteAll();
 	SpotLight::DeleteAll();
@@ -101,16 +118,16 @@ void Application::Quit()
 	glfwSetWindowShouldClose(window, true);
 }
 
-void Application::UpdateBuffer(uint16_t frame, Descriptior *descriptor)
+void Application::UpdateBuffer(uint16_t frame, Uniform *uniform)
 {
 	camera->UpdateCamera(width, height);
 	camera->UpdateBuffer(frame);
 
 	if (LightObject::pointLightBuffer->getSize() != PointLight::SendData(frame) && PointLight::lightNum > 0)
-		descriptor->UpdateDescriptor(*LightObject::pointLightBuffer, 2, glm::max(static_cast<uint32_t>(PointLight::lightNum * sizeof(PointLightBuffer)), static_cast<uint32_t>(1)));
+		uniform->UpdateDescriptorSets(*LightObject::getPointBuffer()->GetBuffer(), 2, glm::max(static_cast<uint32_t>(PointLight::lightNum * sizeof(PointLightBuffer)), static_cast<uint32_t>(1)));
 
 	if (LightObject::spotLightBuffer->getSize() != SpotLight::SendData(frame) && SpotLight::lightNum > 0)
-		descriptor->UpdateDescriptor(*LightObject::spotLightBuffer, 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
+		uniform->UpdateDescriptorSets(*LightObject::getSpotBuffer()->GetBuffer(), 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
 }
 
 std::list <float> frameTimes;

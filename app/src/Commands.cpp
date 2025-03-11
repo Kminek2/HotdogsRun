@@ -14,6 +14,8 @@
 
 #include "Camera.h"
 #include "DebugPoints.h"
+#include "Application.h"
+#include "Uniform.h"
 
 VkCommandPool Commands::commandPool;
 
@@ -75,13 +77,16 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
     {
+        //MAIN
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipeline());
 
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
-        viewport.width = static_cast<float>(swapChain.getExtend().width);
-        viewport.height = static_cast<float>(swapChain.getExtend().height);
+        //viewport.width = static_cast<float>(swapChain.getExtend().width);
+        //viewport.height = static_cast<float>(swapChain.getExtend().height);
+        viewport.width = static_cast<float>(Application::width);
+        viewport.height = static_cast<float>(Application::height);
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
@@ -97,7 +102,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
 
         vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getMainPipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
 
         struct PushConstantData {
             glm::vec4 dir = glm::vec4(LightObject::dirLight.dir, 0);
@@ -125,6 +130,8 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             vkCmdDrawIndexed(commandBuffer, model->indexSize, instance.second, model->indexOffset, model->vertexOffset, instanceOff);
             instanceOff += instance.second;
         }
+
+        //UI
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
@@ -132,7 +139,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         vkCmdBindVertexBuffers(commandBuffer, 0, 3, vertexBuffers, offsets);
         vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getUiPipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
 
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
         while (instanceOff < Model::createdModels.size() + Model::createdUiModels.size())
@@ -144,6 +151,20 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             instanceOff += instance.second;
         }
 
+        //SPRITES
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getSpritePipeline()->getPipeline());
+
+        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+        vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, &Model::vertexBuffer->getBuffer(), offsets);
+        vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getSpritePipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getSpritePipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
+
+
+        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+
+        //DEEBUG POINTS
         if (DebugPoints::indicies.size() > 0) {
             vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getDebugPipeline()->getPipeline());
 
@@ -152,7 +173,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             vkCmdBindVertexBuffers(commandBuffer, 0, 1, &DebugPoints::vertexBuffer->getBuffer(), offsets);
             vkCmdBindIndexBuffer(commandBuffer, DebugPoints::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getDebugPipeline()->getPipelineLayout(), 0, 1, &Descriptior::descriptorSets[frame], 0, nullptr);
+            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getDebugPipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getDebugPipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
 
         }
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);

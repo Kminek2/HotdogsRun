@@ -3,8 +3,6 @@
 #include <GLFW/glfw3.h>
 #include "GraphicsPipeline.h"
 
-#include "Uniform.h"
-
 #include "Image.h"
 
 class SwapChain;
@@ -16,6 +14,7 @@ private:
 	VkRenderPass renderPass;
 	GraphicsPipeline* mainPipeline;
 	GraphicsPipeline* UIPipeline;
+	GraphicsPipeline* SpritePipeline;
 	GraphicsPipeline* debugingPipeline;
 
 	Image depthImage;
@@ -37,6 +36,7 @@ public:
 	Image getUIDepthImage() const { return uiDepthImage; }
 	GraphicsPipeline* getMainPipeline() const { return mainPipeline; }
 	GraphicsPipeline* getUiPipeline() const { return UIPipeline; }
+	GraphicsPipeline* getSpritePipeline() const { return SpritePipeline; }
 	GraphicsPipeline* getDebugPipeline() const { return debugingPipeline; }
 
 	void RecreateDepthResource();
