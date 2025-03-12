@@ -52,15 +52,16 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	//DebugPoints::AddLines({
 	//{Camera::main->cameraTransform->position, {0.1f, 0.0f}, {0, 0, 0}},
 	//{glm::vec3(bilbord->transform->getModelMatrix() * glm::vec4(2.05f, -1.55f, 5.6f, 1)), {0.1f, 0.0f}, {0, 0, 0}}}, {0, 1});
-	//DebugPoints::AddLines({
-	//{glm::vec3(bilbord->transform->getModelMatrix() * glm::vec4(2.05f, -1.55f, 5.6f, 1)), {0.6f, 0.0f}, {0, 0, 0}},
-	//{glm::vec3(bilbord->transform->getModelMatrix() * glm::vec4(2.05f, -1.55f, 5.6f, 1)) + glm::vec3(0, 1, 1), {0.6f, 0.0f}, {0, 0, 0}}}, {0, 1});
+	DebugPoints::AddLines({
+	{glm::vec3(bilbord->transform->getModelMatrix() * glm::vec4(1.95f, -1.0f, 5.6f, 1)), {0.6f, 0.0f}, {0, 0, 0}},
+	{glm::vec3(bilbord->transform->getModelMatrix() * glm::vec4(2.0f, -1.55f, 5.6f, 1)) + glm::vec3(0, 1, 1), {0.6f, 0.0f}, {0, 0, 0}}}, {0, 1});
 
 	AudioSource2d* testSound = new AudioSource2d("test", 0.5f);
 	testSound->PlayTrack(true);
 
 	AudioSource3d* testSound3d = new AudioSource3d(bilbord, "car-horn-test", 0.2f);
 	testSound3d->PlayTrack(true);
+	Application::Invoke(A, 5000);
 	return std::shared_ptr<Scene>(scene);
 }
 

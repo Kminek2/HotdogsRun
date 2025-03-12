@@ -46,5 +46,6 @@ private:
 	friend Engine;
 	friend Application;
 	friend Commands;
+	friend class RenderPass;
 };
 

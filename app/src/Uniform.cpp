@@ -1,9 +1,90 @@
 #include "Uniform.h"
 #include "Device.h"
+#include "Application.h"
 
 #include <stdexcept>
 
-VkDescriptorSetLayout Uniform::descriptorSetLayout;
+void Uniform::CreateDescriptorPool()
+{
+    std::vector < VkDescriptorPoolSize> poolSize(types.size());
+
+    for (int i = 0; i < types.size(); i++) {
+        poolSize[i].type = types[i];
+        poolSize[i].descriptorCount = static_cast<uint32_t>(FRAMES_IN_FLIGHT);
+    }
+
+    VkDescriptorPoolCreateInfo poolInfo{};
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.poolSizeCount = static_cast<uint32_t>(poolSize.size());
+    poolInfo.pPoolSizes = poolSize.data();
+    poolInfo.maxSets = static_cast<uint32_t>(FRAMES_IN_FLIGHT);
+
+    if (vkCreateDescriptorPool(Device::getDevice(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create descriptor pool!");
+    }
+}
+
+void Uniform::AllocateDescriptorSets()
+{
+    std::vector<VkDescriptorSetLayout> layouts(FRAMES_IN_FLIGHT, descriptorSetLayout);
+    VkDescriptorSetAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.descriptorPool = descriptorPool;
+    allocInfo.descriptorSetCount = static_cast<uint32_t>(FRAMES_IN_FLIGHT);
+    allocInfo.pSetLayouts = layouts.data();
+
+    descriptorSets.resize(FRAMES_IN_FLIGHT);
+    if (vkAllocateDescriptorSets(Device::getDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate descriptor sets!");
+    }
+}
+
+void Uniform::UpdateDescriptorSets(const std::vector<VkBuffer>& buffer, uint32_t binding, VkDeviceSize size)
+{
+    vkDeviceWaitIdle(Device::getDevice());
+    for (size_t i = 0; i < FRAMES_IN_FLIGHT; i++) {
+        VkDescriptorBufferInfo bufferInfo = {};
+        bufferInfo.buffer = buffer[i];
+        bufferInfo.offset = 0;
+        bufferInfo.range = size; // sizeof(Light) * numLights
+
+        VkWriteDescriptorSet descriptorWrite = {};
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.dstSet = descriptorSets[i];
+        descriptorWrite.dstBinding = binding;
+        descriptorWrite.dstArrayElement = 0;
+        descriptorWrite.descriptorType = types[binding];
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pBufferInfo = &bufferInfo;
+
+        vkUpdateDescriptorSets(Device::getDevice(), 1, &descriptorWrite, 0, nullptr);
+    }
+}
+
+
+void Uniform::UpdateImageInDescriptorSets(const Texture& texture, const uint32_t& binding)
+{
+    VkDescriptorImageInfo imageInfo;
+
+    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    imageInfo.imageView = texture.imageView;
+    imageInfo.sampler = texture.sampler;
+
+
+    for (size_t i = 0; i < FRAMES_IN_FLIGHT; i++) {
+        VkWriteDescriptorSet descriptorWrite{};
+
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.dstSet = descriptorSets[i];
+        descriptorWrite.dstBinding = binding;
+        descriptorWrite.dstArrayElement = 0;
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pImageInfo = &imageInfo;
+
+        vkUpdateDescriptorSets(Device::getDevice(), 1, &descriptorWrite, 0, nullptr);
+    }
+}
 
 void Uniform::AddUniforms(uint16_t amount, VkDescriptorType type, VkShaderStageFlags shaderStage, uint32_t descriptorSize)
 {
@@ -16,6 +97,7 @@ void Uniform::AddUniforms(uint16_t amount, VkDescriptorType type, VkShaderStageF
         uboLayoutBinding.stageFlags = shaderStage;
         uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
 
+        types.push_back(type);
         UBOs.push_back(uboLayoutBinding);
     }
 }
@@ -31,6 +113,9 @@ std::vector<VkDescriptorSetLayout> Uniform::BindUniforms()
         throw std::runtime_error("failed to create descriptor set layout!");
     }
 
+    CreateDescriptorPool();
+    AllocateDescriptorSets();
+
     return { descriptorSetLayout };
 }
 
@@ -39,5 +124,10 @@ std::vector<VkDescriptorSetLayout> Uniform::GetUnfiorms() {
 }
 
 Uniform::~Uniform() {
-    vkDestroyDescriptorSetLayout(Device::getDevice(), descriptorSetLayout, nullptr);
+    if (descriptorPool != nullptr) {
+        vkDestroyDescriptorPool(Device::getDevice(), descriptorPool, nullptr);
+        vkDestroyDescriptorSetLayout(Device::getDevice(), descriptorSetLayout, nullptr);
+
+        descriptorPool = nullptr;
+    }
 }

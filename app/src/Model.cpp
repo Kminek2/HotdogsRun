@@ -8,6 +8,7 @@
 std::map<std::string, Model*> Model::loadedModels;
 std::list<Model*> Model::createdModels;
 std::list<Model*> Model::createdUiModels;
+uint32_t Model::createdSprites;
 Buffer<Vertex>* Model::vertexBuffer = new Buffer<Vertex>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 Buffer<uint32_t>* Model::indexBuffer = new Buffer<uint32_t>(VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
 Texture* Model::textures = new Texture();
@@ -155,6 +156,17 @@ std::pair<Model*, uint32_t> Model::CreateUI(std::string model) {
 	textureOffBuffer->SendBufferToMemory();
 
 	return { newModel, index };
+}
+
+Model* Model::CreateSprite()
+{
+	createdSprites++;
+	return loadedModels["Sprite"];
+}
+
+void Model::DeleteSprite()
+{
+	createdSprites--;
 }
 
 void Model::Delete() {

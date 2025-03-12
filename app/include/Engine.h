@@ -40,7 +40,6 @@ private:
     Device* device;
     Commands* commands;
     Application* application;
-    Descriptior* descriptor;
 
     void InitVulkan();
     void MainLoop();

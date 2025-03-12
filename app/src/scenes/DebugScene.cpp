@@ -14,7 +14,7 @@
 #include <iostream>
 
 const std::vector<std::string> models = {
-	"racing_car", "racing_car", "arrow", "racing_car"
+	"racing_car", "racing_car", "arrow", "racing_car", "zakretPolSkosAsfalt"
 };
 
 std::shared_ptr<Scene> DebugScene::Init() {
@@ -41,7 +41,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false);
 		objs[0]->AddScript(cmv);
-		objs[0]->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
+		objs[0]->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.8f, 0.8f));
 		objs[0]->AddScript(new CarInputs(*cmv));
 	}
 	
@@ -49,7 +49,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false);
 		objs[1]->AddScript(cmv);
 		objs[1]->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.1f, 1.6f, 0.0f, 2.2f));
-		objs[1]->AddScript(new CarInputs(*cmv, GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_PAGE_DOWN));
+		//objs[1]->AddScript(new CarInputs(*cmv, GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_PAGE_DOWN));
 	}
 	//objs[0]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(1,1,1), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
 	//objs[1]->addOBB(OBB(glm::vec3(0,0,0), glm::vec3(3,3,3), {glm::vec3(1,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1)}));
@@ -61,13 +61,15 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	objs[2]->AddScript(new LockRotation(objs[1]->transform));
 	objs[2]->AddScript(new LockPosition(objs[3]->transform));
 	objs[2]->AddScript(new LockRotation(objs[3]->transform));
+
+	objs[4]->AddDefaultOBB()->AddScript(new ShowOBB());
 	
 	AnimationManager* am = new AnimationManager();
 	GameObject* am_obj = new GameObject();
 	am_obj->AddScript(am);
 	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
 	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {20.0f,0.0f,0.0f}));
-	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
+	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}, true));
 	
 	return std::shared_ptr<Scene>(scene);
 }

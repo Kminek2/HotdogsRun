@@ -19,6 +19,7 @@ class CinematicCamera :
         void LateUpdate() override;
         void OnDestroy() override;
         bool hasEnded();
+        void skip();
     private:
         obj_data position_in_time(float t);
         float time;

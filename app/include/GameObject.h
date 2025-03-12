@@ -14,6 +14,10 @@ class Collisions;
 class ShowOBB;
 class CarMovement;
 
+// used in collisions somewhere down the line
+constexpr int ALWAYS_COLLIDE = -1;
+constexpr int NEVER_COLLIDE = -2;
+
 struct OBB {
 	glm::vec3 center;
 	glm::vec3 sizes;
@@ -42,7 +46,6 @@ private:
 	std::vector<OBB> obbs;
 
 	static bool deletingAll;
-	const int surface_type;
 
 	std::vector<ColorChangeBuffer> changeColor;
 public:
@@ -53,12 +56,13 @@ public:
 	Transform* transform;
 
 	std::vector<ObjectScript*> objectScripts;
+	int surface_type;
 
-	void AddScript(ObjectScript* script);
+	GameObject* AddScript(ObjectScript* script);
 	std::string GetModelName();
 	std::array<glm::vec2, 3> GetModelMaxDistVert();
-	void addOBB(OBB obb);
-	void AddDefaultOBB(glm::vec3 offset = {0.0f, 0.0f, 0.0f});
+	GameObject* addOBB(OBB obb);
+	GameObject* AddDefaultOBB(glm::vec3 offset = {0.0f, 0.0f, 0.0f}, bool two_dim = false);
 
 	void AddColorChange(glm::vec3 from, glm::vec3 to);
 

@@ -30,8 +30,8 @@ void CinematicCamera::LateUpdate() {
         return;
     }
 
-    std::cout << Camera::main->cameraTransform->position.x << ' '<< Camera::main->cameraTransform->position.y << ' '<< Camera::main->cameraTransform->position.z << ' ' << '\n';
-	std::cout << Camera::main->cameraTransform->rotation.x << ' '<< Camera::main->cameraTransform->rotation.y << '\n';
+    //std::cout << Camera::main->cameraTransform->position.x << ' '<< Camera::main->cameraTransform->position.y << ' '<< Camera::main->cameraTransform->position.z << ' ' << '\n';
+	//std::cout << Camera::main->cameraTransform->rotation.x << ' '<< Camera::main->cameraTransform->rotation.y << '\n';
 
     obj_data now = position_in_time(time/animation_time);
     Camera::main->cameraTransform->MoveTo(now.position);
@@ -63,4 +63,8 @@ CinematicCamera::obj_data CinematicCamera::position_in_time(float t) {
 
 bool CinematicCamera::hasEnded() {
     return time > animation_time;
+}
+
+void CinematicCamera::skip() {
+    time = animation_time+1.0f;
 }

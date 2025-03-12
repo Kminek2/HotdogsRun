@@ -11,10 +11,11 @@
 
 #include "Model.h"
 #include "LightBufferStruct.h"
+#include "Application.h"
+#include "LightObject.h"
+#include "Uniform.h"
 
-Uniform* GraphicsPipeline::uniform = nullptr;
-
-GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, VkPrimitiveTopology topology) {
+GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, std::vector<BindingStruct> bindings, std::vector<VkVertexInputBindingDescription> bindingDesc, std::vector<VkVertexInputAttributeDescription> atribDesc, Uniform* createdUniform, VkPrimitiveTopology topology) {
     std::cout << "Creating pipeline\n";
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
 
@@ -46,12 +47,13 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShader.getShaderStageInfo() , fragmentShader.getShaderStageInfo() };
 
-    std::vector<VkVertexInputBindingDescription> bindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2)};
-    std::vector<VkVertexInputAttributeDescription> attributeDescriptions = Vertex::GetAttributeDescriptions(0);
-    std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
-    VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 7);
-    attributeDescriptions.insert(attributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
-    attributeDescriptions.push_back(textureDescriptions);
+    //TODO: make it also take vector in constructor
+    std::vector<VkVertexInputBindingDescription> bindingDescriptions = bindingDesc;// = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2) };
+    std::vector<VkVertexInputAttributeDescription> attributeDescriptions = atribDesc;// = Vertex::GetAttributeDescriptions(0);
+    // std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
+    //VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 7);
+    //attributeDescriptions.insert(attributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
+    //attributeDescriptions.push_back(textureDescriptions);
 
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -122,14 +124,29 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
     dynamicState.pDynamicStates = dynamicStates.data();
 
     std::vector<VkDescriptorSetLayout> descriptorSetLayout;
-    if (uniform == nullptr) {
+
+    if (createdUniform == nullptr) {
         uniform = new Uniform();
-        uniform->AddUniforms(1);
-        uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
-        uniform->AddUniforms(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
+
+        for (auto& bind : bindings)
+            uniform->AddUniforms(1, bind.descType, bind.shaderStage);
         descriptorSetLayout = uniform->BindUniforms();
+
+        for (int i = 0; i < bindings.size(); i++) {
+            BindingStruct bind = bindings[i];
+            if (bind.texture == nullptr)
+                uniform->UpdateDescriptorSets(*bind.unfiormBuffer, i, bind.size);
+            else
+                uniform->UpdateImageInDescriptorSets(*bind.texture, i);
+        }
+
+        gotUniform = false;
     }
-    descriptorSetLayout = uniform->GetUnfiorms();
+    else {
+        uniform = createdUniform;
+        descriptorSetLayout = uniform->GetUnfiorms();
+        gotUniform = true;
+    }
 
     VkPushConstantRange range = {};
     range.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -184,9 +201,8 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 }
 
 GraphicsPipeline::~GraphicsPipeline() {
-    if (uniform != nullptr) {
+    if(!gotUniform){
         delete uniform;
-        uniform = nullptr;
     }
     vkDestroyPipeline(Device::getDevice(), graphicsPipeline, nullptr);
     vkDestroyPipelineLayout(Device::getDevice(), pipelineLayout, nullptr);

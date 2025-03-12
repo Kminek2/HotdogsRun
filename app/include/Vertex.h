@@ -43,6 +43,25 @@ struct Vertex {
         return attributeDescriptions;
     }
 
+    static VkVertexInputBindingDescription GetPosBindingDescription(uint16_t binding = 0) {
+        VkVertexInputBindingDescription bindingDescription{};
+        bindingDescription.binding = binding;
+        bindingDescription.stride = sizeof(glm::vec4);
+        bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+        return bindingDescription;
+    }
+
+    static VkVertexInputAttributeDescription GetPosAttributeDescriptions(uint16_t binding = 0, uint16_t location = 0) {
+        VkVertexInputAttributeDescription attributeDescriptions{};
+
+        attributeDescriptions.binding = binding;
+        attributeDescriptions.location = location;
+        attributeDescriptions.format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions.offset = offsetof(Vertex, pos);
+
+        return attributeDescriptions;
+    }
+
     bool operator==(const Vertex& other) const {
         return pos == other.pos && texCoord == other.texCoord && normal == other.normal;
     }

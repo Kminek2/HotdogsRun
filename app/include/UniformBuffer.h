@@ -7,9 +7,6 @@
 #include "Buffer.h"
 #include <memory>
 
-
-class Descriptior;
-
 template <typename T>
 class UniformBuffer
 {
@@ -28,8 +25,9 @@ public:
 	void UpdateBuffer(uint16_t currentFrame, const T& data);
     void UpdateBuffer(uint16_t currentFrame, const T& data, size_t dataSize);
     VkDeviceSize getSize() { return bufferSize; };
+    std::vector<VkBuffer>* GetBuffer() { return &uniformBuffers; }
 
-	friend Descriptior;
+	friend class Uniform;
 };
 
 template<typename T>

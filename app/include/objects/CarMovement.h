@@ -2,6 +2,8 @@
 #include "ObjectScript.h"
 #include "GameObject.h"
 #include "Collisions.h"
+#include "objects/LockPosition.h"
+#include "objects/LockRotation.h"
 
 constexpr float EPSILON = 1e-3;
 
@@ -21,11 +23,13 @@ private:
     float actSpeed;
     float axleAngle;
     glm::vec3 forces;
+    const glm::vec3 nitro_trail_offset;
     void handleGas();
     void handleBreaks();
     void handleSteeringWheel();
     void handleEngBreak();
     void handleForces();
+    void handleNitroAcc();
     struct actions {
         bool forward;
         bool backwards;
@@ -40,11 +44,16 @@ private:
         float break_multiplier;
         float steering_multiplier;
     };
+    float nitro_timer;
+    float before_nitro_mem;
+    int nitros_available;
+    GameObject* nitro_trail;
     static const actions clearedActions;
-    static const std::array<road_type_data,4> surfaces_data;
-    int road_type; // 0 - no surface (grass), 1 - classical road (asphalt), 2 - dirt road, 3 - icy road
+    static const std::array<road_type_data,5> surfaces_data;
+    static const float nitro_duration;
+    int road_type; // 0 - no surface (grass), 1 - classical road (asphalt), 2 - dirt road, 3 - icy road, 4 - oil puddle
 public:
-    CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode = false, float multiplier = 0.1f);
+    CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode = false, float multiplier = 0.1f, glm::vec3 nitro_trail_offset = glm::vec3(1.7f, 0.0f, 0.0f));
     void Init() override;
     void Update() override;
     void OnDestroy() override;
@@ -53,5 +62,6 @@ public:
     void makeLeftTurn();
     void makeRightTurn();
     void useHandBreak();
+    void useNitro();
     friend WheelsScript;
 };

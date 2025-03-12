@@ -42,11 +42,12 @@ GameObject::~GameObject()
 	delete model;
 }
 
-void GameObject::AddScript(ObjectScript* script)
+GameObject* GameObject::AddScript(ObjectScript* script)
 {
 	script->gameObject = this;
 	objectScripts.push_back(script);
 	script->Init();
+	return this;
 }
 
 std::string GameObject::GetModelName()
@@ -129,19 +130,22 @@ void GameObject::TransformTransformsToMemory()
 	Transform::TransformToMemory(transforms);
 }
 
-void GameObject::addOBB(OBB obb) {
+GameObject* GameObject::addOBB(OBB obb) {
 	obbs.push_back(obb);
+	return this;
 }
 
-void GameObject::AddDefaultOBB(glm::vec3 offset)
+GameObject* GameObject::AddDefaultOBB(glm::vec3 offset, bool two_dim)
 {
 	std::array<glm::vec2, 3> maxD = GetModelMaxDistVert();
 	for (int i = 0; i < 3; i++)
 		maxD[i] += glm::vec2(offset[i], -offset[i]);
 	glm::vec3 c = { (maxD[0].x + maxD[0].y) / 2, (maxD[1].x + maxD[1].y) / 2, (maxD[2].x + maxD[2].y) / 2 };
 	glm::vec3 s = { (maxD[0].x + abs(maxD[0].y)) / 2, (maxD[1].x + abs(maxD[1].y)) / 2, (maxD[2].x + abs(maxD[2].y)) / 2 };
+	if (two_dim)
+		s.z = 100000;
 
-	addOBB(OBB(c, s));
+	return addOBB(OBB(c, s));
 }
 
 void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)

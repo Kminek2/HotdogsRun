@@ -41,6 +41,7 @@
     <ClCompile Include="app\src\main.cpp" />
     <ClCompile Include="app\src\mapgen.cpp" />
     <ClCompile Include="app\src\mapgen_road.cpp" />
+    <ClCompile Include="app\src\ObjectSchema.cpp" />
     <ClCompile Include="app\src\objects\AnimationManager.cpp" />
     <ClCompile Include="app\src\objects\BuildingManager.cpp" />
     <ClCompile Include="app\src\objects\CarInputs.cpp" />
@@ -53,11 +54,13 @@
     <ClCompile Include="app\src\objects\CarMovement.cpp" />
     <ClCompile Include="app\src\objects\LockPosition.cpp" />
     <ClCompile Include="app\src\objects\LockRotation.cpp" />
+    <ClCompile Include="app\src\objects\RaceManager.cpp" />
     <ClCompile Include="app\src\objects\ShowOBB.cpp" />
     <ClCompile Include="app\src\objects\WheelsScript.cpp" />
     <ClCompile Include="app\src\PointLight.cpp" />
     <ClCompile Include="app\src\Queues.cpp" />
     <ClCompile Include="app\src\QuickCamera.cpp" />
+    <ClCompile Include="app\src\RectTransform.cpp" />
     <ClCompile Include="app\src\RenderPass.cpp" />
     <ClCompile Include="app\src\SceeneScript.cpp" />
     <ClCompile Include="app\src\Scene.cpp" />
@@ -67,6 +70,7 @@
     <ClCompile Include="app\src\Shader.cpp" />
     <ClCompile Include="app\src\SoundEngine.cpp" />
     <ClCompile Include="app\src\SpotLight.cpp" />
+    <ClCompile Include="app\src\Sprite.cpp" />
     <ClCompile Include="app\src\SwapChain.cpp" />
     <ClCompile Include="app\src\Transform.cpp" />
     <ClCompile Include="app\src\UiObject.cpp" />
@@ -114,12 +118,15 @@
     <ClInclude Include="app\include\objects\CarMovement.h" />
     <ClInclude Include="app\include\objects\LockPosition.h" />
     <ClInclude Include="app\include\objects\LockRotation.h" />
+    <ClInclude Include="app\include\objects\RaceManager.hpp" />
     <ClInclude Include="app\include\objects\ShowOBB.h" />
     <ClInclude Include="app\include\objects\WheelsScript.h" />
     <ClInclude Include="app\include\PointLight.h" />
     <ClInclude Include="app\include\Queues.h" />
     <ClInclude Include="app\include\QuickCamera.h" />
+    <ClInclude Include="app\include\RectTransform.h" />
     <ClInclude Include="app\include\SoundEngine.h" />
+    <ClInclude Include="app\include\Sprite.h" />
     <ClInclude Include="app\include\_rand.hpp" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />
@@ -146,7 +153,12 @@
     <None Include="app\shaders\main.frag.spv" />
     <None Include="app\shaders\main.vert" />
     <None Include="app\shaders\main.vert.spv" />
+    <None Include="app\shaders\Sprite.frag" />
+    <None Include="app\shaders\Sprite.frag.spv" />
+    <None Include="app\shaders\Sprite.vert" />
+    <None Include="app\shaders\Sprite.vert.spv" />
     <None Include="app\shaders\ui.frag" />
+    <None Include="app\shaders\ui.frag.spv" />
     <None Include="app\shaders\ui.vert" />
     <None Include="app\shaders\ui.vert.spv" />
   </ItemGroup>
@@ -203,8 +215,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\filip\Desktop\requires\include;C:\Users\Staszek\Documents\GitHub\HotdogsRun;C:\Users\Staszek\Documents\GitHub\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun;C:\LIB\glfw-3.4.bin.WIN64\include;C:\LIB\VulkanSDK\1.4.304.0\Include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun\app\include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes;D:\GitHub\PirateJam\HotdogsRun\app\include;C:\Users\Gry\Desktop\vusual\includes</IncludePath>
-    <SourcePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\src;C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\src;D:\GitHub\PirateJam\HotdogsRun\app\src;$(SourcePath)</SourcePath>
+    <IncludePath>C:\Users\filip\Desktop\requires\include;C:\Users\Staszek\Documents\GitHub\HotdogsRun;C:\Users\Staszek\Documents\GitHub\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun\app\include;C:\Users\filip\source\repos\Kminek2\HotdogsRun;C:\LIB\glfw-3.4.bin.WIN64\include;C:\LIB\VulkanSDK\1.4.304.0\Include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun\app\include;C:\Users\pawel\source\repos\HotdogsRun\HotdogsRun;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes;D:\GitHub\PirateJam\HotdogsRun\app\include;C:\Users\Gry\Desktop\vusual\includes;C:\Users\michalik krzysztof\Documents\GitHub\HotdogsRun\app\include;C:\Users\michalik krzysztof\Desktop\visual\include</IncludePath>
+    <SourcePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\src;C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\src;D:\GitHub\PirateJam\HotdogsRun\app\src;C:\Users\michalik krzysztof\Documents\GitHub\HotdogsRun\app\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun;C:\glfw\include;C:\VulkanSDK\1.4.304.0\Include;C:\Users\Kamil\source\repos\HotdogsRun\HotdogsRun\app\include;$(IncludePath);C:\Users\Admin\Desktop\Moje\Projekty\HotdogsRun\app\include;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes\GLFW;C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\includes</IncludePath>
@@ -250,7 +262,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib;C:\Users\Gry\Desktop\vusual\lib;C:\VulkanSDK\1.4.304.1\Lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\LIB\VulkanSDK\1.4.304.0\Lib;C:\LIB\glfw-3.4.bin.WIN64\lib-vc2022;C:\glfw\lib-vc2022;C:\VulkanSDK\1.4.304.0\Lib;%(AdditionalLibraryDirectories);C:\Users\Admin\Desktop\Programowanie\Liberies\Visual Studio 2022\lib;C:\Users\Gry\Desktop\vusual\lib;C:\VulkanSDK\1.4.304.1\Lib;C:\Users\michalik krzysztof\Desktop\visual\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

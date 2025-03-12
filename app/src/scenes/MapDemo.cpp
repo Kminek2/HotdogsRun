@@ -5,13 +5,23 @@
 #include "objects/CameraLockScript.h"
 #include "objects/CarInputs.h"
 #include "objects/WheelsScript.h"
+#include "objects/ShowOBB.h"
 
 #include <glm/vec3.hpp>
 #include <iostream>
 
 using namespace mapgen;
+using tc = RaceManager::TerminationCondition;
 
 const size_t seed = 42;
+const unsigned int cityNum = 3;
+
+const std::array<std::vector<std::string>, 16> defaultBuildings = { {
+	{""}, {"case_1"}, {"case_2"}, {"case_3"},
+	{"case_4"}, {"case_5"}, {"case_6"}, {"case_7"},
+	{"case_8"}, {"case_9"}, {"case_10"}, {"case_11"},
+	{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
+} };
 
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
@@ -19,52 +29,62 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	qc = new QuickCamera();
 	qc->_sr(0.75f);
 	qc->_sm(100.0f);
+	qc->_mappings(__keybinds({GLFW_KEY_I, GLFW_KEY_K, GLFW_KEY_J, GLFW_KEY_L, GLFW_KEY_U, GLFW_KEY_O, GLFW_KEY_P}));
 
 	_rand rand(seed);
 
 	MapManager::MapSettingsValues svals;
+	svals.map_len = 20;
+	svals.ellipse.a = 5; svals.ellipse.b = 10;
+	svals.ellipse.min_offset = -2.5; svals.ellipse.max_offset = 2.5;
 	svals.small_decors = {
-		"cube"
+		{ "cube", "barrel", "bus", "crate",
+			"fucked_up_car", "fucked_up_pickup", "goat", "hydrant",
+			"smietnik", "TNT" },
+		{ 0.15f, 0.15f, 0.05f, 0.15f,
+			0.04f, 0.04f, 0.04f, 0.16f,
+			0.12f, 0.1f }
 	};
 
-	GameObject* mapObj = new GameObject();
-	map = new MapManager(seed, svals);
-	mapObj->AddScript(map);
+	svals.decors_per_tile = 1.25f;
+	svals.decor_max_dist = 5;
+	svals.road_types = { {"Asfalt","Zwir","Lod"},{.8,.15,.05} };
+	svals.num_sur_changes = 5;
 
-	// -- tmp --
-	GameObject* buildObj = new GameObject();
-	build = new BuildingManager(seed, { {
-		{""}, {"building_1"}, {"building_2"}, {"building_3"},
-		{"building_4"}, {"building_5"}, {"building_6"}, {"building_7"},
-		{"building_8"}, {"building_9"}, {"building_10"}, {"building_11"},
-		{"building_12"}, {"building_13"}, {"debug_star"}, {"debug_star"}
-	} });
+	map = (new MapManager(seed, svals))->Init();
+	build = (new BuildingManager(seed, defaultBuildings))->setMap(map->GetPoints());
 
-	std::vector<std::vector<bool>> builds(10);
-	for (std::vector<bool>& row : builds) {
-		row.resize(10);
-		for (int i = 0; i < 10; i++)
-			row[i] = rand.coin_toss(0.4);
+	unsigned int mapCityTile = rand.random(0, map->GetLen());
+	for (int i = 0; i < cityNum; i++) {
+		build->setOffset(map->GetPoint(mapCityTile)->transform->position);
+		build->generateBuildings(build->generateBuildingsVector(mapCityTile, 20));
+		mapCityTile = (mapCityTile + map->GetLen() / cityNum) % map->GetLen();
 	}
-
-	auto vec_builds = build->generateBuildings(builds);
-	// -- end_tmp --
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	//
 	GameObject* car = new GameObject("f1car");
 	car->addOBB(OBB());
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false, 0.05f);
 		car->AddScript(cmv);
 		car->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
-		car->AddScript(new CarInputs(*cmv, GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_LEFT, GLFW_KEY_RIGHT, GLFW_KEY_PAGE_DOWN));
+		car->AddScript(new CarInputs(*cmv, GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL));
 	}
-	car->transform->MoveTo(Camera::main->cameraTransform->position);
-	//
+
+	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(tc::LAPS, 1)->SetCarsRelativeOffset(.1f);
+	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
+
+	race_manager->AddCar(car);
+	for(int i=0; i<3; i++) race_manager->AddCar(new GameObject("f1car"));
+
+	race_manager->StartRace();
 
 	return std::shared_ptr<Scene>(scene);
+}
+
+void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
+	std::cout << "===\n\t" << winner->car->GetModelName() << "\n\t" << winner->checkpoint << "\n\t" << winner->time << '\n';
 }
 
 void MapDemo::Update() {
@@ -77,4 +97,7 @@ void MapDemo::Update() {
 
 void MapDemo::UnLoad() {
 	delete qc;
+	delete build;
+	delete race_manager;
+	delete map;
 }

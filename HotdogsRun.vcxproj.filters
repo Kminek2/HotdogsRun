@@ -40,6 +40,9 @@
     <Filter Include="Header Files\The Real Engine">
       <UniqueIdentifier>{d2ca70f9-a8aa-408e-abee-be57a547e544}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shaders\spv">
+      <UniqueIdentifier>{1eafb408-1312-4280-971b-a5ebc7325fea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app\src\scenes\DebugScene.cpp">
@@ -205,6 +208,18 @@
       <Filter>Source Files\objects</Filter>
     </ClCompile>
     <ClCompile Include="app\src\objects\AnimationManager.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\ObjectSchema.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Sprite.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\RectTransform.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\RaceManager.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -392,6 +407,15 @@
     <ClInclude Include="app\include\objects\AnimationManager.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
+    <ClInclude Include="app\include\Sprite.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\RectTransform.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\RaceManager.hpp">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="app\shaders\compile.bat">
@@ -403,19 +427,10 @@
     <None Include="app\shaders\main.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="app\shaders\main.frag.spv">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
     <None Include="app\shaders\main.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="app\shaders\main.vert.spv">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
     <None Include="app\shaders\ui.vert">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="app\shaders\ui.vert.spv">
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="app\shaders\ui.frag">
@@ -423,6 +438,30 @@
     </None>
     <None Include="app\shaders\debug.vert">
       <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\Sprite.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\Sprite.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\main.frag.spv">
+      <Filter>Resource Files\shaders\spv</Filter>
+    </None>
+    <None Include="app\shaders\main.vert.spv">
+      <Filter>Resource Files\shaders\spv</Filter>
+    </None>
+    <None Include="app\shaders\Sprite.frag.spv">
+      <Filter>Resource Files\shaders\spv</Filter>
+    </None>
+    <None Include="app\shaders\Sprite.vert.spv">
+      <Filter>Resource Files\shaders\spv</Filter>
+    </None>
+    <None Include="app\shaders\ui.vert.spv">
+      <Filter>Resource Files\shaders\spv</Filter>
+    </None>
+    <None Include="app\shaders\ui.frag.spv">
+      <Filter>Resource Files\shaders\spv</Filter>
     </None>
   </ItemGroup>
 </Project>

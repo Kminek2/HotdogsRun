@@ -3,6 +3,10 @@
 #include "SwapChain.h"
 #include "Device.h"
 #include <iostream>
+#include "Camera.h"
+#include "Model.h"
+#include "LightObject.h"
+#include "Sprite.h"
 
 RenderPass::RenderPass(SwapChain* swapChain)
 {
@@ -49,7 +53,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
     uiDepthAttachmentRef.attachment = 2;
     uiDepthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    std::array<VkSubpassDescription, 3> subpasses{};
+    std::array<VkSubpassDescription, 4> subpasses{};
     subpasses[0].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[0].colorAttachmentCount = 1;
     subpasses[0].pColorAttachments = &colorAttachmentRef;
@@ -66,9 +70,14 @@ RenderPass::RenderPass(SwapChain* swapChain)
     subpasses[2].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[2].colorAttachmentCount = 1;
     subpasses[2].pColorAttachments = &colorAttachmentRef;
-    subpasses[2].pDepthStencilAttachment = &depthAttachmentRef;
+    subpasses[2].pDepthStencilAttachment = &uiDepthAttachmentRef;
 
-    std::array<VkSubpassDependency, 3> dependencies{};
+    subpasses[3].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpasses[3].colorAttachmentCount = 1;
+    subpasses[3].pColorAttachments = &colorAttachmentRef;
+    subpasses[3].pDepthStencilAttachment = &depthAttachmentRef;
+
+    std::array<VkSubpassDependency, 4> dependencies{};
     dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     dependencies[0].dstSubpass = 0;
     dependencies[0].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
@@ -90,6 +99,13 @@ RenderPass::RenderPass(SwapChain* swapChain)
     dependencies[2].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     dependencies[2].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
+    dependencies[3].srcSubpass = 2;
+    dependencies[3].dstSubpass = 3;
+    dependencies[3].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependencies[3].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependencies[3].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    dependencies[3].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
     std::array<VkAttachmentDescription, 3> attachments = { colorAttachment, depthAttachment, uiDepthAttachment };
     VkRenderPassCreateInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -106,11 +122,44 @@ RenderPass::RenderPass(SwapChain* swapChain)
 
     std::cout << "Created render pass\n";
 
-    mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this);
+    //uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+    //uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
+    //uniform->AddUniforms(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
+
+    /*uniform->UpdateDescriptorSets(Camera::main->getBuffer()->GetBuffer(), 0, Camera::main->getBuffer()->getSize());
+    uniform->UpdateImageInDescriptorSets(*Model::textures, 1);
+    uniform->UpdateDescriptorSets(LightObject::getPointBuffer()->GetBuffer(), 2, LightObject::getPointBuffer()->getSize());
+    uniform->UpdateDescriptorSets(LightObject::getSpotBuffer()->GetBuffer(), 3, LightObject::getSpotBuffer()->getSize());*/
+
+    std::vector<GraphicsPipeline::BindingStruct> mainBindings = {
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, nullptr, Camera::main->getBuffer()->GetBuffer(), Camera::main->getBuffer()->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, Model::textures, nullptr, 0),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr, LightObject::getPointBuffer()->GetBuffer(), LightObject::getPointBuffer()->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr, LightObject::getSpotBuffer()->GetBuffer(), LightObject::getSpotBuffer()->getSize()),
+    };
+
+    std::vector<VkVertexInputBindingDescription> mainBindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2) };
+    std::vector<VkVertexInputAttributeDescription> mainAttributeDescriptions = Vertex::GetAttributeDescriptions(0);
+    std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
+    VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 7);
+    mainAttributeDescriptions.insert(mainAttributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
+    mainAttributeDescriptions.push_back(textureDescriptions);
+
+    std::vector<GraphicsPipeline::BindingStruct> spriteBindings = {
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, Sprite::textures, nullptr, 0),
+    };
+    
+    // 
+    //std::vector<VkVertexInputBindingDescription> mainBindingDescriptions = { Vertex::GetPosBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2) };
+    //std::vector<VkVertexInputAttributeDescription> mainAttributeDescriptions = Vertex::GetAttributeDescriptions(0);
+
+    mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this, mainBindings, mainBindingDescriptions, mainAttributeDescriptions);
     std::cout << "Created main pipeline\n";
-    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this);
+    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this, {}, {}, {}, mainPipeline->GetUniform());
     std::cout << "Created UI pipeline\n";
-    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 2, *this, VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+    SpritePipeline = new GraphicsPipeline("app/shaders/Sprite.vert.spv", "app/shaders/Sprite.frag.spv", 2, *this, spriteBindings);
+    std::cout << "Created Sprite Pipeline\n";
+    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 3, *this, {}, {}, {}, mainPipeline->GetUniform(), VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
     std::cout << "Created debbuging pipeline\n";
 
 
@@ -121,6 +170,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
 RenderPass::~RenderPass() {
     delete mainPipeline;
     delete UIPipeline;
+    delete SpritePipeline;
     delete debugingPipeline;
     vkDestroyRenderPass(Device::getDevice(), renderPass, nullptr);
 
