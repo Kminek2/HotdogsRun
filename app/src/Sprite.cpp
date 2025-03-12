@@ -14,7 +14,7 @@ Sprite::Sprite(std::string name, glm::vec3 color)
 	rectTransform = new RectTransform();
 }
 
-Sprite::Sprite(glm::uvec2 texSize, glm::uint32_t offSet, std::string name)
+Sprite::Sprite(glm::uvec2 texSize, glm::uvec2 offSet, std::string name)
 {
 	this->texSize = texSize;
 	this->offSet = offSet;
@@ -27,7 +27,7 @@ Sprite::Sprite(glm::uvec2 texSize, glm::uint32_t offSet, std::string name)
 
 void Sprite::LoadImageFromFile(std::string name, std::string filePath)
 {
-	loadedSprites[name] = new Sprite(textures->GetImageSize(filePath.c_str()), textures->dimention.second, name);
+	loadedSprites[name] = new Sprite(textures->GetImageSize(filePath.c_str()), glm::uvec2(0, textures->dimention.second), name);
 	textures->AddTexture(filePath.c_str());
 }
 
@@ -65,4 +65,35 @@ void Sprite::SendDataToGPU()
 {
 	textures->CreateSampler();
 	textures->SendTexturesToMemory();
+}
+
+
+VkVertexInputBindingDescription Sprite::SpriteSendData::GetBindingDescription(uint16_t binding)
+{
+	VkVertexInputBindingDescription bindingDescription{};
+	bindingDescription.binding = binding;
+	bindingDescription.stride = sizeof(SpriteSendData);
+	bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
+	return bindingDescription;
+}
+
+std::vector<VkVertexInputAttributeDescription> Sprite::SpriteSendData::GetAttributeDescriptions(uint16_t binding, uint16_t location)
+{
+	std::vector<VkVertexInputAttributeDescription> attributeDescriptions(3);
+
+	attributeDescriptions[0].binding = binding;
+	attributeDescriptions[0].location = location;
+	attributeDescriptions[0].format = VK_FORMAT_R32G32_UINT;
+	attributeDescriptions[0].offset = offsetof(SpriteSendData, texSize);
+
+	attributeDescriptions[1].binding = binding;
+	attributeDescriptions[1].location = location + 1;
+	attributeDescriptions[1].format = VK_FORMAT_R32G32_UINT;
+	attributeDescriptions[1].offset = offsetof(SpriteSendData, offset);
+
+	attributeDescriptions[2].binding = binding;
+	attributeDescriptions[2].location = location + 2;
+	attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+	attributeDescriptions[2].offset = offsetof(SpriteSendData, color);
+	return attributeDescriptions;
 }

@@ -13,7 +13,7 @@
 using namespace mapgen;
 using tc = RaceManager::TerminationCondition;
 
-const size_t seed = 41;
+const size_t seed = 42;
 const unsigned int cityNum = 3;
 
 const std::array<std::vector<std::string>, 16> defaultBuildings = { {

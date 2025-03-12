@@ -1,7 +1,7 @@
 #version 450
 
 struct SpriteInput{
-    vec2 texSize;
+    uvec2 texSize;
 	vec3 color;
 };
 

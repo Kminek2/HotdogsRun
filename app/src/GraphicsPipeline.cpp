@@ -15,7 +15,7 @@
 #include "LightObject.h"
 #include "Uniform.h"
 
-GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, std::vector<BindingStruct> bindings, Uniform* createdUniform, VkPrimitiveTopology topology) {
+GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, std::vector<BindingStruct> bindings, std::vector<VkVertexInputBindingDescription> bindingDesc, std::vector<VkVertexInputAttributeDescription> atribDesc, Uniform* createdUniform, VkPrimitiveTopology topology) {
     std::cout << "Creating pipeline\n";
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
 
@@ -48,12 +48,12 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
     VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShader.getShaderStageInfo() , fragmentShader.getShaderStageInfo() };
 
     //TODO: make it also take vector in constructor
-    std::vector<VkVertexInputBindingDescription> bindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2)};
-    std::vector<VkVertexInputAttributeDescription> attributeDescriptions = Vertex::GetAttributeDescriptions(0);
-    std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
-    VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 7);
-    attributeDescriptions.insert(attributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
-    attributeDescriptions.push_back(textureDescriptions);
+    std::vector<VkVertexInputBindingDescription> bindingDescriptions = bindingDesc;// = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2) };
+    std::vector<VkVertexInputAttributeDescription> attributeDescriptions = atribDesc;// = Vertex::GetAttributeDescriptions(0);
+    // std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
+    //VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 7);
+    //attributeDescriptions.insert(attributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
+    //attributeDescriptions.push_back(textureDescriptions);
 
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
