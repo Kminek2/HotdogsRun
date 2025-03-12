@@ -8,7 +8,6 @@
 #include <iterator>
 #include <string>
 #include <list>
-#include <map>
 #include <array>
 
 #include <iostream>

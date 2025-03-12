@@ -19,7 +19,7 @@ MapManager* MapManager::Init()
 	// .9 is a safety margin, because points.size() <= n,
 	// but we don't know exactly points.size().
 	// it might not work still, so don't stress-test it
-	if (num_sur_changes > .9 * n) throw std::invalid_argument("yeah you want to much man");
+	if (num_sur_changes > .9 * n) throw std::invalid_argument("yeah you want too much man");
 
 	std::set<size_t> sur_types_changes = { 0 }; // set of id's of points where the road types change
 	int cur_sur_type_id = 0; // current surface type **ID (not type)**
@@ -62,9 +62,14 @@ MapManager* MapManager::Init()
 		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
 	}
 
-	check_points.reserve(points.size() / cp_offset);
-	for (const glm::vec2& checkpoint : getCheckPoints(points, cp_offset))
-		check_points.push_back(new GameObject("checkpoint", { checkpoint.x, checkpoint.y, 0 })); 
+	std::vector<glm::vec2> chekcpoint_positions = getCheckPoints(points, cp_offset);
+	check_points.reserve(chekcpoint_positions.size());
+	for (int i=0; i< chekcpoint_positions.size(); i++)
+		check_points.push_back(new GameObject(
+			"checkpoint", 
+			{ chekcpoint_positions[i].x, chekcpoint_positions[i].y, 0}, 
+			GetPoint(i * cp_offset)->transform->rotation, 
+			glm::vec3(MAP_TILE_SCALE)));
 
 	unsigned int decors_count = n * decors_per_tile;
 

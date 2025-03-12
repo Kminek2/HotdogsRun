@@ -148,6 +148,11 @@ GameObject* GameObject::AddDefaultOBB(glm::vec3 offset, bool two_dim)
 	return addOBB(OBB(c, s));
 }
 
+int GameObject::GetOBBsCount()
+{
+	return obbs.size();
+}
+
 void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)
 {
 	ColorChangeBuffer colorChange;
@@ -168,5 +173,5 @@ GameObject* GameObject::ChangeModel(std::string model)
 	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
 
 	i = std::next(createdGameObject.begin(), newModel.second);
-	return nullptr;
+	return this;
 }

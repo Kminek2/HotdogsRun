@@ -76,8 +76,10 @@ std::vector<std::vector<bool>> BuildingManager::generateBuildingsVector(unsigned
 			bool closeToRoad = false;
 
 			for (GameObject* road : *map) {
-				if (Collisions::checkCollision(*road, *buildingCloser))
+				if (Collisions::checkCollision(*road, *buildingCloser)) {
 					closeToRoad = true;
+					city_roads.push_back(road);
+				}
 
 				if (Collisions::checkCollision(*road, *building)) 
 					canPlace = false;
@@ -99,4 +101,24 @@ std::vector<std::vector<bool>> BuildingManager::generateBuildingsVector(unsigned
 	}
 
 	return points;
+}
+
+BuildingManager* BuildingManager::replaceCityRoads(std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types, _rand& rand)
+{
+	for (auto& road : city_roads) {
+		std::string name = road->GetModelName();
+		if (types.find(name) == types.end())
+			continue;
+
+		std::pair<std::vector<std::string>, std::vector<float>> replacements = types.at(name);
+		replacements.first.push_back(name);
+		replacements.second.push_back(-1);
+
+		std::string repl = rand.choice(replacements.first, replacements.second);
+
+		if(repl != name)
+			road->ChangeModel(repl);
+	}
+
+	return this;
 }

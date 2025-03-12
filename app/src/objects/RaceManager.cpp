@@ -32,6 +32,9 @@ int normalize(int n, int lim) {
 RaceManager* RaceManager::AddCar(GameObject* car) {
 	if (!map_manager) throw std::invalid_argument("init map_manager first");
 
+	if (!car->GetOBBsCount())
+		car->AddDefaultOBB();
+
 	const int n = map_manager->GetLen();
 	int point_id = normalize(-cars_placed / 4, n);
 
@@ -102,7 +105,7 @@ void RaceManager::StartRace() {
 	std::set<std::string> car_names;
 	
 	for (int i = 0; i < map_manager->GetCheckPoints(); i++) {
-		map_manager->GetCheckPoint(i)->AddDefaultOBB(glm::vec3(1), true)->AddScript(new ShowOBB())->surface_type = NEVER_COLLIDE;
+		map_manager->GetCheckPoint(i)->AddDefaultOBB(glm::vec3(1), true)->surface_type = NEVER_COLLIDE;
 	}
 
 	for (CarObject* car : car_objects)

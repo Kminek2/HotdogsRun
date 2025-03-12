@@ -35,6 +35,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	MapManager::MapSettingsValues svals;
 	svals.map_len = 20;
+	svals.checkpoint_offset = 10;
 	svals.ellipse.a = 5; svals.ellipse.b = 10;
 	svals.ellipse.min_offset = -2.5; svals.ellipse.max_offset = 2.5;
 	svals.small_decors = {
@@ -61,9 +62,14 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		mapCityTile = (mapCityTile + map->GetLen() / cityNum) % map->GetLen();
 	}
 
+	build->replaceCityRoads({
+		{"prostaAsfalt", {{"przejscieDlaPieszychAsfalt"},{.1}}},
+		{"prostaLod", {{"przejscieDlaPieszychLod"},{.1}}}
+	}, rand);
+
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	GameObject* car = new GameObject("f1car");
+	GameObject* car = new GameObject("hotrod");
 	car->addOBB(OBB());
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false, 0.05f);
@@ -76,7 +82,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
 
 	race_manager->AddCar(car);
-	for(int i=0; i<3; i++) race_manager->AddCar(new GameObject("f1car"));
+	for(int i=0; i<3; i++) 
+		race_manager->AddCar(new GameObject("f1car"));
 
 	race_manager->StartRace();
 
