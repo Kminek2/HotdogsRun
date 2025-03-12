@@ -156,3 +156,17 @@ void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)
 
 	changeColor.push_back(colorChange);
 }
+
+GameObject* GameObject::ChangeModel(std::string model)
+{
+	createdGameObject.erase(i);
+	delete this->model;
+
+	std::pair<Model*, uint32_t> newModel = Model::Create(model);
+	this->model = newModel.first;
+
+	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
+
+	i = std::next(createdGameObject.begin(), newModel.second);
+	return nullptr;
+}

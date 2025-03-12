@@ -65,6 +65,7 @@ public:
 	GameObject* AddDefaultOBB(glm::vec3 offset = {0.0f, 0.0f, 0.0f}, bool two_dim = false);
 
 	void AddColorChange(glm::vec3 from, glm::vec3 to);
+	GameObject* ChangeModel(std::string model = "");
 
 	static void DeleteAll();
 	static void EarlyUpdateAllObjectScripts();
