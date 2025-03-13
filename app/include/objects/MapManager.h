@@ -3,6 +3,7 @@
 #include "ObjectScript.h"
 #include "_rand.hpp"
 #include "mapgen.h"
+#include "objects/BuildingManager.hpp"
 
 using namespace mapgen;
 
@@ -13,6 +14,7 @@ private:
 	std::vector<GameObject*> check_points;
 
 	// -- general --
+	_rand rand;
 	const size_t seed;
 
 	// -- road --
@@ -33,11 +35,16 @@ private:
 
 	int num_sur_changes = 0;
 
-	void add_decor(_rand& rand, const std::vector<MapPoint>& map_points);
+	const unsigned cities_count;
+
+	void add_decor(const std::vector<MapPoint>& map_points);
+
+	BuildingManager* build;
 
 public:
 	struct MapSettingsValues {
 		MapSettingsValues();
+
 		float decors_per_tile = 1.5f,
 			decor_max_dist = 10.0f;
 
@@ -52,8 +59,17 @@ public:
 		unsigned checkpoint_offset = 15;
 	};
 
+	struct BuildsSettingsValues {
+		BuildsSettingsValues();
+
+		unsigned cities_count = 1;
+		std::array<std::vector<std::string>, 16> buildings;
+		std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types;
+	};
+
 	// i hate this
-	MapManager(size_t seed = 42, const MapSettingsValues& vals = MapSettingsValues()) :
+	MapManager(size_t seed = 42, const MapSettingsValues& vals = MapSettingsValues(), const BuildsSettingsValues& bvals = BuildsSettingsValues()) :
+		rand(seed),
 		seed(seed),
 		decors_per_tile(vals.decors_per_tile), 
 		decor_max_dist(vals.decor_max_dist), 
@@ -62,7 +78,9 @@ public:
 		num_sur_changes(vals.num_sur_changes),
 		map_len(vals.map_len), 
 		cp_offset(vals.checkpoint_offset), 
-		ellipse(vals.ellipse) {};
+		ellipse(vals.ellipse),
+		// ---
+		cities_count(bvals.cities_count) { build = (new BuildingManager(rand, bvals.buildings))->setCityRoads(bvals.types); };
 
 	MapManager* Init();
 	GameObject* GetPoint(unsigned long long index);

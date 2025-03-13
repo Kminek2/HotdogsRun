@@ -4,8 +4,6 @@
 
 MapManager* MapManager::Init()
 {
-	_rand rand(seed);
-
 	std::vector<__road> road_segments;
 	road_segments.reserve(road_types.first.size());
 	for (const std::string& key : road_types.first) road_segments.push_back(createRoadMap(key));
@@ -74,12 +72,15 @@ MapManager* MapManager::Init()
 	unsigned int decors_count = n * decors_per_tile;
 
 	for (unsigned i = 0; i < decors_count; i++) 
-		add_decor(rand, map_points);
+		add_decor(map_points);
+
+	build->setMap(&points);
+	build->generateCities(cities_count)->replaceCityRoads();
 
 	return this;
 }
 
-void MapManager::add_decor(_rand& rand, const std::vector<MapPoint>& map_points) {
+void MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 	glm::vec2 tile = rand.choice(map_points).pos;
 
 	GameObject* decor = new GameObject(rand.choice(small_decors.first, small_decors.second), {
@@ -140,3 +141,4 @@ std::vector<GameObject*>* MapManager::GetPoints()
 }
 
 MapManager::MapSettingsValues::MapSettingsValues() {}
+MapManager::BuildsSettingsValues::BuildsSettingsValues() {}

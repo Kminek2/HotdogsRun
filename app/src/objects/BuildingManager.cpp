@@ -25,9 +25,26 @@ BuildingManager* BuildingManager::setMap(std::vector<GameObject*>* map)
 	return this;
 }
 
+BuildingManager* BuildingManager::setCityRoads(std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types)
+{
+	this->types = types;
+	return this;
+}
+
 glm::vec3 BuildingManager::getOffset() { return offset; }
 glm::vec3 BuildingManager::getRotation() { return rotation; }
 glm::vec3 BuildingManager::getScale() { return scale; }
+
+BuildingManager* BuildingManager::generateCities(unsigned n) {
+	unsigned int mapCityTile = rand.random(static_cast<size_t>(0), map->size());
+	for (int i = 0; i < n; i++) {
+		setOffset((*map)[mapCityTile]->transform->position);
+		generateBuildings(generateBuildingsVector(mapCityTile, 20));
+		mapCityTile = (mapCityTile + map->size() / n) % map->size();
+	}
+
+	return this;
+}
 
 std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<std::vector<bool>>& building_data) {
 	std::vector<GameObject*> buildings;
@@ -103,7 +120,7 @@ std::vector<std::vector<bool>> BuildingManager::generateBuildingsVector(unsigned
 	return points;
 }
 
-BuildingManager* BuildingManager::replaceCityRoads(std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types, _rand& rand)
+BuildingManager* BuildingManager::replaceCityRoads()
 {
 	for (auto& road : city_roads) {
 		std::string name = road->GetModelName();

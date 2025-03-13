@@ -9,7 +9,6 @@
 
 class BuildingManager {
 private:
-private:
 	_rand rand;
 	const std::array<std::vector<std::string>, 16> tiles;
 
@@ -22,20 +21,24 @@ private:
 	std::vector<GameObject*>* map = nullptr;
 	std::vector<GameObject*> city_roads;
 
+	std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types;
+
 public:
-	BuildingManager(size_t seed, const std::array<std::vector<std::string>, 16>& building_tiles) : rand(seed), tiles(building_tiles) {};
+	BuildingManager(_rand& rand, const std::array<std::vector<std::string>, 16>& building_tiles) : rand(rand), tiles(building_tiles) {};
 
 	BuildingManager* setOffset(glm::vec3 offset);
 	BuildingManager* setRotation(glm::vec3 rotation);
 	BuildingManager* setScale(glm::vec3 scale);
 	BuildingManager* setMap(std::vector<GameObject*>*);
+	BuildingManager* setCityRoads(std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types);
 
 	glm::vec3 getOffset();
 	glm::vec3 getRotation();
 	glm::vec3 getScale();
 
+	BuildingManager* generateCities(unsigned n);
 	std::vector<GameObject*> generateBuildings(const std::vector<std::vector<bool>>& building_data);
 	std::vector<std::vector<bool>> generateBuildingsVector(unsigned int centerRoad, unsigned int citySize);
 
-	BuildingManager* replaceCityRoads(std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types, _rand& rand);
+	BuildingManager* replaceCityRoads();
 };

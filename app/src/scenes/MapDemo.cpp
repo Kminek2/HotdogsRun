@@ -46,26 +46,20 @@ std::shared_ptr<Scene> MapDemo::Init() {
 			0.04f, 0.04f, 0.04f, 0.16f,
 			0.12f, 0.1f }
 	};
-
 	svals.decors_per_tile = 1.25f;
 	svals.decor_max_dist = 5;
 	svals.road_types = { {"Asfalt","Zwir","Lod"},{.8,.15,.05} };
 	svals.num_sur_changes = 5;
 
-	map = (new MapManager(seed, svals))->Init();
-	build = (new BuildingManager(seed, defaultBuildings))->setMap(map->GetPoints());
-
-	unsigned int mapCityTile = rand.random(0, map->GetLen());
-	for (int i = 0; i < cityNum; i++) {
-		build->setOffset(map->GetPoint(mapCityTile)->transform->position);
-		build->generateBuildings(build->generateBuildingsVector(mapCityTile, 20));
-		mapCityTile = (mapCityTile + map->GetLen() / cityNum) % map->GetLen();
-	}
-
-	build->replaceCityRoads({
+	MapManager::BuildsSettingsValues bvals;
+	bvals.cities_count = 3;
+	bvals.buildings = defaultBuildings;
+	bvals.types = {
 		{"prostaAsfalt", {{"przejscieDlaPieszychAsfalt"},{.1}}},
 		{"prostaLod", {{"przejscieDlaPieszychLod"},{.1}}}
-	}, rand);
+	};
+
+	map = (new MapManager(seed, svals, bvals))->Init();
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
