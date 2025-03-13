@@ -61,6 +61,7 @@ void Sprite::Unload()
 	loadedSprites.clear();
 
 	delete textures;
+	delete spriteBuffer;
 }
 
 void Sprite::SendDataToGPU()

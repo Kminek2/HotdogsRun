@@ -125,6 +125,8 @@ template<typename T>
 void Buffer<T>::SendBufferToMemory()
 {
     VkDeviceSize bufferSize = sizeof(data[0]) * data.size();
+    if (bufferSize == 0)
+        return;
     if (stagingBufferSize < bufferSize) {
         if (stagingBuffer != VK_NULL_HANDLE) {
             vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
