@@ -14,6 +14,7 @@ public:
 	glm::vec3 color;
 
 	Sprite(std::string name, glm::vec3 color = glm::vec3(1));
+	Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec3 color = glm::vec3(1));
 private:
 	~Sprite();
 	Sprite(glm::uvec2 texSize, glm::uvec2 offSet, std::string name);
