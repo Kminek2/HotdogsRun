@@ -16,6 +16,18 @@ Sprite::Sprite(std::string name, glm::vec3 color)
 	rectTransform = new RectTransform();
 }
 
+Sprite::Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec3 color)
+{
+	model = Model::CreateSprite();
+
+	*this = *loadedSprites[name];
+	this->texSize = texSize;
+	this->offSet += offset;
+	createdSprites.push_back(this);
+	i = std::prev(createdSprites.end());
+	rectTransform = new RectTransform();
+}
+
 Sprite::Sprite(glm::uvec2 texSize, glm::uvec2 offSet, std::string name)
 {
 	this->texSize = texSize;
