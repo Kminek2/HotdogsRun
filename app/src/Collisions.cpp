@@ -86,7 +86,7 @@ OBB Collisions::getAbsOBB(const OBB& obb, const GameObject& obj) {
 	glm::mat3 rotationMatrix = getRotationMatrix(obj.transform->rotation);
 	glm::vec3 absPosition = glm::vec3(obj.transform->position.x, obj.transform->position.y, obj.transform->position.z);
 
-	absOBB.center = absPosition + rotationMatrix * obb.center * obj.transform->scale;
+	absOBB.center = obj.transform->getModelMatrix() * glm::vec4(obb.center, 1);
 	
 	for (int i = 0; i < 3; ++i) {
 		absOBB.axes[i] = rotationMatrix * obb.axes[i];
