@@ -113,12 +113,6 @@ public:
 		UpdateMatrix();
 	}
 
-	static void TransformToMemory(const std::vector<glm::mat4>& transforms) {
-		transformBuffer->ClearBuffer();
-		transformBuffer->AddToBuffer(transforms);
-		transformBuffer->SendBufferToMemory();
-	}
-
 	RectTransform(glm::vec2 pos = glm::vec2(0), float rot = 0.0f, glm::vec2 scale = glm::vec2(1)) {
 		position = pos;
 		rotation = rot;
@@ -127,9 +121,6 @@ public:
 		UpdateMatrix();
 	}
 
-	static void Unload() {
-		delete transformBuffer;
-	}
 
 	glm::mat4 getModelMatrix() { return modelTransform; }
 private:
@@ -163,7 +154,5 @@ private:
 	}
 
 	glm::mat4 modelTransform = glm::mat4(1);
-
-	static Buffer<glm::mat4>* transformBuffer;
 };
 

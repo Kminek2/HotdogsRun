@@ -32,7 +32,7 @@ public:
 		VkDeviceSize size = 0;
 	};
 
-	GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, std::vector<BindingStruct> bindings = {}, std::vector<VkVertexInputBindingDescription> bundingDesc = {}, std::vector<VkVertexInputAttributeDescription> atribDesc = {}, Uniform* createdUniform = nullptr, VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+	GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, VkFrontFace front, std::vector<BindingStruct> bindings = {}, std::vector<VkVertexInputBindingDescription> bundingDesc = {}, std::vector<VkVertexInputAttributeDescription> atribDesc = {}, Uniform* createdUniform = nullptr, VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
 	~GraphicsPipeline();
 
 	Uniform* GetUniform() { return uniform; }

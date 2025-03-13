@@ -150,16 +150,21 @@ RenderPass::RenderPass(SwapChain* swapChain)
     };
     
     // 
-    //std::vector<VkVertexInputBindingDescription> mainBindingDescriptions = { Vertex::GetPosBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2) };
-    //std::vector<VkVertexInputAttributeDescription> mainAttributeDescriptions = Vertex::GetAttributeDescriptions(0);
+    std::vector<VkVertexInputBindingDescription> spriteBindingDescriptions = { Vertex::GetBindingDescription(0), Sprite::SpriteSendData::GetBindingDescription(1), Transform::GetBindingDescription(2)};
+    std::vector<VkVertexInputAttributeDescription> spriteAttributeDescriptions = Vertex::GetAttributeDescriptions(0, 0);
+    
+    std::vector<VkVertexInputAttributeDescription> spAtrib = Sprite::SpriteSendData::GetAttributeDescriptions(1, 3);
+    std::vector<VkVertexInputAttributeDescription> trAtrib = Transform::GetAttributeDescriptions(2, 6);
+    spriteAttributeDescriptions.insert(spriteAttributeDescriptions.end(), spAtrib.begin(), spAtrib.end());
+    spriteAttributeDescriptions.insert(spriteAttributeDescriptions.end(), trAtrib.begin(), trAtrib.end());
 
-    mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this, mainBindings, mainBindingDescriptions, mainAttributeDescriptions);
+    mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, mainBindings, mainBindingDescriptions, mainAttributeDescriptions);
     std::cout << "Created main pipeline\n";
-    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this, {}, {}, {}, mainPipeline->GetUniform());
+    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, {}, mainBindingDescriptions, mainAttributeDescriptions, mainPipeline->GetUniform());
     std::cout << "Created UI pipeline\n";
-    SpritePipeline = new GraphicsPipeline("app/shaders/Sprite.vert.spv", "app/shaders/Sprite.frag.spv", 2, *this, spriteBindings);
+    SpritePipeline = new GraphicsPipeline("app/shaders/Sprite.vert.spv", "app/shaders/Sprite.frag.spv", 2, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, spriteBindings, spriteBindingDescriptions,  spriteAttributeDescriptions);
     std::cout << "Created Sprite Pipeline\n";
-    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 3, *this, {}, {}, {}, mainPipeline->GetUniform(), VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 3, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, {}, mainBindingDescriptions, mainAttributeDescriptions, mainPipeline->GetUniform(), VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
     std::cout << "Created debbuging pipeline\n";
 
 

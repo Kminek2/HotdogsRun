@@ -17,6 +17,7 @@
 #include "Application.h"
 #include "Uniform.h"
 
+#include "Sprite.h"
 VkCommandPool Commands::commandPool;
 
 Commands::Commands() {
@@ -152,17 +153,23 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         }
 
         //SPRITES
+        VkBuffer spVertexBuffers[] = { Model::vertexBuffer->getBuffer(), Sprite::spriteBuffer->getBuffer(),  Transform::transformBuffer->getBuffer()};
+        VkDeviceSize spOffsets[] = { 0, 0, instanceOff * sizeof(glm::mat4)};
+
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getSpritePipeline()->getPipeline());
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-        vkCmdBindVertexBuffers(commandBuffer, 0, 1, &Model::vertexBuffer->getBuffer(), offsets);
+        vkCmdBindVertexBuffers(commandBuffer, 0, 3, spVertexBuffers ,spOffsets);
         vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getSpritePipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getSpritePipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
 
 
         vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+
+        if(Sprite::createdSprites.size() > 0)
+            vkCmdDrawIndexed(commandBuffer, Model::loadedModels[Sprite::spriteModelName]->indexSize, Model::createdSprites, Model::loadedModels[Sprite::spriteModelName]->indexOffset, Model::loadedModels[Sprite::spriteModelName]->vertexOffset, 0);
 
         //DEEBUG POINTS
         if (DebugPoints::indicies.size() > 0) {

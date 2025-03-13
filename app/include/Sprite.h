@@ -21,6 +21,7 @@ private:
 	static void Unload();
 	static void LoadImageFromFile(std::string name, std::string filePath);
 	static void SendDataToGPU();
+	static void UpdateBuffer();
 	glm::uvec2 texSize;
 	glm::uvec2 offSet;
 
@@ -36,16 +37,19 @@ private:
 	struct SpriteSendData {
 		glm::uvec2 texSize;
 		glm::uvec2 offset;
-		glm::vec3 color;
+		alignas(16)glm::vec3 color;
 
 		static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 0);
 
 		static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions(uint16_t binding = 0, uint16_t location = 1);
 	};
 
-	static Buffer<SpriteSendData> spriteBuffer;
+	static Buffer<SpriteSendData>* spriteBuffer;
+
+	const static std::string spriteModelName;
 
 	friend class Application;
 	friend class RenderPass;
+	friend class Commands;
 };
 

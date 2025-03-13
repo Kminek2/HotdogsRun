@@ -127,7 +127,7 @@ void GameObject::TransformTransformsToMemory()
 	if (transforms.size() == 0)
 		return;
 
-	Transform::TransformToMemory(transforms);
+	Transform::AddToMemory(transforms);
 }
 
 GameObject* GameObject::addOBB(OBB obb) {

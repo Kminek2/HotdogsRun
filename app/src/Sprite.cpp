@@ -3,6 +3,8 @@
 std::map<std::string, Sprite*> Sprite::loadedSprites;
 std::list<Sprite*> Sprite::createdSprites;
 Texture* Sprite::textures = new Texture();
+Buffer<Sprite::SpriteSendData>* Sprite::spriteBuffer = new Buffer<Sprite::SpriteSendData>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+const std::string Sprite::spriteModelName = "Sprite";
 
 Sprite::Sprite(std::string name, glm::vec3 color)
 {
@@ -65,6 +67,32 @@ void Sprite::SendDataToGPU()
 {
 	textures->CreateSampler();
 	textures->SendTexturesToMemory();
+}
+
+void Sprite::UpdateBuffer()
+{
+	std::list<Sprite*>::iterator i = createdSprites.begin();
+
+	std::vector<glm::mat4> matrixes;
+	std::vector<Sprite::SpriteSendData> sprites;
+
+	while (i != createdSprites.end()) {
+		matrixes.push_back((*i)->rectTransform->getModelMatrix());
+		SpriteSendData sendData{};
+		sendData.color = (*i)->color;
+		sendData.texSize = (*i)->texSize;
+		sendData.offset = (*i)->offSet;
+
+		sprites.push_back(sendData);
+
+		i = std::next(i);
+	}
+
+	Transform::AddToMemory(matrixes);
+	
+	spriteBuffer->ClearBuffer();
+	spriteBuffer->AddToBuffer(sprites);
+	spriteBuffer->SendBufferToMemory();
 }
 
 

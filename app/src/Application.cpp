@@ -162,5 +162,8 @@ void Application::Update() {
 	soundEngine->UpdatePos();
 	AudioSource3d::UpdateAllPosition();
 	Input::mouseOff = Input::mousePos - Input::lastPos;
+	Transform::ClearMemory();
 	GameObject::TransformTransformsToMemory();
+	Sprite::UpdateBuffer();
+	Transform::TransformToMemory();
 }

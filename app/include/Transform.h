@@ -173,8 +173,15 @@ struct Transform {
 		this->right = newRight;
 	}
 
-	static void TransformToMemory(const std::vector<glm::mat4>& transforms) {
+	static void ClearMemory() {
 		transformBuffer->ClearBuffer();
+	}
+
+	static void TransformToMemory() {
+		transformBuffer->SendBufferToMemory();
+	}
+
+	static void AddToMemory(const std::vector<glm::mat4>& transforms) {
 		transformBuffer->AddToBuffer(transforms);
 		transformBuffer->SendBufferToMemory();
 	}
