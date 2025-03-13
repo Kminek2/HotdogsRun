@@ -10,7 +10,7 @@ bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
 		}
 	}
 
-	distance = glm::vec3(dot(distance, a.axes[0]), dot(distance, a.axes[1]), dot(distance, a.axes[2]));
+	distance = glm::vec3(glm::dot(distance, a.axes[0]), glm::dot(distance, a.axes[1]), glm::dot(distance, a.axes[2]));
 
 	for (int i = 0; i < 3; ++i) {
 		for (int j = 0; j < 3; ++j) {
@@ -36,7 +36,7 @@ bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
 		for (int j = 0; j < 3; ++j) {
 			float ra = a.sizes[(i+1)%3]*absRotation[(i+2)%3][j] + a.sizes[(i+2)%3]*absRotation[(i+1)%3][j];
 			float rb = b.sizes[(j+1)%3]*absRotation[i][(j+2)%3] + b.sizes[(j+2)%3]*absRotation[i][(j+1)%3];
-			if (std::abs(distance[(i+1)%3]*rotation[(i+2)%3][j] - distance[(i+2)%3]*rotation[(i+1)%3][j] > ra + rb))
+			if (std::abs(distance[(i+1)%3]*rotation[(i+2)%3][j] - distance[(i+2)%3]*rotation[(i+1)%3][j]) > ra + rb)
 				return false;
 		}
 	}
@@ -49,7 +49,7 @@ bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, 
 	for (int i = 0; i < obj1.obbs.size(); ++i) {
 		for (int j = 0; j < obj2.obbs.size(); ++j) {
 			OBB absOBB1 = getAbsOBB(obj1.obbs[i], obj1);
-			OBB absOBB2 = getAbsOBB(obj2.obbs[i], obj2);
+			OBB absOBB2 = getAbsOBB(obj2.obbs[j], obj2);
 			if (checkOBBCollision(absOBB1, absOBB2))
 				coll = true;
 
