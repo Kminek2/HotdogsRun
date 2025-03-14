@@ -39,9 +39,9 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	svals.ellipse.a = 5; svals.ellipse.b = 10;
 	svals.ellipse.min_offset = -2.5; svals.ellipse.max_offset = 2.5;
 	svals.small_decors = {
-		{ "cube", "barrel", "bus", "crate",
-			"fucked_up_car", "fucked_up_pickup", "goat", "hydrant",
-			"smietnik", "TNT" },
+		{ {"cube",0}, {"barrel",0}, {"bus",1}, {"crate",0},
+			{"fucked_up_car",1}, {"fucked_up_pickup",1}, {"goat",0}, {"hydrant",0},
+			{"smietnik",0}, {"TNT",0} },
 		{ 0.15f, 0.15f, 0.05f, 0.15f,
 			0.04f, 0.04f, 0.04f, 0.16f,
 			0.12f, 0.1f }

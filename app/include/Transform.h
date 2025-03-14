@@ -17,6 +17,17 @@ class GameObject;
 
 namespace glm {
 	constexpr uint8_t elements(const glm::vec3& v) { return std::count_if(&v.x, &v.x + 3, [](float f) { return f != 0; }); }
+
+	/// <summary>
+	/// Normalize an integer value to [0, max) range
+	/// </summary>
+	template<typename T>
+	T normalize(T n, T max) {
+		assert(std::is_arithmetic<T>::value);
+
+		while (n < 0) n += max;
+		return n % max;
+	}
 };
 
 struct Transform {

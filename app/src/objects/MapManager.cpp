@@ -80,14 +80,44 @@ MapManager* MapManager::Init()
 	return this;
 }
 
+const std::array<glm::vec2, 8> directions = { {{0,1}, {1,1}, {1,0}, {1,-1}, {0,-1}, {-1,-1}, {-1,0}, {-1,1}} };
 void MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 	glm::vec2 tile = rand.choice(map_points).pos;
 
-	GameObject* decor = new GameObject(rand.choice(small_decors.first, small_decors.second), {
+	std::pair<std::string, float> obj_data = rand.choice(small_decors.first, small_decors.second);
+	GameObject* decor = new GameObject(obj_data.first, {
 		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1),
 		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), .1 }, { 0,0,rand.random(0.0f,360.0f) });
 
 	decor->AddDefaultOBB();
+
+	if (rand.coin_toss(obj_data.second)) return; // allow for on-road placement if TRUE
+
+	int bef, cur, nxt;
+	bef = cur = nxt = -1;
+
+	for (size_t i = 0; i < points.size(); i++) {
+		if (!Collisions::checkCollision(*points[i], *decor)) continue;
+
+		bef = glm::normalize(i - 1, points.size());
+		cur = i;
+		nxt = glm::normalize(i + 1, points.size());
+
+		break;
+	}
+
+	if (cur == -1) return; // no collision - all good!
+
+	glm::vec3 pos = decor->transform->position;
+	for (glm::vec2 dir : directions) {
+		decor->transform->Move(glm::vec3(dir.x, dir.y, 0) * MAP_TILE_SIZE * MAP_TILE_SCALE);
+		if (!Collisions::checkCollision(*points[bef], *decor) &&
+			!Collisions::checkCollision(*points[cur], *decor) &&
+			!Collisions::checkCollision(*points[nxt], *decor))
+			break;
+
+		decor->transform->MoveTo(pos);
+	}
 }
 
 /// <summary>

@@ -30,7 +30,7 @@ private:
 	const float MAP_TILE_SIZE = 12.7; // 127x127 mv size
 	const float decor_max_dist; // min_dist = MAP_TILE_SIZE
 
-	const std::pair<std::vector<std::string>, std::vector<float>> small_decors;
+	const std::pair<std::vector<std::pair<std::string, float>>, std::vector<float>> small_decors;
 	const std::pair<std::vector<std::string>, std::vector<float>> road_types;
 
 	int num_sur_changes = 0;
@@ -50,7 +50,7 @@ public:
 
 		Ellipse ellipse = { 20, 50, -5, 5 };
 
-		std::pair<std::vector<std::string>, std::vector<float>> small_decors = {};
+		std::pair<std::vector<std::pair<std::string, float>>, std::vector<float>> small_decors = {};
 		std::pair<std::vector<std::string>, std::vector<float>> road_types = { {"Asfalt"}, {1} };
 
 		int num_sur_changes = 0;
