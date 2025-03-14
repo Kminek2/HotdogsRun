@@ -23,6 +23,8 @@ const std::array<std::vector<std::string>, 16> defaultBuildings = { {
 	{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
 } };
 
+GameObject* car;
+
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
 
@@ -69,8 +71,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	GameObject* car = new GameObject("hotrod");
-	car->addOBB(OBB());
+	car = new GameObject("hotrod");
+	car->AddDefaultOBB();
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false, 0.05f);
 		car->AddScript(cmv);
@@ -82,9 +84,13 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
 
 	race_manager->AddCar(car);
-	for(int i=0; i<3; i++) 
+	for(int i=0; i<3; i++)
 		race_manager->AddCar(new GameObject("f1car"));
 
+	GameObject* amobj = new GameObject;
+	AnimationManager* am = new AnimationManager;
+	amobj->AddScript(am);
+	race_manager->SetAnimationManager(am);
 	race_manager->StartRace();
 
 	return std::shared_ptr<Scene>(scene);
@@ -100,6 +106,10 @@ void MapDemo::Update() {
 
 	if (Input::getKeyPressed(GLFW_KEY_R))
 		Application::LoadScene("map_demo");
+
+	if (Input::getKeyClicked(GLFW_KEY_B)) {
+		std::cout << car->transform->position.x - Camera::main->cameraTransform->position.x << ' ' << car->transform->position.y - Camera::main->cameraTransform->position.y << ' ' << car->transform->position.z - Camera::main->cameraTransform->position.z << '\n' << car->transform->rotation.x - Camera::main->cameraTransform->rotation.x << ' ' << car->transform->rotation.y - Camera::main->cameraTransform->rotation.y << '\n';
+	}
 }
 
 void MapDemo::UnLoad() {

@@ -7,6 +7,7 @@
 #include <glm/vec2.hpp>
 #include <array>
 #include <functional>
+#include "objects/AnimationManager.h"
 
 class RaceManager {
 public:
@@ -23,6 +24,7 @@ public:
 	RaceManager* SetMapManager(MapManager* map_manager);
 	RaceManager* SetCarsRelativeOffset(float offset);
 	RaceManager* AddCar(GameObject* car);
+	RaceManager* SetAnimationManager(AnimationManager* am);
 
 	void StartRace();
 	RaceManager* SetEndCondition(TerminationCondition condition, unsigned long long val);
@@ -46,4 +48,8 @@ private:
 	unsigned long long termination_condition_value;
 
 	std::vector<std::function<void(CarObject*)>> subscribers;
+
+	AnimationManager* animation_manager = nullptr;
+
+	void StartAnimation();
 };

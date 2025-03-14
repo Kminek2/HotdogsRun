@@ -56,6 +56,18 @@ CinematicCamera::obj_data CinematicCamera::position_in_time(float t) {
     result.position.y = rt*rt*begining.position.y + 2*rt*t*control.y + t*t*ending.position.y;
     result.position.z = rt*rt*begining.position.z + 2*rt*t*control.z + t*t*ending.position.z;
 
+    {
+        float delta = begining.rotation.x - ending.rotation.x;
+        int k = static_cast<int>(std::round(delta / 360.0));
+        const_cast<float&>(ending.rotation.x) += 360.0 * k;
+    }
+
+    {
+        float delta = begining.rotation.y - ending.rotation.y;
+        int k = static_cast<int>(std::round(delta / 360.0));
+        const_cast<float&>(ending.rotation.y) += 360.0 * k;
+    }
+
     result.rotation.x = begining.rotation.x + t * (ending.rotation.x - begining.rotation.x);
     result.rotation.y = begining.rotation.y + t * (ending.rotation.y - begining.rotation.y);
     return result;

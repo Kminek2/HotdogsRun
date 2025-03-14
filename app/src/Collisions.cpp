@@ -67,8 +67,8 @@ bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, 
 	const std::string name1 = obj1.model->GetName();
 	const std::string name2 = obj2.model->GetName();
 
-	if(name1 == "checkpoint" || name2 == "checkpoint")
-		std::cout << "Callback for [" << name1 << " - " << name2 << "]\n";
+	/*if(name1 == "checkpoint" || name2 == "checkpoint")
+		std::cout << "Callback for [" << name1 << " - " << name2 << "]\n";*/
 
 	const std::pair<std::string, std::string> colliders = { std::min(name1, name2), std::max(name1, name2) };
 

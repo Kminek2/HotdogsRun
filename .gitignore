@@ -407,3 +407,4 @@ lib-include/
 
 stb/
 objLoader/
+.clang-format
