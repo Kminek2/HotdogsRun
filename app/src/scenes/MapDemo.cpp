@@ -39,12 +39,18 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	svals.ellipse.a = 5; svals.ellipse.b = 10;
 	svals.ellipse.min_offset = -2.5; svals.ellipse.max_offset = 2.5;
 	svals.small_decors = {
-		{ {"cube",0}, {"barrel",0}, {"bus",1}, {"crate",0},
+		{		  
 			{"fucked_up_car",1}, {"fucked_up_pickup",1}, {"goat",0}, {"hydrant",0},
-			{"smietnik",0}, {"TNT",0} },
-		{ 0.15f, 0.15f, 0.05f, 0.15f,
-			0.04f, 0.04f, 0.04f, 0.16f,
-			0.12f, 0.1f }
+			{"smietnik",0},	{"TNT",0} , {"drzewo",0}, {"jodla",0},
+			{"kamien1",0}, {"kamien2",0},	{"krzak",0}, {"maleDrzewo",0},
+			{"malyKrzak",0}, {"pacholki",0}, {"barrel",0},	{"bus",1},
+		},
+		{	
+			-1.0f,-0.75f,-0.25f,0.1f,
+			-0.6f,0.05f,-0.8f,-0.8f,
+			-0.4f,0.025f,-0.6f,-0.4f,
+			-0.25f,-0.3f,0.025f,-0.6f,
+		}
 	};
 	svals.decors_per_tile = 1.25f;
 	svals.decor_max_dist = 5;

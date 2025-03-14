@@ -87,7 +87,7 @@ void MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 	std::pair<std::string, float> obj_data = rand.choice(small_decors.first, small_decors.second);
 	GameObject* decor = new GameObject(obj_data.first, {
 		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1),
-		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), .1 }, { 0,0,rand.random(0.0f,360.0f) });
+		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), .1 }, { 0,0,rand.random(0.0f,360.0f) }, glm::vec3(MAP_TILE_SCALE));
 
 	decor->AddDefaultOBB();
 
