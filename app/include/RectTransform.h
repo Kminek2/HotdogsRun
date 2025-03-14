@@ -5,14 +5,14 @@ class RectTransform :
     public Transform
 {
 public:
-	glm::vec2 position;
+	glm::vec3 position;
 	float rotation;
 	glm::vec2 scale;
 
 	/// <summary>
 	/// Set position to the given vector, in world space
 	/// </summary>
-	void MoveTo(glm::vec2 position) {
+	void MoveTo(glm::vec3 position) {
 		this->position = position;
 		UpdateMatrix();
 	}
@@ -68,7 +68,7 @@ public:
 	/// Move the object by the given vector, in world space
 	/// </summary>
 	void Move(glm::vec2 by) {
-		this->position += by;
+		this->position += glm::vec3(by, 0);
 		UpdateMatrix();
 	}
 
@@ -113,7 +113,7 @@ public:
 		UpdateMatrix();
 	}
 
-	RectTransform(glm::vec2 pos = glm::vec2(0), float rot = 0.0f, glm::vec2 scale = glm::vec2(1)) {
+	RectTransform(glm::vec3 pos = glm::vec3(0), float rot = 0.0f, glm::vec2 scale = glm::vec2(1)) {
 		position = pos;
 		rotation = rot;
 		this->scale = scale * glm::vec2(ASPECT_WIDTH, ASPECT_HEIGHT) / (float)std::max(ASPECT_WIDTH, ASPECT_HEIGHT);
@@ -146,7 +146,7 @@ private:
 	void UpdateMatrix() {
 		modelTransform = glm::mat4(1);
 
-		modelTransform = glm::translate(modelTransform, glm::vec3(position, 0.0f));
+		modelTransform = glm::translate(modelTransform, position);
 
 		modelTransform = glm::rotate(modelTransform, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 

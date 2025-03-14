@@ -60,14 +60,18 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	AudioSource2d* testSound = new AudioSource2d("test", 0.5f);
 	testSound->PlayTrack(true);
 
-	AudioSource3d* testSound3d = new AudioSource3d(bilbord, "car-horn-test", 0.2f);
-	testSound3d->PlayTrack(true);
+	//AudioSource3d* testSound3d = new AudioSource3d(bilbord, "car-horn-test", 0.2f);
+	//testSound3d->PlayTrack(true);
 	Application::Invoke(A, 5000);
 
 	Sprite* sp = new Sprite("Roblox");
-	sp->rectTransform->MoveTo(glm::vec2(0));
+	sp->rectTransform->MoveTo(glm::vec3(0));
 	sp->rectTransform->RotateTo(0);
-	sp->rectTransform->ScaleTo(glm::vec2(0.5));
+	sp->rectTransform->ScaleTo(glm::vec2(0.005));
+
+	Text* text = new Text("BaseFont", glm::vec3(0), glm::vec2(0));
+	text->SetText("A{}A");
+
 	return std::shared_ptr<Scene>(scene);
 }
 

@@ -11,12 +11,13 @@ class Sprite
 {
 public:
 	RectTransform* rectTransform;
-	glm::vec3 color;
+	glm::vec4 color;
 
-	Sprite(std::string name, glm::vec3 color = glm::vec3(1));
-	Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec3 color = glm::vec3(1));
-private:
+	Sprite(std::string name, glm::vec4 color = glm::vec4(1));
+	Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec4 color = glm::vec4(1));
+	Sprite(std::string name, int, glm::vec2 texSize01, glm::vec2 offset01, glm::vec4 color = glm::vec4(1));
 	~Sprite();
+private:
 	Sprite(glm::uvec2 texSize, glm::uvec2 offSet, std::string name);
 	static void DeleteAll();
 	static void Unload();
@@ -38,7 +39,7 @@ private:
 	struct SpriteSendData {
 		glm::uvec2 texSize;
 		glm::uvec2 offset;
-		alignas(16)glm::vec3 color;
+		glm::vec4 color;
 
 		static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 0);
 

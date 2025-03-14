@@ -32,6 +32,7 @@
     <ClCompile Include="app\src\Descriptior.cpp" />
     <ClCompile Include="app\src\Device.cpp" />
     <ClCompile Include="app\src\Engine.cpp" />
+    <ClCompile Include="app\src\Font.cpp" />
     <ClCompile Include="app\src\Framebuffer.cpp" />
     <ClCompile Include="app\src\GameObject.cpp" />
     <ClCompile Include="app\src\GraphicsPipeline.cpp" />
@@ -73,6 +74,7 @@
     <ClCompile Include="app\src\SpotLight.cpp" />
     <ClCompile Include="app\src\Sprite.cpp" />
     <ClCompile Include="app\src\SwapChain.cpp" />
+    <ClCompile Include="app\src\Text.cpp" />
     <ClCompile Include="app\src\Transform.cpp" />
     <ClCompile Include="app\src\UiObject.cpp" />
     <ClCompile Include="app\src\Uniform.cpp" />
@@ -97,6 +99,7 @@
     <ClInclude Include="app\include\Device.h" />
     <ClInclude Include="app\include\Engine.h" />
     <ClInclude Include="app\include\FileReader.h" />
+    <ClInclude Include="app\include\Font.h" />
     <ClInclude Include="app\include\Framebuffer.h" />
     <ClInclude Include="app\include\GameObject.h" />
     <ClInclude Include="app\include\GraphicsPipeline.h" />
@@ -129,6 +132,7 @@
     <ClInclude Include="app\include\RectTransform.h" />
     <ClInclude Include="app\include\SoundEngine.h" />
     <ClInclude Include="app\include\Sprite.h" />
+    <ClInclude Include="app\include\Text.h" />
     <ClInclude Include="app\include\_rand.hpp" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />

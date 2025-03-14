@@ -6,7 +6,7 @@ Texture* Sprite::textures = new Texture();
 Buffer<Sprite::SpriteSendData>* Sprite::spriteBuffer = new Buffer<Sprite::SpriteSendData>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 const std::string Sprite::spriteModelName = "Sprite";
 
-Sprite::Sprite(std::string name, glm::vec3 color)
+Sprite::Sprite(std::string name, glm::vec4 color)
 {
 	model = Model::CreateSprite();
 
@@ -16,7 +16,7 @@ Sprite::Sprite(std::string name, glm::vec3 color)
 	rectTransform = new RectTransform();
 }
 
-Sprite::Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec3 color)
+Sprite::Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec4 color)
 {
 	model = Model::CreateSprite();
 
@@ -28,13 +28,25 @@ Sprite::Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec
 	rectTransform = new RectTransform();
 }
 
+Sprite::Sprite(std::string name, int, glm::vec2 texSize01, glm::vec2 offset01, glm::vec4 color)
+{
+	model = Model::CreateSprite();
+
+	*this = *loadedSprites[name];
+	this->offSet += offset01 * (glm::vec2)this->texSize;
+	this->texSize = (glm::vec2)texSize * texSize01;
+	createdSprites.push_back(this);
+	i = std::prev(createdSprites.end());
+	rectTransform = new RectTransform();
+}
+
 Sprite::Sprite(glm::uvec2 texSize, glm::uvec2 offSet, std::string name)
 {
 	this->texSize = texSize;
 	this->offSet = offSet;
 	this->name = name;
 	rectTransform = nullptr;
-	color = glm::vec3(1);
+	color = glm::vec4(1);
 
 	model = nullptr;
 }
@@ -134,7 +146,7 @@ std::vector<VkVertexInputAttributeDescription> Sprite::SpriteSendData::GetAttrib
 
 	attributeDescriptions[2].binding = binding;
 	attributeDescriptions[2].location = location + 2;
-	attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+	attributeDescriptions[2].format = VK_FORMAT_R32G32B32A32_SFLOAT;
 	attributeDescriptions[2].offset = offsetof(SpriteSendData, color);
 	return attributeDescriptions;
 }

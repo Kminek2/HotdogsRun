@@ -179,7 +179,7 @@ bool AudioSource2d::LoadWaveFile(const char* filename, unsigned short maxChanelN
 	}
 
 	// Read in the riff wave file header.
-	file.read(reinterpret_cast<char*>(&riffWaveFileHeader), sizeof(riffWaveFileHeader));
+	file.read(reinterpret_cast<char*>(& riffWaveFileHeader), sizeof(riffWaveFileHeader));
 	count = file.gcount();
 	if (count != sizeof(riffWaveFileHeader))
 	{

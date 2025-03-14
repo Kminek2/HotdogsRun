@@ -222,6 +222,12 @@
     <ClCompile Include="app\src\objects\RaceManager.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\Font.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\Text.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -415,6 +421,12 @@
     </ClInclude>
     <ClInclude Include="app\include\objects\RaceManager.hpp">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Font.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Text.h">
+      <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
