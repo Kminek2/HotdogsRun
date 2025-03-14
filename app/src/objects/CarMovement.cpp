@@ -87,7 +87,7 @@ void CarMovement::handleGas() {
 		float speedPr = actSpeed / minSpeed*multiplier;
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
-		actSpeed -= Time::deltaTime * accelBack * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * multiplier; //y = -1.6x^2 + 1.6
+		actSpeed -= Time::deltaTime * accelBack * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * multiplier * 3.0f; //y = -1.6x^2 + 1.6
 		actSpeed = std::max(actSpeed, minSpeed * multiplier);
 	}
 }
