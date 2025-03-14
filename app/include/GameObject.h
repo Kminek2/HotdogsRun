@@ -59,6 +59,7 @@ public:
 	int surface_type;
 
 	GameObject* AddScript(ObjectScript* script);
+	std::vector<ObjectScript*>& GetObjectScripts();
 	std::string GetModelName();
 	std::array<glm::vec2, 3> GetModelMaxDistVert();
 	GameObject* addOBB(OBB obb);

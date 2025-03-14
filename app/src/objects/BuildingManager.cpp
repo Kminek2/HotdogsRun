@@ -39,7 +39,7 @@ BuildingManager* BuildingManager::generateCities(unsigned n) {
 	unsigned int mapCityTile = rand.random(static_cast<size_t>(0), map->size());
 	for (int i = 0; i < n; i++) {
 		setOffset((*map)[mapCityTile]->transform->position);
-		generateBuildings(generateBuildingsVector(mapCityTile, 20));
+		cities.push_back(generateBuildings(generateBuildingsVector(mapCityTile, 20)));
 		mapCityTile = (mapCityTile + map->size() / n) % map->size();
 	}
 
@@ -83,10 +83,10 @@ std::vector<std::vector<bool>> BuildingManager::generateBuildingsVector(unsigned
 	glm::vec3 posNow = glm::vec3(map->at(centerRoad)->transform->position) - glm::vec3(BUILDING_SIZE * citySize / 2);
 
 	for (int y = 0; y < citySize; y++) {
-		points[y].resize(citySize);
+		points[y].assign(citySize, false);
 
 		for (int x = 0; x < citySize; x++) {
-			GameObject* building = (new GameObject("case_15", posNow, glm::vec3(0), glm::vec3(.5f)))->AddDefaultOBB(glm::vec3(0), true);
+			GameObject* building = (new GameObject("case_15", posNow))->AddDefaultOBB(glm::vec3(1.0f), true);
 			GameObject* buildingCloser = (new GameObject("case_15", posNow))->AddDefaultOBB(glm::vec3(BUILDING_SIZE), true);
 
 			bool canPlace = true;
@@ -138,4 +138,8 @@ BuildingManager* BuildingManager::replaceCityRoads()
 	}
 
 	return this;
+}
+
+std::vector<std::vector<GameObject*>>& BuildingManager::getBuildings() {
+	return cities;
 }

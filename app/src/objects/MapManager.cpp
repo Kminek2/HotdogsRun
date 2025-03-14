@@ -172,3 +172,7 @@ std::vector<GameObject*>* MapManager::GetPoints()
 
 MapManager::MapSettingsValues::MapSettingsValues() {}
 MapManager::BuildsSettingsValues::BuildsSettingsValues() {}
+
+BuildingManager* MapManager::getBuildingManager() {
+	return build;
+}

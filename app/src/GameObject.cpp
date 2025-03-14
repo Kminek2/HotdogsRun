@@ -50,6 +50,10 @@ GameObject* GameObject::AddScript(ObjectScript* script)
 	return this;
 }
 
+std::vector<ObjectScript*>& GameObject::GetObjectScripts() {
+	return objectScripts;
+}
+
 std::string GameObject::GetModelName()
 {
 	return model->GetName();
@@ -138,6 +142,9 @@ GameObject* GameObject::addOBB(OBB obb) {
 GameObject* GameObject::AddDefaultOBB(glm::vec3 offset, bool two_dim)
 {
 	std::array<glm::vec2, 3> maxD = GetModelMaxDistVert();
+	if (this->GetModelName() == "")
+		return this;
+
 	for (int i = 0; i < 3; i++)
 		maxD[i] += glm::vec2(offset[i], -offset[i]);
 	glm::vec3 c = { (maxD[0].x + maxD[0].y) / 2, (maxD[1].x + maxD[1].y) / 2, (maxD[2].x + maxD[2].y) / 2 };

@@ -58,7 +58,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	svals.num_sur_changes = 5;
 
 	MapManager::BuildsSettingsValues bvals;
-	bvals.cities_count = 3;
+	bvals.cities_count = cityNum;
 	bvals.buildings = defaultBuildings;
 	bvals.types = {
 		{"prostaAsfalt", {{"przejscieDlaPieszychAsfalt"},{.1}}},

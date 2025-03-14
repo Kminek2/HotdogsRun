@@ -93,7 +93,7 @@ OBB Collisions::getAbsOBB(const OBB& obb, const GameObject& obj) {
 	}
 
 	absOBB.sizes = obb.sizes;
-	absOBB.sizes *= obj.transform->scale;
+	absOBB.sizes *= abs(obj.transform->scale);
 	return absOBB;
 }
 

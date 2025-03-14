@@ -91,5 +91,6 @@ public:
 	float GetMapTileSize();
 	float GetMapScale();
 	std::vector<GameObject*>* GetPoints();
+	BuildingManager* getBuildingManager();
 };
 

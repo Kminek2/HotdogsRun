@@ -20,6 +20,7 @@ private:
 
 	std::vector<GameObject*>* map = nullptr;
 	std::vector<GameObject*> city_roads;
+	std::vector<std::vector<GameObject*>> cities;
 
 	std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types;
 
@@ -39,6 +40,7 @@ public:
 	BuildingManager* generateCities(unsigned n);
 	std::vector<GameObject*> generateBuildings(const std::vector<std::vector<bool>>& building_data);
 	std::vector<std::vector<bool>> generateBuildingsVector(unsigned int centerRoad, unsigned int citySize);
+	std::vector<std::vector<GameObject*>>& getBuildings();
 
 	BuildingManager* replaceCityRoads();
 };
