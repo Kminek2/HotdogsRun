@@ -33,7 +33,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 		position_offset += 10.0f;
 	}
 
-	objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true, GLFW_KEY_Z, GLFW_KEY_C));
+	objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C));
 	
 	objs[0]->AddScript(new ShowOBB);
 	objs[1]->AddScript(new ShowOBB);

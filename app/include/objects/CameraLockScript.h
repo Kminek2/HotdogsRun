@@ -13,11 +13,13 @@ class CameraLockScript :
         float pitch = 0.0f;
         float yaw = 0.0f;
         const ViewType view;
+        const bool lock_rotation;
         const bool unlocked_rotation;
         const uint16_t key_left, key_right;
         static bool disabled;
+        int cnt_after_disabled = 0;
     public:
-        CameraLockScript(ViewType view = Isometric, glm::vec3 offset = glm::vec3(-300.0f, 0.0f, 0.0f), float pitch = -15.0f, float yaw = 45.0f, bool unlocked_rotation = false, uint16_t key_left = GLFW_KEY_Q, uint16_t key_right = GLFW_KEY_E);
+        CameraLockScript(ViewType view = Isometric, glm::vec3 offset = glm::vec3(-300.0f, 0.0f, 0.0f), float pitch = -15.0f, float yaw = 45.0f, bool lock_rotation = false, bool unlocked_rotation = false, uint16_t key_left = GLFW_KEY_Q, uint16_t key_right = GLFW_KEY_E);
         void Init() override;
         void Update() override;
         void LateUpdate() override;

@@ -11,7 +11,7 @@
 
 #define FRAMES_IN_FLIGHT 2
 #define ASPECT_WIDTH 16
-#define ASPECT_HEIGHT 8
+#define ASPECT_HEIGHT 9
 
 class Engine;
 class Uniform;

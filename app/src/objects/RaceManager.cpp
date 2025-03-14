@@ -206,8 +206,8 @@ void RaceManager::StartAnimation() {
 				       false});
 	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({-3.1062f, -6.63792f, -1.38018f}),
 					{car_objects[0]->car->transform->rotation.x - -269.0f, car_objects[0]->car->transform->rotation.y - -0.25f}},
-				       {car_objects[0]->car->transform->position - glm::vec3({-14.6291f, -0.301346f, -3.56136f}),
-					{car_objects[0]->car->transform->rotation.x - -182.75, car_objects[0]->car->transform->rotation.y - 7.25}},
+				       {car_objects[0]->car->transform->position - glm::vec3({-15.0351f, 0.0f, -5.47232f}),
+					{car_objects[0]->car->transform->rotation.x - -180.0f, car_objects[0]->car->transform->rotation.y - 20.0f}},
 				       1.5f,
 				       {5.0f, 5.0f, 1.0f},
 				       true});

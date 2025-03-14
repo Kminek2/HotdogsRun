@@ -28,10 +28,10 @@ GameObject* car;
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
 
-	qc = new QuickCamera();
-	qc->_sr(0.75f);
-	qc->_sm(100.0f);
-	qc->_mappings(__keybinds({GLFW_KEY_I, GLFW_KEY_K, GLFW_KEY_J, GLFW_KEY_L, GLFW_KEY_U, GLFW_KEY_O, GLFW_KEY_P}));
+	//qc = new QuickCamera();
+	//qc->_sr(0.75f);
+	//qc->_sm(100.0f);
+	//qc->_mappings(__keybinds({GLFW_KEY_I, GLFW_KEY_K, GLFW_KEY_J, GLFW_KEY_L, GLFW_KEY_U, GLFW_KEY_O, GLFW_KEY_P}));
 
 	_rand rand(seed);
 
@@ -78,6 +78,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		car->AddScript(cmv);
 		car->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
 		car->AddScript(new CarInputs(*cmv, GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL));
+		car->AddScript(new CameraLockScript(Perspective, glm::vec3(-16, 0, 0), -20.0f, 45.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C));
 	}
 
 	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(tc::LAPS, 1)->SetCarsRelativeOffset(.1f);
@@ -101,8 +102,8 @@ void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
 }
 
 void MapDemo::Update() {
-	qc->HandleRotate();
-	qc->HandleMove();
+	//qc->HandleRotate();
+	//qc->HandleMove();
 
 	if (Input::getKeyPressed(GLFW_KEY_R))
 		Application::LoadScene("map_demo");
@@ -113,7 +114,7 @@ void MapDemo::Update() {
 }
 
 void MapDemo::UnLoad() {
-	delete qc;
+	//delete qc;
 	delete build;
 	delete race_manager;
 	delete map;

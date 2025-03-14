@@ -74,7 +74,7 @@ CinematicCamera::obj_data CinematicCamera::position_in_time(float t) {
 }
 
 bool CinematicCamera::hasEnded() {
-    return time > animation_time;
+    return ended;
 }
 
 void CinematicCamera::skip() {
