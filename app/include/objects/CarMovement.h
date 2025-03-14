@@ -38,11 +38,12 @@ private:
         bool hand_break;
     } actActions;
     struct road_type_data {
-        road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier);
+        road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier, float max_speed_multiplier);
         float acc_multiplier;
         float eng_break_multiplier;
         float break_multiplier;
         float steering_multiplier;
+        float max_speed_multiplier;
     };
     float nitro_timer;
     float before_nitro_mem;

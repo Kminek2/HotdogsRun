@@ -4,11 +4,11 @@
 
 const CarMovement::actions CarMovement::clearedActions = {false, false, false, false, false};
 const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
-	CarMovement::road_type_data(0.7f, 2.0f, 2.0f, 1.0f),
-	CarMovement::road_type_data(1.0f, 1.5f, 1.6f, 1.2f),
-	CarMovement::road_type_data(0.8f, 2.0f, 2.0f, 1.0f),
-	CarMovement::road_type_data(0.6f, 1.0f, 0.5f, 0.8f),
-	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.4f)
+	CarMovement::road_type_data(0.7f, 2.0f, 2.0f, 1.0f, 0.2f),
+	CarMovement::road_type_data(1.0f, 1.5f, 1.6f, 1.2f, 1.0f),
+	CarMovement::road_type_data(0.8f, 2.0f, 2.0f, 1.0f, 0.7f),
+	CarMovement::road_type_data(0.6f, 1.0f, 0.5f, 0.8f, 1.0f),
+	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.4f, 0.3f)
 };
 const float CarMovement::nitro_duration = 1.0f;
 
@@ -75,11 +75,13 @@ void CarMovement::handleGas() {
 	if (forces.x != 1.0f) return;
 	if (maxSpeed == 0) return;
 	if (actActions.forward) {
-		float speedPr = actSpeed / maxSpeed*multiplier;
+		float speedPr = actSpeed / maxSpeed*multiplier*surfaces_data[road_type].max_speed_multiplier;
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
-		actSpeed += Time::deltaTime * accelFront * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * multiplier; //y = -1.6x^2+1.6
-		actSpeed = std::min(actSpeed, maxSpeed*multiplier);
+		if (actSpeed < maxSpeed*multiplier*surfaces_data[road_type].max_speed_multiplier) {
+			actSpeed += Time::deltaTime * accelFront * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * multiplier; //y = -1.6x^2+1.6
+			actSpeed = std::min(actSpeed, maxSpeed*multiplier*surfaces_data[road_type].max_speed_multiplier);
+		}
 	}
 	if (actActions.backwards) {
 		float speedPr = actSpeed / minSpeed*multiplier;
@@ -105,7 +107,7 @@ void CarMovement::handleBreaks() {
 
 void CarMovement::handleEngBreak() {
 	if (actSpeed > 0) {
-		actSpeed -= surfaces_data[road_type].eng_break_multiplier * carWeight * 10.0f * Time::deltaTime * multiplier;
+		actSpeed -= surfaces_data[road_type].eng_break_multiplier * carWeight * 10.0f * Time::deltaTime * multiplier * std::max(((actSpeed - maxSpeed*multiplier*surfaces_data[road_type].max_speed_multiplier)*3.0f), 1.0f);
 		actSpeed = std::max(actSpeed, 0.0f);
 	} else {
 		actSpeed += surfaces_data[road_type].eng_break_multiplier * carWeight * 10.0f * Time::deltaTime * multiplier;
@@ -191,11 +193,12 @@ void CarMovement::useHandBreak() {
 	actActions.hand_break = true;
 }
 
-CarMovement::road_type_data::road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier) {
+CarMovement::road_type_data::road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier, float max_speed_multiplier) {
 	this->acc_multiplier = acc_multiplier;
 	this->eng_break_multiplier = eng_break_multiplier;
 	this->break_multiplier = break_multiplier;
 	this->steering_multiplier = steering_multiplier;
+	this->max_speed_multiplier = max_speed_multiplier;
 }
 
 void CarMovement::useNitro() {
