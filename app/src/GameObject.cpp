@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "default_obb_data.h"
 
 bool GameObject::deletingAll = false;
 std::list<GameObject*> GameObject::createdGameObject;
@@ -144,6 +145,13 @@ GameObject* GameObject::AddDefaultOBB(glm::vec3 offset, bool two_dim)
 	std::array<glm::vec2, 3> maxD = GetModelMaxDistVert();
 	if (this->GetModelName() == "")
 		return this;
+
+	auto found = default_obb_data::data.find(this->GetModelName());
+	if (found != default_obb_data::data.end()) {
+		for (const auto& x : found->second)
+			addOBB(x);
+		return this;
+	}
 
 	for (int i = 0; i < 3; i++)
 		maxD[i] += glm::vec2(offset[i], -offset[i]);
