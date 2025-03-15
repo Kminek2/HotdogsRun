@@ -34,8 +34,10 @@ template<typename T>
 inline void UniformBuffer<T>::RecreateBuffer(size_t dataSize)
 {
     for (size_t i = 0; i < uniformBuffers.size(); i++) {
-        vkDestroyBuffer(Device::getDevice(), uniformBuffers[i], nullptr);
-        vkFreeMemory(Device::getDevice(), uniformBuffersMemory[i], nullptr);
+        if (uniformBuffers[i] != VK_NULL_HANDLE) {
+            vkDestroyBuffer(Device::getDevice(), uniformBuffers[i], nullptr);
+            vkFreeMemory(Device::getDevice(), uniformBuffersMemory[i], nullptr);
+        }
         Buffer<T>::CreateBuffer(dataSize, bufferUsage, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 
         vkMapMemory(Device::getDevice(), uniformBuffersMemory[i], 0, dataSize, 0, &uniformBuffersMapped[i]);
@@ -47,7 +49,7 @@ UniformBuffer<T>::UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFla
 {
     bufferSize = sizeof(T);
 
-    uniformBuffers.resize(numberOfFrames);
+    uniformBuffers.resize(numberOfFrames, VK_NULL_HANDLE);
     uniformBuffersMemory.resize(numberOfFrames);
     uniformBuffersMapped.resize(numberOfFrames);
 

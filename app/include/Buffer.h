@@ -18,7 +18,7 @@ class Buffer
 {
 private:
     bool createdBuffer = false;
-	VkBuffer buffer;
+	VkBuffer buffer = VK_NULL_HANDLE;
 	VkDeviceMemory bufferMemory;
     uint64_t actBufferSize = 0;
 
@@ -32,7 +32,7 @@ private:
 
     VkDeviceSize stagingBufferSize = 0;
 
-    VkBuffer stagingBuffer;
+    VkBuffer stagingBuffer = VK_NULL_HANDLE;
     VkDeviceMemory stagingBufferMemory;
 public:
 	Buffer(const VkBufferUsageFlags& bufferUsage);
