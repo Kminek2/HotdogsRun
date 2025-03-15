@@ -15,6 +15,8 @@
 #include "LightObject.h"
 #include "Uniform.h"
 
+#include "Image.h"
+
 GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, VkFrontFace front, std::vector<BindingStruct> bindings, std::vector<VkVertexInputBindingDescription> bindingDesc, std::vector<VkVertexInputAttributeDescription> atribDesc, Uniform* createdUniform, VkPrimitiveTopology topology) {
     std::cout << "Creating pipeline\n";
     Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
@@ -129,10 +131,12 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
         for (int i = 0; i < bindings.size(); i++) {
             BindingStruct bind = bindings[i];
-            if (bind.texture == nullptr)
+            if (bind.unfiormBuffer != nullptr)
                 uniform->UpdateDescriptorSets(*bind.unfiormBuffer, i, bind.size);
-            else
+            else if (bind.texture != nullptr)
                 uniform->UpdateImageInDescriptorSets(*bind.texture, i);
+            else if(bind.cubeMap != nullptr)
+                uniform->UpdateImageInDescriptorSets(*&bind.cubeMap->sampler, *&bind.cubeMap->imageView, i);
         }
 
         gotUniform = false;
@@ -163,7 +167,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
     depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     depthStencil.depthTestEnable = VK_TRUE;
     depthStencil.depthWriteEnable = VK_TRUE;
-    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
     depthStencil.depthBoundsTestEnable = VK_FALSE;
     depthStencil.minDepthBounds = 0.0f; // Optional
     depthStencil.maxDepthBounds = 1.0f; // Optional

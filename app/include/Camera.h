@@ -7,6 +7,8 @@
 #include "CameraTransform.h"
 #include "CameraStructures.h"
 #include "UniformBuffer.h"
+
+class Uniform;
 class Camera
 {
 private:
@@ -14,6 +16,8 @@ private:
 	UniformBuffer<UniformCameraBuffer>* cameraBuffer;
 
 	const float render_distance = 1000.0f;
+	bool changedCubeMap = false;
+	CubeMap* cubeMap;
 public:
 	CameraTransform* cameraTransform;
 	ViewType view;
@@ -21,10 +25,13 @@ public:
 	static Camera* main;
 	Camera(uint16_t frameNum, uint16_t width, uint16_t height);
 	~Camera();
-	void UpdateBuffer(uint16_t frame);
+	void UpdateBuffer(uint16_t frame, Uniform* uniform);
 	void UpdateCamera(uint16_t width, uint16_t height);
 
 	void Reload(uint16_t width, uint16_t height);
+
+	CubeMap* GetCubeMap() { return cubeMap; }
+	void ChangeCubeMap(CubeMap* cubeMap);
 
 	UniformBuffer<UniformCameraBuffer>* getBuffer() { return cameraBuffer; }
 };

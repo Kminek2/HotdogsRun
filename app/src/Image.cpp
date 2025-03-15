@@ -5,24 +5,24 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-void Image::CreateImageView(VkFormat format, VkImageAspectFlags aspectFlags) {
+void Image::CreateImageView(VkFormat format, VkImageAspectFlags aspectFlags, VkImageViewType viewType, uint32_t layerCount) {
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = image;
-    viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    viewInfo.viewType = viewType;
     viewInfo.format = format;
     viewInfo.subresourceRange.aspectMask = aspectFlags;
     viewInfo.subresourceRange.baseMipLevel = 0;
     viewInfo.subresourceRange.levelCount = 1;
     viewInfo.subresourceRange.baseArrayLayer = 0;
-    viewInfo.subresourceRange.layerCount = 1;
+    viewInfo.subresourceRange.layerCount = layerCount;
 
     if (vkCreateImageView(Device::getDevice(), &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
         throw std::runtime_error("failed to create texture image view!");
     }
 }
 
-void Image::CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, VkSampleCountFlagBits sampleCount) {
+void Image::CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, VkSampleCountFlagBits sampleCount, uint32_t arrayLeyers, VkImageCreateFlags flags) {
     VkImageCreateInfo imageInfo{};
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -30,13 +30,14 @@ void Image::CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImag
     imageInfo.extent.height = height;
     imageInfo.extent.depth = 1;
     imageInfo.mipLevels = 1;
-    imageInfo.arrayLayers = 1;
+    imageInfo.arrayLayers = arrayLeyers;
     imageInfo.format = format;
     imageInfo.tiling = tiling;
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     imageInfo.usage = usage;
     imageInfo.samples = sampleCount;
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.flags = flags;
 
     if (vkCreateImage(Device::getDevice(), &imageInfo, nullptr, &image) != VK_SUCCESS) {
         throw std::runtime_error("failed to create image!");
@@ -57,7 +58,7 @@ void Image::CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImag
     vkBindImageMemory(Device::getDevice(), image, imageMemory, 0);
 }
 
-void Image::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
+void Image::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t layerCount) {
     VkCommandBuffer commandBuffer = Commands::BeginSingleTimeCommands();
 
     VkImageMemoryBarrier barrier{};
@@ -73,7 +74,7 @@ void Image::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout 
     barrier.subresourceRange.baseMipLevel = 0;
     barrier.subresourceRange.levelCount = 1;
     barrier.subresourceRange.baseArrayLayer = 0;
-    barrier.subresourceRange.layerCount = 1;
+    barrier.subresourceRange.layerCount = layerCount;
 
     VkPipelineStageFlags sourceStage;
     VkPipelineStageFlags destinationStage;
@@ -109,7 +110,7 @@ void Image::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout 
     Commands::EndSingleTimeCommands(commandBuffer);
 }
 
-void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset) {
+void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset, uint32_t layerCount) {
     VkCommandBuffer commandBuffer = Commands::BeginSingleTimeCommands();
 
     VkBufferImageCopy region{};
@@ -120,7 +121,7 @@ void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, ui
     region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     region.imageSubresource.mipLevel = 0;
     region.imageSubresource.baseArrayLayer = 0;
-    region.imageSubresource.layerCount = 1;
+    region.imageSubresource.layerCount = layerCount;
 
     region.imageOffset = { imageOffset.first, imageOffset.second, 0};
     region.imageExtent = {
@@ -139,6 +140,36 @@ void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, ui
     );
 
     Commands::EndSingleTimeCommands(commandBuffer);
+}
+
+void Image::CreateSampler(VkSampler& sampler, VkFilter oversamplingFilter, VkFilter undersamplingFilter)
+{
+    //Change maxAnisotropy to some value: min(value, properties.limit)
+    VkPhysicalDeviceProperties properties{};
+    vkGetPhysicalDeviceProperties(Device::getPhysicalDevice(), &properties);
+    //
+    VkSamplerCreateInfo samplerInfo{};
+    samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    samplerInfo.magFilter = oversamplingFilter;
+    samplerInfo.minFilter = undersamplingFilter;
+    samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+    samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+    samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+    samplerInfo.anisotropyEnable = VK_TRUE;
+    samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy;
+    samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+    samplerInfo.unnormalizedCoordinates = VK_FALSE;
+    samplerInfo.compareEnable = VK_FALSE;
+    samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+    samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+    samplerInfo.mipLodBias = 0.0f;
+    samplerInfo.minLod = 0.0f;
+    samplerInfo.maxLod = 0.0f;
+
+    if (vkCreateSampler(Device::getDevice(), &samplerInfo, nullptr, &sampler) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create texture sampler!");
+    }
+
 }
 
 //Image::~Image()
@@ -353,4 +384,53 @@ Texture::~Texture()
     vkDestroyImage(Device::getDevice(), image, nullptr);
     vkFreeMemory(Device::getDevice(), textureMemory, nullptr);
 
+}
+
+CubeMap::CubeMap(std::array<std::string, 6> textures)
+{
+    int texWidth{ 0 };
+    int texHeight{ 0 };
+    int texChannels{ 0 };
+
+    std::array<stbi_uc*, 6> pixels;
+    for(int i = 0; i < 6; i++)
+        pixels[i] = stbi_load(textures[i].c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    VkDeviceSize layerSize = texWidth * texHeight * 4;
+    VkDeviceSize imageSize = layerSize * 6;
+
+    if (!pixels[0]) {
+        throw std::runtime_error("failed to load cubeMap images!");
+    }
+
+
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+
+    Buffer<bool>::CreateBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+    void* data;
+    for (int i = 0; i < pixels.size(); i++) {
+        vkMapMemory(Device::getDevice(), stagingBufferMemory, layerSize * i, layerSize, 0, &data);
+        memcpy(data, pixels[i], static_cast<size_t>(layerSize));
+        vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
+    }
+
+    for (auto& pixel : pixels)
+        stbi_image_free(pixel);
+
+    CreateImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, textureMemory, VK_SAMPLE_COUNT_1_BIT, 6, VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT);
+
+    int32_t bufferOffset = 0;
+    int32_t heightOffset = 0;
+
+    Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 6);
+    Image::copyBufferToImage(stagingBuffer, image, texWidth, texHeight, 0, { 0, 0 }, 6);
+    Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 6);
+
+    vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
+    vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
+
+    CreateImageView(VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_VIEW_TYPE_CUBE, 6);
+
+    CreateSampler(sampler, VK_FILTER_LINEAR, VK_FILTER_LINEAR);
 }

@@ -50,6 +50,7 @@ public:
     template <typename t>
     friend class UniformBuffer;
     friend class Texture;
+    friend class CubeMap;
 };
 
 template<typename T>

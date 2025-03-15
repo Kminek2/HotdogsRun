@@ -109,7 +109,7 @@ void Engine::DrawFrame() {
 
     vkResetFences(Device::getDevice(), 1, &inFlightFences[currentFrame]);
 
-    application->UpdateBuffer(currentFrame, swapChain->getRenderPass()->getMainPipeline()->GetUniform());
+    application->UpdateBuffer(currentFrame, swapChain->getRenderPass()->getMainPipeline()->GetUniform(), swapChain->getRenderPass()->getCubeMapPipeline()->GetUniform());
 
     commands->ResetCommands(currentFrame);
     commands->RecordCommands(currentFrame, swapChain->getFramebuffer(imageIndex)->getFramebuffer(), *swapChain, imageIndex);

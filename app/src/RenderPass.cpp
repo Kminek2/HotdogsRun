@@ -68,7 +68,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
     uiDepthAttachmentRef.attachment = 2;
     uiDepthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    std::array<VkSubpassDescription, 4> subpasses{};
+    std::array<VkSubpassDescription, 5> subpasses{};
     subpasses[0].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[0].colorAttachmentCount = 1;
     subpasses[0].pColorAttachments = &colorAttachmentRef;
@@ -77,24 +77,29 @@ RenderPass::RenderPass(SwapChain* swapChain)
     subpasses[1].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[1].colorAttachmentCount = 1;
     subpasses[1].pColorAttachments = &colorAttachmentRef;
-    //subpasses[1].pDepthStencilAttachment = nullptr;
-    subpasses[1].pDepthStencilAttachment = &uiDepthAttachmentRef;
-    //subpasses[1].inputAttachmentCount = 1;
-    //subpasses[1].pInputAttachments = &inputAttachmentRef;
+    subpasses[1].pDepthStencilAttachment = &depthAttachmentRef;
 
     subpasses[2].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[2].colorAttachmentCount = 1;
     subpasses[2].pColorAttachments = &colorAttachmentRef;
+    //subpasses[1].pDepthStencilAttachment = nullptr;
     subpasses[2].pDepthStencilAttachment = &uiDepthAttachmentRef;
+    //subpasses[1].inputAttachmentCount = 1;
+    //subpasses[1].pInputAttachments = &inputAttachmentRef;
 
     subpasses[3].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[3].colorAttachmentCount = 1;
     subpasses[3].pColorAttachments = &colorAttachmentRef;
-    subpasses[3].pDepthStencilAttachment = &depthAttachmentRef;
+    subpasses[3].pDepthStencilAttachment = &uiDepthAttachmentRef;
+
+    subpasses[4].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpasses[4].colorAttachmentCount = 1;
+    subpasses[4].pColorAttachments = &colorAttachmentRef;
+    subpasses[4].pDepthStencilAttachment = &depthAttachmentRef;
 
     subpasses[subpasses.size() - 1].pResolveAttachments = &colorAttachmentResolveRef;
 
-    std::array<VkSubpassDependency, 4> dependencies{};
+    std::array<VkSubpassDependency, 5> dependencies{};
     dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     dependencies[0].dstSubpass = 0;
     dependencies[0].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
@@ -123,6 +128,13 @@ RenderPass::RenderPass(SwapChain* swapChain)
     dependencies[3].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     dependencies[3].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
+    dependencies[4].srcSubpass = 3;
+    dependencies[4].dstSubpass = 4;
+    dependencies[4].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependencies[4].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependencies[4].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    dependencies[4].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
     std::array<VkAttachmentDescription, 4> attachments = { colorAttachment, depthAttachment, uiDepthAttachment, colorAttachmentResolve };
     VkRenderPassCreateInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -139,20 +151,12 @@ RenderPass::RenderPass(SwapChain* swapChain)
 
     std::cout << "Created render pass\n";
 
-    //uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-    //uniform->AddUniforms(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
-    //uniform->AddUniforms(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
-
-    /*uniform->UpdateDescriptorSets(Camera::main->getBuffer()->GetBuffer(), 0, Camera::main->getBuffer()->getSize());
-    uniform->UpdateImageInDescriptorSets(*Model::textures, 1);
-    uniform->UpdateDescriptorSets(LightObject::getPointBuffer()->GetBuffer(), 2, LightObject::getPointBuffer()->getSize());
-    uniform->UpdateDescriptorSets(LightObject::getSpotBuffer()->GetBuffer(), 3, LightObject::getSpotBuffer()->getSize());*/
-
+    //MAIN
     std::vector<GraphicsPipeline::BindingStruct> mainBindings = {
-        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, nullptr, Camera::main->getBuffer()->GetBuffer(), Camera::main->getBuffer()->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, (CubeMap*)nullptr, Camera::main->getBuffer()->GetBuffer(), Camera::main->getBuffer()->getSize()),
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, Model::textures, nullptr, 0),
-        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr, LightObject::getPointBuffer()->GetBuffer(), LightObject::getPointBuffer()->getSize()),
-        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, nullptr, LightObject::getSpotBuffer()->GetBuffer(), LightObject::getSpotBuffer()->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, LightObject::getPointBuffer()->GetBuffer(), LightObject::getPointBuffer()->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, LightObject::getSpotBuffer()->GetBuffer(), LightObject::getSpotBuffer()->getSize()),
     };
 
     std::vector<VkVertexInputBindingDescription> mainBindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2) };
@@ -160,13 +164,22 @@ RenderPass::RenderPass(SwapChain* swapChain)
     std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
     VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 7);
     mainAttributeDescriptions.insert(mainAttributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
+
     mainAttributeDescriptions.push_back(textureDescriptions);
 
+    //CUBEMAP
+    std::vector<GraphicsPipeline::BindingStruct> cubeMapBindings = {
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, nullptr, 0),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, (CubeMap*)nullptr, Camera::main->getBuffer()->GetBuffer(), Camera::main->getBuffer()->getSize())
+    };
+
+    std::vector<VkVertexInputBindingDescription> cubeMapBindingDescriptions = { Vertex::GetBindingDescription(0) };
+    std::vector<VkVertexInputAttributeDescription> cubeMapAttributeDescriptions = Vertex::GetAttributeDescriptions(0);
+    //SPRITE
     std::vector<GraphicsPipeline::BindingStruct> spriteBindings = {
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, Sprite::textures, nullptr, 0),
     };
     
-    // 
     std::vector<VkVertexInputBindingDescription> spriteBindingDescriptions = { Vertex::GetBindingDescription(0), Sprite::SpriteSendData::GetBindingDescription(1), Transform::GetBindingDescription(2)};
     std::vector<VkVertexInputAttributeDescription> spriteAttributeDescriptions = Vertex::GetAttributeDescriptions(0, 0);
     
@@ -177,11 +190,13 @@ RenderPass::RenderPass(SwapChain* swapChain)
 
     mainPipeline = new GraphicsPipeline("app/shaders/main.vert.spv", "app/shaders/main.frag.spv", 0, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, mainBindings, mainBindingDescriptions, mainAttributeDescriptions);
     std::cout << "Created main pipeline\n";
-    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 1, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, {}, mainBindingDescriptions, mainAttributeDescriptions, mainPipeline->GetUniform());
+    cubeMapPipeline = new GraphicsPipeline("app/shaders/CubeMap.vert.spv", "app/shaders/CubeMap.frag.spv", 1, *this, VK_FRONT_FACE_CLOCKWISE, cubeMapBindings, cubeMapBindingDescriptions, cubeMapAttributeDescriptions);
+    std::cout << "Created cube map pipeline - yes It's just for cubeMap :)\n";
+    UIPipeline = new GraphicsPipeline("app/shaders/ui.vert.spv", "app/shaders/ui.frag.spv", 2, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, {}, mainBindingDescriptions, mainAttributeDescriptions, mainPipeline->GetUniform());
     std::cout << "Created UI pipeline\n";
-    SpritePipeline = new GraphicsPipeline("app/shaders/Sprite.vert.spv", "app/shaders/Sprite.frag.spv", 2, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, spriteBindings, spriteBindingDescriptions,  spriteAttributeDescriptions);
+    SpritePipeline = new GraphicsPipeline("app/shaders/Sprite.vert.spv", "app/shaders/Sprite.frag.spv", 3, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, spriteBindings, spriteBindingDescriptions,  spriteAttributeDescriptions);
     std::cout << "Created Sprite Pipeline\n";
-    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 3, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, {}, mainBindingDescriptions, mainAttributeDescriptions, mainPipeline->GetUniform(), VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
+    debugingPipeline = new GraphicsPipeline("app/shaders/debug.vert.spv", "app/shaders/ui.frag.spv", 4, *this, VK_FRONT_FACE_COUNTER_CLOCKWISE, {}, mainBindingDescriptions, mainAttributeDescriptions, mainPipeline->GetUniform(), VK_PRIMITIVE_TOPOLOGY_LINE_LIST);
     std::cout << "Created debbuging pipeline\n";
 
 

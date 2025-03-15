@@ -40,7 +40,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	uiObj = new UiObject("f1car", {0, 0.5, 0}, glm::vec3(0, 0, 0), glm::vec3(0.05));
 
 	LightObject::SetDirLight({ glm::vec3(-0.2f, -0.3f, -1.0f), glm::vec3(0.005f, 0.005f, 0.005f), glm::vec3(0.04f, 0.04f, 0.04f), glm::vec3(0.05f, 0.05f, 0.05f) });
-	//LightObject::SetDirLight({ glm::vec3(-0.2f, -0.3f, -1.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.4f, 0.4f), glm::vec3(0.5f, 0.5f, 0.5f) });
+	LightObject::SetDirLight({ glm::vec3(-0.2f, -0.3f, -1.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.4f, 0.4f), glm::vec3(0.5f, 0.5f, 0.5f) });
 	//new PointLight(obj2, { 0, 1, 1 });
 	//new PointLight(obj2, { 0, -1, 1 });
 	//new SpotLight(obj2, { 0, 0, -1 }, {0, 1, 1});
@@ -71,6 +71,8 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 	Text* text = new Text("BaseFont", glm::vec3(0), glm::vec2(0), 0.2f, glm::vec4(0, 1, 0, 0.1f));
 	text->SetText("BB!!BB");
+
+	Camera::main->ChangeCubeMap(new CubeMap({ "./CubeMaps/Ranch/posx.jpg", "./CubeMaps/Ranch/negx.jpg", "./CubeMaps/Ranch/posy.jpg", "./CubeMaps/Ranch/negy.jpg", "./CubeMaps/Ranch/posz.jpg", "./CubeMaps/Ranch/negz.jpg" }));
 
 	return std::shared_ptr<Scene>(scene);
 }

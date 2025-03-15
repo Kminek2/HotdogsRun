@@ -132,6 +132,21 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
             instanceOff += instance.second;
         }
 
+        //CubeMap
+        if (Camera::main->GetCubeMap() != nullptr) {
+            vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getCubeMapPipeline()->getPipeline());
+
+            vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+            vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+            vkCmdBindVertexBuffers(commandBuffer, 0, 1, &Model::vertexBuffer->getBuffer(), offsets);
+            vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getCubeMapPipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getCubeMapPipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
+        }
+        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+        if (Camera::main->GetCubeMap() != nullptr)
+            vkCmdDrawIndexed(commandBuffer, Model::loadedModels["BaseCube"]->indexSize, 1, Model::loadedModels["BaseCube"]->indexOffset, Model::loadedModels["BaseCube"]->vertexOffset, 0);
+
         //UI
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
 

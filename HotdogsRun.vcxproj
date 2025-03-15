@@ -154,6 +154,8 @@
   <ItemGroup>
     <None Include="app\shaders\compile.bat" />
     <None Include="app\shaders\compile.sh" />
+    <None Include="app\shaders\CubeMap.frag" />
+    <None Include="app\shaders\CubeMap.vert" />
     <None Include="app\shaders\debug.vert" />
     <None Include="app\shaders\main.frag" />
     <None Include="app\shaders\main.frag.spv" />

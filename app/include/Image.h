@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <glm/glm.hpp>
 #include <vector>
+#include <array>
 
 #include "Device.h"
 
@@ -13,13 +14,15 @@ struct Image
 	VkImage image;
 	VkImageView imageView;
 
-    void CreateImageView(VkFormat format, VkImageAspectFlags aspectFlags);
+    void CreateImageView(VkFormat format, VkImageAspectFlags aspectFlags, VkImageViewType viewType = VK_IMAGE_VIEW_TYPE_2D, uint32_t layerCount = 1);
 
-    static void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, VkSampleCountFlagBits sampleCount = VK_SAMPLE_COUNT_1_BIT);
+    static void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, VkSampleCountFlagBits sampleCount = VK_SAMPLE_COUNT_1_BIT, uint32_t arrayLeyers = 1, VkImageCreateFlags flags = NULL);
 
-    static void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+    static void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t layerCount = 1);
 
-    static void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset);
+    static void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset, uint32_t layerCount = 1);
+    
+    static void CreateSampler(VkSampler& sampler, VkFilter oversamplingFilter, VkFilter undersamplingFilter);
 
 //    ~Image();
 };
@@ -57,4 +60,15 @@ struct Texture : Image {
     void SendTexturesToMemory();
 
     ~Texture();
+};
+
+struct CubeMap : Image {
+    VkDeviceMemory textureMemory;
+    VkSampler sampler;
+
+    /// <summary>
+    /// Creates cube map
+    /// </summary>
+    /// <param name="textures">X, -X, Y, -Y, Z, -Z</param>
+    CubeMap(std::array<std::string, 6> textures);
 };

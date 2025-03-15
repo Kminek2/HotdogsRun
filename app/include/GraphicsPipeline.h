@@ -8,6 +8,7 @@
 class RenderPass;
 class Uniform;
 class Texture;
+class CubeMap;
 template<typename T>
 class UniformBuffer;
 
@@ -24,10 +25,12 @@ public:
 	{
 		BindingStruct() {};
 		BindingStruct(VkDescriptorType descType, VkShaderStageFlagBits shaderStage, Texture* texture = nullptr, std::vector<VkBuffer>* unfiormBuffer = nullptr, VkDeviceSize size = 0) : descType(descType), shaderStage(shaderStage), texture(texture), unfiormBuffer(unfiormBuffer), size(size) {}
+		BindingStruct(VkDescriptorType descType, VkShaderStageFlagBits shaderStage, CubeMap* cubeMap = nullptr, std::vector<VkBuffer>* unfiormBuffer = nullptr, VkDeviceSize size = 0) : descType(descType), shaderStage(shaderStage), cubeMap(cubeMap), unfiormBuffer(unfiormBuffer), size(size) {}
 		VkDescriptorType descType;
 		VkShaderStageFlagBits shaderStage;
 
 		Texture* texture = nullptr;
+		CubeMap* cubeMap = nullptr;
 		std::vector<VkBuffer>* unfiormBuffer = nullptr;
 		VkDeviceSize size = 0;
 	};

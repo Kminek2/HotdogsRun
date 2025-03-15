@@ -86,6 +86,30 @@ void Uniform::UpdateImageInDescriptorSets(const Texture& texture, const uint32_t
     }
 }
 
+void Uniform::UpdateImageInDescriptorSets(const VkSampler& sampler, const VkImageView& imageView, const uint32_t& binding)
+{
+    VkDescriptorImageInfo imageInfo;
+
+    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    imageInfo.imageView = imageView;
+    imageInfo.sampler = sampler;
+
+
+    for (size_t i = 0; i < FRAMES_IN_FLIGHT; i++) {
+        VkWriteDescriptorSet descriptorWrite{};
+
+        descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        descriptorWrite.dstSet = descriptorSets[i];
+        descriptorWrite.dstBinding = binding;
+        descriptorWrite.dstArrayElement = 0;
+        descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        descriptorWrite.descriptorCount = 1;
+        descriptorWrite.pImageInfo = &imageInfo;
+
+        vkUpdateDescriptorSets(Device::getDevice(), 1, &descriptorWrite, 0, nullptr);
+    }
+}
+
 void Uniform::AddUniforms(uint16_t amount, VkDescriptorType type, VkShaderStageFlags shaderStage, uint32_t descriptorSize)
 {
     for (int i = 0; i < amount; i++)

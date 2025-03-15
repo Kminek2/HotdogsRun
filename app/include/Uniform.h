@@ -29,4 +29,5 @@ public:
 
 	void UpdateDescriptorSets(const std::vector<VkBuffer>& buffer, uint32_t binding, VkDeviceSize size);
 	void UpdateImageInDescriptorSets(const Texture& texture, const uint32_t& binding);
+	void UpdateImageInDescriptorSets(const VkSampler& sampler, const VkImageView& imageView, const uint32_t& binding);
 };

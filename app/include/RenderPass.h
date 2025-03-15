@@ -13,6 +13,7 @@ private:
 	SwapChain* swapChain;
 	VkRenderPass renderPass;
 	GraphicsPipeline* mainPipeline;
+	GraphicsPipeline* cubeMapPipeline;
 	GraphicsPipeline* UIPipeline;
 	GraphicsPipeline* SpritePipeline;
 	GraphicsPipeline* debugingPipeline;
@@ -34,6 +35,7 @@ public:
 	Image getDepthImage() const { return depthImage; }
 	Image getUIDepthImage() const { return uiDepthImage; }
 	GraphicsPipeline* getMainPipeline() const { return mainPipeline; }
+	GraphicsPipeline* getCubeMapPipeline() const { return cubeMapPipeline; }
 	GraphicsPipeline* getUiPipeline() const { return UIPipeline; }
 	GraphicsPipeline* getSpritePipeline() const { return SpritePipeline; }
 	GraphicsPipeline* getDebugPipeline() const { return debugingPipeline; }

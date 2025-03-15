@@ -27,7 +27,7 @@ public:
 	~Application();
 
 	void Update();
-	void UpdateBuffer(uint16_t frame, Uniform* uniform);
+	void UpdateBuffer(uint16_t frame, Uniform* uniform, Uniform* cubeMapUniform);
 	void UpdateWindowSizes(uint16_t width, uint16_t height);
 
 	template<typename Function, typename... Args>

@@ -122,10 +122,10 @@ void Application::Quit()
 	glfwSetWindowShouldClose(window, true);
 }
 
-void Application::UpdateBuffer(uint16_t frame, Uniform *uniform)
+void Application::UpdateBuffer(uint16_t frame, Uniform *uniform, Uniform* cubeMapUniform)
 {
 	camera->UpdateCamera(width, height);
-	camera->UpdateBuffer(frame);
+	camera->UpdateBuffer(frame, cubeMapUniform);
 
 	if (LightObject::pointLightBuffer->getSize() != PointLight::SendData(frame) && PointLight::lightNum > 0)
 		uniform->UpdateDescriptorSets(*LightObject::getPointBuffer()->GetBuffer(), 2, glm::max(static_cast<uint32_t>(PointLight::lightNum * sizeof(PointLightBuffer)), static_cast<uint32_t>(1)));

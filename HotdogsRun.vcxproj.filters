@@ -228,6 +228,9 @@
     <ClCompile Include="app\src\Text.cpp">
       <Filter>Source Files\The Real Engine</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\PowerUp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -428,6 +431,9 @@
     <ClInclude Include="app\include\Text.h">
       <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
+    <ClInclude Include="app\include\PowerUp.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="app\shaders\compile.bat">
@@ -474,6 +480,12 @@
     </None>
     <None Include="app\shaders\ui.frag.spv">
       <Filter>Resource Files\shaders\spv</Filter>
+    </None>
+    <None Include="app\shaders\CubeMap.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="app\shaders\CubeMap.vert">
+      <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

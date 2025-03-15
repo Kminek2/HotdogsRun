@@ -10,7 +10,9 @@
 
 #include <algorithm>
 
-Camera* Camera::main;
+#include "Uniform.h"
+
+Camera* Camera::main = nullptr;
 
 Camera::Camera(uint16_t frameNum, uint16_t width, uint16_t height)
 {
@@ -26,6 +28,8 @@ Camera::Camera(uint16_t frameNum, uint16_t width, uint16_t height)
 
 	cameraBufferStruct.proj[1][1] *= -1;
 	cameraBufferStruct.view = glm::lookAt(cameraTransform->position, cameraTransform->position + cameraTransform->front, cameraTransform->up);
+
+	cubeMap = nullptr;
 }
 
 Camera::~Camera() {
@@ -43,19 +47,13 @@ void Camera::UpdateCamera(uint16_t width, uint16_t height)
 	cameraBufferStruct.view = glm::lookAt(cameraTransform->position, cameraTransform->position + cameraTransform->front, cameraTransform->up);
 }
 
-void Camera::UpdateBuffer(uint16_t frame)
+void Camera::UpdateBuffer(uint16_t frame, Uniform* uniform)
 {
-	/*for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			std::cout << cameraBufferStruct.proj[i][j] << ' ';
-		}
-		std::cout << '\n';
-	}
-
-	std::cout << "\n\n\n";*/
 	cameraBuffer->UpdateBuffer(frame, cameraBufferStruct);
+
+	if (changedCubeMap) {
+		uniform->UpdateImageInDescriptorSets(cubeMap->sampler, cubeMap->imageView, 0);
+	}
 }
 
 void Camera::Reload(uint16_t width, uint16_t height)
@@ -72,4 +70,14 @@ void Camera::Reload(uint16_t width, uint16_t height)
 
 	cameraBufferStruct.proj[1][1] *= -1;
 	cameraBufferStruct.view = glm::lookAt(cameraTransform->position, cameraTransform->position + cameraTransform->front, cameraTransform->up);
+}
+
+void Camera::ChangeCubeMap(CubeMap* cubeMap)
+{
+	if (this->cubeMap != nullptr)
+		delete this->cubeMap;
+
+	this->cubeMap = cubeMap;
+
+	changedCubeMap = true;
 }
