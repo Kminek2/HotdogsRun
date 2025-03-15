@@ -69,8 +69,8 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	sp->rectTransform->RotateTo(0);
 	sp->rectTransform->ScaleTo(glm::vec2(0.005));
 
-	Text* text = new Text("BaseFont", glm::vec3(0), glm::vec2(0));
-	text->SetText("A{}A");
+	Text* text = new Text("BaseFont", glm::vec3(0), glm::vec2(0), 0.2f, glm::vec4(0, 1, 0, 0.1f));
+	text->SetText("BB!!BB");
 
 	return std::shared_ptr<Scene>(scene);
 }

@@ -21,6 +21,7 @@ private:
 public:
 	static glm::vec2 getTextSize(std::string fontName ,std::string text, float spacing);
 	static std::vector<Sprite*> ConvertText(std::string fontName, std::string text, glm::vec3 startPos, float spacing, float size, glm::vec4 col);
+	static float getLetterWidth(std::string fontName, char letter);
 
 	friend class Application;
 };

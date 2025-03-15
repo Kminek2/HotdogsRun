@@ -55,12 +55,16 @@ glm::vec2 Font::getTextSize(std::string fontName, std::string text, float spacin
         else
             size += font->chars[ch - startingFromChar].pixSize;
     }
-
-    size -= font->chars[text[0] - startingFromChar].pixSize;
-    size -= font->chars[text[text.size() - 1] - startingFromChar].pixSize;
     size += spacing * (text.size() - 1);
 
     return glm::vec2(size, font->fontHeight / 2.0f) / 100.0f;
+}
+
+float Font::getLetterWidth(std::string fontName, char letter)
+{
+    Font* font = loadedFonts[fontName];
+
+    return font->chars[letter - startingFromChar].pixSize / 100.0f;
 }
 
 std::vector<Sprite*> Font::ConvertText(std::string fontName, std::string text, glm::vec3 startPos, float spacing, float size, glm::vec4 col)
@@ -69,12 +73,12 @@ std::vector<Sprite*> Font::ConvertText(std::string fontName, std::string text, g
     std::vector<Sprite*> textSprites;
 
     size /= 100;
-    glm::vec3 pos = startPos;
+    glm::vec3 pos = startPos + spacing * size / 2.0f;
     for (int i = 0; i < text.size(); i++) {
         char ch = text[i];
 
         if (ch == ' ')
-            pos += font->spaceSize * size * glm::vec3(1, 0, 0);
+            pos += (font->spaceSize + spacing) * size * glm::vec3(1, 0, 0);
         else {
             Sprite* sp = new Sprite(fontName, 0, glm::vec2(font->chars[ch - startingFromChar].onTexSize, 1), glm::vec2(font->chars[ch - startingFromChar].offset, 0), col);
             sp->rectTransform->MoveTo(pos);

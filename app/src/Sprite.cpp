@@ -11,6 +11,7 @@ Sprite::Sprite(std::string name, glm::vec4 color)
 	model = Model::CreateSprite();
 
 	*this = *loadedSprites[name];
+	this->color = color;
 	createdSprites.push_back(this);
 	i = std::prev(createdSprites.end());
 	rectTransform = new RectTransform();
@@ -23,6 +24,7 @@ Sprite::Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec
 	*this = *loadedSprites[name];
 	this->texSize = texSize;
 	this->offSet += offset;
+	this->color = color;
 	createdSprites.push_back(this);
 	i = std::prev(createdSprites.end());
 	rectTransform = new RectTransform();
@@ -35,6 +37,7 @@ Sprite::Sprite(std::string name, int, glm::vec2 texSize01, glm::vec2 offset01, g
 	*this = *loadedSprites[name];
 	this->offSet += offset01 * (glm::vec2)this->texSize;
 	this->texSize = (glm::vec2)texSize * texSize01;
+	this->color = color;
 	createdSprites.push_back(this);
 	i = std::prev(createdSprites.end());
 	rectTransform = new RectTransform();
