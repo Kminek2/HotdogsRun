@@ -81,6 +81,7 @@ std::vector<Sprite*> Font::ConvertText(std::string fontName, std::string text, g
             pos += (font->spaceSize + spacing) * size * glm::vec3(1, 0, 0);
         else {
             Sprite* sp = new Sprite(fontName, 0, glm::vec2(font->chars[ch - startingFromChar].onTexSize, 1), glm::vec2(font->chars[ch - startingFromChar].offset, 0), col);
+            textSprites.push_back(sp);
             sp->rectTransform->MoveTo(pos);
             sp->rectTransform->ScaleTo(glm::vec2(font->chars[ch - startingFromChar].pixSize, font->fontHeight) * size);
             if (i + 1 < text.size())

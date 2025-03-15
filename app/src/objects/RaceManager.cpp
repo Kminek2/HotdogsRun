@@ -117,6 +117,9 @@ void RaceManager::AfterCountdown() {
 						std::bind(&RaceManager::OnCheckpoint, this, std::placeholders::_1));
 			std::cout << "Added callback to [checkpoint - " << car->car->GetModelName() << "] collision\n";
 		}
+
+	clock = new Text("BaseFont", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
+	clock->SetText("0.00");
 }
 
 /// <summary>
@@ -177,7 +180,10 @@ void RaceManager::StartAnimation() {
 					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 18.25f}},
 				       5.0f,
 				       {0.0f, 0.0f, 0.0f},
-				       false});
+				       false, [](){
+						AudioSource2d* music = new AudioSource2d("music/first-race-accordion", 1.0f);
+						music->PlayTrack(false);
+					   }});
 	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
 					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 18.25f}},
 				       {car_objects[0]->car->transform->position - glm::vec3({4.96434f, -4.10972f, -4.14516f}),
@@ -212,5 +218,18 @@ void RaceManager::StartAnimation() {
 					{car_objects[0]->car->transform->rotation.x - -180.0f, car_objects[0]->car->transform->rotation.y - 20.0f}},
 				       1.5f,
 				       {5.0f, 5.0f, 1.0f},
-				       true, [](){}, std::bind(&RaceManager::AfterCountdown, this)});
+				       true, [](){
+						
+					   }, std::bind(&RaceManager::AfterCountdown, this)});
+}
+
+void RaceManager::Update() {
+	if (race_started)
+		handleClock();
+}
+
+void RaceManager::handleClock() {
+	race_time_elapsed += Time::deltaTime;
+	int tmp_time = std::round(race_time_elapsed);
+	clock->SetText(std::to_string(tmp_time/60) + "." + std::to_string(tmp_time%60));
 }

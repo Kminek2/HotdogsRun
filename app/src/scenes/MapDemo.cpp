@@ -104,6 +104,7 @@ void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
 void MapDemo::Update() {
 	//qc->HandleRotate();
 	//qc->HandleMove();
+	race_manager->Update();
 
 	if (Input::getKeyPressed(GLFW_KEY_R))
 		Application::LoadScene("map_demo");

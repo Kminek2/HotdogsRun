@@ -26,6 +26,11 @@ public:
 	RaceManager* AddCar(GameObject* car);
 	RaceManager* SetAnimationManager(AnimationManager* am);
 
+	void Update();
+	
+	void handleClock();
+	Text* clock = nullptr;
+
 	void StartRace();
 	RaceManager* SetEndCondition(TerminationCondition condition, unsigned long long val);
 	CarObject* EndRace(bool executeCallbacks = true);
@@ -43,6 +48,7 @@ private:
 
 	float cars_relative_offset = .25f;
 	const static std::array<glm::vec2, 5> offsets;
+	float race_time_elapsed = 0.0f;
 
 	TerminationCondition termination_condition = undefined;
 	unsigned long long termination_condition_value;
