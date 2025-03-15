@@ -13,21 +13,36 @@ RenderPass::RenderPass(SwapChain* swapChain)
     this->swapChain = swapChain;
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = swapChain->swapChainImageFormat;
-    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    colorAttachment.samples = Device::GetSampleCount();
     colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     VkAttachmentReference colorAttachmentRef{};
     colorAttachmentRef.attachment = 0;
     colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
+    VkAttachmentDescription colorAttachmentResolve{};
+    colorAttachmentResolve.format = swapChain->swapChainImageFormat;
+    colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
+    colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentReference colorAttachmentResolveRef{};
+    colorAttachmentResolveRef.attachment = 3;
+    colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+
     VkAttachmentDescription depthAttachment{};
     depthAttachment.format = FindDepthFormat();
-    depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    depthAttachment.samples = Device::GetSampleCount();
     depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -41,7 +56,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
 
     VkAttachmentDescription uiDepthAttachment{};
     uiDepthAttachment.format = FindDepthFormat();
-    uiDepthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    uiDepthAttachment.samples = Device::GetSampleCount();
     uiDepthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     uiDepthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     uiDepthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -77,6 +92,8 @@ RenderPass::RenderPass(SwapChain* swapChain)
     subpasses[3].pColorAttachments = &colorAttachmentRef;
     subpasses[3].pDepthStencilAttachment = &depthAttachmentRef;
 
+    subpasses[subpasses.size() - 1].pResolveAttachments = &colorAttachmentResolveRef;
+
     std::array<VkSubpassDependency, 4> dependencies{};
     dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
     dependencies[0].dstSubpass = 0;
@@ -106,7 +123,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
     dependencies[3].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     dependencies[3].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
-    std::array<VkAttachmentDescription, 3> attachments = { colorAttachment, depthAttachment, uiDepthAttachment };
+    std::array<VkAttachmentDescription, 4> attachments = { colorAttachment, depthAttachment, uiDepthAttachment, colorAttachmentResolve };
     VkRenderPassCreateInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
@@ -209,9 +226,9 @@ VkFormat RenderPass::FindDepthFormat() {
 void RenderPass::CreateDepthResources() {
     VkFormat depthFormat = FindDepthFormat();
 
-    depthImage.CreateImage(swapChain->getExtend().width, swapChain->getExtend().height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage.image, depthImageMemory);
+    depthImage.CreateImage(swapChain->getExtend().width, swapChain->getExtend().height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage.image, depthImageMemory, Device::GetSampleCount());
     depthImage.CreateImageView(depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-    uiDepthImage.CreateImage(swapChain->getExtend().width, swapChain->getExtend().height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, uiDepthImage.image, uiDepthImageMemory);
+    uiDepthImage.CreateImage(swapChain->getExtend().width, swapChain->getExtend().height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, uiDepthImage.image, uiDepthImageMemory, Device::GetSampleCount());
     uiDepthImage.CreateImageView(depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
 }

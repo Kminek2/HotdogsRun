@@ -11,6 +11,7 @@ class Device
 private:
 	static VkPhysicalDevice physicalDevice;
 	static VkDevice device;
+	static VkSampleCountFlagBits msaaSamples;
 
 	static std::vector<const char*> deviceExtensions;
 
@@ -20,6 +21,7 @@ private:
 	static bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 
 	void CreateLogicalDevice();
+	static VkSampleCountFlagBits GetMaxUsableSampleCount(VkPhysicalDevice device);
 public:
 	Device(std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 	~Device();
@@ -30,5 +32,7 @@ public:
 	static VkPhysicalDevice& getPhysicalDevice() { return physicalDevice; }
 
 	static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+	static VkSampleCountFlagBits GetSampleCount();
 };
 

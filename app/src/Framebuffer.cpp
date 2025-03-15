@@ -8,11 +8,12 @@ Framebuffer::~Framebuffer() {
     vkDestroyFramebuffer(Device::getDevice(), framebuffer, nullptr);
 }
 
-void Framebuffer::CreateFramebuffer(VkImageView swapChainImageView, RenderPass* renderPass, SwapChain* swapChain) {
-    std::array<VkImageView, 3> attachments = {
-                swapChainImageView,
+void Framebuffer::CreateFramebuffer(VkImageView msaaImageView, VkImageView swapChainImageView, RenderPass* renderPass, SwapChain* swapChain) {
+    std::array<VkImageView, 4> attachments = {
+                msaaImageView,
                 renderPass->getDepthImage().imageView,
-                renderPass->getUIDepthImage().imageView
+                renderPass->getUIDepthImage().imageView,
+                swapChainImageView
     };
 
     VkFramebufferCreateInfo framebufferInfo{};

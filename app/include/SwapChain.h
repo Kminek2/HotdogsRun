@@ -15,6 +15,9 @@ private:
 	VkSwapchainKHR swapChain;
 	Images* swapChainImages;
 
+	Image* msaaImage;
+	VkDeviceMemory msaamageMemory;
+
 	VkFormat swapChainImageFormat;
 	VkExtent2D swapChainExtent;
 
@@ -33,6 +36,9 @@ private:
 	void CleanUp();
 
 	void CreateFrameBuffers();
+
+	void CreateColorResources();
+	void DestroyColorResources();
 public:
 	uint16_t width, height;
 	friend RenderPass;

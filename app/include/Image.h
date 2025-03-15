@@ -15,11 +15,13 @@ struct Image
 
     void CreateImageView(VkFormat format, VkImageAspectFlags aspectFlags);
 
-    static void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+    static void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, VkSampleCountFlagBits sampleCount = VK_SAMPLE_COUNT_1_BIT);
 
     static void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
 
     static void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset);
+
+//    ~Image();
 };
 
 struct Images
@@ -34,6 +36,8 @@ struct Images
     static VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 
     static void CreateImages(std::vector<std::pair<int, int>> dimentions, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, std::vector<VkImage>& images, VkDeviceMemory& imageMemory, std::vector<uint32_t>& offsets);
+
+//    ~Images();
 };
 
 struct Texture : Image {

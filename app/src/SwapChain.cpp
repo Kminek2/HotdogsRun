@@ -4,6 +4,7 @@
 #include "Device.h"
 #include <algorithm>
 #include <iostream>
+#include "Device.h"
 
 VkSurfaceKHR SwapChain::surface;
 
@@ -21,6 +22,10 @@ SwapChain::~SwapChain() {
 
     CleanUp();
 
+    vkDestroyImageView(Device::getDevice(), msaaImage->imageView, nullptr);
+    vkDestroyImage(Device::getDevice(), msaaImage->image, nullptr);
+    delete msaaImage;
+    vkFreeMemory(Device::getDevice(), msaamageMemory, nullptr);
     delete swapChainImages;
 
     vkDestroySurfaceKHR(Engine::instance, surface, nullptr);
@@ -53,6 +58,7 @@ void SwapChain::ReCreate() {
 
     CreateSwapChain();
     CreateImageViews();
+    CreateColorResources();
     renderPass->RecreateDepthResource();
     CreateFrameBuffers();
 }
@@ -70,6 +76,7 @@ void SwapChain::CreateWholeSwapChain() {
     std::cout << "Created swapChain\n";
     CreateImageViews();
     std::cout << "Created swapChain Image Views\n";
+    CreateColorResources();
     renderPass = new RenderPass(this);
     std::cout << "Created render pass\n";
     CreateFrameBuffers();
@@ -82,8 +89,17 @@ void SwapChain::CreateFrameBuffers() {
     for (int i = 0; i < swapChainImages->imageViews.size(); i++)
     {
         framebuffers[i] = new Framebuffer();
-        framebuffers[i]->CreateFramebuffer(swapChainImages->imageViews[i], renderPass, this);
+        framebuffers[i]->CreateFramebuffer(msaaImage->imageView ,swapChainImages->imageViews[i], renderPass, this);
     }
+}
+
+void SwapChain::CreateColorResources()
+{
+    VkFormat colorFormat = swapChainImageFormat;
+    msaaImage = new Image();
+
+    Image::CreateImage(swapChainExtent.width, swapChainExtent.height, colorFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, msaaImage->image, msaamageMemory, Device::GetSampleCount());
+    msaaImage->CreateImageView(colorFormat, VK_IMAGE_ASPECT_COLOR_BIT);
 }
 
 void SwapChain::CreateSwapChain() {

@@ -25,7 +25,6 @@ private:
 	static VkFormat FindDepthFormat();
 
 	void CreateDepthResources();
-
 	void DestroyDepthResource();
 public:
 	RenderPass(SwapChain* swapChain);

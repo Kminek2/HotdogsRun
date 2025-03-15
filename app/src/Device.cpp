@@ -9,6 +9,7 @@
 VkDevice Device::device;
 VkPhysicalDevice Device::physicalDevice;
 std::vector<const char*> Device::deviceExtensions;
+VkSampleCountFlagBits Device::msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
 
 Device::Device(std::vector<const char*> deviceExtensions)
@@ -47,6 +48,8 @@ void Device::PickPhysicalDevice() {
     if (physicalDevice == VK_NULL_HANDLE) {
         throw std::runtime_error("failed to find a suitable GPU!");
     }
+
+    msaaSamples = GetMaxUsableSampleCount(physicalDevice);
 }
 
 uint32_t Device::GetScore(VkPhysicalDevice device) {
@@ -58,6 +61,8 @@ uint32_t Device::GetScore(VkPhysicalDevice device) {
     if (deviceProperites.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
         score += 1000;
     }
+
+    score += GetMaxUsableSampleCount(device);
 
     return score;
 }
@@ -114,6 +119,7 @@ void Device::CreateLogicalDevice() {
 
     VkPhysicalDeviceFeatures deviceFeatures{};
     deviceFeatures.samplerAnisotropy = VK_TRUE;
+    deviceFeatures.sampleRateShading = VK_TRUE;
 
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -171,4 +177,25 @@ uint32_t Device::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags prope
     }
 
     throw std::runtime_error("failed to find suitable memory type!");
+}
+
+VkSampleCountFlagBits Device::GetMaxUsableSampleCount(VkPhysicalDevice device) {
+    VkPhysicalDeviceProperties physicalDeviceProperties;
+    vkGetPhysicalDeviceProperties(device, &physicalDeviceProperties);
+
+    VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+    if (counts & VK_SAMPLE_COUNT_64_BIT) { return VK_SAMPLE_COUNT_64_BIT; }
+    if (counts & VK_SAMPLE_COUNT_32_BIT) { return VK_SAMPLE_COUNT_32_BIT; }
+    if (counts & VK_SAMPLE_COUNT_16_BIT) { return VK_SAMPLE_COUNT_16_BIT; }
+    if (counts & VK_SAMPLE_COUNT_8_BIT) { return VK_SAMPLE_COUNT_8_BIT; }
+    if (counts & VK_SAMPLE_COUNT_4_BIT) { return VK_SAMPLE_COUNT_4_BIT; }
+    if (counts & VK_SAMPLE_COUNT_2_BIT) { return VK_SAMPLE_COUNT_2_BIT; }
+
+    return VK_SAMPLE_COUNT_1_BIT;
+}
+
+
+VkSampleCountFlagBits Device::GetSampleCount()
+{
+    return msaaSamples;
 }
