@@ -4,7 +4,7 @@
 
 const CarMovement::actions CarMovement::clearedActions = {false, false, false, false, false};
 const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
-	CarMovement::road_type_data(0.7f, 2.0f, 2.0f, 0.7f, 0.2f, 0.4f), // NONE
+	CarMovement::road_type_data(0.7f, 2.0f, 2.0f, 0.7f, 0.2f, 0.7f), // NONE
 	CarMovement::road_type_data(1.0f, 1.5f, 1.6f, 0.9f, 1.0f, 0.9f), // ASPHALT
 	CarMovement::road_type_data(0.8f, 2.0f, 2.0f, 0.7f, 0.7f, 0.8f), //	GRAVEL
 	CarMovement::road_type_data(0.6f, 1.0f, 0.5f, 0.6f, 1.0f, 0.2f), // ICE
@@ -44,12 +44,16 @@ void CarMovement::Update() {
 	gameObject->transform->Move((actSpeed*gripMult*Time::deltaTime)*glm::length(forces));
 	bool coll = false;
 	road_type = 0;
+
+	GameObject* collidedWith = nullptr;
 	for (auto const& obj : GameObject::createdGameObject) {
 		if (obj == gameObject || !Collisions::checkCollision(*gameObject, *obj))
 			continue;
 
 		if (obj->surface_type < 0) {
 			coll = (obj->surface_type == ALWAYS_COLLIDE);
+			if (coll)
+				collidedWith = obj;
 		} else {
 			road_type = std::max(road_type, obj->surface_type);
 		}
@@ -58,7 +62,8 @@ void CarMovement::Update() {
 		gameObject->transform->MoveTo(old_pos);
 		gameObject->transform->RotateTo(old_rot);
 		actSpeed *= -1;
-		//forces.x = -forces.x;
+		forces.x = -forces.x;
+		gripMult += collidedWith->transform->position - gameObject->transform->position;
 		axleAngle = 0.0f;
 		if (actSpeed > 0) {
 			actSpeed = std::min(actSpeed/2.5f, 20.0f);
