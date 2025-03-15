@@ -20,7 +20,7 @@ private:
 	// -- road --
 	const uint16_t map_len;
 	const Ellipse ellipse;
-	const float MAP_TILE_SCALE = 2.0;
+	const float MAP_TILE_SCALE = 2.4;
 
 	// -- checkpoints --
 	const unsigned cp_offset; // cp stands for checkpoint 💀

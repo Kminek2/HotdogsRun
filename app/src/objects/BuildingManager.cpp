@@ -86,7 +86,7 @@ std::vector<std::vector<bool>> BuildingManager::generateBuildingsVector(unsigned
 		points[y].assign(citySize, false);
 
 		for (int x = 0; x < citySize; x++) {
-			GameObject* building = (new GameObject("case_15", posNow))->AddDefaultOBB(glm::vec3(1.0f), true);
+			GameObject* building = (new GameObject("case_15", posNow))->AddDefaultOBB(glm::vec3(4.0f), true);
 			GameObject* buildingCloser = (new GameObject("case_15", posNow))->AddDefaultOBB(glm::vec3(BUILDING_SIZE), true);
 
 			bool canPlace = true;
