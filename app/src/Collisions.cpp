@@ -95,11 +95,6 @@ OBB Collisions::getAbsOBB(const OBB& obb, const GameObject& obj) {
 	absOBB.sizes = obb.sizes;
 	absOBB.sizes *= abs(obj.transform->scale);
 
-	if (obj.GetModelName() == "zakretPolSkosAsfalt" && not_used) {
-		not_used = false;
-		DebugPoints::AddLines({{obj.transform->position + glm::vec3(0.0f,0.0f,3.0f), glm::vec3(0), glm::vec3(0)}, {obj.transform->position+absOBB.axes[0]+ glm::vec3(0.0f,0.0f,3.0f), glm::vec3(0), glm::vec3(0)}}, {0,1});
-	}
-
 	return absOBB;
 }
 
