@@ -6,8 +6,8 @@
 #include <glm/vec3.hpp>
 #include <set>
 
-const std::array<glm::vec2, 4> RaceManager::offsets =
-    std::array<glm::vec2, 4>({glm::vec2(1, 1), glm::vec2(-1, 1), glm::vec2(-1, -1), glm::vec2(1, -1)});
+const std::array<glm::vec2, 5> RaceManager::offsets =
+    std::array<glm::vec2, 5>({glm::vec2(2.0, 1.5), glm::vec2(2.0, 0.75), glm::vec2(2.0, 0), glm::vec2(2.0, -0.75), glm::vec2(2.0, -1.5)});
 
 RaceManager *RaceManager::SetMapManager(MapManager *map_manager) {
 	this->map_manager = map_manager;
@@ -39,7 +39,7 @@ RaceManager *RaceManager::AddCar(GameObject *car) {
 		car->AddDefaultOBB();
 
 	const int n = map_manager->GetLen();
-	int point_id = normalize(-cars_placed / 4, n);
+	int point_id = normalize(-cars_placed / 5, n);
 
 	glm::vec3 tile_points[2] = {map_manager->GetPoint(point_id)->transform->position,
 				    map_manager->GetPoint(normalize(point_id + 1, n))->transform->position};
@@ -52,7 +52,7 @@ RaceManager *RaceManager::AddCar(GameObject *car) {
 	car->transform->MoveTo(glm::vec3(tile_points_transformed[0].x, tile_points_transformed[0].y, 1));
 	car->transform->RotateTo(glm::vec3(0, 0, glm::degrees(orient) - 180.0f));
 
-	glm::vec2 offset = offsets[cars_placed % 4] * map_manager->GetMapScale() * map_manager->GetMapTileSize() * cars_relative_offset;
+	glm::vec2 offset = offsets[cars_placed % 5] * map_manager->GetMapScale() * map_manager->GetMapTileSize() * cars_relative_offset;
 	car->transform->Translate(glm::vec3(offset.x, offset.y, 0));
 
 	++cars_placed;

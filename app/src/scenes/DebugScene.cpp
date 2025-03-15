@@ -14,7 +14,7 @@
 #include <iostream>
 
 const std::vector<std::string> models = {
-	"racing_car", "racing_car", "arrow", "racing_car", "racing_car"
+	"racing_car", "racing_car", "arrow", "racing_car", "zakretPolSkosAsfalt"
 };
 
 std::shared_ptr<Scene> DebugScene::Init() {
@@ -62,7 +62,10 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	objs[2]->AddScript(new LockPosition(objs[3]->transform));
 	objs[2]->AddScript(new LockRotation(objs[3]->transform));
 
+	objs[4]->transform->ScaleTo(glm::vec3(-2.0f));
+	objs[4]->transform->RotateTo(glm::vec3(0.0f, 0.0f, 90.0f));
 	objs[4]->AddDefaultOBB()->AddScript(new ShowOBB());
+	objs[4]->surface_type = 1;
 	
 	AnimationManager* am = new AnimationManager();
 	GameObject* am_obj = new GameObject();

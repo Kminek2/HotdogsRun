@@ -42,7 +42,7 @@ private:
 	bool race_started = false;
 
 	float cars_relative_offset = .25f;
-	const static std::array<glm::vec2, 4> offsets;
+	const static std::array<glm::vec2, 5> offsets;
 
 	TerminationCondition termination_condition = undefined;
 	unsigned long long termination_condition_value;

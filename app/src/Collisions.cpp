@@ -47,8 +47,8 @@ bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, 
 	bool coll = false;
 
 	for (int i = 0; i < obj1.obbs.size(); ++i) {
+		OBB absOBB1 = getAbsOBB(obj1.obbs[i], obj1);
 		for (int j = 0; j < obj2.obbs.size(); ++j) {
-			OBB absOBB1 = getAbsOBB(obj1.obbs[i], obj1);
 			OBB absOBB2 = getAbsOBB(obj2.obbs[j], obj2);
 			if (checkOBBCollision(absOBB1, absOBB2))
 				coll = true;
@@ -83,30 +83,37 @@ bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, 
 
 OBB Collisions::getAbsOBB(const OBB& obb, const GameObject& obj) {
 	OBB absOBB;
-	glm::mat3 rotationMatrix = getRotationMatrix(obj.transform->rotation);
+	glm::mat4 rotationMatrix = getRotationMatrix(obj.transform->rotation, obj.transform->scale/abs(obj.transform->scale));
 	glm::vec3 absPosition = glm::vec3(obj.transform->position.x, obj.transform->position.y, obj.transform->position.z);
 
 	absOBB.center = obj.transform->getModelMatrix() * glm::vec4(obb.center, 1);
 	
 	for (int i = 0; i < 3; ++i) {
-		absOBB.axes[i] = rotationMatrix * obb.axes[i];
+		absOBB.axes[i] = rotationMatrix * glm::vec4(obb.axes[i], 1.0f);
 	}
 
 	absOBB.sizes = obb.sizes;
 	absOBB.sizes *= abs(obj.transform->scale);
+
+	if (obj.GetModelName() == "zakretPolSkosAsfalt" && not_used) {
+		not_used = false;
+		DebugPoints::AddLines({{obj.transform->position + glm::vec3(0.0f,0.0f,3.0f), glm::vec3(0), glm::vec3(0)}, {obj.transform->position+absOBB.axes[0]+ glm::vec3(0.0f,0.0f,3.0f), glm::vec3(0), glm::vec3(0)}}, {0,1});
+	}
+
 	return absOBB;
 }
 
-glm::mat3 Collisions::getRotationMatrix(glm::vec3 rot) {
+glm::mat4 Collisions::getRotationMatrix(glm::vec3 rot, glm::vec3 scale) {
 	glm::vec3 v = glm::radians(rot);
-	float p = -v.x;
-	float y = -v.y;
-	float r = -v.z;
+	glm::mat4 model_transform = glm::mat4(1);
 
-	glm::mat3 Rx(1.0f, 0.0f, 0.0f, 0.0f, cos(p), -sin(p), 0.0f, sin(p), cos(p));
-	glm::mat3 Ry(cos(y), 0.0f, sin(y), 0.0f, 1.0f, 0.0f, -sin(y), 0.0f, cos(y));
-	glm::mat3 Rz(cos(r), -sin(r), 0.0f, sin(r), cos(r), 0.0f, 0.0f, 0.0f, 1.0f);
-	return Rx*Ry*Rz;
+	model_transform = glm::rotate(model_transform, glm::radians(rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	model_transform = glm::rotate(model_transform, glm::radians(rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	model_transform = glm::rotate(model_transform, glm::radians(rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	
+	model_transform = glm::scale(model_transform, scale);
+
+	return model_transform;
 }
 
 std::map<std::pair<std::string, std::string>, std::vector<std::function<void(Collisions::CollisionData*)>>> Collisions::callbacks;

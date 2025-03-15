@@ -85,7 +85,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
 
 	race_manager->AddCar(car);
-	for(int i=0; i<3; i++)
+	for(int i=0; i<4; i++)
 		race_manager->AddCar(new GameObject("f1car"));
 
 	GameObject* amobj = new GameObject;

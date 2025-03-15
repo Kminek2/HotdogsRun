@@ -60,14 +60,16 @@ MapManager* MapManager::Init()
 		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
 	}
 
-	std::vector<glm::vec2> chekcpoint_positions = getCheckPoints(points, cp_offset);
-	check_points.reserve(chekcpoint_positions.size());
-	for (int i=0; i< chekcpoint_positions.size(); i++)
+	std::vector<glm::vec2> checkpoint_positions = getCheckPoints(points, cp_offset);
+	check_points.reserve(checkpoint_positions.size());
+	for (int i=0; i< checkpoint_positions.size(); i++) {
 		check_points.push_back(new GameObject(
 			"checkpoint", 
-			{ chekcpoint_positions[i].x, chekcpoint_positions[i].y, 0}, 
+			{ checkpoint_positions[i].x, checkpoint_positions[i].y, 0}, 
 			GetPoint(i * cp_offset)->transform->rotation, 
 			glm::vec3(MAP_TILE_SCALE)));
+		check_points[check_points.size()-1]->transform->Translate(glm::vec3(0.0f, -(MAP_TILE_SIZE*MAP_TILE_SCALE*0.5f), 0.0f));
+	}
 
 	unsigned int decors_count = n * decors_per_tile;
 

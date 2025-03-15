@@ -21,7 +21,7 @@ public:
 private:
 	static bool checkOBBCollision(const OBB& a, const OBB& b);
 	static OBB getAbsOBB(const OBB& obb, const GameObject& obj);
-	static glm::mat3 getRotationMatrix(glm::vec3 v);
+	static glm::mat4 getRotationMatrix(glm::vec3 v, glm::vec3 scale);
 
 	static std::map<std::pair<std::string, std::string>, std::vector<std::function<void(CollisionData*)>>> callbacks;
 };
