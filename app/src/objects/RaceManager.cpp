@@ -95,7 +95,9 @@ void RaceManager::StartRace() {
 		throw std::invalid_argument("define a condition");
 
 	StartAnimation();
+}
 
+void RaceManager::AfterCountdown() {
 	race_started = true;
 	std::cout << "Race stared with the termination condition of " << (termination_condition == TIME ? "TIME" : "LAPS") << " ("
 		  << termination_condition_value << ")\n";
@@ -210,5 +212,5 @@ void RaceManager::StartAnimation() {
 					{car_objects[0]->car->transform->rotation.x - -180.0f, car_objects[0]->car->transform->rotation.y - 20.0f}},
 				       1.5f,
 				       {5.0f, 5.0f, 1.0f},
-				       true});
+				       true, [](){}, std::bind(&RaceManager::AfterCountdown, this)});
 }

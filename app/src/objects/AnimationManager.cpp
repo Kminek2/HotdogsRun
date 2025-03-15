@@ -10,7 +10,7 @@ void AnimationManager::Init() {}
 
 void AnimationManager::Update() {
     if (id < animation_queue.size() && (last_animation == nullptr || last_animation->hasEnded())) {
-        last_animation = new CinematicCamera(animation_queue[id].start, animation_queue[id].end, animation_queue[id].animation_time, animation_queue[id].cur_offset, false);
+        last_animation = new CinematicCamera(animation_queue[id].start, animation_queue[id].end, animation_queue[id].animation_time, animation_queue[id].cur_offset, false, animation_queue[id].beg_func, animation_queue[id].end_func);
         gameObject->AddScript(last_animation);
         ++id;
     }

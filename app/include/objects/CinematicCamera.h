@@ -13,7 +13,7 @@ class CinematicCamera :
             glm::vec2 rotation;
         } old_data;
         ViewType old_view;
-        CinematicCamera(obj_data begining, obj_data ending, float animation_time, glm::vec3 offset, bool ret_to_pos = true);
+        CinematicCamera(obj_data begining, obj_data ending, float animation_time, glm::vec3 offset, bool ret_to_pos = true, std::function<void()> beg_func = [](){}, std::function<void()> end_func = [](){});
         void Init() override;
         void Update() override;
         void LateUpdate() override;
@@ -27,6 +27,8 @@ class CinematicCamera :
         const glm::vec3 offset;
         const float animation_time;
         const bool ret_to_pos;
+        const std::function<void()> beg_func;
+        const std::function<void()> end_func;
         bool ended;
 };
 

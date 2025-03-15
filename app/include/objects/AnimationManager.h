@@ -12,6 +12,8 @@ class AnimationManager :
             float animation_time;
             glm::vec3 cur_offset;
             bool stop_skip = false;
+            std::function<void()> beg_func = [](){};
+            std::function<void()> end_func = [](){};
         };
         AnimationManager(std::vector<data> animation_queue = {});
         void Init() override;

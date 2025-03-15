@@ -52,4 +52,5 @@ private:
 	AnimationManager* animation_manager = nullptr;
 
 	void StartAnimation();
+	void AfterCountdown();
 };
