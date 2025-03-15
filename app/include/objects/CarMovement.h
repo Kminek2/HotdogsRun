@@ -22,6 +22,7 @@ private:
     const bool expertMode;
     float actSpeed;
     float axleAngle;
+    glm::vec3 gripMult;
     glm::vec3 forces;
     const glm::vec3 nitro_trail_offset;
     void handleGas();
@@ -30,6 +31,7 @@ private:
     void handleEngBreak();
     void handleForces();
     void handleNitroAcc();
+    void handleGrip();
     struct actions {
         bool forward;
         bool backwards;
@@ -38,12 +40,13 @@ private:
         bool hand_break;
     } actActions;
     struct road_type_data {
-        road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier, float max_speed_multiplier);
+        road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier, float max_speed_multiplier, float grip);
         float acc_multiplier;
         float eng_break_multiplier;
         float break_multiplier;
         float steering_multiplier;
         float max_speed_multiplier;
+        float grip;
     };
     float nitro_timer;
     float before_nitro_mem;

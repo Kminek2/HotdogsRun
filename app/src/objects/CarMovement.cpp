@@ -4,11 +4,11 @@
 
 const CarMovement::actions CarMovement::clearedActions = {false, false, false, false, false};
 const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
-	CarMovement::road_type_data(0.7f, 2.0f, 2.0f, 0.7f, 0.2f),
-	CarMovement::road_type_data(1.0f, 1.5f, 1.6f, 0.9f, 1.0f),
-	CarMovement::road_type_data(0.8f, 2.0f, 2.0f, 0.7f, 0.7f),
-	CarMovement::road_type_data(0.6f, 1.0f, 0.5f, 0.6f, 1.0f),
-	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.1f, 0.3f)
+	CarMovement::road_type_data(0.7f, 2.0f, 2.0f, 0.7f, 0.2f, 0.4f), // NONE
+	CarMovement::road_type_data(1.0f, 1.5f, 1.6f, 0.9f, 1.0f, 0.9f), // ASPHALT
+	CarMovement::road_type_data(0.8f, 2.0f, 2.0f, 0.7f, 0.7f, 0.8f), //	GRAVEL
+	CarMovement::road_type_data(0.6f, 1.0f, 0.5f, 0.6f, 1.0f, 0.2f), // ICE
+	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.1f, 0.3f, 0.4f) // OIL
 };
 const float CarMovement::nitro_duration = 1.0f;
 
@@ -21,6 +21,7 @@ CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, 
 	nitros_available = 3;
 	nitro_timer = 0.0f;
 	nitro_trail = nullptr;
+	gripMult = glm::vec3(1);
 }
 
 void CarMovement::Init() {
@@ -39,7 +40,8 @@ void CarMovement::Update() {
 	auto old_rot = gameObject->transform->rotation;
 	auto old_pos = gameObject->transform->position;
 	gameObject->transform->Rotate(glm::vec3(0.0f, 0.0f, (axleAngle * (actSpeed < 200.0f*multiplier ? std::min(200.0f*multiplier, actSpeed*4) : actSpeed) / (maxSpeed*multiplier)) * Time::deltaTime * 5.0f * surfaces_data[road_type].steering_multiplier));
-	gameObject->transform->Translate((actSpeed*Time::deltaTime)*forces);
+	handleGrip();
+	gameObject->transform->Move((actSpeed*gripMult*Time::deltaTime)*glm::length(forces));
 	bool coll = false;
 	road_type = 0;
 	for (auto const& obj : GameObject::createdGameObject) {
@@ -55,7 +57,8 @@ void CarMovement::Update() {
 	if (coll) {
 		gameObject->transform->MoveTo(old_pos);
 		gameObject->transform->RotateTo(old_rot);
-		forces.x = -forces.x;
+		actSpeed *= -1;
+		//forces.x = -forces.x;
 		axleAngle = 0.0f;
 		if (actSpeed > 0) {
 			actSpeed = std::min(actSpeed/2.5f, 20.0f);
@@ -193,12 +196,13 @@ void CarMovement::useHandBreak() {
 	actActions.hand_break = true;
 }
 
-CarMovement::road_type_data::road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier, float max_speed_multiplier) {
+CarMovement::road_type_data::road_type_data(float acc_multiplier, float eng_break_multiplier, float break_multiplier, float steering_multiplier, float max_speed_multiplier, float grip) {
 	this->acc_multiplier = acc_multiplier;
 	this->eng_break_multiplier = eng_break_multiplier;
 	this->break_multiplier = break_multiplier;
 	this->steering_multiplier = steering_multiplier;
 	this->max_speed_multiplier = max_speed_multiplier;
+	this->grip = grip;
 }
 
 void CarMovement::useNitro() {
@@ -223,4 +227,9 @@ void CarMovement::handleNitroAcc() {
 			nitro_trail = nullptr;
 		}
 	}
+}
+
+void CarMovement::handleGrip()
+{
+	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime + (1 - surfaces_data[road_type].grip) * gripMult);
 }
