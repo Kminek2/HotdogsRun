@@ -25,6 +25,7 @@ private:
     float axleAngle;
     glm::vec3 gripMult;
     glm::vec3 forces;
+    float downSpeed = 0;
     const glm::vec3 nitro_trail_offset;
     void handleGas();
     void handleBreaks();
