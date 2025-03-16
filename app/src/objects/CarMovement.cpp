@@ -12,8 +12,8 @@ const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
 };
 const float CarMovement::nitro_duration = 1.0f;
 
-CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode, float multiplier, glm::vec3 nitro_trail_offset) :
-	carWeight(carWeight), breaksStrength(breaksStrength), maxSpeed(maxSpeed), minSpeed(minSpeed), accelFront(accelFront), accelBack(accelBack), expertMode(expertMode), multiplier(multiplier), nitro_trail_offset(nitro_trail_offset) {
+CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode, float multiplier, glm::vec3 nitro_trail_offset) :
+	carWeight(carWeight), breaksStrength(breaksStrength), maxSpeed(maxSpeed), minSpeed(minSpeed), accelFront(accelFront), accelBack(accelBack), expertMode(expertMode), multiplier(multiplier), nitro_trail_offset(nitro_trail_offset), gripToSpeed(gripToSpeedMult) {
 	forces = { 1, 0, 0 };
 	actSpeed = 0.0f;
 	axleAngle = 0.0f;
@@ -236,5 +236,5 @@ void CarMovement::handleNitroAcc() {
 
 void CarMovement::handleGrip()
 {
-	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime + (1 - surfaces_data[road_type].grip) * gripMult);
+	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime + (1 - surfaces_data[road_type].grip) * gripMult * std::abs(actSpeed * (gripToSpeed * maxSpeed)));
 }

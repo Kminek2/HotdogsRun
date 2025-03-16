@@ -39,7 +39,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	objs[1]->AddScript(new ShowOBB);
 	
 	{
-		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, false);
+		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false);
 		objs[0]->AddScript(cmv);
 		objs[0]->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.8f, 0.8f));
 		objs[0]->AddScript(new CarInputs(*cmv));

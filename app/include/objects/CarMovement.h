@@ -19,6 +19,7 @@ private:
     const float accelBack;
     const float carWeight; // (SCALE UNIT) NORMAL BREAKS - 1
     const float breaksStrength; // IN TONES
+    const float gripToSpeed;
     const bool expertMode;
     float actSpeed;
     float axleAngle;
@@ -57,7 +58,7 @@ private:
     static const float nitro_duration;
     int road_type; // 0 - no surface (grass), 1 - classical road (asphalt), 2 - dirt road, 3 - icy road, 4 - oil puddle
 public:
-    CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, bool expertMode = false, float multiplier = 0.1f, glm::vec3 nitro_trail_offset = glm::vec3(1.7f, 0.0f, 0.0f));
+    CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode = false, float multiplier = 0.1f, glm::vec3 nitro_trail_offset = glm::vec3(1.7f, 0.0f, 0.0f));
     void Init() override;
     void Update() override;
     void OnDestroy() override;
