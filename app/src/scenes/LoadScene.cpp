@@ -35,7 +35,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 	obj = new GameObject("f1car");
 	obj2 = new GameObject({ "prostaAsfalt" }, { 0, 0, 0 });
-	obj2->AddColorChange({ 0.571, 0.597, 0.638 }, { 0.5, 0.5, 0 });
+	obj2->AddColorChange({ 0.93f, 0.93, 0.93 }, { 0.5, 0.5, 0 });
 	new GameObject("arrow", { 0, 0, 1 });
 
 	uiObj = new UiObject("f1car", {0, 0.5, 0}, glm::vec3(0, 0, 0), glm::vec3(0.05));

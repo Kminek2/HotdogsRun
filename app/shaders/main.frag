@@ -80,7 +80,7 @@ void main() {
     vec3 texColor = texture(samplers, vec2(fragTexCoord.x, fragTexCoord.y / MAX_TEXTURES)).xyz;
 
     for(int i = 0; i < colorChange.amount; i++)
-        if(length(texColor - colorChanges[colorChange.index + i].from) < 0.5)
+        if(length(texColor - colorChanges[colorChange.index + i].from) <= 0.2)
             texColor = colorChanges[colorChange.index + i].to;
 
     DirLight dirLight;
