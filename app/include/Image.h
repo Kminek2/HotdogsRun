@@ -45,7 +45,7 @@ struct Images
 
 struct Texture : Image {
     VkDeviceMemory textureMemory;
-    VkSampler sampler;
+    VkSampler sampler = VK_NULL_HANDLE;
 
     std::vector<std::pair<stbi_uc*, VkDeviceSize>> textures;
     std::pair<uint32_t, uint32_t> dimention = {0, 0};

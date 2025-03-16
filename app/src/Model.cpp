@@ -237,8 +237,10 @@ void Model::SendBuffers() {
 	vertexBuffer->SendBufferToMemory();
 	indexBuffer->SendBufferToMemory();
 
-	textures->CreateSampler();
-	textures->SendTexturesToMemory();
+	if (textures->sampler == VK_NULL_HANDLE) {
+		textures->CreateSampler();
+		textures->SendTexturesToMemory();
+	}
 }
 
 void Model::Unload() {
@@ -246,6 +248,11 @@ void Model::Unload() {
 	delete indexBuffer;
 	delete textureOffBuffer;
 	delete textures;
+}
+
+bool Model::LoadedAModel(std::string name)
+{
+	return loadedModels.contains(name);
 }
 
 Model::Model(std::vector<Vertex> verticies, std::vector<uint32_t> indices) {

@@ -7,21 +7,17 @@ class LoadScene :
     public SceeneScript
 {
 private:
-    GameObject* obj;
-    GameObject* obj2;
-    UiObject* uiObj;
-
-    QuickCamera* qc;
+    Text* amountOfLoaded;
+    unsigned count;
+    GameObject* loadingCircle;
 public:
-
     static std::vector<std::pair<std::string, SceeneScript*>> scenes;
+    static std::vector<std::string> preLoadModels;
+    static std::vector<std::string> preLoadSprites;
 
     std::shared_ptr<Scene> Init() override;
 
     void Update() override;
 
     void UnLoad() override;
-    static void A() {
-        std::cout << "AAAAAAAAAAAA";
-    }
 };

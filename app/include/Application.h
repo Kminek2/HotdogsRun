@@ -8,6 +8,7 @@
 #include <thread>
 #include <chrono>
 #include <functional>
+#include <filesystem>
 
 #define FRAMES_IN_FLIGHT 2
 #define ASPECT_WIDTH 16
@@ -22,6 +23,10 @@ private:
 	Camera* camera;
 	SoundEngine* soundEngine;
 	static GLFWwindow* window;
+
+	std::vector<std::filesystem::directory_entry> entries;
+	unsigned loadedModel;
+	bool loadedAll;
 public:
 	Application(uint16_t width, uint16_t height, GLFWwindow* window);
 	~Application();

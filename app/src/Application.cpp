@@ -33,14 +33,22 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	this->height = height;
 	this->window = window;
 
-	for(const auto& entry : fs::directory_iterator("models_obj_test")) {
-		// std::cout << entry.path().filename().stem().string() << " : " << entry.path().string() << ", " << "textures/" + entry.path().filename().stem().string() + ".png" << '\n';
-		Model::LoadModelFromFile(entry.path().filename().stem().string(), entry.path().string(), "textures/" + entry.path().filename().stem().string() + ".png", true);
+	for (int i = 0; i < LoadScene::preLoadModels.size(); i++)
+	{
+		Model::LoadModelFromFile(LoadScene::preLoadModels[i],"models_obj_test/" + LoadScene::preLoadModels[i] + ".obj", "textures/" + LoadScene::preLoadModels[i] + ".png", true);
 	}
+
+	for (const auto& entry : fs::directory_iterator("models_obj_test")) {
+		entries.push_back(entry);
+	}
+
 
 	Model::LoadEmptyModel();
 
 	Model::SendBuffers();
+
+	loadedModel = 0;
+	loadedAll = false;
 
 	for (const auto& entry : fs::directory_iterator("images")) {
 		// std::cout << entry.path().filename().stem().string() << " : " << entry.path().string() << ", " << "textures/" + entry.path().filename().stem().string() + ".png" << '\n';
@@ -142,6 +150,25 @@ void Application::UpdateBuffer(uint16_t frame, Uniform *uniform, Uniform* cubeMa
 std::list <float> frameTimes;
 
 void Application::Update() {
+	if (loadedModel < entries.size()) {
+		const auto& entry = entries[loadedModel];
+		std::string modelName = entry.path().filename().stem().string();
+
+		if (!Model::LoadedAModel(modelName)) {
+			Model::LoadModelFromFile(
+				modelName,
+				entry.path().string(),
+				"textures/" + modelName + ".png",
+				true
+			);
+		}
+		loadedModel++;
+	}
+	if (loadedModel == entries.size() && !loadedAll) {
+		Model::SendBuffers();
+		vkDeviceWaitIdle(Device::getDevice());
+		loadedAll = true;
+	}
 	Time::UpdateTime();
 	frameTimes.push_back(1 / Time::deltaTime);
 

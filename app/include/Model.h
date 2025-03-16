@@ -41,6 +41,10 @@ struct Model
 
 	static void Unload();
 
+	static unsigned getLoadedModelCount() { return loadedModels.size(); };
+
+	static bool LoadedAModel(std::string name);
+
 	static VkVertexInputBindingDescription GetBindingDescription(uint16_t binding = 2)
 	{
 		VkVertexInputBindingDescription bindingDescription{};
