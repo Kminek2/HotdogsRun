@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "LightObject.h"
 #include "Sprite.h"
+#include "GameObject.h"
 
 RenderPass::RenderPass(SwapChain* swapChain)
 {
@@ -157,16 +158,19 @@ RenderPass::RenderPass(SwapChain* swapChain)
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, Model::textures, nullptr, 0),
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, LightObject::getPointBuffer()->GetBuffer(), LightObject::getPointBuffer()->getSize()),
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, LightObject::getSpotBuffer()->GetBuffer(), LightObject::getSpotBuffer()->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, GameObject::allColorChanges->GetBuffer(), GameObject::allColorChanges->getSize())
     };
 
-    std::vector<VkVertexInputBindingDescription> mainBindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2) };
+    std::vector<VkVertexInputBindingDescription> mainBindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2), ThisColorChanges::GetBindingDescription(3)};
     std::vector<VkVertexInputAttributeDescription> mainAttributeDescriptions = Vertex::GetAttributeDescriptions(0);
     std::vector<VkVertexInputAttributeDescription> transformDescriptions = Transform::GetAttributeDescriptions(1, 3);
     VkVertexInputAttributeDescription textureDescriptions = Model::GetAttributeDescriptions(2, 7);
+    std::vector<VkVertexInputAttributeDescription> colorAttributes = ThisColorChanges::GetAttributeDescriptions(3, 8);
     mainAttributeDescriptions.insert(mainAttributeDescriptions.end(), transformDescriptions.begin(), transformDescriptions.end());
 
     mainAttributeDescriptions.push_back(textureDescriptions);
 
+    mainAttributeDescriptions.insert(mainAttributeDescriptions.end(), colorAttributes.begin(), colorAttributes.end());
     //CUBEMAP
     std::vector<GraphicsPipeline::BindingStruct> cubeMapBindings = {
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, nullptr, 0),

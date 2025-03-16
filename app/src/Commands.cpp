@@ -18,6 +18,7 @@
 #include "Uniform.h"
 
 #include "Sprite.h"
+#include "GameObject.h";
 VkCommandPool Commands::commandPool;
 
 Commands::Commands() {
@@ -97,9 +98,9 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         scissor.extent = swapChain.getExtend();
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-        VkBuffer vertexBuffers[] = { Model::vertexBuffer->getBuffer(),  Transform::transformBuffer->getBuffer(), Model::textureOffBuffer->getBuffer()};
-        VkDeviceSize offsets[] = { 0, 0, 0 };
-        vkCmdBindVertexBuffers(commandBuffer, 0, 3, vertexBuffers, offsets);
+        VkBuffer vertexBuffers[] = { Model::vertexBuffer->getBuffer(),  Transform::transformBuffer->getBuffer(), Model::textureOffBuffer->getBuffer(), GameObject::colorChangesPrObject->getBuffer()};
+        VkDeviceSize offsets[] = { 0, 0, 0, 0 };
+        vkCmdBindVertexBuffers(commandBuffer, 0, 4, vertexBuffers, offsets);
 
         vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 

@@ -3,6 +3,9 @@
 
 bool GameObject::deletingAll = false;
 std::list<GameObject*> GameObject::createdGameObject;
+Buffer<ThisColorChanges>* GameObject::colorChangesPrObject = nullptr;
+UniformBuffer<ColorChangeStruct>* GameObject::allColorChanges = nullptr;
+std::list<ColorChangeStruct> GameObject::changeColor;
 
 GameObject::GameObject(int, std::string model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int surface_type) 
 : surface_type(surface_type)
@@ -15,9 +18,40 @@ GameObject::GameObject(int, std::string model, glm::vec3 position, glm::vec3 rot
 	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
 
 	i = std::next(createdGameObject.begin(), newModel.second);
+	colorChangesIndex = changeColor.end();
+	amountOfColorChanges = 0;
 }
 
-GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int surface_type) 
+uint32_t GameObject::SendColorData(uint32_t frame)
+{
+	std::list<GameObject*>::iterator it = createdGameObject.begin();
+	std::vector<ThisColorChanges> colorChanges;
+	for (int i = 0; i < createdGameObject.size(); i++) {
+		ThisColorChanges colorChange;
+		colorChange.amount = (*it)->amountOfColorChanges;
+		colorChange.index = std::distance(changeColor.begin(), (*it)->colorChangesIndex);
+		colorChanges.push_back(colorChange);
+
+		it = std::next(it);
+	}
+
+	colorChangesPrObject->ClearBuffer();
+	colorChangesPrObject->AddToBuffer(colorChanges);
+	colorChangesPrObject->SendBufferToMemory();
+
+	std::list<ColorChangeStruct>::iterator Cit = changeColor.begin();
+	std::vector<ColorChangeStruct> colors;
+	while (Cit != changeColor.end())
+	{
+		colors.push_back(*Cit);
+		Cit = std::next(Cit);
+	}
+
+	allColorChanges->UpdateBuffer(frame, *colors.data(), colors.size() * sizeof(ColorChangeStruct));
+	return colors.size() * sizeof(ColorChangeStruct);
+}
+
+GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int surface_type)
 : surface_type(surface_type)
 {
 	std::pair<Model*, uint32_t> newModel = Model::Create(model);
@@ -28,6 +62,8 @@ GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation
 	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
 
 	i = std::next(createdGameObject.begin(), newModel.second);
+	colorChangesIndex = changeColor.end();
+	amountOfColorChanges = 0;
 }
 
 GameObject::~GameObject()
@@ -41,6 +77,11 @@ GameObject::~GameObject()
 		createdGameObject.erase(i);
 	delete transform;
 	delete model;
+
+	auto it = colorChangesIndex;
+	for (int i = 0; i < amountOfColorChanges; i++) {
+		it = changeColor.erase(it);
+	}
 }
 
 GameObject* GameObject::AddScript(ObjectScript* script)
@@ -122,10 +163,16 @@ void GameObject::LateUpdateAllObjectScripts()
 
 void GameObject::TransformTransformsToMemory()
 {
+	if (colorChangesPrObject == nullptr) {
+		GameObject::colorChangesPrObject = new Buffer<ThisColorChanges>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+		GameObject::allColorChanges = new UniformBuffer<ColorChangeStruct>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
+		return;
+	}
 	std::vector<glm::mat4> transforms;
 	std::list<GameObject*>::iterator it = createdGameObject.begin();
 	for (int i = 0; i < createdGameObject.size(); i++) {
 		transforms.push_back((*it)->transform->modelTransform);
+
 		it = std::next(it);
 	}
 
@@ -170,11 +217,17 @@ int GameObject::GetOBBsCount()
 
 void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)
 {
-	ColorChangeBuffer colorChange;
-	colorChange.fromCol = from;
-	colorChange.toCol = to;
+	ColorChangeStruct colorChange;
+	colorChange.from = from;
+	colorChange.to = to;
 
-	changeColor.push_back(colorChange);
+	amountOfColorChanges++;
+	if(amountOfColorChanges > 1)
+		changeColor.insert(colorChangesIndex, colorChange);
+	else {
+		changeColor.push_back(colorChange);
+		colorChangesIndex = std::prev(changeColor.end());
+	}
 }
 
 GameObject* GameObject::ChangeModel(std::string model)

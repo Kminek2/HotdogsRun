@@ -23,6 +23,15 @@ struct SpotLight {
 	vec2 cutOffs;
 };
 
+struct ColorChanges{
+    vec3 from;
+    vec3 to;
+};
+
+struct InstColorChange{
+    uint index;
+    uint amount;
+};
 
 layout(constant_id = 0) const int MAX_TEXTURES = 64;
 
@@ -42,6 +51,7 @@ layout(push_constant, std430) uniform dirLightAndViewPos{
 layout(location = 0) in vec2 fragTexCoord;
 layout(location = 1) in vec3 fragNormal;
 layout(location = 2) in vec3 fragPos;
+layout(location = 3) flat in InstColorChange colorChange;
 
 layout(set = 0, binding = 1) uniform sampler2D samplers;
 layout(std430, binding = 2) buffer PointLightBuffer {
@@ -51,6 +61,9 @@ layout(std430, binding = 3) buffer SpotLightBuffer {
     readonly SpotLight spotLights[];
 };
 
+layout(std430, binding = 4) buffer ColorChangesBuffer {
+    readonly ColorChanges colorChanges[];
+};
 
 layout(location = 0) out vec4 outColor;
 
@@ -65,6 +78,10 @@ void main() {
     vec3 viewDir = normalize(cPos.xyz - fragPos);
     vec3 result = vec3(0, 0, 0);
     vec3 texColor = texture(samplers, vec2(fragTexCoord.x, fragTexCoord.y / MAX_TEXTURES)).xyz;
+
+    for(int i = 0; i < colorChange.amount; i++)
+        if(length(texColor - colorChanges[colorChange.index + i].from) < 0.5)
+            texColor = colorChanges[colorChange.index + i].to;
 
     DirLight dirLight;
     dirLight.direction = lDirection.xyz;

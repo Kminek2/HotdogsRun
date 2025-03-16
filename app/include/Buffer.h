@@ -43,6 +43,7 @@ public:
 	void SendBufferToMemory();
 
 	uint32_t getSize() { return data.size(); }
+    std::vector<T> getData() { return data; }
     VkBuffer& getBuffer() { return buffer; }
 
 	void ClearBuffer();

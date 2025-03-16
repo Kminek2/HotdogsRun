@@ -72,6 +72,8 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 
 	Input::startKeyCallback();
 	Scene::loadedScene = Scene::Load(LoadScene::scenes[0].first)->Init();
+
+	GameObject::TransformTransformsToMemory();
 }
 
 Application::~Application() {
@@ -132,6 +134,9 @@ void Application::UpdateBuffer(uint16_t frame, Uniform *uniform, Uniform* cubeMa
 
 	if (LightObject::spotLightBuffer->getSize() != SpotLight::SendData(frame) && SpotLight::lightNum > 0)
 		uniform->UpdateDescriptorSets(*LightObject::getSpotBuffer()->GetBuffer(), 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
+
+	if (GameObject::allColorChanges->getSize() != GameObject::SendColorData(frame) && GameObject::changeColor.size() > 0)
+		uniform->UpdateDescriptorSets(*GameObject::allColorChanges->GetBuffer(), 4, glm::max(static_cast<uint32_t>(GameObject::allColorChanges->getSize()), static_cast<uint32_t>(1)));
 }
 
 std::list <float> frameTimes;
@@ -165,9 +170,9 @@ void Application::Update() {
 
 	soundEngine->UpdatePos();
 	AudioSource3d::UpdateAllPosition();
-	Input::mouseOff = Input::mousePos - Input::lastPos;
 	Transform::ClearMemory();
 	GameObject::TransformTransformsToMemory();
 	Sprite::UpdateBuffer();
 	Transform::TransformToMemory();
+	Input::mouseOff = Input::mousePos - Input::lastPos;
 }
