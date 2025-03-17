@@ -9,6 +9,8 @@
 
 #include "Device.h"
 
+class Uniform;
+
 struct Image
 {
 	VkImage image = VK_NULL_HANDLE;
@@ -56,6 +58,11 @@ struct Texture : Image {
 
     int32_t bufferOffset = 0;
     int32_t heightOffset = 0;
+
+    Uniform* uniform = nullptr;
+    uint32_t binding = 0;
+
+    void SetBinding(Uniform* uniform, uint32_t binding);
 
     void CreateSampler(VkFilter oversamplingFilter = VK_FILTER_NEAREST, VkFilter undersamplingFilter = VK_FILTER_LINEAR);
 

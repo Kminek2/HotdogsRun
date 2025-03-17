@@ -133,9 +133,11 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
             BindingStruct bind = bindings[i];
             if (bind.unfiormBuffer != nullptr)
                 uniform->UpdateDescriptorSets(*bind.unfiormBuffer, i, bind.size);
-            else if (bind.texture != nullptr)
+            else if (bind.texture != nullptr) {
                 uniform->UpdateImageInDescriptorSets(*bind.texture, i);
-            else if(bind.cubeMap != nullptr)
+                bind.texture->SetBinding(uniform, i);
+            }
+            else if (bind.cubeMap != nullptr)
                 uniform->UpdateImageInDescriptorSets(*&bind.cubeMap->sampler, *&bind.cubeMap->imageView, i);
         }
 

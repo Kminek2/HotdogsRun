@@ -1,6 +1,7 @@
 #include "Image.h"
 #include "Commands.h"
 #include "Buffer.h"
+#include "Uniform.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -312,6 +313,12 @@ void Images::CreateImages(std::vector<std::pair<int, int>> dimentions, VkFormat 
 
 //Textures
 
+void Texture::SetBinding(Uniform* uniform, uint32_t binding)
+{
+    this->uniform = uniform;
+    this->binding = binding;
+}
+
 void Texture::CreateSampler(VkFilter oversamplingFilter, VkFilter undersamplingFilter) {
     //Change maxAnisotropy to some value: min(value, properties.limit)
     VkPhysicalDeviceProperties properties{};
@@ -338,7 +345,6 @@ void Texture::CreateSampler(VkFilter oversamplingFilter, VkFilter undersamplingF
     if (vkCreateSampler(Device::getDevice(), &samplerInfo, nullptr, &sampler) != VK_SUCCESS) {
         throw std::runtime_error("failed to create texture sampler!");
     }
-
 }
 
 glm::uvec2 Texture::GetImageSize(const char* texturePath) {
@@ -381,7 +387,6 @@ void Texture::SendTexturesToMemory() {
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
     bool isImageNull = image == VK_NULL_HANDLE;
-    bool samplerCreated = sampler != VK_NULL_HANDLE;
 
     Buffer<bool>::CreateBuffer(allTextureSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
@@ -404,8 +409,6 @@ void Texture::SendTexturesToMemory() {
         Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
         copyImage(image, newImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, { dimention.first, heightOffset });
         
-        if(samplerCreated)
-            vkDestroySampler(Device::getDevice(), sampler, nullptr);
         vkDestroyImageView(Device::getDevice(), imageView, nullptr);
         vkDestroyImage(Device::getDevice(), image, nullptr);
         vkFreeMemory(Device::getDevice(), textureMemory, nullptr);
@@ -429,8 +432,9 @@ void Texture::SendTexturesToMemory() {
     vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
 
     imageView = Images::CreateImageView(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
-    if (samplerCreated)
-        CreateSampler();
+
+    if (uniform != nullptr)
+        uniform->UpdateImageInDescriptorSets(*this, binding);
 }
 
 Texture::~Texture()
