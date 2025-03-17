@@ -74,7 +74,7 @@ MapManager* MapManager::Init()
 	unsigned int decors_count = n * decors_per_tile;
 
 	for (unsigned i = 0; i < decors_count; i++) 
-		add_decor(map_points);
+		decors.push_back(add_decor(map_points));
 
 	build->setMap(&points);
 	build->generateCities(cities_count)->replaceCityRoads();
@@ -83,7 +83,7 @@ MapManager* MapManager::Init()
 }
 
 const std::array<glm::vec2, 8> directions = { {{0,1}, {1,1}, {1,0}, {1,-1}, {0,-1}, {-1,-1}, {-1,0}, {-1,1}} };
-void MapManager::add_decor(const std::vector<MapPoint>& map_points) {
+GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 	glm::vec2 tile = rand.choice(map_points).pos;
 
 	std::pair<std::string, float> obj_data = rand.choice(small_decors.first, small_decors.second);
@@ -93,7 +93,7 @@ void MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 
 	decor->AddDefaultOBB();
 
-	if (rand.coin_toss(obj_data.second)) return; // allow for on-road placement if TRUE
+	if (rand.coin_toss(obj_data.second)) return decor; // allow for on-road placement if TRUE
 
 	int bef, cur, nxt;
 	bef = cur = nxt = -1;
@@ -108,7 +108,7 @@ void MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 		break;
 	}
 
-	if (cur == -1) return; // no collision - all good!
+	if (cur == -1) return decor; // no collision - all good!
 
 	glm::vec3 pos = decor->transform->position;
 	for (glm::vec2 dir : directions) {
@@ -120,6 +120,7 @@ void MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 
 		decor->transform->MoveTo(pos);
 	}
+	return decor;
 }
 
 /// <summary>
@@ -177,4 +178,8 @@ MapManager::BuildsSettingsValues::BuildsSettingsValues() {}
 
 BuildingManager* MapManager::getBuildingManager() {
 	return build;
+}
+
+std::vector<GameObject*>& MapManager::getDecors() {
+	return decors;
 }

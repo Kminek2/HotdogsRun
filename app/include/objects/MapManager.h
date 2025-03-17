@@ -12,6 +12,7 @@ class MapManager
 private:
 	std::vector<GameObject*> points; // the final map tiles
 	std::vector<GameObject*> check_points;
+	std::vector<GameObject*> decors;
 
 	// -- general --
 	_rand rand;
@@ -37,7 +38,7 @@ private:
 
 	const unsigned cities_count;
 
-	void add_decor(const std::vector<MapPoint>& map_points);
+	GameObject* add_decor(const std::vector<MapPoint>& map_points);
 
 	BuildingManager* build;
 
@@ -91,6 +92,7 @@ public:
 	float GetMapTileSize();
 	float GetMapScale();
 	std::vector<GameObject*>* GetPoints();
+	std::vector<GameObject*>& getDecors();
 	BuildingManager* getBuildingManager();
 };
 
