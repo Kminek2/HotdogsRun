@@ -237,10 +237,9 @@ void Model::SendBuffers() {
 	vertexBuffer->SendBufferToMemory();
 	indexBuffer->SendBufferToMemory();
 
-	if (textures->sampler == VK_NULL_HANDLE) {
+	if(textures->sampler == VK_NULL_HANDLE)
 		textures->CreateSampler();
-		textures->SendTexturesToMemory();
-	}
+	textures->SendTexturesToMemory();
 }
 
 void Model::Unload() {

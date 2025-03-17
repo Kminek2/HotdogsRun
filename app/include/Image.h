@@ -54,6 +54,9 @@ struct Texture : Image {
     uint32_t alreadyLoaded = 0;
     size_t allTextureSize = 0;
 
+    int32_t bufferOffset = 0;
+    int32_t heightOffset = 0;
+
     void CreateSampler(VkFilter oversamplingFilter = VK_FILTER_NEAREST, VkFilter undersamplingFilter = VK_FILTER_LINEAR);
 
     glm::uvec2 GetImageSize(const char* texturePath);

@@ -93,6 +93,13 @@ void Image::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout 
         sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
     }
+    else if (oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL) {
+        barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+        barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+
+        sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+    }
     else {
         throw std::invalid_argument("unsupported layout transition!");
     }
@@ -373,6 +380,8 @@ void Texture::AddTexture(const char* texturePath) {
 void Texture::SendTexturesToMemory() {
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
+    bool isImageNull = image == VK_NULL_HANDLE;
+    bool samplerCreated = sampler != VK_NULL_HANDLE;
 
     Buffer<bool>::CreateBuffer(allTextureSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
@@ -387,22 +396,27 @@ void Texture::SendTexturesToMemory() {
 
     VkDeviceMemory newImageMemory;
     VkImage newImage;
-    CreateImage(dimention.first, dimention.second, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newImage, newImageMemory);
+    CreateImage(dimention.first, dimention.second, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newImage, newImageMemory);
 
-    int32_t bufferOffset = 0;
-    int32_t heightOffset = 0;
     Image::transitionImageLayout(newImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-    if (image != VK_NULL_HANDLE) {
-        copyImage(image, newImage, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, { 0, static_cast<int32_t>(textures[alreadyLoaded - 1].second) });
+    if (!isImageNull) {
+        Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+        copyImage(image, newImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, { dimention.first, heightOffset });
+        
+        if(samplerCreated)
+            vkDestroySampler(Device::getDevice(), sampler, nullptr);
+        vkDestroyImageView(Device::getDevice(), imageView, nullptr);
+        vkDestroyImage(Device::getDevice(), image, nullptr);
+        vkFreeMemory(Device::getDevice(), textureMemory, nullptr);
     }
 
     image = newImage;
     textureMemory = newImageMemory;
 
     for (int i = alreadyLoaded; i < dimensions.size(); i++) {
-        Image::copyBufferToImage(stagingBuffer, image, dimensions[i].first, dimensions[i].second, static_cast<int32_t>(textures[i].second), {0, heightOffset});
-        bufferOffset += textures[i].second; // dimensions[i].first * dimensions[i].second * 4;
+        Image::copyBufferToImage(stagingBuffer, image, dimensions[i].first, dimensions[i].second, static_cast<int32_t>(textures[i - alreadyLoaded].second), {0, heightOffset});
+        bufferOffset += textures[i - alreadyLoaded].second; // dimensions[i].first * dimensions[i].second * 4;
         heightOffset += dimensions[i].second;
     }
 
@@ -415,6 +429,8 @@ void Texture::SendTexturesToMemory() {
     vkFreeMemory(Device::getDevice(), stagingBufferMemory, nullptr);
 
     imageView = Images::CreateImageView(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
+    if (samplerCreated)
+        CreateSampler();
 }
 
 Texture::~Texture()
