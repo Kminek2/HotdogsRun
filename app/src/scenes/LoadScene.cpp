@@ -59,10 +59,6 @@ void LoadScene::Update() {
 
 	loadingCircle->transform->Rotate(glm::vec3(0, 0, Time::deltaTime * 100));
 	amountOfLoaded->SetText(std::to_string(loadedNum) + "/" + std::to_string(count));
-	if (Input::getKeyClicked(GLFW_KEY_U)) {
-		Application::LoadScene("main_menu");
-		return;
-	}
 }
 
 void LoadScene::UnLoad() {
