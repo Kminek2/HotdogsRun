@@ -44,6 +44,7 @@
     <ClCompile Include="app\src\mapgen_road.cpp" />
     <ClCompile Include="app\src\ObjectSchema.cpp" />
     <ClCompile Include="app\src\objects\AnimationManager.cpp" />
+    <ClCompile Include="app\src\objects\BotMovement.cpp" />
     <ClCompile Include="app\src\objects\BuildingManager.cpp" />
     <ClCompile Include="app\src\objects\CarInputs.cpp" />
     <ClCompile Include="app\src\objects\CinematicCamera.cpp" />
@@ -88,6 +89,7 @@
     <ClInclude Include="app\include\AppTime.h" />
     <ClInclude Include="app\include\AudioSource2d.h" />
     <ClInclude Include="app\include\AudioSource3d.h" />
+    <ClInclude Include="app\include\BotMovement.h" />
     <ClInclude Include="app\include\Buffer.h" />
     <ClInclude Include="app\include\Camera.h" />
     <ClInclude Include="app\include\CameraStructures.h" />

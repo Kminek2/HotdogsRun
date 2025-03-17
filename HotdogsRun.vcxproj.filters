@@ -228,11 +228,14 @@
     <ClCompile Include="app\src\Text.cpp">
       <Filter>Source Files\The Real Engine</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\PowerUp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="app\src\scenes\MainMenuScene.cpp">
       <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\PowerUp.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\BotMovement.cpp">
+      <Filter>Source Files\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -434,11 +437,14 @@
     <ClInclude Include="app\include\Text.h">
       <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
-    <ClInclude Include="app\include\PowerUp.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="app\include\scenes\MainMenuScene.h">
       <Filter>Header Files\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\PowerUp.hpp">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\BotMovement.h">
+      <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

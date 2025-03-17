@@ -1,7 +1,8 @@
 #pragma once
-#include "CarMovement.h"
+#include "objects/CarMovement.h"
 #include "Collisions.h"
 #include "GameObject.h"
+#include "objects/MapManager.h"
 
 class BotMovement : public CarMovement {
 private:
@@ -15,28 +16,24 @@ private:
 
     enum BotBehavior {
         AGGRESSIVE,
-        DEFENSIVE,
-        TIMID,
-        RECKLESS
+        DUMMY
     } botBehavior;
 
-    std::vector<glm::vec3> waypoints = ;
+    std::vector<glm::vec3> waypoints;
     int currentWaypointIndex;
     GameObject* botObject;
+    MapManager* map;
 
 
     void handleCollision(Collisions::CollisionData* collisionData);
 
 public:
-    BotMovement(GameObject* bot, float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode = false, float multiplier = 0.1f, glm::vec3 nitro_trail_offset = glm::vec3(1.7f, 0.0f, 0.0f));
-
-    void Init(Map) override;
+    void Init(MapManager* map);
     void Update() override;
     void OnDestroy() override;
     void chooseAction();
     void followPath();
     void avoidObstacles();
     void reactToOpponent();
-    void applyBotActions();
-    void updateSurfaceEffect();
+    BotMovement* SetMapManager(MapManager* map);
 };
