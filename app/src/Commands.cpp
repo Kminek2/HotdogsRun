@@ -18,7 +18,7 @@
 #include "Uniform.h"
 
 #include "Sprite.h"
-#include "GameObject.h";
+#include "GameObject.h"
 VkCommandPool Commands::commandPool;
 
 Commands::Commands() {

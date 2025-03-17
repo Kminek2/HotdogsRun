@@ -1,6 +1,7 @@
 #include "scenes/LoadScene.h"
 #include "scenes/DebugScene.h"
 #include "scenes/MapDemo.h"
+#include "scenes/MainMenuScene.h"
 
 #include "Scene.h"
 #include "QuickCamera.h"
@@ -16,8 +17,9 @@
 
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"load", new LoadScene()},
+	{"main_menu", new MainMenuScene()},
 	{"debug", new DebugScene()},
-	{"map_demo", new MapDemo()}
+	{"map_demo", new MapDemo()},
 };
 
 std::vector<std::string> LoadScene::preLoadModels = {"hotrod", "Sprite"};
@@ -27,8 +29,8 @@ std::vector<std::string> LoadScene::preLoadSprites = {"BaseFont"};
 std::shared_ptr<Scene> LoadScene::Init() {
 	Scene* scene = new Scene(this);
 
-	Text* loadingText = new Text("BaseFont", { 0, -0.5f, 0 }, glm::vec3(0), 0.5f);
-	amountOfLoaded = new Text("BaseFont", { 0, -0.8f, 0 }, glm::vec3(0), 0.5f);
+	Text* loadingText = new Text("SansSerif", { 0, -0.5f, 0 }, glm::vec3(0), 0.5f);
+	amountOfLoaded = new Text("SansSerif", { 0, -0.8f, 0 }, glm::vec3(0), 0.5f);
 
 	loadingText->SetText("Loading...");
 	count = 0;
@@ -57,6 +59,10 @@ void LoadScene::Update() {
 
 	loadingCircle->transform->Rotate(glm::vec3(0, 0, Time::deltaTime * 100));
 	amountOfLoaded->SetText(std::to_string(loadedNum) + "/" + std::to_string(count));
+	if (Input::getKeyClicked(GLFW_KEY_U)) {
+		Application::LoadScene("main_menu");
+		return;
+	}
 }
 
 void LoadScene::UnLoad() {

@@ -19,7 +19,7 @@ void Text::SetText(std::string text)
 
 	glm::vec2 textSize = Font::getTextSize(font, text, spacing) * size;
 
-	glm::vec3 startPos = (pos + glm::vec3((Font::getLetterWidth(font, text[0]) + spacing / 100) * size, 0, 0)) - glm::vec3(textSize, 0) + glm::vec3(center * -1.0f * textSize, 0);
+	glm::vec3 startPos = (pos + glm::vec3((Font::getLetterWidth(font, text[0]) + spacing / 100.0f) * size, 0.0f, 0.0f)) - glm::vec3(textSize, 0.0f) + glm::vec3(center * -1.0f * textSize, 0.0f);
 	textSprites = Font::ConvertText(font, text, startPos, spacing, size, color);
 
 	this->text = text;
