@@ -38,6 +38,7 @@ public:
 	template<typename Function, typename... Args>
 	static void Invoke(Function&& func, unsigned long long delayMs, Args&&... args);
 
+	static void SetCursor(bool enabled);
 	static void LoadScene(std::string scene);
 	static void Quit();
 

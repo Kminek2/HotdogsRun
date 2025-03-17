@@ -66,7 +66,6 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	LightObject::spotLightBuffer = new UniformBuffer<SpotLightBuffer>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 
 	Input::window = window;
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, Input::MouseCallback);
 
 	Input::width = width;
@@ -78,6 +77,7 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 
 	soundEngine = new SoundEngine();
 
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	Input::startKeyCallback();
 	Scene::loadedScene = Scene::Load(LoadScene::scenes[0].first)->Init();
 
@@ -108,10 +108,19 @@ void Application::UpdateWindowSizes(uint16_t width, uint16_t height) {
 	Input::height = height;
 }
 
+void Application::SetCursor(bool enabled)
+{
+	if(enabled)
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	else
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
 void Application::LoadScene(std::string scene)
 {
 	Scene::loadedScene.get()->sceneScript->UnLoad();
 	Input::stopKeyCallback();
+	SetCursor(false);
 
 	GameObject::DeleteAll();
 	Sprite::DeleteAll();
