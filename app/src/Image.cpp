@@ -142,6 +142,34 @@ void Image::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, ui
     Commands::EndSingleTimeCommands(commandBuffer);
 }
 
+void Image::copyImage(VkImage srcImage, VkImage dstImage, VkImageLayout srcLayout, VkImageLayout dstLayout, glm::uvec2 extent)
+{
+    VkCommandBuffer commandBuffer = Commands::BeginSingleTimeCommands();
+
+    VkImageSubresourceLayers srcSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
+    VkImageSubresourceLayers dstSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
+
+    VkImageCopy region{};
+    region.srcSubresource = srcSubresource;
+    region.srcOffset = { 0, 0, 0 };
+    region.dstSubresource = dstSubresource;
+    region.dstOffset = { 0, 0, 0 };
+    region.extent = { extent.x, extent.y, 1 };
+
+    vkCmdCopyImage(
+        commandBuffer,
+        srcImage,
+        srcLayout,
+        dstImage,
+        dstLayout,
+        1,
+
+        &region
+    );
+
+    Commands::EndSingleTimeCommands(commandBuffer);
+}
+
 void Image::CreateSampler(VkSampler& sampler, VkFilter oversamplingFilter, VkFilter undersamplingFilter)
 {
     //Change maxAnisotropy to some value: min(value, properties.limit)
@@ -357,16 +385,28 @@ void Texture::SendTexturesToMemory() {
     for (auto& pixels : textures)
         stbi_image_free(pixels.first);
 
-    CreateImage(dimention.first, dimention.second, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, image, textureMemory);
+    VkDeviceMemory newImageMemory;
+    VkImage newImage;
+    CreateImage(dimention.first, dimention.second, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, newImage, newImageMemory);
 
     int32_t bufferOffset = 0;
     int32_t heightOffset = 0;
-    Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-    for (int i = 0; i < dimensions.size(); i++) {
+    Image::transitionImageLayout(newImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+    if (image != VK_NULL_HANDLE) {
+        copyImage(image, newImage, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, { 0, static_cast<int32_t>(textures[alreadyLoaded - 1].second) });
+    }
+
+    image = newImage;
+    textureMemory = newImageMemory;
+
+    for (int i = alreadyLoaded; i < dimensions.size(); i++) {
         Image::copyBufferToImage(stagingBuffer, image, dimensions[i].first, dimensions[i].second, static_cast<int32_t>(textures[i].second), {0, heightOffset});
         bufferOffset += textures[i].second; // dimensions[i].first * dimensions[i].second * 4;
         heightOffset += dimensions[i].second;
     }
+
+    alreadyLoaded = dimensions.size();
     Image::transitionImageLayout(image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     textures.clear();

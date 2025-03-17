@@ -11,7 +11,7 @@
 
 struct Image
 {
-	VkImage image;
+	VkImage image = VK_NULL_HANDLE;
 	VkImageView imageView;
 
     void CreateImageView(VkFormat format, VkImageAspectFlags aspectFlags, VkImageViewType viewType = VK_IMAGE_VIEW_TYPE_2D, uint32_t layerCount = 1);
@@ -21,6 +21,7 @@ struct Image
     static void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t layerCount = 1);
 
     static void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset, uint32_t layerCount = 1);
+    static void copyImage(VkImage srcImage, VkImage dstImage, VkImageLayout srcLayout, VkImageLayout dstLayout, glm::uvec2 extent);
     
     static void CreateSampler(VkSampler& sampler, VkFilter oversamplingFilter, VkFilter undersamplingFilter);
 
@@ -50,6 +51,7 @@ struct Texture : Image {
     std::vector<std::pair<stbi_uc*, VkDeviceSize>> textures;
     std::pair<uint32_t, uint32_t> dimention = {0, 0};
     std::vector<std::pair<int, int>> dimensions;
+    uint32_t alreadyLoaded = 0;
     size_t allTextureSize = 0;
 
     void CreateSampler(VkFilter oversamplingFilter = VK_FILTER_NEAREST, VkFilter undersamplingFilter = VK_FILTER_LINEAR);

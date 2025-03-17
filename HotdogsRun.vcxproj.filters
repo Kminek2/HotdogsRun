@@ -231,6 +231,9 @@
     <ClCompile Include="app\src\PowerUp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\scenes\MainMenuScene.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -433,6 +436,9 @@
     </ClInclude>
     <ClInclude Include="app\include\PowerUp.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\scenes\MainMenuScene.h">
+      <Filter>Header Files\scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
