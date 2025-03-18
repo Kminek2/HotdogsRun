@@ -98,6 +98,10 @@ void RaceManager::StartRace() {
 }
 
 void RaceManager::AfterCountdown() {
+	if (countdown_number != nullptr)
+		delete countdown_number;
+	countdown_number = nullptr;
+	
 	race_started = true;
 	std::cout << "Race stared with the termination condition of " << (termination_condition == TIME ? "TIME" : "LAPS") << " ("
 		  << termination_condition_value << ")\n";
@@ -206,7 +210,11 @@ void RaceManager::StartAnimation() {
 				       2.0f,
 				       {0.0f, 0.0f, 0.0f},
 				       false, [&](){
-							countdown_number = new GameObject("3", car_objects[0]->car->transform->position + glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(90.0f, 0.0f, -90.0f), glm::vec3(0.2));
+							countdown_number = new GameObject("3", car_objects[0]->car->transform->position + glm::vec3(-2.5f, -0.5f, 1.7f), glm::vec3(90.0f, 0.0f, -90.0f), glm::vec3(0.15));
+					   }, [&](){
+							if (countdown_number != nullptr)
+								delete countdown_number;
+							countdown_number = nullptr;
 					   }});
 	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({5.01428f, -5.82023f, -1.38018f}),
 					{car_objects[0]->car->transform->rotation.x - -275.75f, car_objects[0]->car->transform->rotation.y - 2.0f}},
@@ -214,7 +222,13 @@ void RaceManager::StartAnimation() {
 					{car_objects[0]->car->transform->rotation.x - -269.0f, car_objects[0]->car->transform->rotation.y - -0.25f}},
 				       1.5f,
 				       {0.0f, 0.0f, 0.0f},
-				       false});
+				       false, [&](){
+						countdown_number = new GameObject("2", car_objects[0]->car->transform->position + glm::vec3(-1.0f, 1.2f, 1.5f), glm::vec3(90.0f, 0.0f, 180.0f), glm::vec3(0.15));
+				   }, [&](){
+						if (countdown_number != nullptr)
+							delete countdown_number;
+						countdown_number = nullptr;
+				   }});
 	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({-3.1062f, -6.63792f, -1.38018f}),
 					{car_objects[0]->car->transform->rotation.x - -269.0f, car_objects[0]->car->transform->rotation.y - -0.25f}},
 				       {car_objects[0]->car->transform->position - glm::vec3({-15.0351f, 0.0f, -5.47232f}),
@@ -222,7 +236,9 @@ void RaceManager::StartAnimation() {
 				       1.5f,
 				       {5.0f, 5.0f, 1.0f},
 				       true,
-				       []() {},
+				       [&](){
+						countdown_number = new GameObject("1", car_objects[0]->car->transform->position + glm::vec3(2.0f, 1.0f, 2.0f), glm::vec3(90.0f, 0.0f, 120.0f), glm::vec3(0.2));
+				   },
 				       std::bind(&RaceManager::AfterCountdown, this)});
 }
 
