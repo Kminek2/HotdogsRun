@@ -24,7 +24,6 @@ private:
     GameObject* botObject;
     MapManager* map;
 
-
     void handleCollision(Collisions::CollisionData* collisionData);
 
 public:

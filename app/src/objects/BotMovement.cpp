@@ -21,8 +21,7 @@ void BotMovement::Update() {
 }
 
 void BotMovement::OnDestroy() {
-
-// TODO
+    // TODO
 }
 
 BotMovement* BotMovement::SetMapManager(MapManager* map)
@@ -61,31 +60,27 @@ void BotMovement::chooseAction() {
 
 void BotMovement::followPath() {
     if (this->waypoints.empty()) {
-        std::cout << "❌ No waypoints! Bot can't move!\n";
+        std::cout << "No waypoints! Bot can't move!\n";
         return;
     }
 
-    // Aktualny waypoint
+    // current waypoint
     GameObject* targetWaypoint = waypoints[currentWaypointIndex];
     glm::vec3 targetPos = targetWaypoint->transform->position;
 
-    // Pozycja bota
     glm::vec3 botPos = botObject->transform->position;
 
-    // Oblicz wektor kierunku do waypointa
+    // direction vector
     glm::vec3 direction = glm::normalize(targetPos - botPos);
     float speed = 15.0f; //debug
 
     botObject->transform->Move(direction * speed * Time::deltaTime);
 
-    // Sprawdzanie, czy bot dotarł do waypointa
+    // check if reached waypoint
     float distance = glm::distance(botPos, targetPos);
-    if (distance < 5.0f) { // Jeśli blisko, przechodzimy do kolejnego waypointa
+    if (distance < 5.0f) { // if close, go to the next one
         currentWaypointIndex++;
-        if (currentWaypointIndex >= waypoints.size()) {
-            currentWaypointIndex = 0; // Restart trasy, gdy skończą się waypointy
-        }
-        std::cout << "🏁 Reached waypoint! Moving to next.\n";
+        if (currentWaypointIndex >= waypoints.size()) currentWaypointIndex = 0; // start the next lap
     }
 }
 
@@ -109,7 +104,7 @@ void BotMovement::avoidObstacles() {
             glm::vec3 toObstacle = glm::normalize(decorPosition - botPosition);
             float dotProduct = glm::dot(frontDirection, toObstacle);
 
-            if (dotProduct > 0.7f) { // Sprawdzamy, czy obiekt znajduje się przed botem
+            if (dotProduct > 0.7f) { // check if obstacle is in front
                 obstacleDetected = true;
                 obstaclePos = decorPosition;
                 break;
@@ -120,7 +115,7 @@ void BotMovement::avoidObstacles() {
     if (obstacleDetected) {
         botActions.accelerate = false;
 
-        // Spróbuj znaleźć miejsce do ominięcia przeszkody
+        // avoid the obstacle
         glm::vec3 rightDirection = glm::cross(frontDirection, glm::vec3(0, 1, 0));
         glm::vec3 leftDirection = -rightDirection;
 

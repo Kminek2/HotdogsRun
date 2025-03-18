@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "QuickCamera.h"
 #include "DebugPoints.h"
+#include "StringOperations.hpp"
 
 #include "objects/Lights.h"
 #include "Sprite.h"
@@ -35,11 +36,10 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	loadingText->SetText("Loading...");
 	count = 0;
 	for (auto& p : std::filesystem::directory_iterator("models_obj_test"))
-	{
 		++count;
-	}
-	amountOfLoaded->SetText(std::to_string(Model::getLoadedModelCount()) + "/" + std::to_string(count));
-	loadingCircle = new GameObject("", {10, 0, 0});
+
+	amountOfLoaded->SetText("Loading " + std::to_string(count) + " models...");
+	loadingCircle = new GameObject("", {8, 0, 0});
 	GameObject* car = new GameObject("hotrod");
 	car->AddScript(new LockPosition(loadingCircle->transform, glm::vec3(10, 0, 0)))->AddScript(new LockRotation(loadingCircle->transform, {0, 0, -90}));
 
@@ -50,7 +50,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 const float cam_speed = 100.0f;
 void LoadScene::Update() {
-	unsigned loadedNum = Model::getLoadedModelCount();
+	double loadedNum = Model::getLoadedModelCount();
 
 	if (loadedNum > count) {
 		Application::LoadScene(scenes[1].first);
@@ -58,8 +58,7 @@ void LoadScene::Update() {
 	}
 
 	loadingCircle->transform->Rotate(glm::vec3(0, 0, Time::deltaTime * 100));
-	amountOfLoaded->SetText(std::to_string(loadedNum) + "/" + std::to_string(count));
+	amountOfLoaded->SetText(String::formatDouble(loadedNum / count * 100, 2) + "%");
 }
 
-void LoadScene::UnLoad() {
-}
+void LoadScene::UnLoad() {}

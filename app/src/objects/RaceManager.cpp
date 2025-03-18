@@ -6,8 +6,7 @@
 #include <glm/vec3.hpp>
 #include <set>
 
-const std::array<glm::vec2, 5> RaceManager::offsets =
-    std::array<glm::vec2, 5>({glm::vec2(2.0, 1.5), glm::vec2(2.0, 0.75), glm::vec2(2.0, 0), glm::vec2(2.0, -0.75), glm::vec2(2.0, -1.5)});
+const std::array<glm::vec2, 5> RaceManager::offsets = std::array<glm::vec2, 5>({glm::vec2(2.0, 1.5), glm::vec2(2.0, 0.75), glm::vec2(2.0, 0), glm::vec2(2.0, -0.75), glm::vec2(2.0, -1.5)});
 
 RaceManager *RaceManager::SetMapManager(MapManager *map_manager) {
 	this->map_manager = map_manager;
@@ -17,15 +16,6 @@ RaceManager *RaceManager::SetMapManager(MapManager *map_manager) {
 RaceManager *RaceManager::SetCarsRelativeOffset(float offset) {
 	this->cars_relative_offset = offset;
 	return this;
-}
-
-/// <summary>
-/// Return n normalized to [0, lim)
-/// </summary>
-int normalize(int n, int lim) {
-	while (n < 0)
-		n += lim;
-	return n % lim;
 }
 
 /// <summary>
@@ -39,15 +29,14 @@ RaceManager *RaceManager::AddCar(GameObject *car) {
 		car->AddDefaultOBB();
 
 	const int n = map_manager->GetLen();
-	int point_id = normalize(-cars_placed / 5, n);
+	int point_id = glm::normalize(-cars_placed / 5, n);
 
 	glm::vec3 tile_points[2] = {map_manager->GetPoint(point_id)->transform->position,
-				    map_manager->GetPoint(normalize(point_id + 1, n))->transform->position};
+				    map_manager->GetPoint(glm::normalize(point_id + 1, n))->transform->position};
 
 	glm::vec2 tile_points_transformed[2] = {glm::vec2(tile_points[0].x, tile_points[0].y), glm::vec2(tile_points[1].x, tile_points[1].y)};
 
-	float orient =
-	    atan2(tile_points_transformed[1].y - tile_points_transformed[0].y, tile_points_transformed[1].x - tile_points_transformed[0].x);
+	float orient = atan2(tile_points_transformed[1].y - tile_points_transformed[0].y, tile_points_transformed[1].x - tile_points_transformed[0].x);
 
 	car->transform->MoveTo(glm::vec3(tile_points_transformed[0].x, tile_points_transformed[0].y, 0.0f));
 	car->transform->RotateTo(glm::vec3(0, 0, glm::degrees(orient) - 180.0f));
@@ -73,7 +62,7 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 
 	CarObject *car_obj = *std::find_if(car_objects.begin(), car_objects.end(), [car](CarObject *a) { return a->car == car; });
 
-	if (map_manager->GetCheckPoint(normalize(car_obj->checkpoint + 1, map_manager->GetCheckPoints())) != cp)
+	if (map_manager->GetCheckPoint(glm::normalize(car_obj->checkpoint + 1, static_cast<unsigned long long>(map_manager->GetCheckPoints()))) != cp)
 		return;
 
 	car_obj->checkpoint++;
@@ -144,7 +133,7 @@ RaceManager *RaceManager::SetEndCondition(TerminationCondition condition, unsign
 /// Force-end the race. If executeCallbacks is set to false, the subscribers will not be called.
 /// Also used by the main gameplay loop.
 /// </summary>
-RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
+RaceManager::CarObject* RaceManager::EndRace(bool executeCallbacks) {
 	if (!race_started)
 		return nullptr; // race might have been force-ended already
 

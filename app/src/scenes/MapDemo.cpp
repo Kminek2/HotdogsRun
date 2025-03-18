@@ -1,6 +1,5 @@
 ﻿#include "scenes/MapDemo.h"
 #include "Scene.h"
-#include "QuickCamera.h"
 
 #include "objects/CameraLockScript.h"
 #include "objects/CarInputs.h"
@@ -72,7 +71,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	car = new GameObject("hotrod");
+	car = new GameObject("f1car");
 	car->AddDefaultOBB();
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
@@ -95,7 +94,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		race_manager->AddCar(bot);
 	}
 
-	GameObject* amobj = new GameObject;
+	GameObject* amobj = new GameObject; // 'am' stands for Animation Manager, apparently
 	AnimationManager* am = new AnimationManager;
 	amobj->AddScript(am);
 	race_manager->SetAnimationManager(am);
@@ -106,12 +105,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
 	std::cout << "===\n\t" << winner->car->GetModelName() << "\n\t" << winner->checkpoint << "\n\t" << winner->time << '\n';
-	Application::LoadScene("main_menu");
+	Application::Invoke([]() {Application::LoadScene("main_menu"); }, 1000);
 }
 
 void MapDemo::Update() {
-	//qc->HandleRotate();
-	//qc->HandleMove();
 	race_manager->Update();
 
 	if (Input::getKeyPressed(GLFW_KEY_R))
@@ -123,7 +120,6 @@ void MapDemo::Update() {
 }
 
 void MapDemo::UnLoad() {
-	//delete qc;
 	delete build;
 	delete race_manager;
 	delete map;

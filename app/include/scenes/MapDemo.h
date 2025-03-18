@@ -3,7 +3,6 @@
 #include "SceeneScript.h"
 #include "GameObject.h"
 #include "Model.h"
-#include "QuickCamera.h"
 #include "_rand.hpp"
 #include "mapgen.h"
 #include "objects/MapManager.h"
@@ -17,7 +16,6 @@ class MapDemo :
 	public SceeneScript
 {
 private:
-	QuickCamera* qc;
 	MapManager* map;
 	BuildingManager* build;
 	RaceManager* race_manager;
