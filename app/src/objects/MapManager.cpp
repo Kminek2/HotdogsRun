@@ -56,7 +56,7 @@ MapManager* MapManager::Init()
 		data->scale *= MAP_TILE_SCALE;
 		data->surface_type = _cur_sur_type;
 
-		points.push_back(new GameObject(data, { point.pos.x, point.pos.y, 0 }));
+		points.push_back(new GameObject(data, { point.pos.x, point.pos.y, -0.5f }));
 		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
 	}
 
@@ -78,6 +78,8 @@ MapManager* MapManager::Init()
 
 	build->setMap(&points);
 	build->generateCities(cities_count)->replaceCityRoads();
+
+	(new GameObject("BaseCube", glm::vec3(0, 0, -0.51f), glm::vec3(0), glm::vec3(1000, 1000, 0)))->AddColorChange(glm::vec3(1), glm::vec3(0.1f, 0.5f, 0.1f)); // just TEMPORARY hradcoded ground
 
 	return this;
 }

@@ -27,7 +27,7 @@ layout(location = 3) flat out InstColorChange colorChange;
 void main() {
     fragPos = (model * vec4(inPosition, 1.0)).xyz;
     gl_Position = ubo.proj * ubo.view * vec4(fragPos, 1.0);
-    fragTexCoord = texCoord;// + vec2(0, textOff);
+    fragTexCoord = texCoord + vec2(0, textOff);
     fragNormal = mat3(transpose(inverse(model))) * normal;
     colorChange.index = ColorChangeIndex;
     colorChange.amount = ColorChangeAmount;
