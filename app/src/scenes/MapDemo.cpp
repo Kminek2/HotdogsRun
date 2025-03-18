@@ -106,6 +106,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
 	std::cout << "===\n\t" << winner->car->GetModelName() << "\n\t" << winner->checkpoint << "\n\t" << winner->time << '\n';
+	Application::LoadScene("main_menu");
 }
 
 void MapDemo::Update() {

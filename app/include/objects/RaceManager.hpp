@@ -57,6 +57,8 @@ private:
 
 	AnimationManager* animation_manager = nullptr;
 
+	GameObject* countdown_number = nullptr;
+
 	void StartAnimation();
 	void AfterCountdown();
 };

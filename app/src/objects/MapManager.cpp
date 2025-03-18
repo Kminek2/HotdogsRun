@@ -90,6 +90,8 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 	GameObject* decor = new GameObject(obj_data.first, {
 		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1),
 		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), .1 }, { 0,0,rand.random(0.0f,360.0f) }, glm::vec3(MAP_TILE_SCALE));
+	if (decor->GetModelName() == "fucked_up_car" || decor->GetModelName() == "fucked_up_pickup" || decor->GetModelName() == "bus" || decor->GetModelName() == "goat")
+		decor->transform->ScaleTo(glm::vec3(MAP_TILE_SCALE/2.0f));
 
 	decor->AddDefaultOBB();
 

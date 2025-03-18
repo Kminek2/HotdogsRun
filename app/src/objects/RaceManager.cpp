@@ -49,7 +49,7 @@ RaceManager *RaceManager::AddCar(GameObject *car) {
 	float orient =
 	    atan2(tile_points_transformed[1].y - tile_points_transformed[0].y, tile_points_transformed[1].x - tile_points_transformed[0].x);
 
-	car->transform->MoveTo(glm::vec3(tile_points_transformed[0].x, tile_points_transformed[0].y, 1));
+	car->transform->MoveTo(glm::vec3(tile_points_transformed[0].x, tile_points_transformed[0].y, 0.0f));
 	car->transform->RotateTo(glm::vec3(0, 0, glm::degrees(orient) - 180.0f));
 
 	glm::vec2 offset = offsets[cars_placed % 5] * map_manager->GetMapScale() * map_manager->GetMapTileSize() * cars_relative_offset;
@@ -205,7 +205,9 @@ void RaceManager::StartAnimation() {
 					{car_objects[0]->car->transform->rotation.x - -275.75f, car_objects[0]->car->transform->rotation.y - 2.0f}},
 				       2.0f,
 				       {0.0f, 0.0f, 0.0f},
-				       false});
+				       false, [&](){
+							countdown_number = new GameObject("3", car_objects[0]->car->transform->position + glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(90.0f, 0.0f, -90.0f), glm::vec3(0.2));
+					   }});
 	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({5.01428f, -5.82023f, -1.38018f}),
 					{car_objects[0]->car->transform->rotation.x - -275.75f, car_objects[0]->car->transform->rotation.y - 2.0f}},
 				       {car_objects[0]->car->transform->position - glm::vec3({-3.1062f, -6.63792f, -1.38018f}),
