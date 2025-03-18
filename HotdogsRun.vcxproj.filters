@@ -237,6 +237,9 @@
     <ClCompile Include="app\src\objects\BotMovement.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\Shadow.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -445,6 +448,9 @@
     </ClInclude>
     <ClInclude Include="app\include\BotMovement.h">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Shadow.h">
+      <Filter>Header Files\The Real Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
