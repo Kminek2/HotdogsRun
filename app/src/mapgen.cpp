@@ -5,12 +5,14 @@
 #include <random>
 #include <algorithm>
 #include <iterator>
+
 #include "glm/gtc/constants.hpp"
+#include "glm/mat3x3.hpp"
 
 using mapgen::direction;
 
 /// <summary>
-/// Implementation of Beresenham's algorithm. Includes `start` and `end` in the result.
+/// Implementation of Bresenham's algorithm. Includes `start` and `end` in the result.
 /// </summary>
 std::vector<glm::vec2> bresenham(const glm::ivec2& start, const glm::ivec2& end) {
     std::vector<glm::vec2> result;
@@ -30,15 +32,41 @@ std::vector<glm::vec2> bresenham(const glm::ivec2& start, const glm::ivec2& end)
 
         int e2 = 2 * err;
         if (e2 > -dy) { err -= dy; x += sx; }
-        if (e2 < dx)  { err += dx; y += sy; }
+        if (e2 <  dx) { err += dx; y += sy; }
     }
 
     return result;
 }
 
-void emplace_vectors(std::vector<mapgen::MapPoint>& in, const std::vector<glm::vec2>& src) {
-    for (size_t i=0; i<src.size()-1; i++)
+std::set<glm::vec2> already_placed_points;
+
+glm::mat3 rotation_90deg (
+    0, -1, 0,
+    1,  0, 0,
+    0,  0, 1
+);
+
+void emplace_vectors(std::vector<mapgen::MapPoint>& in, std::vector<glm::vec2> src, uint8_t dep = 0) {
+    if (dep > 20) throw std::invalid_argument("map parameters.");
+
+    for (size_t i = 1; i < src.size() - 1; i++) {
+        if (!already_placed_points.contains(src[i])) continue; // no road collision
+
+        glm::vec3 diff = glm::vec3((src[src.size() - 1] - src[0]), 0);
+        diff = rotation_90deg * diff;
+
+        src[i] += glm::normalize(glm::vec2(diff.x, diff.y));
+
+        emplace_vectors(in, bresenham(src[0], src[i]), dep + 1);
+        emplace_vectors(in, bresenham(src[i], src[src.size() - 1]), dep + 1);
+
+        return; // above calls will handle the emplacing
+    }
+
+    for (size_t i = 0; i < src.size() - 1; i++) {
         in.emplace_back(src[i]);
+        already_placed_points.insert(src[i]);
+    }
 }
 
 direction points_direction(const glm::vec2& a, const glm::vec2& b) {

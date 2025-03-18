@@ -1,6 +1,5 @@
 #pragma once
 #include "SceeneScript.h"
-#include "QuickCamera.h"
 #include "objects/AnimationManager.h"
 #include <utility>
 #include <vector>
@@ -8,7 +7,6 @@ class MainMenuScene :
     public SceeneScript
 {
 private:
-    QuickCamera* qc;
     AnimationManager* am;
     std::vector<GameObject*> objs;
     static bool first_load;

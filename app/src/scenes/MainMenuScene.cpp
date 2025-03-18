@@ -16,8 +16,6 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 
     Camera::main->cameraTransform->position = glm::vec3(-9.96294f, -9.06299f, 2.38608f);
     Camera::main->cameraTransform->rotation = glm::vec2(47.0f, -4.0f);
-    //qc = new QuickCamera();
-	//qc->_sm(100.0f);
 
     objs.push_back(new GameObject());
     am = new AnimationManager();
@@ -61,8 +59,7 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 void MainMenuScene::Update() {
     if (!menu_options.empty())
         UpdateMenu();
-    //qc->HandleRotate();
-	//qc->HandleMove();
+
     if (Input::getKeyClicked(GLFW_KEY_B)) {
 		std::cout << Camera::main->cameraTransform->position.x << ' ' << Camera::main->cameraTransform->position.y << ' ' << Camera::main->cameraTransform->position.z << '\n' << Camera::main->cameraTransform->rotation.x << ' ' << Camera::main->cameraTransform->rotation.y << '\n';
 	}
@@ -77,18 +74,21 @@ void MainMenuScene::ShowMenu() {
     menu_options[menu_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
     menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,0.4f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].first->SetText("Play");
+
     menu_options.push_back({nullptr, nullptr});
     menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,0.09f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].second->SetText("Appearance");
     menu_options[menu_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
     menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,0.1f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].first->SetText("Appearance");
+
     menu_options.push_back({nullptr, nullptr});
     menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,-0.21f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].second->SetText("Settings");
     menu_options[menu_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
     menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,-0.2f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].first->SetText("Settings");
+
     menu_options.push_back({nullptr, nullptr});
     menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,-0.51f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].second->SetText("Exit");
@@ -98,18 +98,12 @@ void MainMenuScene::ShowMenu() {
 }
 
 void MainMenuScene::UpdateMenu() {
-    if (menu_choosen_option < menu_options.size()-1) {
-        if (Input::getKeyClicked(GLFW_KEY_DOWN)) {
-            ++menu_choosen_option;
-            UpdateMenuHighlight();
-        }
-    }
-    if (menu_choosen_option > 0) {
-        if (Input::getKeyClicked(GLFW_KEY_UP)) {
-            --menu_choosen_option;
-            UpdateMenuHighlight();
-        }
-    }
+    if (Input::getKeyClicked(GLFW_KEY_DOWN)) ++menu_choosen_option;
+    if (Input::getKeyClicked(GLFW_KEY_UP))   --menu_choosen_option;
+
+    menu_choosen_option = glm::normalize(menu_choosen_option, static_cast<int>(menu_options.size()));
+    UpdateMenuHighlight();
+
     if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
         switch (menu_choosen_option)
         {
@@ -149,13 +143,4 @@ void MainMenuScene::first_animation() {
         menu_choosen_option = 0;
         UpdateMenuHighlight();
     }});
-    
-
-
-/*
-
-
-
--8.31365 2.60173 2.2555
-6 3*/
 }
