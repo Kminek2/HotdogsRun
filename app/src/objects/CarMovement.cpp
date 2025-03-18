@@ -40,7 +40,7 @@ void CarMovement::Update() {
 	handleForces();
 	if (gameObject->transform->position.z < 0) {
 		gameObject->transform->MoveTo(gameObject->transform->position * glm::vec3(1, 1, 0));
-		downSpeed = 0.3f * std::max(0.0f, std::abs(downSpeed) - 0.001f);
+		downSpeed = 0.3f * std::max(0.0f, std::abs(downSpeed) - Time::deltaTime);
 	}
 	else if (gameObject->transform->position.z > 0) {
 		downSpeed += -carWeight * multiplier * 1000 * Time::deltaTime;
