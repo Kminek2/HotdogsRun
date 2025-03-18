@@ -24,7 +24,7 @@ private:
 	const float MAP_TILE_SCALE = 2.4;
 
 	// -- checkpoints --
-	const unsigned cp_offset; // cp stands for checkpoint 💀
+	const unsigned cp_offset; // cp stands for checkpoint 💀 
 
 	// -- decors -- 
 	const float decors_per_tile;

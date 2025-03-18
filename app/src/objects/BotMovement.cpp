@@ -1,15 +1,23 @@
-#include "BotMovement.h"
+ï»¿#include "BotMovement.h"
 
-void BotMovement::Init(MapManager* map)
+BotMovement::BotMovement(GameObject* bot, float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode, float multiplier, glm::vec3 nitro_trail_offset)
+    : CarMovement(carWeight, breaksStrength, maxSpeed, minSpeed, accelFront, accelBack, gripToSpeedMult, expertMode, multiplier, nitro_trail_offset)
 {
-	SetMapManager(map);
+    botObject = bot;
+    currentWaypointIndex = 0;
+}
+
+void BotMovement::Init()
+{
+    std::cout << "BotMovement::Init() called\n"; //debug
+    this->botBehavior = AGGRESSIVE;
+    currentWaypointIndex = 0;
 }
 
 void BotMovement::Update() {
-    chooseAction();         // Decyzje o tym, co bot ma zrobiæ
-    followPath();           // Oblicz, jak bot ma pod¹¿aæ za œcie¿k¹
-    avoidObstacles();       // Sprawdzanie przeszkód na drodze
-    reactToOpponent();      // Reakcje na przeciwników
+    followPath();
+    chooseAction();
+    avoidObstacles();
 }
 
 void BotMovement::OnDestroy() {
@@ -21,6 +29,16 @@ BotMovement* BotMovement::SetMapManager(MapManager* map)
 {
 	this->map = map;
 	return this;
+}
+
+void BotMovement::getWaypoints(MapManager* map)
+{
+    if (!map) {
+        std::cout << "âŒ MapManager is NULL!\n";
+        return;
+    }
+    std::cout << "Get waypoints!\n";
+    waypoints = *(map->GetPoints());
 }
 
 void BotMovement::chooseAction() {
@@ -42,41 +60,83 @@ void BotMovement::chooseAction() {
 }
 
 void BotMovement::followPath() {
-    if (currentWaypointIndex < waypoints.size()) {
-        glm::vec3 targetWaypoint = waypoints[currentWaypointIndex];
-        glm::vec3 direction = targetWaypoint - botObject->transform->position;
-        float distance = glm::length(direction);
-        if (distance < .5f) {
-            currentWaypointIndex++;
-        }
-        else {
-            direction = glm::normalize(direction);
+    if (this->waypoints.empty()) {
+        std::cout << "âŒ No waypoints! Bot can't move!\n";
+        return;
+    }
 
-            glm::vec3 frontDirection = botObject->transform->front; // Przyjmujemy, ¿e bot ma wektor 'forward', który wskazuje na jego aktualny kierunek
-            float angleToTarget = glm::degrees(atan2(direction.x, direction.z) - atan2(frontDirection.x, frontDirection.z));
-            
-            if (angleToTarget > 180.0f) angleToTarget -= 360.0f;
-            if (angleToTarget < -180.0f) angleToTarget += 360.0f;
+    // Aktualny waypoint
+    GameObject* targetWaypoint = waypoints[currentWaypointIndex];
+    glm::vec3 targetPos = targetWaypoint->transform->position;
 
-            // Ustalmy jak bot powinien obracaæ siê w stronê celu
-            if (angleToTarget > 0) {
-                // Skrêcaj w lewo
-                makeLeftTurn();
-            }
-            else {
-                // Skrêcaj w prawo
-                makeRightTurn();
-            }
-            goForward();
+    // Pozycja bota
+    glm::vec3 botPos = botObject->transform->position;
+
+    // Oblicz wektor kierunku do waypointa
+    glm::vec3 direction = glm::normalize(targetPos - botPos);
+    float speed = 15.0f; //debug
+
+    botObject->transform->Move(direction * speed * Time::deltaTime);
+
+    // Sprawdzanie, czy bot dotarÅ‚ do waypointa
+    float distance = glm::distance(botPos, targetPos);
+    if (distance < 5.0f) { // JeÅ›li blisko, przechodzimy do kolejnego waypointa
+        currentWaypointIndex++;
+        if (currentWaypointIndex >= waypoints.size()) {
+            currentWaypointIndex = 0; // Restart trasy, gdy skoÅ„czÄ… siÄ™ waypointy
         }
+        std::cout << "ðŸ Reached waypoint! Moving to next.\n";
     }
 }
 
 void BotMovement::avoidObstacles() {
+    if (!map) return;
 
-    // TODO
-}
+    glm::vec3 botPosition = botObject->transform->position;
+    glm::vec3 frontDirection = glm::normalize(botObject->transform->front);
+    float detectionRange = 5.0f; 
 
-void BotMovement::reactToOpponent() {
-    // TODO
+    bool obstacleDetected = false;
+    glm::vec3 obstaclePos;
+
+    for (GameObject* decor : map->getDecors()) {
+        if (!decor) continue;
+
+        glm::vec3 decorPosition = decor->transform->position;
+        float distance = glm::distance(botPosition, decorPosition);
+
+         if (distance < detectionRange) {
+            glm::vec3 toObstacle = glm::normalize(decorPosition - botPosition);
+            float dotProduct = glm::dot(frontDirection, toObstacle);
+
+            if (dotProduct > 0.7f) { // Sprawdzamy, czy obiekt znajduje siÄ™ przed botem
+                obstacleDetected = true;
+                obstaclePos = decorPosition;
+                break;
+            }
+        }
+    }
+
+    if (obstacleDetected) {
+        botActions.accelerate = false;
+
+        // SprÃ³buj znaleÅºÄ‡ miejsce do ominiÄ™cia przeszkody
+        glm::vec3 rightDirection = glm::cross(frontDirection, glm::vec3(0, 1, 0));
+        glm::vec3 leftDirection = -rightDirection;
+
+        glm::vec3 rightCheck = botPosition + rightDirection * 2.0f;
+        glm::vec3 leftCheck = botPosition + leftDirection * 2.0f;
+
+        float rightDist = glm::distance(rightCheck, obstaclePos);
+        float leftDist = glm::distance(leftCheck, obstaclePos);
+
+        if (leftDist > rightDist) {
+            botActions.turnLeft = true;
+            botActions.turnRight = false;
+        }
+        else {
+            botActions.turnLeft = false;
+            botActions.turnRight = true;
+        }
+    }
 }

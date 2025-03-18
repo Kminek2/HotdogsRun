@@ -6,6 +6,7 @@
 #include "objects/CarInputs.h"
 #include "objects/WheelsScript.h"
 #include "objects/ShowOBB.h"
+#include "BotMovement.h"
 
 #include <glm/vec3.hpp>
 #include <iostream>
@@ -85,8 +86,14 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
 
 	race_manager->AddCar(car);
-	for(int i=0; i<4; i++)
-		race_manager->AddCar(new GameObject("f1car"));
+	for (int i = 0; i < 1; i++) {
+		GameObject* bot = new GameObject("hotrod");
+		BotMovement* botmv = new BotMovement(bot, 1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
+		botmv->SetMapManager(map);
+		botmv->getWaypoints(map);
+		bot->AddScript(botmv);
+		race_manager->AddCar(bot);
+	}
 
 	GameObject* amobj = new GameObject;
 	AnimationManager* am = new AnimationManager;
