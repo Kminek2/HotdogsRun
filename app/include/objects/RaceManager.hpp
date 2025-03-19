@@ -7,6 +7,7 @@
 #include <glm/vec2.hpp>
 #include <array>
 #include <functional>
+#include <set>
 #include "objects/AnimationManager.h"
 
 class RaceManager {

@@ -1,5 +1,7 @@
 #include "PowerUp.hpp"
 
+std::set<std::string> PowerUp::car_names;
+
 void PowerUp::Init() {
 	gameObject->surface_type = NEVER_COLLIDE;
 
