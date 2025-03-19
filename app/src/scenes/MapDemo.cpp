@@ -33,6 +33,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	//qc->_sm(100.0f);
 	//qc->_mappings(__keybinds({GLFW_KEY_I, GLFW_KEY_K, GLFW_KEY_J, GLFW_KEY_L, GLFW_KEY_U, GLFW_KEY_O, GLFW_KEY_P}));
 
+	on_end_screen = false;
+
 	_rand rand(seed);
 
 	MapManager::MapSettingsValues svals;
@@ -87,10 +89,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	race_manager->AddCar(car);
 	for (int i = 0; i < 1; i++) {
 		GameObject* bot = new GameObject("hotrod");
-		BotMovement* botmv = new BotMovement(bot, 1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
-		botmv->SetMapManager(map);
-		botmv->getWaypoints(map);
-		bot->AddScript(botmv);
+		//BotMovement* botmv = new BotMovement(bot, 1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
+		//botmv->SetMapManager(map);
+		//botmv->getWaypoints(map);
+		//bot->AddScript(botmv);
 		race_manager->AddCar(bot);
 	}
 
@@ -105,7 +107,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
 	std::cout << "===\n\t" << winner->car->GetModelName() << "\n\t" << winner->checkpoint << "\n\t" << winner->time << '\n';
-	Application::Invoke([]() {Application::LoadScene("main_menu"); }, 1000);
+	Application::Invoke([&](){ShowEndScreen();}, 1000);
 }
 
 void MapDemo::Update() {
@@ -117,10 +119,26 @@ void MapDemo::Update() {
 	if (Input::getKeyClicked(GLFW_KEY_B)) {
 		std::cout << car->transform->position.x - Camera::main->cameraTransform->position.x << ' ' << car->transform->position.y - Camera::main->cameraTransform->position.y << ' ' << car->transform->position.z - Camera::main->cameraTransform->position.z << '\n' << car->transform->rotation.x - Camera::main->cameraTransform->rotation.x << ' ' << car->transform->rotation.y - Camera::main->cameraTransform->rotation.y << '\n';
 	}
+
+	if (on_end_screen && UpdateEndScreen()) {
+		Application::LoadScene("main_menu");
+		return;
+	}
 }
 
 void MapDemo::UnLoad() {
 	delete build;
 	delete race_manager;
 	delete map;
+}
+
+void MapDemo::ShowEndScreen() {
+	on_end_screen = true;
+}
+
+bool MapDemo::UpdateEndScreen() {
+	if (Input::getKeyClicked(GLFW_KEY_ENTER))
+		return true;
+
+	return false;
 }

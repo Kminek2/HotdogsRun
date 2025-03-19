@@ -21,6 +21,9 @@ private:
 	RaceManager* race_manager;
 
 	const float MAP_TILE_SIZE = 12.7f; // 127x127 mv size
+	bool on_end_screen;
+	void ShowEndScreen();
+	bool UpdateEndScreen();
 
 public:
 	std::shared_ptr<Scene> Init() override;

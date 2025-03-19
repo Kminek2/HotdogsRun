@@ -14,9 +14,9 @@ bool MainMenuScene::first_load = true;
 std::shared_ptr<Scene> MainMenuScene::Init() {
 	Scene* scene = new Scene(this);
 
-    //qc = new QuickCamera();
-    //qc->_sr(0.75f);
-	//qc->_sm(100.0f);
+    qc = new QuickCamera();
+    qc->_sr(0.75f);
+	qc->_sm(100.0f);
 
     Camera::main->cameraTransform->position = glm::vec3(-9.96294f, -9.06299f, 2.38608f);
     Camera::main->cameraTransform->rotation = glm::vec2(47.0f, -4.0f);
@@ -51,6 +51,11 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     objs.push_back(new GameObject("prostaAsfalt"));
     objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-12.7f, 0.0f, 0.0f));
     objs[objs.size()-1]->transform->Rotate(glm::vec3(0.0f, 0.0f, 90.0f));
+    objs.push_back(new GameObject("prostaAsfalt"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(63.5f, 50.75f, 0.0f));
+    objs.push_back(new GameObject("skrzyzowanieTrojkatAsfalt"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, 12.7f, -0.05f));
+    objs[objs.size()-1]->transform->Rotate(glm::vec3(0.0f, 0.0f, -90.0f));
     
     if (first_load) {
         first_animation();
@@ -61,8 +66,8 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 }
 
 void MainMenuScene::Update() {
-    //qc->HandleMove();
-    //qc->HandleRotate();
+    qc->HandleMove();
+    qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();
 
