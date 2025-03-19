@@ -5,7 +5,7 @@
 #include "objects/MapManager.h"
 #include "ObjectScript.h"
 
-class BotMovement : public CarMovement{
+class BotMovement : public ObjectScript{
 private:
     struct bot_actions {
         bool accelerate;
@@ -21,13 +21,13 @@ private:
     } botBehavior;
 
     int currentWaypointIndex;
+    std::vector<GameObject*> waypoints;
     GameObject* botObject;
     MapManager* map;
-
-    void handleCollision(Collisions::CollisionData* collisionData);
+    CarMovement* carmv;
 
 public:
-    BotMovement(GameObject* bot, float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode = false, float multiplier = 0.1f, glm::vec3 nitro_trail_offset = glm::vec3(1.7f, 0.0f, 0.0f));
+    BotMovement(CarMovement* car);
     void Init() override;
     void Update() override;
     void OnDestroy() override;
@@ -35,8 +35,8 @@ public:
     void followPath();
     void avoidObstacles();
     BotMovement* SetMapManager(MapManager* map);
-    void getWaypoints(MapManager* map);
+    std::vector<GameObject*> GetWaypoints(MapManager* map);
+    CarMovement* SetCarMovement(CarMovement* car);
     
-    std::vector<GameObject*> waypoints; //debug
 
 };
