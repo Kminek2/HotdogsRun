@@ -51,7 +51,7 @@ template<typename Function, typename ...Args>
 inline void Application::Invoke(Function&& func, unsigned long long delayMs, Args && ...args)
 {
 	std::thread([=]() {
-		std::this_thread::sleep_for(std::chrono::milliseconds(delayMs)); // Sleep for the specified delay
-		std::invoke(func, args...); // Call the function with arguments
-	}).detach(); // Detach the thread to run independently
+		std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+		std::invoke(func, args...);
+	}).detach();
 }

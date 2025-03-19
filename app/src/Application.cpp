@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <thread>
 
 #include "Scene.h"
 #include "scenes/LoadScene.h"
@@ -35,24 +36,49 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 
 	for (int i = 0; i < LoadScene::preLoadModels.size(); i++)
 	{
-		Model::LoadModelFromFile(LoadScene::preLoadModels[i],"models_obj_test/" + LoadScene::preLoadModels[i] + ".obj", "textures/" + LoadScene::preLoadModels[i] + ".png", true);
+		Model::LoadModelFromFile(LoadScene::preLoadModels[i],
+			"models_obj_test/" + LoadScene::preLoadModels[i] + ".obj", 
+			"textures/" + LoadScene::preLoadModels[i] + ".png", true);
+	}
+	
+	for (int i = 0; i < LoadScene::preLoadSprites.size(); i++)
+	{
+		Sprite::LoadImageFromFile(LoadScene::preLoadModels[i], 
+			"textures/" + LoadScene::preLoadModels[i] + ".png");
 	}
 
 	for (const auto& entry : fs::directory_iterator("models_obj_test")) {
 		entries.push_back(entry);
 	}
 
-
-	Model::LoadEmptyModel();
+	Model::LoadEmptyModel(); // responsible for GameObject() and GameObject("")
 
 	Model::SendBuffers();
 
 	loadedModel = 0;
 	loadedAll = false;
 
+	std::thread([this]() {
+		for (const auto& entry : entries) {
+			std::string modelName = entry.path().filename().stem().string();
+
+			if (!Model::LoadedAModel(modelName)) {
+				Model::LoadModelFromFile(
+					modelName,
+					entry.path().string(),
+					"textures/" + modelName + ".png",
+					true
+				);
+			}
+			loadedModel++;
+		}
+	}).detach();
+	
 	for (const auto& entry : fs::directory_iterator("images")) {
-		// std::cout << entry.path().filename().stem().string() << " : " << entry.path().string() << ", " << "textures/" + entry.path().filename().stem().string() + ".png" << '\n';
-		Sprite::LoadImageFromFile(entry.path().filename().stem().string(), entry.path().string());
+		Sprite::LoadImageFromFile(
+			entry.path().filename().stem().string(),
+			entry.path().string()
+		);
 	}
 
 	Sprite::SendDataToGPU();
@@ -159,25 +185,12 @@ void Application::UpdateBuffer(uint16_t frame, Uniform *uniform, Uniform* cubeMa
 std::list <float> frameTimes;
 
 void Application::Update() {
-	if (loadedModel < entries.size()) {
-		const auto& entry = entries[loadedModel];
-		std::string modelName = entry.path().filename().stem().string();
-
-		if (!Model::LoadedAModel(modelName)) {
-			Model::LoadModelFromFile(
-				modelName,
-				entry.path().string(),
-				"textures/" + modelName + ".png",
-				true
-			);
-		}
-		loadedModel++;
-	}
-	if (loadedModel == entries.size() && !loadedAll) {
+	if (!loadedAll && loadedModel == entries.size()) {
 		Model::SendBuffers();
 		vkDeviceWaitIdle(Device::getDevice());
 		loadedAll = true;
 	}
+
 	Time::UpdateTime();
 	frameTimes.push_back(1 / Time::deltaTime);
 

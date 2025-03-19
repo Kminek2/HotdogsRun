@@ -26,7 +26,6 @@ std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 std::vector<std::string> LoadScene::preLoadModels = {"hotrod", "Sprite"};
 std::vector<std::string> LoadScene::preLoadSprites = {"BaseFont"};
 
-
 std::shared_ptr<Scene> LoadScene::Init() {
 	Scene* scene = new Scene(this);
 
