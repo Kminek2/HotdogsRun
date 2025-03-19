@@ -6,6 +6,7 @@
 #include "objects/WheelsScript.h"
 #include "objects/ShowOBB.h"
 #include "BotMovement.h"
+#include "PowerUp.hpp"
 
 #include <glm/vec3.hpp>
 #include <iostream>
@@ -27,11 +28,6 @@ GameObject* car;
 
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
-
-	//qc = new QuickCamera();
-	//qc->_sr(0.75f);
-	//qc->_sm(100.0f);
-	//qc->_mappings(__keybinds({GLFW_KEY_I, GLFW_KEY_K, GLFW_KEY_J, GLFW_KEY_L, GLFW_KEY_U, GLFW_KEY_O, GLFW_KEY_P}));
 
 	on_end_screen = false;
 
@@ -78,7 +74,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
 		car->AddScript(cmv);
-		car->AddScript(new WheelsScript(*cmv, "3x3_tire_1", 0.9f, 0.9f, 0.0f, 2.2f));
+		car->AddScript(new WheelsScript(*cmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
 		car->AddScript(new CarInputs(*cmv, GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL));
 		car->AddScript(new CameraLockScript(Perspective, glm::vec3(-16, 0, 0), -20.0f, 45.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C));
 	}
@@ -98,6 +94,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		bot->AddScript(carmv);
 		race_manager->AddCar(bot);
 	}
+
+	PowerUp::car_names = race_manager->GetCarNames();
 
 	GameObject* amobj = new GameObject; // 'am' stands for Animation Manager, apparently
 	AnimationManager* am = new AnimationManager;

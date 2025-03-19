@@ -4,19 +4,15 @@ bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
 	glm::mat3 rotation, absRotation;
 	glm::vec3 distance = b.center - a.center;
 
-	for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 3; ++j) {
+	for (int i = 0; i < 3; ++i)
+		for (int j = 0; j < 3; ++j)
 			rotation[i][j] = glm::dot(a.axes[i], b.axes[j]);
-		}
-	}
 
 	distance = glm::vec3(glm::dot(distance, a.axes[0]), glm::dot(distance, a.axes[1]), glm::dot(distance, a.axes[2]));
 
-	for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 3; ++j) {
+	for (int i = 0; i < 3; ++i)
+		for (int j = 0; j < 3; ++j)
 			absRotation[i][j] = std::abs(rotation[i][j]) + 1e-6f;
-		}
-	}
 
 	for (int i = 0; i < 3; ++i) {
 		float ra = a.sizes[i];
@@ -32,14 +28,14 @@ bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
 			return false;
 	}
 
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 3; ++i)
 		for (int j = 0; j < 3; ++j) {
 			float ra = a.sizes[(i+1)%3]*absRotation[(i+2)%3][j] + a.sizes[(i+2)%3]*absRotation[(i+1)%3][j];
 			float rb = b.sizes[(j+1)%3]*absRotation[i][(j+2)%3] + b.sizes[(j+2)%3]*absRotation[i][(j+1)%3];
 			if (std::abs(distance[(i+1)%3]*rotation[(i+2)%3][j] - distance[(i+2)%3]*rotation[(i+1)%3][j]) > ra + rb)
 				return false;
 		}
-	}
+
 	return true;
 }
 
@@ -48,27 +44,23 @@ bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, 
 
 	for (int i = 0; i < obj1.obbs.size(); ++i) {
 		OBB absOBB1 = getAbsOBB(obj1.obbs[i], obj1);
+
 		for (int j = 0; j < obj2.obbs.size(); ++j) {
 			OBB absOBB2 = getAbsOBB(obj2.obbs[j], obj2);
-			if (checkOBBCollision(absOBB1, absOBB2))
-				coll = true;
 
-			if (coll)
+			if (checkOBBCollision(absOBB1, absOBB2)) {
+				coll = true;
 				break;
+			}
 		}
 
-		if (coll)
-			break;
+		if (coll) break;
 	}
 
-	if (!coll || !callback)
-		return coll;
+	if (!coll || !callback) return coll;
 
 	const std::string name1 = obj1.model->GetName();
 	const std::string name2 = obj2.model->GetName();
-
-	/*if(name1 == "checkpoint" || name2 == "checkpoint")
-		std::cout << "Callback for [" << name1 << " - " << name2 << "]\n";*/
 
 	const std::pair<std::string, std::string> colliders = { std::min(name1, name2), std::max(name1, name2) };
 

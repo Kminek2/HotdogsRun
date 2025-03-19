@@ -16,7 +16,7 @@ private:
     const std::string model;
     std::array<GameObject*, 4> wheels;
 public:
-    WheelsScript(CarMovement& movement_script, std::string model, float off_left, float off_right, float off_forw, float off_back, float off_up = 0.0f);
+    WheelsScript(CarMovement& movement_script, std::string model = "", float off_left = 1.0f, float off_right = 1.0f, float off_forw = 1.0f, float off_back = 1.0f, float off_up = 0.0f);
     void Init() override;
     void Update() override;
     void LateUpdate() override;

@@ -4,9 +4,10 @@
 
 #include <algorithm>
 #include <glm/vec3.hpp>
-#include <set>
 
 const std::array<glm::vec2, 5> RaceManager::offsets = std::array<glm::vec2, 5>({glm::vec2(2.0, 1.5), glm::vec2(2.0, 0.75), glm::vec2(2.0, 0), glm::vec2(2.0, -0.75), glm::vec2(2.0, -1.5)});
+
+std::set<std::string> RaceManager::car_names;
 
 RaceManager *RaceManager::SetMapManager(MapManager *map_manager) {
 	this->map_manager = map_manager;
@@ -46,6 +47,8 @@ RaceManager *RaceManager::AddCar(GameObject *car) {
 
 	++cars_placed;
 	car_objects.push_back(new RaceManager::CarObject(car, 0, 0));
+	car_names.insert(car->GetModelName());
+
 	return this;
 }
 
@@ -78,17 +81,14 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 /// Start race. Has to have at least two cars and a termination condition.
 /// </summary>
 void RaceManager::StartRace() {
-	if (car_objects.size() < 2)
-		throw std::invalid_argument("add more cars");
-	if (termination_condition == undefined)
-		throw std::invalid_argument("define a condition");
+	if (car_objects.size() < 2) throw std::invalid_argument("add more cars");
+	if (termination_condition == undefined) throw std::invalid_argument("define a condition");
 
 	StartAnimation();
 }
 
 void RaceManager::AfterCountdown() {
-	if (countdown_number != nullptr)
-		delete countdown_number;
+	if (countdown_number != nullptr) delete countdown_number;
 	countdown_number = nullptr;
 	
 	race_started = true;
@@ -98,21 +98,18 @@ void RaceManager::AfterCountdown() {
 	if (termination_condition == TIME)
 		Application::Invoke(&RaceManager::EndRace, termination_condition_value, this, true);
 
-	std::set<std::string> car_names;
-
 	for (int i = 0; i < map_manager->GetCheckPoints(); i++) {
 		map_manager->GetCheckPoint(i)->AddDefaultOBB(glm::vec3(1), true)->surface_type = NEVER_COLLIDE;
 	}
 
-	for (CarObject *car : car_objects)
-		if (car_names.insert(car->car->GetModelName()).second) {
-			Collisions::addCallback("checkpoint", car->car->GetModelName(),
-						std::bind(&RaceManager::OnCheckpoint, this, std::placeholders::_1));
-			std::cout << "Added callback to [checkpoint - " << car->car->GetModelName() << "] collision\n";
-		}
+	for(const std::string& car_name : car_names) {
+		Collisions::addCallback("checkpoint", car_name,
+					std::bind(&RaceManager::OnCheckpoint, this, std::placeholders::_1));
+		std::cout << "Added callback to [checkpoint - " << car_name << "] collision\n";
+	}
 
 	clock = new Text("SansSerif", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
-	clock->SetText("0.00");
+	clock->SetText("Get ready!");
 }
 
 /// <summary>
@@ -137,6 +134,8 @@ RaceManager::CarObject* RaceManager::EndRace(bool executeCallbacks) {
 	if (!race_started)
 		return nullptr; // race might have been force-ended already
 
+	car_names.clear();
+
 	std::sort(car_objects.begin(), car_objects.end(), [](CarObject *a, CarObject *b) {
 		if (a->checkpoint == b->checkpoint)
 			return a->time < b->time;
@@ -158,6 +157,8 @@ RaceManager::CarObject* RaceManager::EndRace(bool executeCallbacks) {
 /// Subscribe a `void` return type function to the 'race end' event
 /// </summary>
 void RaceManager::SubscribeToRaceEnd(const std::function<void(CarObject *)> &callback) { subscribers.push_back(callback); }
+
+std::set<std::string> RaceManager::GetCarNames() { return car_names; }
 
 RaceManager *RaceManager::SetAnimationManager(AnimationManager *am) {
 	animation_manager = am;
