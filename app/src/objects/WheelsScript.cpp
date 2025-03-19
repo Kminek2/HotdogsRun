@@ -5,6 +5,31 @@ WheelsScript::WheelsScript(CarMovement& movement_script, std::string model, floa
 {}
 
 void WheelsScript::Init() {
+    if (model == "") {
+        if (gameObject->GetModelName() == "f1car") {
+            const_cast<std::string&>(model) = "tire_f1car";
+            const_cast<float&>(off_left) = 0.6f;
+            const_cast<float&>(off_right) = 0.6f;
+            const_cast<float&>(off_forw) = 1.4f;
+            const_cast<float&>(off_back) = 1.1f;
+            const_cast<float&>(off_up) = 0.05f;
+        } else if (gameObject->GetModelName() == "racing_car") {
+            const_cast<std::string&>(model) = "3x3_tire_1";
+            const_cast<float&>(off_left) = 0.75f;
+            const_cast<float&>(off_right) = 0.75f;
+            const_cast<float&>(off_forw) = 1.4f;
+            const_cast<float&>(off_back) = 0.8f;
+            const_cast<float&>(off_up) = 0.05f;
+        } else if (gameObject->GetModelName() == "hotrod") {
+            const_cast<std::string&>(model) = "3x3_tire_2";
+            const_cast<float&>(off_left) = 0.75f;
+            const_cast<float&>(off_right) = 0.75f;
+            const_cast<float&>(off_forw) = 0.85f;
+            const_cast<float&>(off_back) = 1.4f;
+            const_cast<float&>(off_up) = 0.05f;
+        }
+    }
+
     for (int i = 0; i < wheels.size(); ++i)
         wheels[i] = new GameObject(model);
 }
