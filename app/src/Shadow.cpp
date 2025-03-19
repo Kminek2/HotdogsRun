@@ -18,3 +18,19 @@ Shadow::Shadow(glm::uvec2 size, glm::vec3 dir)
     upMatrix = glm::rotate(upMatrix, glm::radians(90.0f), glm::vec3(0, 1, 0));
     glm::mat4 lightView = glm::lookAt(glm::vec3(0, 0, 0), dir, glm::vec3(upMatrix * glm::vec4(dir, 1)));
 }
+
+Shadow::~Shadow()
+{
+    vkDestroyImage(Device::getDevice(), lightDepthImage.image, nullptr);
+    vkDestroyImageView(Device::getDevice(), lightDepthImage.imageView, nullptr);
+    vkDestroySampler(Device::getDevice(), depthImageSampler, nullptr);
+    vkFreeMemory(Device::getDevice(), depthImageMemory, nullptr);
+}
+
+void Shadow::UpdateLightSpaceMatrix(glm::uvec2 size, glm::vec3 pos, glm::vec3 rotation)
+{
+    //lightSpaceMatrix = glm::ortho(-(size.x / 2.0f), size.x / 2.0f, -(size.y / 2.0f), size.y / 2.0f, -100.0f, 100.0f);
+    //glm::mat4 upMatrix(1);
+    //upMatrix = glm::rotate(upMatrix, glm::radians(90.0f), glm::vec3(0, 1, 0));
+    //glm::mat4 lightView = glm::lookAt(pos, rotation, glm::vec3(upMatrix * glm::vec4(rotation, 1)));
+}

@@ -4,6 +4,7 @@
 
 #include "UniformBuffer.h"
 #include "LightBufferStruct.h"
+#include "Shadow.h"
 
 class Application;
 class GameObject;
@@ -37,6 +38,8 @@ protected:
 	static UniformBuffer<SpotLightBuffer>* spotLightBuffer;
 private:
 
+	static void UpdateShadows();
+	static Shadow* dirLightShadow;
 	static DirLightBuffer dirLight;
 
 	static UniformBuffer<PointLightBuffer>* getPointBuffer() { return pointLightBuffer; }

@@ -204,6 +204,8 @@ void Application::Update() {
 	Scene::loadedScene.get()->sceneScript->LateUpdate();
 	GameObject::LateUpdateAllObjectScripts();
 
+	LightObject::UpdateShadows(); // TODO: make it all lights
+
 	soundEngine->UpdatePos();
 	AudioSource3d::UpdateAllPosition();
 	Transform::ClearMemory();

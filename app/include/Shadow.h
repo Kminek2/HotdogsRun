@@ -18,6 +18,6 @@ public:
 	Shadow(glm::uvec2 size, glm::vec3 dir);
 	~Shadow();
 
-
+	void UpdateLightSpaceMatrix(glm::uvec2 size, glm::vec3 pos, glm::vec3 rotation);
 };
 

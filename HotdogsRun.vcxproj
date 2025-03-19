@@ -72,6 +72,7 @@
     <ClCompile Include="app\src\scenes\MainMenuScene.cpp" />
     <ClCompile Include="app\src\scenes\MapDemo.cpp" />
     <ClCompile Include="app\src\Shader.cpp" />
+    <ClCompile Include="app\src\Shadow.cpp" />
     <ClCompile Include="app\src\SoundEngine.cpp" />
     <ClCompile Include="app\src\SpotLight.cpp" />
     <ClCompile Include="app\src\Sprite.cpp" />
@@ -134,6 +135,7 @@
     <ClInclude Include="app\include\QuickCamera.h" />
     <ClInclude Include="app\include\RectTransform.h" />
     <ClInclude Include="app\include\scenes\MainMenuScene.h" />
+    <ClInclude Include="app\include\Shadow.h" />
     <ClInclude Include="app\include\SoundEngine.h" />
     <ClInclude Include="app\include\Sprite.h" />
     <ClInclude Include="app\include\StringOperations.hpp" />
