@@ -38,11 +38,14 @@ public:
 	void OnCheckpoint(Collisions::CollisionData* collision_data);
 	void SubscribeToRaceEnd(const std::function<void(CarObject*)>& callback);
 
+	std::set<std::string> GetCarNames();
+
 private:
 	MapManager* map_manager = nullptr;
 	int cars_placed = 0;
 
 	std::vector<CarObject*> car_objects;
+	static std::set<std::string> car_names;
 
 	bool race_started = false;
 

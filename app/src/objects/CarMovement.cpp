@@ -66,9 +66,8 @@ void CarMovement::Update() {
 			coll = (obj->surface_type == ALWAYS_COLLIDE);
 			if (coll)
 				collidedWith = obj;
-		} else {
+		} else
 			road_type = std::max(road_type, obj->surface_type);
-		}
 	}
 	if (coll) {
 		gameObject->transform->MoveTo(old_pos);
@@ -77,21 +76,13 @@ void CarMovement::Update() {
 		forces.x = -forces.x;
 		gripMult += collidedWith->transform->position - gameObject->transform->position;
 		axleAngle = 0.0f;
-		if (actSpeed > 0) {
-			actSpeed = std::min(actSpeed/2.5f, 20.0f);
-		} else {
-			actSpeed = std::max(actSpeed/2.5f, -20.0f);
-		}
-
+		actSpeed = std::min(actSpeed/2.5f, 20.0f * (actSpeed > 0 ? 1 : -1));
 		downSpeed += std::abs((1 / (carWeight * multiplier)) * actSpeed) * 0.1f;
 	}
 	actActions = clearedActions;
-	//std::cout << road_type << '\n';
 }
 
-void CarMovement::OnDestroy() {
-
-}
+void CarMovement::OnDestroy() {}
 
 void CarMovement::handleGas() {
 	if (forces.x != 1.0f) return;
@@ -192,7 +183,6 @@ void CarMovement::handleForces() {
 			actSpeed = std::min(actSpeed, 0.0f);
 		}
 	}
-	//std::cout << forces.x << '\n';
 }
 
 void CarMovement::goForward() {
@@ -225,8 +215,7 @@ CarMovement::road_type_data::road_type_data(float acc_multiplier, float eng_brea
 }
 
 void CarMovement::useNitro() {
-	if (nitros_available < 1)
-		return;
+	if (nitros_available < 1) return;
 	--nitros_available;
 	before_nitro_mem = actSpeed;
 	nitro_timer = nitro_duration;
