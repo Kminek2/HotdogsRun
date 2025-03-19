@@ -18,10 +18,10 @@ const size_t seed = 42;
 const unsigned int cityNum = 3;
 
 const std::array<std::vector<std::string>, 16> defaultBuildings = { {
-	{""}, {"case_1"}, {"case_2"}, {"case_3"},
-	{"case_4"}, {"case_5"}, {"case_6"}, {"case_7"},
-	{"case_8"}, {"case_9"}, {"case_10"}, {"case_11"},
-	{"case_12"}, {"case_13"}, {"case_14"}, {"case_15"}
+	{""}, {"case_1","case_1_color"}, {"case_2","case_2_color"}, {"case_3","case_3_color"},
+	{"case_4","case_4_color"}, {"case_5"}, {"case_6","case_6_color"}, {"case_7","case_7_color"},
+	{"case_8","case_8_color"}, {"case_9","case_9_color"}, {"case_10"}, {"case_11","case_11_color"},
+	{"case_12","case_12_color"}, {"case_13","case_13_color"}, {"case_14"}, {"case_15"}
 } };
 
 GameObject* car;
@@ -85,13 +85,13 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	race_manager->AddCar(car);
 	for (int i = 0; i < 1; i++) {
 		GameObject* bot = new GameObject("hotrod");
+
 		CarMovement* carmv = new CarMovement(1.0f, 1.0f, 300.0f, -100.0f, 80.0f, 20.0f, 0.1f, false, 0.05f);
 		BotMovement* botmv = new BotMovement(carmv);
-		botmv->SetMapManager(map);
-		botmv->GetWaypoints(map);
-		botmv->SetCarMovement(carmv);
-		bot->AddScript(botmv);
-		bot->AddScript(carmv);
+
+		botmv->SetMapManager(map)->SetCarMovement(carmv);
+		bot->AddScript(botmv)->AddScript(carmv);
+
 		race_manager->AddCar(bot);
 	}
 

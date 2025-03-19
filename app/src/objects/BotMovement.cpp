@@ -33,7 +33,7 @@ BotMovement* BotMovement::SetMapManager(MapManager* map)
 std::vector<GameObject*> BotMovement::GetWaypoints(MapManager* map)
 {
     if (!map) {
-        std::cout << "❌ MapManager is NULL!\n";
+        std::cout << "MapManager is NULL!\n";
         return waypoints;
     }
     std::cout << "Get waypoints!\n";
@@ -48,6 +48,7 @@ CarMovement* BotMovement::SetCarMovement(CarMovement* car)
 }
 
 void BotMovement::chooseAction() {
+    assert(botBehavior != BotBehavior::undefined);
 
     if (botBehavior == AGGRESSIVE) {
         botActions.accelerate = true;
@@ -65,87 +66,85 @@ void BotMovement::chooseAction() {
     }
 }
 
-    void BotMovement::followPath() {
-        if (this->waypoints.empty()) {
-            std::cout << "No waypoints! Bot can't move!\n";
-            return;
-        }
-        if (this->carmv == nullptr) {
-            std::cout << "Car movement not set! \n";
-            return;
-        }
-
-
-        GameObject* targetWaypoint = waypoints[currentWaypointIndex];
-        glm::vec3 targetPos = targetWaypoint->transform->position;
-        glm::vec3 botPos = botObject->transform->position;
-
-        // Kierunek do waypointa - sprawdzenie przed normalizacją
-        glm::vec3 rawDirection = targetPos - botPos;
-        if (glm::dot(rawDirection, rawDirection) < 0.0001f) return; // Używamy kwadratu długości do porównania
-        glm::vec3 direction = glm::normalize(rawDirection);
-
-        direction.z = 0;
-        // Wektor front bota
-        glm::vec3 front = glm::normalize(botObject->transform->front);
-
-        // Kąt między botem a waypointem
-        float dotProduct = glm::dot(front, direction);
-        std::cout << "dotProduct: " << dotProduct << "\n";
-
-        // Obliczanie kąta między botem a waypointem (jeśli chcesz kąt w radianach)
-        float angle = glm::degrees(glm::acos(dotProduct));
-        std::cout << "Angle (degrees): " << angle << "\n";
-
-        // Wykrywanie skrętu - Używamy crossProduct.Z zamiast crossProduct.Y!!!
-        glm::vec3 crossProduct = glm::cross(front, direction);
-        std::cout << "CrossProduct.z: " << crossProduct.z << "\n";
-        bool turnLeft = crossProduct.z > .1f;  // Jeśli Z jest dodatnie -> skręt w lewo
-        bool turnRight = crossProduct.z < -.1f; // Jeśli Z jest ujemne -> skręt w prawo
-
-        // Logika hamowania i przyspieszania
-        float distance = glm::distance(botPos, targetPos);
-        bool shouldBrake = false;
-
-        if (distance < 2.0f && (crossProduct.z >.1f || crossProduct.z <-.1f)) {
-            shouldBrake = true;
-        }
-
-        bool shouldAccelerate = !shouldBrake;
-
-        // Debugowanie logiki sterowania
-        std::cout << "Should Brake: " << shouldBrake << "\n";
-        std::cout << "Should Accelerate: " << shouldAccelerate << "\n";
-
-        // Wysyłanie poleceń do samochodu
-        if (shouldAccelerate) {
-            std::cout << "🚀 Accelerating!\n";
-            this->carmv->goForward();
-        }
-        else if (shouldBrake) {
-            std::cout << "🛑 Braking!\n";
-            this->carmv->useHandBreak();
-        }
-        if (turnLeft) {
-            std::cout << "⬅️ Turning Left!\n";
-            this->carmv->makeLeftTurn();
-        }
-        else if (turnRight) {
-            std::cout << "➡️ Turning Right!\n";
-            this->carmv->makeRightTurn();
-        }
-
-        // Przejście do następnego waypointa
-        if (distance < 5.0f) {
-            currentWaypointIndex++;
-            if (currentWaypointIndex >= waypoints.size()) {
-                currentWaypointIndex = 0;
-            }
-        }
-
+void BotMovement::followPath() {
+    if (this->waypoints.empty()) {
+        std::cout << "No waypoints! Bot can't move!\n";
+        return;
+    }
+    if (this->carmv == nullptr) {
+        std::cout << "Car movement not set! \n";
+        return;
     }
 
-//void BotMovement::avoidObstacles() {
+    GameObject* targetWaypoint = waypoints[currentWaypointIndex];
+    glm::vec3 targetPos = targetWaypoint->transform->position;
+    glm::vec3 botPos = botObject->transform->position;
+
+    // Kierunek do waypointa - sprawdzenie przed normalizacją
+    glm::vec3 rawDirection = targetPos - botPos;
+    if (glm::dot(rawDirection, rawDirection) < 0.0001f) return; // Używamy kwadratu długości do porównania
+    glm::vec3 direction = glm::normalize(rawDirection);
+
+    direction.z = 0;
+    // Wektor front bota
+    glm::vec3 front = glm::normalize(botObject->transform->front);
+
+    // Kąt między botem a waypointem
+    float dotProduct = glm::dot(front, direction);
+    std::cout << "dotProduct: " << dotProduct << "\n";
+
+    // Obliczanie kąta między botem a waypointem (jeśli chcesz kąt w radianach)
+    float angle = glm::degrees(glm::acos(dotProduct));
+    std::cout << "Angle (degrees): " << angle << "\n";
+
+    // Wykrywanie skrętu - Używamy crossProduct.Z zamiast crossProduct.Y!!!
+    glm::vec3 crossProduct = glm::cross(front, direction);
+    std::cout << "CrossProduct.z: " << crossProduct.z << "\n";
+    bool turnLeft = crossProduct.z > .1f;  // Jeśli Z jest dodatnie -> skręt w lewo
+    bool turnRight = crossProduct.z < -.1f; // Jeśli Z jest ujemne -> skręt w prawo
+
+    // Logika hamowania i przyspieszania
+    float distance = glm::distance(botPos, targetPos);
+    bool shouldBrake = false;
+
+    if (distance < 2.0f && (crossProduct.z >.1f || crossProduct.z <-.1f)) {
+        shouldBrake = true;
+    }
+
+    bool shouldAccelerate = !shouldBrake;
+
+    // Debugowanie logiki sterowania
+    std::cout << "Should Brake: " << shouldBrake << "\n";
+    std::cout << "Should Accelerate: " << shouldAccelerate << "\n";
+
+    // Wysyłanie poleceń do samochodu
+    if (shouldAccelerate) {
+        std::cout << "Accelerating!\n";
+        this->carmv->goForward();
+    }
+    else if (shouldBrake) {
+        std::cout << "Braking!\n";
+        this->carmv->useHandBreak();
+    }
+    if (turnLeft) {
+        std::cout << "Turning Left!\n";
+        this->carmv->makeLeftTurn();
+    }
+    else if (turnRight) {
+        std::cout << "Turning Right!\n";
+        this->carmv->makeRightTurn();
+    }
+
+    // Przejście do następnego waypointa
+    if (distance < 5.0f) {
+        currentWaypointIndex++;
+        if (currentWaypointIndex >= waypoints.size()) {
+            currentWaypointIndex = 0;
+        }
+    }
+}
+
+void BotMovement::avoidObstacles() {
 //    if (!map) return;
 //
 //    glm::vec3 botPosition = botObject->transform->position;
