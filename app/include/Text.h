@@ -15,6 +15,7 @@ private:
 	glm::vec4 color;
 public:
 	Text(std::string fontName, glm::vec3 pos, glm::vec2 anchor, float fontSize = 1, glm::vec4 col = glm::vec4(1), float spacing = 1);
+	~Text();
 	std::string getText() { return text; }
 	void SetText(std::string text);
 	float getSize() { return size; }

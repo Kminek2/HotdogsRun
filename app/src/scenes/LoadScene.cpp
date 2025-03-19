@@ -18,9 +18,9 @@
 
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"load", new LoadScene()},
+	{"map_demo", new MapDemo()},
 	{"main_menu", new MainMenuScene()},
 	{"debug", new DebugScene()},
-	{"map_demo", new MapDemo()},
 };
 
 std::vector<std::string> LoadScene::preLoadModels = {"hotrod", "Sprite"};

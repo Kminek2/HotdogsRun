@@ -48,3 +48,9 @@ void Text::SetColor(glm::vec4 color)
 	this->color = color;
 	SetText(text);
 }
+
+Text::~Text(){
+	for(Sprite* sprite : textSprites){
+		delete sprite;
+	}
+}

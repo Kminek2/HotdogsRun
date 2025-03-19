@@ -14,6 +14,10 @@ bool MainMenuScene::first_load = true;
 std::shared_ptr<Scene> MainMenuScene::Init() {
 	Scene* scene = new Scene(this);
 
+    //qc = new QuickCamera();
+    //qc->_sr(0.75f);
+	//qc->_sm(100.0f);
+
     Camera::main->cameraTransform->position = glm::vec3(-9.96294f, -9.06299f, 2.38608f);
     Camera::main->cameraTransform->rotation = glm::vec2(47.0f, -4.0f);
 
@@ -57,6 +61,8 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 }
 
 void MainMenuScene::Update() {
+    //qc->HandleMove();
+    //qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();
 
@@ -97,6 +103,14 @@ void MainMenuScene::ShowMenu() {
     menu_options[menu_options.size()-1].first->SetText("Exit");
 }
 
+void MainMenuScene::HideMenu() {
+    for (auto& x : menu_options) {
+        delete x.first;
+        delete x.second;
+    }
+    menu_options.clear();
+}
+
 void MainMenuScene::UpdateMenu() {
     if (Input::getKeyClicked(GLFW_KEY_DOWN)) ++menu_choosen_option;
     if (Input::getKeyClicked(GLFW_KEY_UP))   --menu_choosen_option;
@@ -108,7 +122,7 @@ void MainMenuScene::UpdateMenu() {
         switch (menu_choosen_option)
         {
         case 0:
-            Application::LoadScene("map_demo");
+            to_maps_animation();
             break;
         case 1:
             
@@ -143,4 +157,20 @@ void MainMenuScene::first_animation() {
         menu_choosen_option = 0;
         UpdateMenuHighlight();
     }});
+}
+
+void MainMenuScene::to_maps_animation() {
+    am->addToQueue({{glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, {glm::vec3(-5.16202f, 1.9114f, 1.5676f), glm::vec2(24.5f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}, false, [&](){
+        HideMenu();
+    }});
+    am->addToQueue({{glm::vec3(-5.16202f, 1.9114f, 1.5676f), glm::vec2(24.5f, -2.0f)}, {glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, {glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, {glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
+}
+
+void MainMenuScene::from_maps_animation() {
+    am->addToQueue({{glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, {glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, {glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, {glm::vec3(-5.16202f, 1.9114f, 1.5676f), glm::vec2(24.5f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(-5.16202f, 1.9114f, 1.5676f), glm::vec2(24.5f, -2.0f)}, {glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
 }
