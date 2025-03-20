@@ -94,7 +94,9 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		BotMovement* botmv = new BotMovement(carmv);
 
 		botmv->SetMapManager(map)->SetCarMovement(carmv);
+		botmv->GetWaypoints(map);
 		bot->AddScript(botmv)->AddScript(carmv);
+		
 
 		race_manager->AddCar(bot);
 	}

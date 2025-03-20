@@ -145,53 +145,53 @@ void BotMovement::followPath() {
 }
 
 void BotMovement::avoidObstacles() {
-//    if (!map) return;
-//
-//    glm::vec3 botPosition = botObject->transform->position;
-//    glm::vec3 frontDirection = glm::normalize(botObject->transform->front);
-//    float detectionRange = 5.0f; 
-//
-//    bool obstacleDetected = false;
-//    glm::vec3 obstaclePos;
-//
-//    for (GameObject* decor : map->getDecors()) {
-//        if (!decor) continue;
-//
-//        glm::vec3 decorPosition = decor->transform->position;
-//        float distance = glm::distance(botPosition, decorPosition);
-//
-//         if (distance < detectionRange) {
-//            glm::vec3 toObstacle = glm::normalize(decorPosition - botPosition);
-//            float dotProduct = glm::dot(frontDirection, toObstacle);
-//
-//            if (dotProduct > 0.7f) { // check if obstacle is in front
-//                obstacleDetected = true;
-//                obstaclePos = decorPosition;
-//                break;
-//            }
-//        }
-//    }
-//
-//    if (obstacleDetected) {
-//        botActions.accelerate = false;
-//
-//        // avoid the obstacle
-//        glm::vec3 rightDirection = glm::cross(frontDirection, glm::vec3(0, 1, 0));
-//        glm::vec3 leftDirection = -rightDirection;
-//
-//        glm::vec3 rightCheck = botPosition + rightDirection * 2.0f;
-//        glm::vec3 leftCheck = botPosition + leftDirection * 2.0f;
-//
-//        float rightDist = glm::distance(rightCheck, obstaclePos);
-//        float leftDist = glm::distance(leftCheck, obstaclePos);
-//
-//        if (leftDist > rightDist) {
-//            botActions.turnLeft = true;
-//            botActions.turnRight = false;
-//        }
-//        else {
-//            botActions.turnLeft = false;
-//            botActions.turnRight = true;
-//        }
-//    }
+    if (!map) return;
+
+    glm::vec3 botPosition = botObject->transform->position;
+    glm::vec3 frontDirection = glm::normalize(botObject->transform->front);
+    float detectionRange = 5.0f; 
+
+    bool obstacleDetected = false;
+    glm::vec3 obstaclePos;
+
+    for (GameObject* decor : map->getDecors()) {
+        if (!decor) continue;
+
+        glm::vec3 decorPosition = decor->transform->position;
+        float distance = glm::distance(botPosition, decorPosition);
+
+         if (distance < detectionRange) {
+            glm::vec3 toObstacle = glm::normalize(decorPosition - botPosition);
+            float dotProduct = glm::dot(frontDirection, toObstacle);
+
+            if (dotProduct > 0.7f) { // check if obstacle is in front
+                obstacleDetected = true;
+                obstaclePos = decorPosition;
+                break;
+            }
+        }
+    }
+
+    if (obstacleDetected) {
+        botActions.accelerate = false;
+
+        // avoid the obstacle
+        glm::vec3 rightDirection = glm::cross(frontDirection, glm::vec3(0, 1, 0));
+        glm::vec3 leftDirection = -rightDirection;
+
+        glm::vec3 rightCheck = botPosition + rightDirection * 2.0f;
+        glm::vec3 leftCheck = botPosition + leftDirection * 2.0f;
+
+        float rightDist = glm::distance(rightCheck, obstaclePos);
+        float leftDist = glm::distance(leftCheck, obstaclePos);
+
+        if (leftDist > rightDist) {
+            botActions.turnLeft = true;
+            botActions.turnRight = false;
+        }
+        else {
+            botActions.turnLeft = false;
+            botActions.turnRight = true;
+        }
+    }
 }
