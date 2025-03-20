@@ -78,10 +78,12 @@ void main() {
     vec3 viewDir = normalize(cPos.xyz - fragPos);
     vec3 result = vec3(0, 0, 0);
     vec3 texColor = texture(samplers, vec2(fragTexCoord.x, fragTexCoord.y / MAX_TEXTURES)).xyz;
+    vec3 resColor = texColor;
 
     for(int i = 0; i < colorChange.amount; i++)
         if(length(texColor - colorChanges[colorChange.index + i].from) <= 0.2)
-            texColor = colorChanges[colorChange.index + i].to;
+            resColor = colorChanges[colorChange.index + i].to;
+
 
     DirLight dirLight;
     dirLight.direction = lDirection.xyz;
@@ -98,14 +100,14 @@ void main() {
 
     for(int i = 0; i < pLNum; i++)
     {
-        result += CalcPointLight(pointLights[i], norm, fragPos, viewDir, texColor);
+        result += CalcPointLight(pointLights[i], norm, fragPos, viewDir, resColor);
     }
 
     for(int i = 0; i < sLNum; i++)
     {
-        result += CalcSpotLight(spotLights[i], norm, fragPos, viewDir, texColor);
+        result += CalcSpotLight(spotLights[i], norm, fragPos, viewDir, resColor);
     }
-    outColor = vec4(result * texColor, 1.0);
+    outColor = vec4(result * resColor, 1.0);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
