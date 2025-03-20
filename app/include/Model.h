@@ -21,7 +21,7 @@ class DebugScene;
 struct Model
 {
 	static void LoadEmptyModel();
-	static void LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords);
+	static void LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords, bool OneDTexture = false);
 
 	static std::pair<Model*, uint32_t> Create(std::string model);
 	static std::pair<Model*, uint32_t> CreateUI(std::string model);

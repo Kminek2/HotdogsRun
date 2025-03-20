@@ -22,7 +22,7 @@ void Model::LoadEmptyModel() {
 	loadedModels[""]->modelName = "";
 }
 
-void Model::LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords)
+void Model::LoadModelFromFile(std::string name, std::string filePath, std::string texturePath, bool swichYZCoords, bool OneDTexture)
 {
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
@@ -69,7 +69,7 @@ attrib.vertices[3 * index.vertex_index + 2]
 
 			vertex.texCoord = {
 attrib.texcoords[2 * index.texcoord_index + 0],
-1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+OneDTexture ? 0.5f : (1.0f - attrib.texcoords[2 * index.texcoord_index + 1])
 			};
 
 			vertex.normal = {
