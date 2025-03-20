@@ -30,7 +30,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 	Scene* scene = new Scene(this);
 
 	Text* loadingText = new Text("SansSerif", { 0, -0.5f, 0 }, glm::vec3(0), 0.5f);
-	amountOfLoaded = new Text("SansSerif", { 0, -0.8f, 0 }, glm::vec3(0), 0.5f);
+	amountOfLoaded = new Text("HackBold", { 0, -0.8f, 0 }, glm::vec3(0), 0.5f);
 
 	loadingText->SetText("Loading...");
 	count = 0;

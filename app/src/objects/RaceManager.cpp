@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "objects/ShowOBB.h"
 
+#include "StringOperations.hpp"
+
 #include <algorithm>
 #include <glm/vec3.hpp>
 
@@ -108,7 +110,7 @@ void RaceManager::AfterCountdown() {
 		std::cout << "Added callback to [checkpoint - " << car_name << "] collision\n";
 	}
 
-	clock = new Text("SansSerif", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
+	clock = new Text("HackBold", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
 	clock->SetText("Get ready!");
 }
 
@@ -239,6 +241,17 @@ void RaceManager::Update() {
 
 void RaceManager::handleClock() {
 	race_time_elapsed += Time::deltaTime;
-	int tmp_time = std::round(race_time_elapsed);
-	clock->SetText(std::to_string(tmp_time / 60) + "." + std::to_string(tmp_time % 60));
+
+	double whole;
+	int milliseconds  = static_cast<int>(std::modf(race_time_elapsed, &whole) * 1000);
+
+	int total_seconds = static_cast<int>(whole);
+
+	int minutes		  = total_seconds / 60;
+	int seconds		  = total_seconds % 60;
+
+	clock->SetText(
+		String::padZeros(minutes, 2) + ':' + 
+		String::padZeros(seconds, 2) + '.' + 
+		String::padZeros(milliseconds, 3));
 }

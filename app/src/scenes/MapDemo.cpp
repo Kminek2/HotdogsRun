@@ -140,6 +140,5 @@ void MapDemo::ShowEndScreen() {
 bool MapDemo::UpdateEndScreen() {
 	if (Input::getKeyClicked(GLFW_KEY_ENTER))
 		return true;
-
 	return false;
 }
