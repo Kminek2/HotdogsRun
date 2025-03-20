@@ -90,7 +90,7 @@ void RaceManager::StartRace() {
 }
 
 void RaceManager::AfterCountdown() {
-	if (countdown_number != nullptr) delete countdown_number;
+	if (countdown_number) delete countdown_number;
 	countdown_number = nullptr;
 	
 	race_started = true;
@@ -168,7 +168,7 @@ RaceManager *RaceManager::SetAnimationManager(AnimationManager *am) {
 }
 
 void RaceManager::StartAnimation() {
-	assert(animation_manager != nullptr);
+	assert(animation_manager);
 
 	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
 					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 18.25f}},

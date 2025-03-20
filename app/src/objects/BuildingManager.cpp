@@ -36,7 +36,7 @@ glm::vec3 BuildingManager::getRotation() { return rotation; }
 glm::vec3 BuildingManager::getScale() { return scale; }
 
 BuildingManager* BuildingManager::generateCities(unsigned n) {
-	unsigned int mapCityTile = rand.random(static_cast<size_t>(0), map->size());
+	unsigned int mapCityTile = rand.random(static_cast<size_t>(0), map->size() - 1);
 	for (int i = 0; i < n; i++) {
 		setOffset((*map)[mapCityTile]->transform->position);
 		cities.push_back(generateBuildings(generateBuildingsVector(mapCityTile, 20)));

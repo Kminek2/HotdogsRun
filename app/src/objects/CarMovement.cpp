@@ -4,12 +4,11 @@
 
 const CarMovement::actions CarMovement::clearedActions = {false, false, false, false, false};
 const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
-								
 	CarMovement::road_type_data(0.7f, 2.0f, 2.0f, 0.7f, 0.2f, 0.7f), // NONE
 	CarMovement::road_type_data(1.0f, 1.5f, 1.6f, 0.9f, 1.0f, 0.9f), // ASPHALT
 	CarMovement::road_type_data(0.8f, 2.0f, 2.0f, 0.7f, 0.7f, 0.8f), //	GRAVEL
 	CarMovement::road_type_data(0.7f, 1.0f, 0.5f, 0.6f, 1.0f, 0.2f), // ICE
-	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.1f, 0.3f, 0.4f) // OIL
+	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.1f, 0.3f, 0.4f)  // OIL
 };
 const float CarMovement::nitro_duration = 1.0f;
 
