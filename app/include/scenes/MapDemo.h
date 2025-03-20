@@ -8,6 +8,7 @@
 #include "objects/MapManager.h"
 #include "objects/BuildingManager.hpp"
 #include "objects/RaceManager.hpp"
+#include "QuickCamera.h"
 
 #include <utility>
 #include <vector>
@@ -19,6 +20,7 @@ private:
 	MapManager* map;
 	BuildingManager* build;
 	RaceManager* race_manager;
+	//QuickCamera* qc;
 
 	const float MAP_TILE_SIZE = 12.7f; // 127x127 mv size
 	bool on_end_screen;

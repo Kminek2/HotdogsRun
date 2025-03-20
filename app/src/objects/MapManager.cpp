@@ -56,7 +56,7 @@ MapManager* MapManager::Init()
 		data->scale *= MAP_TILE_SCALE;
 		data->surface_type = _cur_sur_type;
 
-		points.push_back(new GameObject(data, { point.pos.x, point.pos.y, -0.5f }));
+		points.push_back(new GameObject(data, { point.pos.x, point.pos.y, -0.3f }));
 		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
 	}
 
@@ -79,7 +79,7 @@ MapManager* MapManager::Init()
 	build->setMap(&points);
 	build->generateCities(cities_count)->replaceCityRoads();
 
-	(new GameObject("BaseCube", glm::vec3(0, 0, -0.51f), glm::vec3(0), glm::vec3(1000, 1000, 0)))->AddColorChange(glm::vec3(1), glm::vec3(0.1f, 0.5f, 0.1f)); // just TEMPORARY hradcoded ground
+	(new GameObject("BaseCube", glm::vec3(0, 0, -0.23f), glm::vec3(0), glm::vec3(1000, 1000, 0)))->AddColorChange(glm::vec3(1), glm::vec3(0.1f, 0.5f, 0.1f)); // just TEMPORARY hradcoded ground
 
 	return this;
 }
@@ -91,9 +91,12 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 	std::pair<std::string, float> obj_data = rand.choice(small_decors.first, small_decors.second);
 	GameObject* decor = new GameObject(obj_data.first, {
 		tile.x + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1),
-		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), .1 }, { 0,0,rand.random(0.0f,360.0f) }, glm::vec3(MAP_TILE_SCALE));
+		tile.y + rand.random(MAP_TILE_SIZE, decor_max_dist) * (rand.coin_toss() ? 1 : -1), -0.2f }, { 0,0,rand.random(0.0f,360.0f) }, glm::vec3(MAP_TILE_SCALE));
 	if (decor->GetModelName() == "fucked_up_car" || decor->GetModelName() == "fucked_up_pickup" || decor->GetModelName() == "bus" || decor->GetModelName() == "goat")
 		decor->transform->ScaleTo(glm::vec3(MAP_TILE_SCALE/2.0f));
+	else
+		decor->transform->ScaleTo(glm::vec3(MAP_TILE_SCALE/1.2f));
+		
 
 	decor->AddDefaultOBB();
 

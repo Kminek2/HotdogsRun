@@ -29,6 +29,10 @@ GameObject* car;
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
 
+	//qc = new QuickCamera();
+    //qc->_sr(0.75f);
+	//qc->_sm(100.0f);
+
 	on_end_screen = false;
 
 	_rand rand(seed);
@@ -112,6 +116,8 @@ void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
 }
 
 void MapDemo::Update() {
+	//qc->HandleMove();
+	//qc->HandleRotate();
 	race_manager->Update();
 
 	if (Input::getKeyPressed(GLFW_KEY_R))
