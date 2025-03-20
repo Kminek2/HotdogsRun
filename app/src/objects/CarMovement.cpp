@@ -1,5 +1,6 @@
 #include "objects/CarMovement.h"
 #include "AppTime.h"
+
 #include <iostream>
 
 const CarMovement::actions CarMovement::clearedActions = {false, false, false, false, false};
@@ -29,6 +30,11 @@ void CarMovement::Init() {
 }
 
 void CarMovement::Update() {
+	__multiplier = (_multiplier == -1 ? multiplier : _multiplier);
+	__maxSpeed = (_maxSpeed == -1 ? maxSpeed : _maxSpeed);
+	__accelFront = (_accelFront == -1 ? accelFront : _accelFront);
+	__carWeight = (_carWeight == -1 ? carWeight : _carWeight);
+
 	handleBreaks();
 	handleEngBreak();
 	if (nitro_timer > 0)
@@ -50,7 +56,7 @@ void CarMovement::Update() {
 	}
 	auto old_rot = gameObject->transform->rotation;
 	auto old_pos = gameObject->transform->position;
-	gameObject->transform->Rotate(glm::vec3(0.0f, 0.0f, (axleAngle * (actSpeed < 200.0f*multiplier ? std::min(200.0f*multiplier, actSpeed*4) : actSpeed) / (maxSpeed*multiplier)) * Time::deltaTime * 5.0f * surfaces_data[road_type].steering_multiplier));
+	gameObject->transform->Rotate(glm::vec3(0.0f, 0.0f, (axleAngle * (actSpeed < 200.0f*__multiplier ? std::min(200.0f*__multiplier, actSpeed*4) : actSpeed) / (__maxSpeed*__multiplier)) * Time::deltaTime * 5.0f * surfaces_data[road_type].steering_multiplier));
 	handleGrip();
 	gameObject->transform->Move((actSpeed*gripMult*Time::deltaTime)*glm::length(forces) + downSpeed * glm::vec3(0, 0, Time::deltaTime));
 	bool coll = false;
@@ -76,7 +82,7 @@ void CarMovement::Update() {
 		gripMult += collidedWith->transform->position - gameObject->transform->position;
 		axleAngle = 0.0f;
 		actSpeed = std::min(actSpeed/2.5f, 20.0f * (actSpeed > 0 ? 1 : -1));
-		downSpeed += std::abs((1 / (carWeight * multiplier)) * actSpeed) * 0.1f;
+		downSpeed += std::abs((1 / (__carWeight * __multiplier)) * actSpeed) * 0.1f;
 	}
 	actActions = clearedActions;
 }
@@ -85,21 +91,21 @@ void CarMovement::OnDestroy() {}
 
 void CarMovement::handleGas() {
 	if (forces.x != 1.0f) return;
-	if (maxSpeed == 0) return;
+	if (__maxSpeed == 0) return;
 	if (actActions.forward) {
-		float speedPr = actSpeed / maxSpeed*multiplier*surfaces_data[road_type].max_speed_multiplier;
+		float speedPr = actSpeed / __maxSpeed*__multiplier*surfaces_data[road_type].max_speed_multiplier;
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
-		if (actSpeed < maxSpeed*multiplier*surfaces_data[road_type].max_speed_multiplier) {
-			actSpeed += Time::deltaTime * accelFront * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * multiplier; //y = -1.6x^2+1.6
-			actSpeed = std::min(actSpeed, maxSpeed*multiplier*surfaces_data[road_type].max_speed_multiplier);
+		if (actSpeed < __maxSpeed*__multiplier*surfaces_data[road_type].max_speed_multiplier) {
+			actSpeed += Time::deltaTime * __accelFront * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * __multiplier; //y = -1.6x^2+1.6
+			actSpeed = std::min(actSpeed, __maxSpeed*__multiplier*surfaces_data[road_type].max_speed_multiplier);
 		}
 	}
 	if (actActions.backwards) {
-		float speedPr = actSpeed / minSpeed*multiplier;
+		float speedPr = actSpeed / minSpeed*__multiplier;
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
-		actSpeed -= Time::deltaTime * accelBack * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * multiplier * 3.0f; //y = -1.6x^2 + 1.6
+		actSpeed -= Time::deltaTime * accelBack * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * __multiplier * 3.0f; //y = -1.6x^2 + 1.6
 		actSpeed = std::max(actSpeed, minSpeed * multiplier);
 	}
 }
@@ -163,7 +169,7 @@ void CarMovement::handleForces() {
 		}
 	}
 	
-	bool yNeg = (forces.y < 0 ? true : false);
+	bool yNeg = (forces.y < 0);
 	
 	if (axleAngle < 0.0f+EPSILON && axleAngle > 0.0f-EPSILON) {
 		forces.y -= (yNeg ? -0.4 * Time::deltaTime : 0.4 * Time::deltaTime);
@@ -229,7 +235,7 @@ void CarMovement::handleNitroAcc() {
 	actSpeed += Time::deltaTime * accelFront * surfaces_data[road_type].acc_multiplier * 0.1f * multiplier * std::max(before_nitro_mem, 50.0f);
 	if (nitro_timer == 0.0f) {
 		actSpeed = before_nitro_mem;
-		if (nitro_trail != nullptr) {
+		if (nitro_trail) {
 			delete nitro_trail;
 			nitro_trail = nullptr;
 		}

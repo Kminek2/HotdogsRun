@@ -1,7 +1,9 @@
 #pragma once
+
 #include "ObjectScript.h"
 #include "GameObject.h"
 #include "Collisions.h"
+
 #include "objects/LockPosition.h"
 #include "objects/LockRotation.h"
 
@@ -12,12 +14,13 @@ class WheelsScript;
 class CarMovement :
     public ObjectScript {
 private:
-    const float multiplier;
-    const float maxSpeed;
+    // default value        used
+    const float multiplier; float __multiplier;
+    const float maxSpeed;   float __maxSpeed;
     const float minSpeed;
-    const float accelFront;
+    const float accelFront; float __accelFront;
     const float accelBack;
-    const float carWeight; // (SCALE UNIT) NORMAL BREAKS - 1
+    const float carWeight;  float __carWeight; // (SCALE UNIT) NORMAL BREAKS - 1
     const float breaksStrength; // IN TONES
     const float gripToSpeed;
     const bool expertMode;
@@ -70,4 +73,10 @@ public:
     void useHandBreak();
     void useNitro();
     friend WheelsScript;
+
+    // overrides
+    float _multiplier = -1;
+    float _maxSpeed   = -1;
+    float _accelFront = -1;
+    float _carWeight  = -1;
 };
