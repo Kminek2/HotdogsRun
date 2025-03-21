@@ -73,7 +73,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	car = new GameObject("f1car");
+	car = new GameObject("hotrod");
 	car->AddDefaultOBB();
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
@@ -95,7 +95,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 		botmv->SetMapManager(map)->SetCarMovement(carmv);
 		botmv->GetWaypoints(map);
-		bot->AddScript(botmv)->AddScript(carmv);
+		bot->AddScript(carmv)->AddScript(botmv);
 		
 
 		race_manager->AddCar(bot);
