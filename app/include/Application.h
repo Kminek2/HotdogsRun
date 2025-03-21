@@ -27,6 +27,7 @@ private:
 	std::vector<std::filesystem::directory_entry> entries;
 	unsigned loadedModel;
 	bool loadedAll;
+	std::thread modelLoading;
 public:
 	Application(uint16_t width, uint16_t height, GLFWwindow* window);
 	~Application();

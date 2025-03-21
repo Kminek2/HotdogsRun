@@ -58,7 +58,7 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	loadedModel = 0;
 	loadedAll = false;
 
-	std::thread([this]() {
+	modelLoading = std::thread([this]() {
 		for (const auto& entry : entries) {
 			std::string modelName = entry.path().filename().stem().string();
 
@@ -73,8 +73,8 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 			}
 			loadedModel++;
 		}
-	}).detach();
-	
+		});
+
 	for (const auto& entry : fs::directory_iterator("images")) {
 		Sprite::LoadImageFromFile(
 			entry.path().filename().stem().string(),
@@ -187,6 +187,7 @@ std::list <float> frameTimes;
 
 void Application::Update() {
 	if (!loadedAll && loadedModel == entries.size()) {
+		modelLoading.join();
 		Model::SendBuffers();
 		vkDeviceWaitIdle(Device::getDevice());
 		loadedAll = true;
