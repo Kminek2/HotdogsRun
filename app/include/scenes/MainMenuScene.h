@@ -14,6 +14,8 @@ private:
     static bool first_load;
     std::vector<std::pair<Text*, Text*>> menu_options;
     std::vector<std::pair<Sprite*, std::pair<Text*, Text*>>> maps_options;
+    UiObject* logo;
+    
     int menu_choosen_option;
     void ShowMenu();
     void HideMenu();

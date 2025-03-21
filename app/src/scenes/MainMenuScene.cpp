@@ -22,6 +22,8 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     Camera::main->cameraTransform->position = glm::vec3(-9.96294f, -9.06299f, 2.38608f);
     Camera::main->cameraTransform->rotation = glm::vec2(47.0f, -4.0f);
 
+    logo = nullptr;
+
     objs.push_back(new GameObject());
     am = new AnimationManager();
     objs[objs.size()-1]->AddScript(am);
@@ -87,34 +89,36 @@ void MainMenuScene::Update() {
 void MainMenuScene::UnLoad() {}
 
 void MainMenuScene::ShowMenu() {
+    logo = new UiObject("logo_pelne", glm::vec3(-0.05f, 0.5f, 0.0f), glm::vec3(90.0f, 180.0f, 180.0f), glm::vec3(0.06f, 0.08f, 0.08f));
+
     menu_choosen_option = 0;
 
     menu_options.push_back({nullptr, nullptr});
-    menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,0.39f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
+    menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,0.19f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].second->SetText("Play");
     menu_options[menu_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
-    menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,0.4f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
+    menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,0.2f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].first->SetText("Play");
 
     menu_options.push_back({nullptr, nullptr});
-    menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,0.09f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
+    menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,-0.11f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].second->SetText("Appearance");
     menu_options[menu_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
-    menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,0.1f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
+    menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,-0.1f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].first->SetText("Appearance");
 
     menu_options.push_back({nullptr, nullptr});
-    menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,-0.21f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
+    menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,-0.41f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].second->SetText("Settings");
     menu_options[menu_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
-    menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,-0.2f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
+    menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,-0.4f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].first->SetText("Settings");
 
     menu_options.push_back({nullptr, nullptr});
-    menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,-0.51f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
+    menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,-0.71f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].second->SetText("Exit");
     menu_options[menu_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
-    menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,-0.5f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
+    menu_options[menu_options.size()-1].first = (new Text("SansSerif", {0.2f,-0.7f,0.8f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].first->SetText("Exit");
 }
 
@@ -124,13 +128,15 @@ void MainMenuScene::HideMenu() {
         delete x.second;
     }
     menu_options.clear();
+    delete logo;
+    logo = nullptr;
 }
 
 void MainMenuScene::UpdateMenu() {
     if (Input::getKeyClicked(GLFW_KEY_DOWN)) ++menu_choosen_option;
     if (Input::getKeyClicked(GLFW_KEY_UP))   --menu_choosen_option;
-
-    menu_choosen_option = glm::normalize(menu_choosen_option, static_cast<int>(menu_options.size()));
+    
+    menu_choosen_option = std::max(0, std::min(static_cast<int>(menu_options.size()-1), menu_choosen_option));
     UpdateMenuHighlight();
 
     if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
@@ -204,10 +210,10 @@ void MainMenuScene::UpdateMaps() {
     if (Input::getKeyClicked(GLFW_KEY_ESCAPE))
         from_maps_animation();
 
-    if (Input::getKeyClicked(GLFW_KEY_LEFT)) ++menu_choosen_option;
-    if (Input::getKeyClicked(GLFW_KEY_RIGHT)) --menu_choosen_option;
+    if (Input::getKeyClicked(GLFW_KEY_RIGHT)) ++menu_choosen_option;
+    if (Input::getKeyClicked(GLFW_KEY_LEFT)) --menu_choosen_option;
 
-    menu_choosen_option = glm::normalize(menu_choosen_option, static_cast<int>(maps_options.size()));
+    menu_choosen_option = std::max(0, std::min(static_cast<int>(maps_options.size()-1), menu_choosen_option));
     UpdateMapsHighlight();
 
     if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
@@ -227,7 +233,14 @@ void MainMenuScene::UpdateMaps() {
 }
 
 void MainMenuScene::UpdateMapsHighlight() {
-
+    for (int i = 0; i < maps_options.size(); ++i) {
+        maps_options[i].second.second->ChangeSize(0.4f);
+        maps_options[i].second.first->ChangeSize(0.4f);
+        maps_options[i].first->rectTransform->SetWidth(0.25f);
+    }
+    maps_options[menu_choosen_option].second.second->ChangeSize(0.45f);
+    maps_options[menu_choosen_option].second.first->ChangeSize(0.45f);
+    maps_options[menu_choosen_option].first->rectTransform->SetWidth(0.3f);
 }
 
 void MainMenuScene::HideMaps() {
