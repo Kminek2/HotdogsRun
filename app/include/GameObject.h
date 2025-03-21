@@ -99,6 +99,8 @@ public:
 	Transform* transform;
 
 	std::vector<ObjectScript*> objectScripts;
+	CarMovement* cm = nullptr;
+
 	int surface_type;
 
 	GameObject* AddScript(ObjectScript* script);

@@ -43,6 +43,12 @@
     <Filter Include="Resource Files\shaders\spv">
       <UniqueIdentifier>{1eafb408-1312-4280-971b-a5ebc7325fea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\objects\PowerUps">
+      <UniqueIdentifier>{d06a7ca9-a8be-49db-87fa-89864809dd18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\objects\PowerUps">
+      <UniqueIdentifier>{a6b2f833-bd4b-4118-b543-53962c89eeba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="app\src\scenes\DebugScene.cpp">
@@ -239,6 +245,9 @@
     </ClCompile>
     <ClCompile Include="app\src\Shadow.cpp">
       <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\PowerUps\PUMaxSpeed.cpp">
+      <Filter>Source Files\objects\PowerUps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -454,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="app\include\Shadow.h">
       <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\PowerUps\PUMaxSpeed.hpp">
+      <Filter>Header Files\objects\PowerUps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

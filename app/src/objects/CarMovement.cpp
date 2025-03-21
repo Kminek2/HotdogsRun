@@ -26,14 +26,14 @@ CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, 
 }
 
 void CarMovement::Init() {
-
+	gameObject->cm = this;
 }
 
 void CarMovement::Update() {
-	__multiplier = (_multiplier == -1 ? multiplier : _multiplier);
-	__maxSpeed = (_maxSpeed == -1 ? maxSpeed : _maxSpeed);
-	__accelFront = (_accelFront == -1 ? accelFront : _accelFront);
-	__carWeight = (_carWeight == -1 ? carWeight : _carWeight);
+	__multiplier = multiplier * _multiplier;
+	__maxSpeed   = maxSpeed   * _maxSpeed  ;
+	__accelFront = accelFront * _accelFront;
+	__carWeight  = carWeight  * _carWeight ;
 
 	handleBreaks();
 	handleEngBreak();

@@ -80,30 +80,20 @@ void BotMovement::followPath() {
     glm::vec3 targetPos = targetWaypoint->transform->position;
     glm::vec3 botPos = botObject->transform->position;
 
-    // Kierunek do waypointa - sprawdzenie przed normalizacją
     glm::vec3 rawDirection = targetPos - botPos;
-    if (glm::dot(rawDirection, rawDirection) < 0.0001f) return; // Używamy kwadratu długości do porównania
+    if (glm::dot(rawDirection, rawDirection) < 1e-6) return; 
     glm::vec3 direction = glm::normalize(rawDirection);
 
     direction.z = 0;
-    // Wektor front bota
     glm::vec3 front = glm::normalize(botObject->transform->front);
 
-    // Kąt między botem a waypointem
     float dotProduct = glm::dot(front, direction);
-    std::cout << "dotProduct: " << dotProduct << "\n";
-
-    // Obliczanie kąta między botem a waypointem (jeśli chcesz kąt w radianach)
     float angle = glm::degrees(glm::acos(dotProduct));
-    std::cout << "Angle (degrees): " << angle << "\n";
 
-    // Wykrywanie skrętu - Używamy crossProduct.Z zamiast crossProduct.Y!!!
     glm::vec3 crossProduct = glm::cross(front, direction);
-    std::cout << "CrossProduct.z: " << crossProduct.z << "\n";
-    bool turnLeft = crossProduct.z > .1f;  // Jeśli Z jest dodatnie -> skręt w lewo
-    bool turnRight = crossProduct.z < -.1f; // Jeśli Z jest ujemne -> skręt w prawo
+    bool turnLeft = crossProduct.z > .1f;
+    bool turnRight = crossProduct.z < -.1f;
 
-    // Logika hamowania i przyspieszania
     float distance = glm::distance(botPos, targetPos);
     bool shouldBrake = false;
 
@@ -113,29 +103,19 @@ void BotMovement::followPath() {
 
     bool shouldAccelerate = !shouldBrake;
 
-    // Debugowanie logiki sterowania
-    std::cout << "Should Brake: " << shouldBrake << "\n";
-    std::cout << "Should Accelerate: " << shouldAccelerate << "\n";
-
-    // Wysyłanie poleceń do samochodu
     if (shouldAccelerate) {
-        std::cout << "Accelerating!\n";
         this->carmv->goForward();
     }
     else if (shouldBrake) {
-        std::cout << "Braking!\n";
         this->carmv->useHandBreak();
     }
     if (turnLeft) {
-        std::cout << "Turning Left!\n";
         this->carmv->makeLeftTurn();
     }
     else if (turnRight) {
-        std::cout << "Turning Right!\n";
         this->carmv->makeRightTurn();
     }
 
-    // Przejście do następnego waypointa
     if (distance < 5.0f) {
         currentWaypointIndex++;
         if (currentWaypointIndex >= waypoints.size()) {
