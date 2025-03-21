@@ -76,6 +76,8 @@ void MainMenuScene::Update() {
     //qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();
+    if (!maps_options.empty())
+        UpdateMaps();
 
     if (Input::getKeyClicked(GLFW_KEY_B)) {
 		std::cout << Camera::main->cameraTransform->position.x << ' ' << Camera::main->cameraTransform->position.y << ' ' << Camera::main->cameraTransform->position.z << '\n' << Camera::main->cameraTransform->rotation.x << ' ' << Camera::main->cameraTransform->rotation.y << '\n';
@@ -85,6 +87,8 @@ void MainMenuScene::Update() {
 void MainMenuScene::UnLoad() {}
 
 void MainMenuScene::ShowMenu() {
+    menu_choosen_option = 0;
+
     menu_options.push_back({nullptr, nullptr});
     menu_options[menu_options.size()-1].second = (new Text("SansSerif", {0.208f,0.39f,0.9f}, {-1,-1}, 0.4f, glm::vec4(1.0f), -2.0f));
     menu_options[menu_options.size()-1].second->SetText("Play");
@@ -160,6 +164,8 @@ void MainMenuScene::UpdateMenuHighlight() {
 }
 
 void MainMenuScene::ShowMaps() {
+    menu_choosen_option = 0;
+
     Sprite* sp = new Sprite("easy");
     sp->rectTransform->SetWidth(0.25f);
     sp->rectTransform->MoveTo(glm::vec3({-0.6f, 0.3f ,0.9f}));
@@ -169,7 +175,8 @@ void MainMenuScene::ShowMaps() {
     Text* text = (new Text("SansSerif", {-0.8f,-0.3f,0.8f}, {-1,0}, 0.4f, glm::vec4(1.0f), -2.0f));
     text->SetText("EASY");
     text->SetColor(glm::vec4(glm::vec3(0.0f, 0.7f, 0.0f), 1.0f));
-
+    maps_options.push_back({sp,{text,shadow}});
+    
     sp = new Sprite("medium");
     sp->rectTransform->SetWidth(0.25f);
     sp->rectTransform->MoveTo(glm::vec3({0.0f, 0.3f ,0.9f}));
@@ -179,7 +186,8 @@ void MainMenuScene::ShowMaps() {
     text = (new Text("SansSerif", {0.0f,-0.3f,0.9f}, {0,0}, 0.4f, glm::vec4(1.0f), -2.0f));
     text->SetText("MEDIUM");
     text->SetColor(glm::vec4(glm::vec3(0.7f, 0.7f, 0.0f), 1.0f));
-
+    maps_options.push_back({sp,{text,shadow}});
+    
     sp = new Sprite("hard");
     sp->rectTransform->SetWidth(0.25f);
     sp->rectTransform->MoveTo(glm::vec3({0.6f, 0.3f ,0.9f}));
@@ -189,10 +197,33 @@ void MainMenuScene::ShowMaps() {
     text = (new Text("SansSerif", {0.8f,-0.3f,0.9f}, {1,0}, 0.4f, glm::vec4(1.0f), -2.0f));
     text->SetText("HARD");
     text->SetColor(glm::vec4(glm::vec3(0.7f, 0.0f, 0.0f), 1.0f));
+    maps_options.push_back({sp,{text,shadow}});
 }
 
 void MainMenuScene::UpdateMaps() {
+    if (Input::getKeyClicked(GLFW_KEY_ESCAPE))
+        from_maps_animation();
 
+    if (Input::getKeyClicked(GLFW_KEY_LEFT)) ++menu_choosen_option;
+    if (Input::getKeyClicked(GLFW_KEY_RIGHT)) --menu_choosen_option;
+
+    menu_choosen_option = glm::normalize(menu_choosen_option, static_cast<int>(maps_options.size()));
+    UpdateMapsHighlight();
+
+    if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
+        switch (menu_choosen_option)
+        {
+        case 0:
+            Application::LoadScene("map_demo");
+            break;
+        case 1:    
+            Application::LoadScene("map_demo");
+            break;
+        case 2:
+            Application::LoadScene("map_demo");    
+            break;
+        }
+    }
 }
 
 void MainMenuScene::UpdateMapsHighlight() {
@@ -200,7 +231,12 @@ void MainMenuScene::UpdateMapsHighlight() {
 }
 
 void MainMenuScene::HideMaps() {
-
+    for (auto& x : maps_options) {
+        delete x.first;
+        delete x.second.first;
+        delete x.second.second;
+    }
+    maps_options.clear();
 }
 
 void MainMenuScene::first_animation() {

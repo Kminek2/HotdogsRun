@@ -82,7 +82,7 @@ void CarMovement::Update() {
 		gripMult += collidedWith->transform->position - gameObject->transform->position;
 		axleAngle = 0.0f;
 		actSpeed = std::min(actSpeed/2.5f, 20.0f * (actSpeed > 0 ? 1 : -1));
-		downSpeed += std::abs((1 / (__carWeight * __multiplier)) * actSpeed) * 0.1f;
+		downSpeed += std::abs((1 / (__carWeight * __multiplier)) * actSpeed) * 0.03f;
 	}
 	actActions = clearedActions;
 }

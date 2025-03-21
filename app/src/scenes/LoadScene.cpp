@@ -18,8 +18,8 @@
 
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"load", new LoadScene()},
-	{"map_demo", new MapDemo()},
 	{"main_menu", new MainMenuScene()},
+	{"map_demo", new MapDemo()},
 	{"debug", new DebugScene()},
 };
 
