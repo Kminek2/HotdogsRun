@@ -408,3 +408,4 @@ lib-include/
 stb/
 objLoader/
 .clang-format
+settings.json
