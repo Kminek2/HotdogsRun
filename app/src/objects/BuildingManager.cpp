@@ -68,7 +68,7 @@ std::vector<GameObject*> BuildingManager::generateBuildings(const std::vector<st
 					d |= 1 << i;
 
 			if (!tiles[d].empty()) {
-				buildings.push_back(new GameObject(rand.choice(tiles[d]), correction_offset + glm::vec3(x, y, 0) * BUILDING_SIZE, rotation, scale));
+				buildings.push_back(new GameObject(rand.choice(tiles[d], proba), correction_offset + glm::vec3(x, y, 0) * BUILDING_SIZE, rotation, scale));
 				buildings[buildings.size()-1]->AddDefaultOBB();
 			}
 		}

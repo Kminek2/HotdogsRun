@@ -64,7 +64,7 @@ public:
 		BuildsSettingsValues();
 
 		unsigned cities_count = 1;
-		std::array<std::vector<std::string>, 16> buildings;
+		std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> buildings;
 		std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types;
 	};
 
@@ -80,8 +80,9 @@ public:
 		map_len(vals.map_len), 
 		cp_offset(vals.checkpoint_offset), 
 		ellipse(vals.ellipse),
-		// ---
-		cities_count(bvals.cities_count) { build = (new BuildingManager(rand, bvals.buildings))->setCityRoads(bvals.types); };
+		cities_count(bvals.cities_count) { 
+			build = (new BuildingManager(rand, bvals.buildings.first, bvals.buildings.second))->setCityRoads(bvals.types); 
+	};
 
 	MapManager* Init();
 	GameObject* GetPoint(unsigned long long index);

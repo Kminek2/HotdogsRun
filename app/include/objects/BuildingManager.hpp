@@ -11,6 +11,7 @@ class BuildingManager {
 private:
 	_rand rand;
 	const std::array<std::vector<std::string>, 16> tiles;
+	const std::vector<float> proba;
 
 	glm::vec3 offset = glm::vec3(0);
 	glm::vec3 rotation = glm::vec3(0);
@@ -25,7 +26,7 @@ private:
 	std::map<std::string, std::pair<std::vector<std::string>, std::vector<float>>> types;
 
 public:
-	BuildingManager(_rand& rand, const std::array<std::vector<std::string>, 16>& building_tiles) : rand(rand), tiles(building_tiles) {};
+	BuildingManager(_rand& rand, const std::array<std::vector<std::string>, 16>& building_tiles, const std::vector<float> proba) : rand(rand), tiles(building_tiles), proba(proba) {};
 
 	BuildingManager* setOffset(glm::vec3 offset);
 	BuildingManager* setRotation(glm::vec3 rotation);

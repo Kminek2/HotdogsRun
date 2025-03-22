@@ -17,12 +17,12 @@ using tc = RaceManager::TerminationCondition;
 const size_t seed = 45;
 const unsigned int cityNum = 3;
 
-const std::array<std::vector<std::string>, 16> defaultBuildings = { {
+const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> defaultBuildings = { { {
 	{""}, {"case_1","case_1_color"}, {"case_2","case_2_color"}, {"case_3","case_3_color"},
 	{"case_4","case_4_color"}, {"case_5"}, {"case_6","case_6_color"}, {"case_7","case_7_color"},
 	{"case_8","case_8_color"}, {"case_9","case_9_color"}, {"case_10"}, {"case_11","case_11_color"},
 	{"case_12","case_12_color"}, {"case_13","case_13_color"}, {"case_14"}, {"case_15"}
-} };
+} }, {.1f, -1.0f} };
 
 GameObject* car;
 
