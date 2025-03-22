@@ -347,7 +347,7 @@ void MainMenuScene::HideAppearance() {
         delete x.first;
         delete x.second;
     }
-    menu_options.clear();
+    appearance_options.clear();
 }
 
 void MainMenuScene::UpdateAppearance() {
