@@ -17,11 +17,11 @@ void Settings::save(std::string key, int x) {
     out.close();
 }
 
-std::pair<bool, std::any> Settings::read(std::string key) {
+int Settings::read(std::string key) {
     std::ifstream inp(filename);
 
     if (!inp.is_open())
-        return {false, 0};
+        return 0;
 
     nlohmann::json j = nlohmann::json::parse(inp);
     inp.close();
@@ -29,7 +29,7 @@ std::pair<bool, std::any> Settings::read(std::string key) {
     auto found = j.find(key);
 
     if (found == j.end())
-        return {false, 0};
+        return 0;
 
-    return {true, j[key]};
+    return j[key].get<int>();
 }

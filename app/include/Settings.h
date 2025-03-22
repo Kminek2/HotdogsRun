@@ -7,5 +7,5 @@ class Settings {
         static const std::string filename;
     public:
         static void save(std::string key, int x);
-        static std::pair<bool, std::any> read(std::string key);
+        static int read(std::string key);
 };

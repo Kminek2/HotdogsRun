@@ -110,7 +110,16 @@ void GameObject::DeleteAll()
 {
 	deletingAll = true;
 	std::list<GameObject*>::iterator it = createdGameObject.begin();
+	std::list<GameObject*>::iterator it2 = createdGameObject.begin();
 	
+	while (it2 != createdGameObject.end()) {
+		for (auto& x : (*it2)->GetObjectScripts()) {
+			delete x;
+		}
+		(*it2)->GetObjectScripts().clear();
+		++it2;
+	}
+
 	while (it != createdGameObject.end())
 	{
 		delete *it;

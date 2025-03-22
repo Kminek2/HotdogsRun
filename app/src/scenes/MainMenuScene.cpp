@@ -20,7 +20,7 @@ const std::string car_models_label[] = {
 };
 
 bool MainMenuScene::first_load = true;
-int MainMenuScene::model_choosen = (Settings::read("model_choosen").first ? std::any_cast<int>(Settings::read("model_choosen").second) : 0);
+int MainMenuScene::model_choosen = Settings::read("model_choosen");
 
 std::shared_ptr<Scene> MainMenuScene::Init() {
 	Scene* scene = new Scene(this);
@@ -373,5 +373,5 @@ void MainMenuScene::UpdateAppearance() {
         user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1] = new WheelsScript(*cm);
         user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->gameObject = user_car;
         user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->Init();
-    }    
+    }
 }
