@@ -20,7 +20,7 @@ const std::string car_models_label[] = {
 };
 
 bool MainMenuScene::first_load = true;
-int MainMenuScene::model_choosen = 0;
+int MainMenuScene::model_choosen = (Settings::read("model_choosen").first ? std::any_cast<int>(Settings::read("model_choosen").second) : 0);
 
 std::shared_ptr<Scene> MainMenuScene::Init() {
 	Scene* scene = new Scene(this);
@@ -156,10 +156,10 @@ void MainMenuScene::HideMenu() {
 }
 
 void MainMenuScene::UpdateMenu() {
-    if (Input::getKeyClicked(GLFW_KEY_DOWN)) ++menu_choosen_option;
-    if (Input::getKeyClicked(GLFW_KEY_UP))   --menu_choosen_option;
+    if (Input::getKeyClicked(GLFW_KEY_DOWN) || Input::getKeyClicked(GLFW_KEY_S)) ++menu_choosen_option;
+    if (Input::getKeyClicked(GLFW_KEY_UP) || Input::getKeyClicked(GLFW_KEY_W))   --menu_choosen_option;
     
-    menu_choosen_option = std::max(0, std::min(static_cast<int>(menu_options.size()-1), menu_choosen_option));
+    menu_choosen_option = glm::normalize(menu_choosen_option, static_cast<int>(menu_options.size()));
     UpdateMenuHighlight();
 
     if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
@@ -235,10 +235,10 @@ void MainMenuScene::UpdateMaps() {
         return;
     }
 
-    if (Input::getKeyClicked(GLFW_KEY_RIGHT)) ++menu_choosen_option;
-    if (Input::getKeyClicked(GLFW_KEY_LEFT)) --menu_choosen_option;
+    if (Input::getKeyClicked(GLFW_KEY_RIGHT)  || Input::getKeyClicked(GLFW_KEY_D)) ++menu_choosen_option;
+    if (Input::getKeyClicked(GLFW_KEY_LEFT)  || Input::getKeyClicked(GLFW_KEY_A)) --menu_choosen_option;
 
-    menu_choosen_option = std::max(0, std::min(static_cast<int>(maps_options.size()-1), menu_choosen_option));
+    menu_choosen_option = glm::normalize(menu_choosen_option, static_cast<int>(maps_options.size()));
     UpdateMapsHighlight();
 
     if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
@@ -355,13 +355,14 @@ void MainMenuScene::UpdateAppearance() {
     }
 
     bool model_changed = false;
-    if (Input::getKeyClicked(GLFW_KEY_RIGHT)) ++model_choosen, model_changed = true;
-    if (Input::getKeyClicked(GLFW_KEY_LEFT)) --model_choosen, model_changed = true;
+    if (Input::getKeyClicked(GLFW_KEY_RIGHT) || Input::getKeyClicked(GLFW_KEY_D)) ++model_choosen, model_changed = true;
+    if (Input::getKeyClicked(GLFW_KEY_LEFT) || Input::getKeyClicked(GLFW_KEY_A)) --model_choosen, model_changed = true;
 
     model_choosen += 4;
     model_choosen %= 4;
 
     if (model_changed) {
+        Settings::save("model_choosen", model_choosen);
         appearance_options[appearance_options.size()-1].second->SetText(car_models_label[model_choosen]);
         appearance_options[appearance_options.size()-1].first->SetText(car_models_label[model_choosen]);
         user_car->ChangeModel(car_models[model_choosen]);

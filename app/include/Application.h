@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include "Camera.h"
 #include "SoundEngine.h"
+#include "Settings.h"
 #include <list>
 #include <utility>
 #include <thread>
