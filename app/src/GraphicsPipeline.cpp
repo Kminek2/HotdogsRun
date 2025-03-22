@@ -150,6 +150,8 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
             }
             else if (bind.cubeMap != nullptr)
                 uniform->UpdateImageInDescriptorSets(*&bind.cubeMap->sampler, *&bind.cubeMap->imageView, i);
+            else if (bind.sampler != nullptr)
+                uniform->UpdateImageInDescriptorSets(bind.sampler, bind.imageWiev, i);
         }
 
         gotUniform = false;

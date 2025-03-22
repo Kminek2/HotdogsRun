@@ -1,5 +1,6 @@
 #include "LightObject.h"
 #include "Camera.h"
+#include "Application.h"
 
 UniformBuffer<PointLightBuffer>* LightObject::pointLightBuffer;
 UniformBuffer<SpotLightBuffer>* LightObject::spotLightBuffer;
@@ -10,12 +11,12 @@ Shadow* LightObject::dirLightShadow = nullptr;
 void LightObject::SetDirLight()
 {
 	dirLight.dir = glm::vec3(0);
-	shadowSize = glm::uvec2(0);
+	shadowSize = glm::uvec2(1);
 }
 
 void LightObject::Init()
 {
-	dirLightShadow = new Shadow(glm::uvec2(100), glm::vec3(0, 0, -1));
+	dirLightShadow = new Shadow(glm::uvec2(Application::width, Application::height), glm::vec3(0, 0, -1));
 }
 
 LightObject::LightObject(GameObject* gameObject, glm::vec3 pos)
@@ -26,6 +27,8 @@ LightObject::LightObject(GameObject* gameObject, glm::vec3 pos)
 
 void LightObject::UpdateShadows()
 {
+	shadowSize = glm::uvec2(160, 90);
+
 	if(dirLightShadow != nullptr)
 		dirLightShadow->UpdateLightSpaceMatrix(shadowSize, Camera::main->cameraTransform->position, dirLight.dir);
 }
@@ -37,7 +40,7 @@ void LightObject::SetDirLight(glm::vec3 dir, glm::vec3 ambientCol, glm::vec3 dif
 	dirLight.diffuse = diffuseCol;
 	dirLight.specular = specularCol;
 
-	shadowSize = glm::uvec2(100);
+	shadowSize = glm::uvec2(Application::width, Application::height);
 
 	if(dirLightShadow == nullptr)
 		dirLightShadow = new Shadow(shadowSize, dir);
@@ -50,7 +53,7 @@ void LightObject::SetDirLight(DirLightBuffer dirLight)
 	dirLight.dir = glm::normalize(dirLight.dir);
 	LightObject::dirLight = dirLight;
 
-	shadowSize = glm::uvec2(100);
+	shadowSize = glm::uvec2(Application::width, Application::height);
 
 	if (dirLightShadow == nullptr)
 		dirLightShadow = new Shadow(shadowSize, dirLight.dir);

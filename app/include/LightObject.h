@@ -52,7 +52,7 @@ private:
 	static void DeleteAll();
 	friend Engine;
 	friend Application;
-	friend Commands;
+	friend class Commands;
 	friend class RenderPass;
 };
 

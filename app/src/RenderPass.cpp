@@ -8,6 +8,7 @@
 #include "LightObject.h"
 #include "Sprite.h"
 #include "GameObject.h"
+#include "Uniform.h"
 
 RenderPass::RenderPass(SwapChain* swapChain)
 {
@@ -73,20 +74,25 @@ RenderPass::RenderPass(SwapChain* swapChain)
     shadowDepthAttachment.format = FindDepthFormat();
     shadowDepthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
     shadowDepthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-    shadowDepthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    shadowDepthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     shadowDepthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     shadowDepthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     shadowDepthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    shadowDepthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    shadowDepthAttachment.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
     VkAttachmentReference shadowDepthAttachmentRef{};
     shadowDepthAttachmentRef.attachment = 3;
     shadowDepthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
+    VkAttachmentReference shadowDepthAttachmentRef2{};
+    shadowDepthAttachmentRef.attachment = 3;
+    shadowDepthAttachmentRef.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
     std::array<VkSubpassDescription, 6> subpasses{};
     subpasses[0].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[0].colorAttachmentCount = 0;
     subpasses[0].pDepthStencilAttachment = &shadowDepthAttachmentRef;
+    subpasses[0].pResolveAttachments = &shadowDepthAttachmentRef2;
 
     subpasses[1].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpasses[1].colorAttachmentCount = 1;
@@ -128,10 +134,10 @@ RenderPass::RenderPass(SwapChain* swapChain)
 
     dependencies[1].srcSubpass = 0;
     dependencies[1].dstSubpass = 1;
-    dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-    dependencies[1].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-    dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-    dependencies[1].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependencies[1].srcStageMask = VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+    dependencies[1].dstStageMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    dependencies[1].srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
     dependencies[2].srcSubpass = 1;
     dependencies[2].dstSubpass = 2;
@@ -194,7 +200,9 @@ RenderPass::RenderPass(SwapChain* swapChain)
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, Model::textures, nullptr, 0),
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, LightObject::getPointBuffer()->GetBuffer(), LightObject::getPointBuffer()->getSize()),
         GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, LightObject::getSpotBuffer()->GetBuffer(), LightObject::getSpotBuffer()->getSize()),
-        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, GameObject::allColorChanges->GetBuffer(), GameObject::allColorChanges->getSize())
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, (CubeMap*)nullptr, GameObject::allColorChanges->GetBuffer(), GameObject::allColorChanges->getSize()),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, LightObject::dirLightShadow->depthImageSampler, LightObject::dirLightShadow->lightDepthImage.imageView),
+        GraphicsPipeline::BindingStruct(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, (CubeMap*)nullptr, LightObject::dirLightShadow->lightMatBuffer->GetBuffer(), LightObject::dirLightShadow->lightMatBuffer->getSize())
     };
 
     std::vector<VkVertexInputBindingDescription> mainBindingDescriptions = { Vertex::GetBindingDescription(0), Transform::GetBindingDescription(1), Model::GetBindingDescription(2), ThisColorChanges::GetBindingDescription(3)};
@@ -256,6 +264,11 @@ RenderPass::~RenderPass() {
     DestroyDepthResource();
 }
 
+Image RenderPass::getShadowDepthImage()
+{
+    return LightObject::dirLightShadow->lightDepthImage;
+}
+
 void RenderPass::DestroyDepthResource() {
     vkDestroyImageView(Device::getDevice(), depthImage.imageView, nullptr);
     vkDestroyImage(Device::getDevice(), depthImage.image, nullptr);
@@ -263,12 +276,8 @@ void RenderPass::DestroyDepthResource() {
     vkDestroyImageView(Device::getDevice(), uiDepthImage.imageView, nullptr);
     vkDestroyImage(Device::getDevice(), uiDepthImage.image, nullptr);
 
-    vkDestroyImageView(Device::getDevice(), shadowDepthImage.imageView, nullptr);
-    vkDestroyImage(Device::getDevice(), shadowDepthImage.image, nullptr);
-
     vkFreeMemory(Device::getDevice(), depthImageMemory, nullptr);
     vkFreeMemory(Device::getDevice(), uiDepthImageMemory, nullptr);
-    vkFreeMemory(Device::getDevice(), shadowImageMemory, nullptr);
 }
 
 void RenderPass::RecreateDepthResource() {
@@ -293,6 +302,6 @@ void RenderPass::CreateDepthResources() {
     uiDepthImage.CreateImage(swapChain->getExtend().width, swapChain->getExtend().height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, uiDepthImage.image, uiDepthImageMemory, Device::GetSampleCount());
     uiDepthImage.CreateImageView(depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-    shadowDepthImage.CreateImage(1, 1, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, shadowDepthImage.image, shadowImageMemory);
-    shadowDepthImage.CreateImageView(depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+    LightObject::dirLightShadow->RecreateDepthImage(glm::uvec2(swapChain->getExtend().width, swapChain->getExtend().height));
+    mainPipeline->GetUniform()->UpdateImageInDescriptorSets(LightObject::dirLightShadow->depthImageSampler, LightObject::dirLightShadow->lightDepthImage.imageView, 5);
 }

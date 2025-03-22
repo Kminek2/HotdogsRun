@@ -77,6 +77,8 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
         ShowMenu();
     }
 
+    LightObject::SetDirLight(glm::vec3(0, 0.5, -0.5), glm::vec3(0.2), glm::vec3(0.7), glm::vec3(0.9));
+
 	return std::shared_ptr<Scene>(scene);
 }
 

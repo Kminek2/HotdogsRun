@@ -9,18 +9,22 @@
 class Shadow
 {
 private:
-	//Image lightDepthImage;
-	//VkDeviceMemory depthImageMemory;
-	//VkSampler depthImageSampler;
+	Image lightDepthImage;
+	VkDeviceMemory depthImageMemory;
+	VkSampler depthImageSampler;
 
 	glm::mat4 lightSpaceMatrix;
 	UniformBuffer<glm::mat4>* lightMatBuffer;
+
+	glm::uvec2 size;
 public:
 	Shadow(glm::uvec2 size, glm::vec3 dir);
 	~Shadow();
 
 	void UpdateLightSpaceMatrix(glm::uvec2 size, glm::vec3 pos, glm::vec3 rotation);
+	void RecreateDepthImage(glm::uvec2 size);
 
 	friend class RenderPass;
+	friend class Commands;
 };
 
