@@ -1,5 +1,4 @@
 #include "objects/PowerUps/PUMaxSpeed.hpp"
-#include "objects/CarMovement.h"
 
 void PUMaxSpeed::OnCollide(Collisions::CollisionData* cd) {
 	collided == (cd->obj1 == gameObject 

@@ -10,8 +10,6 @@ private:
 	float increase;
 	unsigned duration;
 
-	GameObject* collided = nullptr;
-
 public:
 	PUMaxSpeed(float increase_percent, unsigned duration_ms) : increase(increase_percent), duration(duration_ms) {};
 

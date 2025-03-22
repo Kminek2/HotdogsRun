@@ -228,6 +228,11 @@ void CarMovement::useNitro() {
 	nitro_trail->AddScript(new LockPosition(gameObject->transform, nitro_trail_offset))->AddScript(new LockRotation(gameObject->transform));
 }
 
+void CarMovement::addNitros(int count)
+{
+	nitros_available += count;
+}
+
 void CarMovement::handleNitroAcc() {
 	nitro_timer -= Time::deltaTime;
 	std::cout << nitro_timer << '\n';

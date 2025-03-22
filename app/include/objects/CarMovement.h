@@ -79,4 +79,6 @@ public:
     float _maxSpeed   = 1;
     float _accelFront = 1;
     float _carWeight  = 1;
+
+    void addNitros(int count);
 };
