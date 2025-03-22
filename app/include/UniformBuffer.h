@@ -22,6 +22,7 @@ private:
 public:
 	UniformBuffer(const uint16_t& numberOfFrames, VkBufferUsageFlags bufferUsage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 	~UniformBuffer();
+    void UpdateData(const T& data);
 	void UpdateBuffer(uint16_t currentFrame, const T& data);
     void UpdateBuffer(uint16_t currentFrame, const T& data, size_t dataSize);
     VkDeviceSize getSize() { return bufferSize; };
@@ -69,6 +70,13 @@ UniformBuffer<T>::~UniformBuffer()
         vkDestroyBuffer(Device::getDevice(), uniformBuffers[i], nullptr);
         vkFreeMemory(Device::getDevice(), uniformBuffersMemory[i], nullptr);
     }
+}
+
+template<typename T>
+inline void UniformBuffer<T>::UpdateData(const T& data)
+{
+    for(int i = 0; i < uniformBuffersMapped.size(); i++)
+        memcpy(uniformBuffersMapped[i], &data, bufferSize);
 }
 
 template<typename T>

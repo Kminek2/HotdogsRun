@@ -88,6 +88,8 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 		Font::LoadFontFromFile(entry.path().filename().stem().string(), entry.path().string(), 32U, 20U);
 	}
 
+	LightObject::Init();
+
 	camera = new Camera(FRAMES_IN_FLIGHT, width, height);
 	LightObject::pointLightBuffer = new UniformBuffer<PointLightBuffer>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
 	LightObject::spotLightBuffer = new UniformBuffer<SpotLightBuffer>(FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);

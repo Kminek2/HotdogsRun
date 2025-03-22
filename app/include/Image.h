@@ -20,7 +20,8 @@ struct Image
 
     static void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, VkSampleCountFlagBits sampleCount = VK_SAMPLE_COUNT_1_BIT, uint32_t arrayLeyers = 1, VkImageCreateFlags flags = 0);
 
-    static void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t layerCount = 1);
+    static void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t layerCount = 1, VkImageAspectFlagBits aspecFlag = VK_IMAGE_ASPECT_COLOR_BIT);
+    static void transitionImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t layerCount = 1, VkImageAspectFlagBits aspecFlag = VK_IMAGE_ASPECT_COLOR_BIT);
 
     static void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, int32_t offset, std::pair<int32_t, int32_t> imageOffset, uint32_t layerCount = 1);
     static void copyImage(VkImage srcImage, VkImage dstImage, VkImageLayout srcLayout, VkImageLayout dstLayout, glm::uvec2 extent);

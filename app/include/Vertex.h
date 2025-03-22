@@ -46,7 +46,7 @@ struct Vertex {
     static VkVertexInputBindingDescription GetPosBindingDescription(uint16_t binding = 0) {
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = binding;
-        bindingDescription.stride = sizeof(glm::vec4);
+        bindingDescription.stride = sizeof(Vertex);
         bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
         return bindingDescription;
     }

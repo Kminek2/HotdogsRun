@@ -526,5 +526,8 @@
     <None Include="app\shaders\CubeMap.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="app\shaders\shadows.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

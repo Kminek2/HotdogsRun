@@ -16,6 +16,7 @@ private:
 	static VkPipelineShaderStageCreateInfo CreatePipelineShaderStageCreateInfo(VkShaderModule shaderModule, VkShaderStageFlagBits shaderStage, VkSpecializationInfo& specializationInfo);
 	static VkPipelineShaderStageCreateInfo CreatePipelineShaderStageCreateInfo(VkShaderModule shaderModule, VkShaderStageFlagBits shaderStage);
 public:
+	Shader() {};
 	Shader(const std::string filePath, VkShaderStageFlagBits shaderStage);
 	Shader(const std::string filePath, VkShaderStageFlagBits shaderStage, VkSpecializationInfo& specializationInfo);
 	~Shader();

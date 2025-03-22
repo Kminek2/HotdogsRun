@@ -19,6 +19,7 @@
 
 #include "Sprite.h"
 #include "GameObject.h"
+#include "Shadow.h"
 VkCommandPool Commands::commandPool;
 
 Commands::Commands() {
@@ -68,10 +69,11 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
     renderPassInfo.renderArea.offset = { 0, 0 };
     renderPassInfo.renderArea.extent = swapChain.getExtend();
 
-    std::array<VkClearValue, 3> clearValues{};
+    std::array<VkClearValue, 4> clearValues{};
     clearValues[0].color = { {0.0f, 0.0f, 0.0f, 1.0f} };
     clearValues[1].depthStencil = { 1.0f, 0 };
     clearValues[2].depthStencil = { 1.0f, 0 };
+    clearValues[3].depthStencil = { 1.0f, 0 };
 
     renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
     renderPassInfo.pClearValues = clearValues.data();
@@ -79,10 +81,48 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
     {
-        //MAIN
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipeline());
+        //SHADOW
+        
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getShadowPipeline()->getPipeline());
 
         VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        //viewport.width = static_cast<float>(swapChain.getExtend().width);
+        //viewport.height = static_cast<float>(swapChain.getExtend().height);
+        viewport.width = static_cast<float>(swapChain.getExtend().width);
+        viewport.height = static_cast<float>(swapChain.getExtend().height);
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+
+        VkRect2D scissor{};
+        scissor.offset = { 0, 0 };
+        scissor.extent = swapChain.getExtend();
+        vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+
+        VkBuffer vertexBuffersSh[] = { Model::vertexBuffer->getBuffer(),  Transform::transformBuffer->getBuffer()};
+        VkDeviceSize offsetsSh[] = { 0, 0 };
+        vkCmdBindVertexBuffers(commandBuffer, 0, 2, vertexBuffersSh, offsetsSh);
+
+        vkCmdBindIndexBuffer(commandBuffer, Model::indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getShadowPipeline()->getPipelineLayout(), 0, 1, &swapChain.getRenderPass()->getShadowPipeline()->GetUniform()->GetDescriptorSet(frame), 0, nullptr);
+
+        uint32_t instanceOffSh = 0;
+        if (LightObject::shadowSize.x > 1) {
+            while (instanceOffSh < Model::createdModels.size())
+            {
+                Model* model = *std::next(Model::createdModels.begin(), instanceOffSh);
+                const auto& instance = Model::modelsIndtaces[model->modelName];
+
+                vkCmdDrawIndexed(commandBuffer, model->indexSize, instance.second, model->indexOffset, model->vertexOffset, instanceOffSh);
+                instanceOffSh += instance.second;
+            }
+        }
+
+        //MAIN
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipeline());
         viewport.x = 0.0f;
         viewport.y = 0.0f;
         //viewport.width = static_cast<float>(swapChain.getExtend().width);
@@ -92,8 +132,6 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-
-        VkRect2D scissor{};
         scissor.offset = { 0, 0 };
         scissor.extent = swapChain.getExtend();
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
@@ -124,6 +162,9 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
 
         uint32_t instanceOff = 0;
         std::pair<std::list<Model*>::iterator, uint32_t> instance;
+
+        vkCmdNextSubpass(commandBuffer, VK_SUBPASS_CONTENTS_INLINE);
+
         while (instanceOff < Model::createdModels.size())
         {
             Model* model = *std::next(Model::createdModels.begin(), instanceOff);

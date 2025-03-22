@@ -12,6 +12,7 @@ class RenderPass
 private:
 	SwapChain* swapChain;
 	VkRenderPass renderPass;
+	GraphicsPipeline* shadowPipeline;
 	GraphicsPipeline* mainPipeline;
 	GraphicsPipeline* cubeMapPipeline;
 	GraphicsPipeline* UIPipeline;
@@ -34,6 +35,8 @@ public:
 	VkRenderPass getRenderPass() { return renderPass; }
 	Image getDepthImage() const { return depthImage; }
 	Image getUIDepthImage() const { return uiDepthImage; }
+	Image getShadowDepthImage();
+	GraphicsPipeline* getShadowPipeline() const { return shadowPipeline; }
 	GraphicsPipeline* getMainPipeline() const { return mainPipeline; }
 	GraphicsPipeline* getCubeMapPipeline() const { return cubeMapPipeline; }
 	GraphicsPipeline* getUiPipeline() const { return UIPipeline; }

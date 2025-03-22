@@ -9,10 +9,11 @@ Framebuffer::~Framebuffer() {
 }
 
 void Framebuffer::CreateFramebuffer(VkImageView msaaImageView, VkImageView swapChainImageView, RenderPass* renderPass, SwapChain* swapChain) {
-    std::array<VkImageView, 4> attachments = {
+    std::array<VkImageView, 5> attachments = {
                 msaaImageView,
                 renderPass->getDepthImage().imageView,
                 renderPass->getUIDepthImage().imageView,
+                renderPass->getShadowDepthImage().imageView,
                 swapChainImageView
     };
 
