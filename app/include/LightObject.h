@@ -32,6 +32,10 @@ public:
 	/// Sets dir light to NULL
 	/// </summary>
 	static void SetDirLight();
+
+	static void Init();
+
+	static glm::uvec2 shadowSize;
 protected:
 	LightObject(GameObject* gameObject, glm::vec3 pos);
 	static UniformBuffer<PointLightBuffer>* pointLightBuffer;

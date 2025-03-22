@@ -12,6 +12,7 @@ class RenderPass
 private:
 	SwapChain* swapChain;
 	VkRenderPass renderPass;
+	GraphicsPipeline* shadowPipeline;
 	GraphicsPipeline* mainPipeline;
 	GraphicsPipeline* cubeMapPipeline;
 	GraphicsPipeline* UIPipeline;
@@ -23,6 +24,9 @@ private:
 
 	Image uiDepthImage;
 	VkDeviceMemory uiDepthImageMemory;
+
+	Image shadowDepthImage;
+	VkDeviceMemory shadowImageMemory;
 	static VkFormat FindDepthFormat();
 
 	void CreateDepthResources();
@@ -34,6 +38,8 @@ public:
 	VkRenderPass getRenderPass() { return renderPass; }
 	Image getDepthImage() const { return depthImage; }
 	Image getUIDepthImage() const { return uiDepthImage; }
+	Image getShadowDepthImage() const { return shadowDepthImage; }
+	GraphicsPipeline* getShadowPipeline() const { return shadowPipeline; }
 	GraphicsPipeline* getMainPipeline() const { return mainPipeline; }
 	GraphicsPipeline* getCubeMapPipeline() const { return cubeMapPipeline; }
 	GraphicsPipeline* getUiPipeline() const { return UIPipeline; }

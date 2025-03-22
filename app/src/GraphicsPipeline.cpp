@@ -19,7 +19,10 @@
 
 GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fragmentShaderPath, uint16_t subPass, RenderPass& renderPass, VkFrontFace front, std::vector<BindingStruct> bindings, std::vector<VkVertexInputBindingDescription> bindingDesc, std::vector<VkVertexInputAttributeDescription> atribDesc, Uniform* createdUniform, VkPrimitiveTopology topology) {
     std::cout << "Creating pipeline\n";
-    Shader vertexShader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
+    Shader* vertexShader = nullptr;
+
+    if (vetrexShaderPath != "")
+        vertexShader = new Shader(vetrexShaderPath, VK_SHADER_STAGE_VERTEX_BIT);
 
     std::cout << "Loaded vertex shader\n";
 
@@ -45,9 +48,17 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     std::cout << "Preparing to load " << maxTextures << " textures\n";
 
-    Shader fragmentShader(fragmentShaderPath, VK_SHADER_STAGE_FRAGMENT_BIT, specializationInfo);
+    Shader* fragmentShader = nullptr;
 
-    VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShader.getShaderStageInfo() , fragmentShader.getShaderStageInfo() };
+    if (fragmentShaderPath != "")
+        fragmentShader = new Shader(fragmentShaderPath, VK_SHADER_STAGE_FRAGMENT_BIT, specializationInfo);
+
+    std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+
+    if (vetrexShaderPath != "")
+        shaderStages.push_back(vertexShader->getShaderStageInfo());
+    if(fragmentShaderPath != "")
+        shaderStages.push_back(fragmentShader->getShaderStageInfo());
 
     std::vector<VkVertexInputBindingDescription> bindingDescriptions = bindingDesc;
     std::vector<VkVertexInputAttributeDescription> attributeDescriptions = atribDesc;
@@ -82,8 +93,8 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
     VkPipelineMultisampleStateCreateInfo multisampling{};
     multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    multisampling.sampleShadingEnable = VK_TRUE;
-    multisampling.rasterizationSamples = Device::GetSampleCount();
+    multisampling.sampleShadingEnable = fragmentShader == nullptr ? VK_FALSE : VK_TRUE;
+    multisampling.rasterizationSamples = fragmentShader == nullptr ? VK_SAMPLE_COUNT_1_BIT : Device::GetSampleCount();
     multisampling.minSampleShading = .3;
     multisampling.pSampleMask = nullptr; // Optional
     multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
@@ -103,7 +114,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
     colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     colorBlending.logicOpEnable = VK_FALSE;
     colorBlending.logicOp = VK_LOGIC_OP_COPY; // Optional
-    colorBlending.attachmentCount = 1;
+    colorBlending.attachmentCount = subPass == 0 ? 0 : 1;
     colorBlending.pAttachments = &colorBlendAttachment;
     colorBlending.blendConstants[0] = 0.0f; // Optional
     colorBlending.blendConstants[1] = 0.0f; // Optional
@@ -180,8 +191,8 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-        pipelineInfo.stageCount = 2;
-        pipelineInfo.pStages = shaderStages;
+        pipelineInfo.stageCount = static_cast<uint32_t>(shaderStages.size());
+        pipelineInfo.pStages = shaderStages.data();
         pipelineInfo.pVertexInputState = &vertexInputInfo;
         pipelineInfo.pInputAssemblyState = &inputAssembly;
         pipelineInfo.pViewportState = &viewportState;
@@ -199,6 +210,12 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
         if (vkCreateGraphicsPipelines(Device::getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
+
+    if(vertexShader != nullptr)
+        delete vertexShader;
+
+    if(fragmentShader != nullptr)
+        delete fragmentShader;
 }
 
 GraphicsPipeline::~GraphicsPipeline() {
