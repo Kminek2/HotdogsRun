@@ -29,6 +29,8 @@ std::vector<std::string> LoadScene::preLoadSprites = {"BaseFont"};
 std::shared_ptr<Scene> LoadScene::Init() {
 	Scene* scene = new Scene(this);
 
+	Application::SetCursor(true);
+
 	Text* loadingText = new Text("SansSerif", { 0, -0.5f, 0 }, glm::vec3(0), 0.5f);
 	amountOfLoaded = new Text("HackBold", { 0, -0.8f, 0 }, glm::vec3(0), 0.5f);
 

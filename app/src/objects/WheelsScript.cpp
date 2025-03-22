@@ -27,6 +27,13 @@ void WheelsScript::Init() {
             const_cast<float&>(off_forw) = 0.85f;
             const_cast<float&>(off_back) = 1.4f;
             const_cast<float&>(off_up) = 0.05f;
+        } else if (gameObject->GetModelName() == "pickup") {
+            const_cast<std::string&>(model) = "pickup_tire_1";
+            const_cast<float&>(off_left) = 0.75f;
+            const_cast<float&>(off_right) = 0.75f;
+            const_cast<float&>(off_forw) = 1.2f;
+            const_cast<float&>(off_back) = 1.1f;
+            const_cast<float&>(off_up) = 0.3f;
         }
     }
 
@@ -50,4 +57,7 @@ void WheelsScript::LateUpdate() {
     }
 }
 
-void WheelsScript::OnDestroy() {}
+void WheelsScript::OnDestroy() {
+    for (int i = 0; i < wheels.size(); ++i)
+        delete wheels[i];
+}

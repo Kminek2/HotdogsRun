@@ -8,13 +8,17 @@ class MainMenuScene :
     public SceeneScript
 {
 private:
-    //QuickCamera* qc;
+    CarMovement* cm;
+    QuickCamera* qc;
     AnimationManager* am;
     std::vector<GameObject*> objs;
     static bool first_load;
+    static int model_choosen;
     std::vector<std::pair<Text*, Text*>> menu_options;
+    std::vector<std::pair<Text*, Text*>> appearance_options;
     std::vector<std::pair<Sprite*, std::pair<Text*, Text*>>> maps_options;
     UiObject* logo;
+    GameObject* user_car;
     
     int menu_choosen_option;
     void ShowMenu();
@@ -28,8 +32,14 @@ private:
     void UpdateMapsHighlight();
     void HideMaps();
 
+    void ShowAppearance();
+    void UpdateAppearance();
+    void HideAppearance();
+
     void to_maps_animation();
     void from_maps_animation();
+    void to_appearance_animation();
+    void from_appearance_animation();
 public:
     static std::vector<std::pair<std::string, SceeneScript*>> scenes;
     

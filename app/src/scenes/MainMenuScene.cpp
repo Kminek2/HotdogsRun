@@ -11,16 +11,29 @@
 #include "objects/Lights.h"
 #include "Sprite.h"
 
+const std::string car_models[] = {
+    "f1car", "hotrod", "pickup", "racing_car"
+};
+
+const std::string car_models_label[] = {
+    "<  F1 Car  >", "<  Hotrod  >", "<  Pickup  >", "<  Racing Car  >"
+};
+
 bool MainMenuScene::first_load = true;
+int MainMenuScene::model_choosen = 0;
 
 std::shared_ptr<Scene> MainMenuScene::Init() {
 	Scene* scene = new Scene(this);
 
-    //qc = new QuickCamera();
-    //qc->_sr(0.75f);
-	//qc->_sm(100.0f);
+    Application::SetCursor(true);
+
+    qc = new QuickCamera();
+    qc->_sr(0.75f);
+	qc->_sm(100.0f);
 
     logo = nullptr;
+
+    cm = new CarMovement(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
 
     objs.push_back(new GameObject());
     am = new AnimationManager();
@@ -29,10 +42,9 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     objs.push_back(new GameObject("BaseCube", glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0.0f), glm::vec3(1000.0f, 1000.0f, 0.0f)));
     objs[objs.size()-1]->AddColorChange(glm::vec3(1.0f), glm::vec3(0.1f, 0.5f, 0.1f));
     
-    objs.push_back(new GameObject("f1car"));
-    CarMovement* cm = new CarMovement(100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f);
-    objs[objs.size()-1]->AddScript(cm);
-    objs[objs.size()-1]->AddScript(new WheelsScript(*cm));
+    user_car = new GameObject(car_models[model_choosen], glm::vec3(-6.0f, 0.0f, 0.3f));
+    user_car->AddScript(new WheelsScript(*cm));
+
     objs.push_back(new GameObject("stacjaBenzynowaCalosc"));
     objs.push_back(new GameObject("wjazd"));
     objs[objs.size()-1]->transform->RotateTo(glm::vec3(0.0f,0.0f,180.0f));
@@ -81,19 +93,23 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 }
 
 void MainMenuScene::Update() {
-    //qc->HandleMove();
-    //qc->HandleRotate();
+    qc->HandleMove();
+    qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();
     if (!maps_options.empty())
         UpdateMaps();
+    if (!appearance_options.empty())
+        UpdateAppearance();
 
     if (Input::getKeyClicked(GLFW_KEY_B)) {
 		std::cout << Camera::main->cameraTransform->position.x << ' ' << Camera::main->cameraTransform->position.y << ' ' << Camera::main->cameraTransform->position.z << '\n' << Camera::main->cameraTransform->rotation.x << ' ' << Camera::main->cameraTransform->rotation.y << '\n';
 	}
 }
 
-void MainMenuScene::UnLoad() {}
+void MainMenuScene::UnLoad() {
+    delete cm;
+}
 
 void MainMenuScene::ShowMenu() {
     logo = new UiObject("logo_pelne", glm::vec3(-0.05f, 0.5f, 0.0f), glm::vec3(90.0f, 180.0f, 180.0f), glm::vec3(0.06f, 0.08f, 0.08f));
@@ -153,7 +169,7 @@ void MainMenuScene::UpdateMenu() {
             to_maps_animation();
             break;
         case 1:
-            
+            to_appearance_animation();
             break;
         case 2:
             
@@ -214,8 +230,10 @@ void MainMenuScene::ShowMaps() {
 }
 
 void MainMenuScene::UpdateMaps() {
-    if (Input::getKeyClicked(GLFW_KEY_ESCAPE))
+    if (Input::getKeyClicked(GLFW_KEY_ESCAPE)) {
         from_maps_animation();
+        return;
+    }
 
     if (Input::getKeyClicked(GLFW_KEY_RIGHT)) ++menu_choosen_option;
     if (Input::getKeyClicked(GLFW_KEY_LEFT)) --menu_choosen_option;
@@ -295,4 +313,62 @@ void MainMenuScene::from_maps_animation() {
     am->addToQueue({{glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, {glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, 0.01f, {0.0f, 0.0f, 0.0f}, true, [](){}, [&](){
         ShowMenu();
     }});
+}
+
+void MainMenuScene::to_appearance_animation() {
+    am->addToQueue({{glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, {glm::vec3(-7.68801f, -4.80643f, 2.04224f), glm::vec2(60.5f, -10.75f)}, 1.5f, {0.0f, 0.0f, 0.0f}, false, [&](){
+        HideMenu();
+    }, [&](){
+        ShowAppearance();
+    }});
+}
+
+void MainMenuScene::from_appearance_animation() {
+    am->addToQueue({{glm::vec3(-7.68801f, -4.80643f, 2.04224f), glm::vec2(60.5f, -10.75f)}, {glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, 1.5f, {0.0f, 0.0f, 0.0f}, false, [&](){
+        HideAppearance();
+    }, [&](){
+        ShowMenu();
+    }});
+}
+
+void MainMenuScene::ShowAppearance() {
+    appearance_options.push_back({nullptr, nullptr});
+    appearance_options[appearance_options.size()-1].second = (new Text("SansSerif", {0.608f,0.49f,0.9f}, {0,0}, 0.3f, glm::vec4(1.0f), -2.0f));
+    appearance_options[appearance_options.size()-1].second->SetText(car_models_label[model_choosen]);
+    appearance_options[appearance_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    appearance_options[appearance_options.size()-1].first = (new Text("SansSerif", {0.6f,0.5f,0.8f}, {0,0}, 0.3f, glm::vec4(1.0f), -2.0f));
+    appearance_options[appearance_options.size()-1].first->SetText(car_models_label[model_choosen]);
+}
+
+void MainMenuScene::HideAppearance() {
+    for (auto& x : appearance_options) {
+        delete x.first;
+        delete x.second;
+    }
+    menu_options.clear();
+}
+
+void MainMenuScene::UpdateAppearance() {
+    if (Input::getKeyClicked(GLFW_KEY_ESCAPE)) {
+        from_appearance_animation();
+        return;
+    }
+
+    bool model_changed = false;
+    if (Input::getKeyClicked(GLFW_KEY_RIGHT)) ++model_choosen, model_changed = true;
+    if (Input::getKeyClicked(GLFW_KEY_LEFT)) --model_choosen, model_changed = true;
+
+    model_choosen += 4;
+    model_choosen %= 4;
+
+    if (model_changed) {
+        appearance_options[appearance_options.size()-1].second->SetText(car_models_label[model_choosen]);
+        appearance_options[appearance_options.size()-1].first->SetText(car_models_label[model_choosen]);
+        user_car->ChangeModel(car_models[model_choosen]);
+        user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->OnDestroy();
+        delete user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1];
+        user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1] = new WheelsScript(*cm);
+        user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->gameObject = user_car;
+        user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->Init();
+    }    
 }

@@ -85,7 +85,7 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	Sprite::SendDataToGPU();
 
 	for (const auto& entry : fs::directory_iterator("fonts")) {
-		Font::LoadFontFromFile(entry.path().filename().stem().string(), entry.path().string(), 32U);
+		Font::LoadFontFromFile(entry.path().filename().stem().string(), entry.path().string(), 32U, 20U);
 	}
 
 	camera = new Camera(FRAMES_IN_FLIGHT, width, height);
