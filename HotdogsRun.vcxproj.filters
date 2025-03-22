@@ -252,6 +252,9 @@
     <ClCompile Include="app\src\objects\PowerUps\PUNitro.cpp">
       <Filter>Source Files\objects\PowerUps</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\Settings.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -472,6 +475,9 @@
     </ClInclude>
     <ClInclude Include="app\include\objects\PowerUps\PUNitro.hpp">
       <Filter>Header Files\objects\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\Settings.h">
+      <Filter>Header Files\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
