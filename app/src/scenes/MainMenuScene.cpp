@@ -6,6 +6,7 @@
 #include "QuickCamera.h"
 #include "DebugPoints.h"
 #include "objects/CarMovement.h"
+#include "objects/WheelsScript.h"
 
 #include "objects/Lights.h"
 #include "Sprite.h"
@@ -19,9 +20,6 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     //qc->_sr(0.75f);
 	//qc->_sm(100.0f);
 
-    Camera::main->cameraTransform->position = glm::vec3(-9.96294f, -9.06299f, 2.38608f);
-    Camera::main->cameraTransform->rotation = glm::vec2(47.0f, -4.0f);
-
     logo = nullptr;
 
     objs.push_back(new GameObject());
@@ -31,6 +29,10 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     objs.push_back(new GameObject("BaseCube", glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0.0f), glm::vec3(1000.0f, 1000.0f, 0.0f)));
     objs[objs.size()-1]->AddColorChange(glm::vec3(1.0f), glm::vec3(0.1f, 0.5f, 0.1f));
     
+    objs.push_back(new GameObject("f1car"));
+    CarMovement* cm = new CarMovement(100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f);
+    objs[objs.size()-1]->AddScript(cm);
+    objs[objs.size()-1]->AddScript(new WheelsScript(*cm));
     objs.push_back(new GameObject("stacjaBenzynowaCalosc"));
     objs.push_back(new GameObject("wjazd"));
     objs[objs.size()-1]->transform->RotateTo(glm::vec3(0.0f,0.0f,180.0f));
@@ -64,10 +66,15 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     objs[objs.size()-1]->transform->Rotate(glm::vec3(0.0f, 0.0f, -90.0f));
     objs.push_back(new GameObject("f1car"));
     objs[objs.size()-1]->AddScript(new CarMovement(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false));
+
+    Camera::main->cameraTransform->MoveTo(glm::vec3(-9.96294f, -9.06299f, 2.38608f));
+    Camera::main->cameraTransform->RotateTo(glm::vec2(47.0f, -4.0f));
     
     if (first_load) {
         first_animation();
         first_load = false;
+    } else {
+        ShowMenu();
     }
 
 	return std::shared_ptr<Scene>(scene);
@@ -220,13 +227,16 @@ void MainMenuScene::UpdateMaps() {
         switch (menu_choosen_option)
         {
         case 0:
+            HideMaps();
             Application::LoadScene("map_demo");
             break;
         case 1:    
+            HideMaps();
             Application::LoadScene("map_demo");
             break;
         case 2:
-            Application::LoadScene("map_demo");    
+            HideMaps();
+            Application::LoadScene("map_demo"); 
             break;
         }
     }
