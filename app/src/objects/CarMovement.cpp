@@ -291,3 +291,11 @@ void CarMovement::handleAudio() {
 	crashsound_timer = std::max(0.0f, crashsound_timer);
 	gassound_timer = std::max(0.0f, gassound_timer);
 }
+
+float CarMovement::getActSpeed() {
+	return actSpeed;
+}
+
+float CarMovement::getAxleAngle() {
+	return axleAngle;
+}

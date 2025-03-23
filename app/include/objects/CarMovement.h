@@ -80,6 +80,8 @@ public:
     void useHandBreak();
     void useNitro();
     void handleAudio();
+    float getActSpeed();
+    float getAxleAngle();
     friend WheelsScript;
     
     // overrides [percent change]
