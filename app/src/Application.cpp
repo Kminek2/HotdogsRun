@@ -241,6 +241,7 @@ void Application::Update() {
 	}
 	catch (std::exception e)
 	{
+		std::cout << "Threading error: " << e.what() << "\nRecreating threading pool.\n";
 		threadPool.StopAll();
 	}
 	Transform::ClearMemory();
