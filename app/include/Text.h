@@ -14,6 +14,7 @@ private:
 	float spacing;
 	glm::vec4 color;
 public:
+	std::mutex textMutex;
 	Text(std::string fontName, glm::vec3 pos, glm::vec2 anchor, float fontSize = 1, glm::vec4 col = glm::vec4(1), float spacing = 1);
 	~Text();
 	std::string getText() { return text; }

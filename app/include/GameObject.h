@@ -91,6 +91,10 @@ private:
 	static UniformBuffer<ColorChangeStruct>* allColorChanges;
 
 	static uint32_t SendColorData(uint32_t frame);
+
+	void EarlyUpdate(ThreadPool& threadPool);
+	void Update(ThreadPool& threadPool);
+	void LateUpdate(ThreadPool& threadPool);
 public:
 	GameObject(std::string model = "", glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1), int surface_type = -1);
 	GameObject(ObjectSchema* schema, glm::vec3 position = glm::vec3(0)) : GameObject(schema->model, position, schema->rotation, schema->scale, schema->surface_type) {};
@@ -116,9 +120,9 @@ public:
 	GameObject* ChangeModel(std::string model = "");
 
 	static void DeleteAll();
-	static void EarlyUpdateAllObjectScripts();
-	static void UpdateAllObjectScripts();
-	static void LateUpdateAllObjectScripts();
+	static void EarlyUpdateAllObjectScripts(ThreadPool& threadPool);
+	static void UpdateAllObjectScripts(ThreadPool& threadPool);
+	static void LateUpdateAllObjectScripts(ThreadPool& threadPool);
 
 	static void TransformTransformsToMemory();
 	friend Commands;

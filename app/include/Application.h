@@ -11,6 +11,8 @@
 #include <functional>
 #include <filesystem>
 
+#include "ThreadPool.h"
+
 #define FRAMES_IN_FLIGHT 2
 #define ASPECT_WIDTH 16
 #define ASPECT_HEIGHT 9
@@ -29,6 +31,8 @@ private:
 	unsigned loadedModel;
 	bool loadedAll;
 	std::thread modelLoading;
+
+	ThreadPool threadPool;
 public:
 	Application(uint16_t width, uint16_t height, GLFWwindow* window);
 	~Application();

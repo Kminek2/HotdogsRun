@@ -51,6 +51,36 @@ uint32_t GameObject::SendColorData(uint32_t frame)
 	return colors.size() * sizeof(ColorChangeStruct);
 }
 
+void GameObject::EarlyUpdate(ThreadPool& threadPool)
+{
+	for (int i = 0; i < objectScripts.size(); i++)
+	{
+		std::function<void()> upd = std::bind(&ObjectScript::EarlyUpdate, objectScripts[i]);
+
+		threadPool.enqueue(upd);
+	}
+}
+
+void GameObject::Update(ThreadPool& threadPool)
+{
+	for (int i = 0; i < objectScripts.size(); i++)
+	{
+		std::function<void()> upd = std::bind(&ObjectScript::Update, objectScripts[i]);
+
+		threadPool.enqueue(upd);
+	}
+}
+
+void GameObject::LateUpdate(ThreadPool& threadPool)
+{
+	for (int i = 0; i < objectScripts.size(); i++)
+	{
+		std::function<void()> upd = std::bind(&ObjectScript::LateUpdate, objectScripts[i]);
+
+		threadPool.enqueue(upd);
+	}
+}
+
 GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int surface_type)
 : surface_type(surface_type)
 {
@@ -129,43 +159,34 @@ void GameObject::DeleteAll()
 	deletingAll = false;
 }
 
-void GameObject::EarlyUpdateAllObjectScripts() {
+void GameObject::EarlyUpdateAllObjectScripts(ThreadPool& threadPool) {
 	std::list<GameObject*>::iterator it = createdGameObject.begin();
 
 	while (it != createdGameObject.end())
 	{
-		for (int i = 0; i < (*it)->objectScripts.size(); i++)
-		{
-			(*it)->objectScripts[i]->EarlyUpdate();
-		}
+		(*it)->EarlyUpdate(threadPool);
 		it = std::next(it);
 	}
 }
 
-void GameObject::UpdateAllObjectScripts()
+void GameObject::UpdateAllObjectScripts(ThreadPool& threadPool)
 {
 	std::list<GameObject*>::iterator it = createdGameObject.begin();
 
 	while (it != createdGameObject.end())
 	{
-		for (int i = 0; i < (*it)->objectScripts.size(); i++)
-		{
-			(*it)->objectScripts[i]->Update();
-		}
+		(*it)->Update(threadPool);
 		it = std::next(it);
 	}
 }
 
-void GameObject::LateUpdateAllObjectScripts()
+void GameObject::LateUpdateAllObjectScripts(ThreadPool& threadPool)
 {
 	std::list<GameObject*>::iterator it = createdGameObject.begin();
 
 	while (it != createdGameObject.end())
 	{
-		for (int i = 0; i < (*it)->objectScripts.size(); i++)
-		{
-			(*it)->objectScripts[i]->LateUpdate();
-		}
+		(*it)->LateUpdate(threadPool);
 		it = std::next(it);
 	}
 }
@@ -180,7 +201,7 @@ void GameObject::TransformTransformsToMemory()
 	std::vector<glm::mat4> transforms;
 	std::list<GameObject*>::iterator it = createdGameObject.begin();
 	for (int i = 0; i < createdGameObject.size(); i++) {
-		transforms.push_back((*it)->transform->modelTransform);
+		transforms.push_back((*it)->transform->getModelMatrix());
 
 		it = std::next(it);
 	}

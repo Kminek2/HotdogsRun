@@ -47,6 +47,9 @@ glm::vec2 Font::getTextSize(std::string fontName, std::string text, float spacin
 {
     Font* font = loadedFonts[fontName];
 
+    if (font == nullptr)
+        return glm::vec2(-1);
+
     unsigned size = 0;
 
     for (char ch : text ) {

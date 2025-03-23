@@ -188,6 +188,9 @@ void Application::UpdateBuffer(uint16_t frame, Uniform *uniform, Uniform* cubeMa
 std::list <float> frameTimes;
 
 void Application::Update() {
+	while (!threadPool.isEmpty())
+		continue;
+
 	if (!loadedAll && loadedModel == entries.size()) {
 		modelLoading.join();
 		Model::SendBuffers();
@@ -210,21 +213,29 @@ void Application::Update() {
 		}
 
 		times /= frameTimes.size();
-		//std::cout << "fps: " << times << '\n';
+		std::cout << "fps: " << times << '\n';
 
 		frameTimes.clear();
 	}
-	Scene::loadedScene.get()->sceneScript->EarlyUpdate();
-	GameObject::EarlyUpdateAllObjectScripts();
-	Scene::loadedScene.get()->sceneScript->Update();
-	GameObject::UpdateAllObjectScripts();
-	Scene::loadedScene.get()->sceneScript->LateUpdate();
-	GameObject::LateUpdateAllObjectScripts();
-
-	LightObject::UpdateShadows(); // TODO: make it all lights
+	threadPool.enqueue(std::bind(&SceeneScript::EarlyUpdate, Scene::loadedScene.get()->sceneScript));
+	GameObject::EarlyUpdateAllObjectScripts(threadPool);
+	while (!threadPool.isEmpty())
+		continue;
+	threadPool.enqueue(std::bind(&SceeneScript::Update, Scene::loadedScene.get()->sceneScript));
+	GameObject::UpdateAllObjectScripts(threadPool);
+	while (!threadPool.isEmpty())
+		continue;
+	threadPool.enqueue(std::bind(&SceeneScript::LateUpdate, Scene::loadedScene.get()->sceneScript));
+	GameObject::LateUpdateAllObjectScripts(threadPool);
+	while (!threadPool.isEmpty())
+		continue;
+	threadPool.enqueue(LightObject::UpdateShadows); // TODO: make it all lights
 
 	soundEngine->UpdatePos();
-	AudioSource3d::UpdateAllPosition();
+	
+	threadPool.enqueue(AudioSource3d::UpdateAllPosition);
+	while (!threadPool.isEmpty())
+		continue;
 	Transform::ClearMemory();
 	GameObject::TransformTransformsToMemory();
 	Sprite::UpdateBuffer();

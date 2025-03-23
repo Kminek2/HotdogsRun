@@ -17,6 +17,7 @@ class AnimationManager :
         };
         AnimationManager(std::vector<data> animation_queue = {});
         void Init() override;
+        void EarlyUpdate() override;
         void Update() override;
         void OnDestroy() override;
         void addToQueue(data animation);
