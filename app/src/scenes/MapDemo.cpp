@@ -158,13 +158,6 @@ void MapDemo::Update() {
 	//qc->HandleRotate();
 	race_manager->Update();
 
-	if (Input::getKeyPressed(GLFW_KEY_R))
-		Application::LoadScene("map_demo");
-
-	if (Input::getKeyClicked(GLFW_KEY_B)) {
-		std::cout << car->transform->position.x - Camera::main->cameraTransform->position.x << ' ' << car->transform->position.y - Camera::main->cameraTransform->position.y << ' ' << car->transform->position.z - Camera::main->cameraTransform->position.z << '\n' << car->transform->rotation.x - Camera::main->cameraTransform->rotation.x << ' ' << car->transform->rotation.y - Camera::main->cameraTransform->rotation.y << '\n';
-	}
-
 	if (on_end_screen && UpdateEndScreen()) {
 		Application::LoadScene("main_menu");
 		return;

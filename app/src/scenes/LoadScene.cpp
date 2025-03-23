@@ -1,5 +1,6 @@
 #include "scenes/LoadScene.h"
 #include "scenes/DebugScene.h"
+#include "scenes/LoadingScreenScene.h"
 #include "scenes/MapDemo.h"
 #include "scenes/MainMenuScene.h"
 
@@ -19,6 +20,7 @@
 std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"load", new LoadScene()},
 	{"main_menu", new MainMenuScene()},
+	{"loading_screen", new LoadingScreenScene()},
 	{"map_demo", new MapDemo()},
 	{"debug", new DebugScene()},
 };

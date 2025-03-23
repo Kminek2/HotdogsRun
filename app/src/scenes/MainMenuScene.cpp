@@ -265,15 +265,15 @@ void MainMenuScene::UpdateMaps() {
         {
         case 0:
             HideMaps();
-            Application::LoadScene("map_demo");
+            Application::LoadScene("loading_screen");
             break;
         case 1:    
             HideMaps();
-            Application::LoadScene("map_demo");
+            Application::LoadScene("loading_screen");
             break;
         case 2:
             HideMaps();
-            Application::LoadScene("map_demo"); 
+            Application::LoadScene("loading_screen"); 
             break;
         }
     }
@@ -311,10 +311,10 @@ void MainMenuScene::first_animation() {
 }
 
 void MainMenuScene::to_maps_animation() {
-    am->addToQueue({{glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, {glm::vec3(-5.16202f, 1.9114f, 1.5676f), glm::vec2(24.5f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}, false, [&](){
+    am->addToQueue({{glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, {glm::vec3(-5.16202f, 1.9114f, 2.5676f), glm::vec2(24.5f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}, false, [&](){
         HideMenu();
     }});
-    am->addToQueue({{glm::vec3(-5.16202f, 1.9114f, 1.5676f), glm::vec2(24.5f, -2.0f)}, {glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(-5.16202f, 1.9114f, 2.5676f), glm::vec2(24.5f, -2.0f)}, {glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
     am->addToQueue({{glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, {glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
     am->addToQueue({{glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, {glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
     am->addToQueue({{glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, {glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, 0.01f, {0.0f, 0.0f, 0.0f}, true, [](){}, [&](){
@@ -327,8 +327,8 @@ void MainMenuScene::from_maps_animation() {
         HideMaps();
     }});
     am->addToQueue({{glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, {glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
-    am->addToQueue({{glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, {glm::vec3(-5.16202f, 1.9114f, 1.5676f), glm::vec2(24.5f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
-    am->addToQueue({{glm::vec3(-5.16202f, 1.9114f, 1.5676f), glm::vec2(24.5f, -2.0f)}, {glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, {glm::vec3(-5.16202f, 1.9114f, 2.5676f), glm::vec2(24.5f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(-5.16202f, 1.9114f, 2.5676f), glm::vec2(24.5f, -2.0f)}, {glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
     am->addToQueue({{glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, {glm::vec3(-9.96294f, -9.06299f, 2.38608f), glm::vec2(47.0f, -4.0f)}, 0.01f, {0.0f, 0.0f, 0.0f}, true, [](){}, [&](){
         ShowMenu();
     }});
