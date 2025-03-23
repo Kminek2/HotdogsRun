@@ -255,6 +255,15 @@
     <ClCompile Include="app\src\Settings.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\ThreadPool.cpp">
+      <Filter>Source Files\The Real Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\PUManager.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\scenes\LoadingScreenScene.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -478,6 +487,15 @@
     </ClInclude>
     <ClInclude Include="app\include\Settings.h">
       <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\PUManager.hpp">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\ThreadPool.h">
+      <Filter>Header Files\The Real Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\scenes\LoadingScreenScene.h">
+      <Filter>Header Files\scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -71,6 +71,7 @@
     <ClCompile Include="app\src\SceeneScript.cpp" />
     <ClCompile Include="app\src\Scene.cpp" />
     <ClCompile Include="app\src\scenes\DebugScene.cpp" />
+    <ClCompile Include="app\src\scenes\LoadingScreenScene.cpp" />
     <ClCompile Include="app\src\scenes\LoadScene.cpp" />
     <ClCompile Include="app\src\scenes\MainMenuScene.cpp" />
     <ClCompile Include="app\src\scenes\MapDemo.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="app\include\Queues.h" />
     <ClInclude Include="app\include\QuickCamera.h" />
     <ClInclude Include="app\include\RectTransform.h" />
+    <ClInclude Include="app\include\scenes\LoadingScreenScene.h" />
     <ClInclude Include="app\include\scenes\MainMenuScene.h" />
     <ClInclude Include="app\include\Settings.h" />
     <ClInclude Include="app\include\Shadow.h" />
