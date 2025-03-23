@@ -3,6 +3,7 @@
 std::set<std::string> PowerUp::car_names;
 
 void PowerUp::Init() {
+	if (!gameObject->GetOBBsCount()) gameObject->AddDefaultOBB(glm::vec3(.1f));
 	gameObject->surface_type = NEVER_COLLIDE;
 
 	if (car_names.size() == 0) std::cout << "[!] There are no models linked to PowerUps!\n";

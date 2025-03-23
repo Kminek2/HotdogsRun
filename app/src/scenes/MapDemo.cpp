@@ -7,6 +7,7 @@
 #include "objects/ShowOBB.h"
 #include "BotMovement.h"
 #include "PowerUp.hpp"
+#include "objects/PUManager.hpp"
 
 #include <glm/vec3.hpp>
 #include <iostream>
@@ -96,12 +97,16 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		botmv->SetMapManager(map)->SetCarMovement(carmv);
 		botmv->GetWaypoints(map);
 		bot->AddScript(carmv)->AddScript(botmv);
-		
 
 		race_manager->AddCar(bot);
 	}
 
 	PowerUp::car_names = race_manager->GetCarNames();
+
+	PUManager* pum = (new PUManager(rand))->setMapManager(map);
+	pum->addPowerUp(GameObject("cube").AddScript(new PUNitro()), -1.0f);
+	pum->addPowerUp(GameObject("crate").AddScript(new PUMaxSpeed(.1f, 10 * 1000)), -1.0f);
+	pum->generatePowerUps(15);
 
 	GameObject* amobj = new GameObject; // 'am' stands for Animation Manager, apparently
 	AnimationManager* am = new AnimationManager;

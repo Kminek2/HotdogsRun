@@ -12,3 +12,6 @@ void PUNitro::OnActivate() {
 	collided->cm->addNitros(n);
 	collided = nullptr;
 }
+
+void PUNitro::Update() {}
+void PUNitro::OnDestroy() {}

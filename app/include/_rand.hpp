@@ -41,7 +41,7 @@ T _rand::random(T min, T max) {
 }
 
 /// <summary>
-/// Returns a const ref. to a random element from a vector. If probs are passed, they have to add up to 1 and not contain any negatives
+/// Returns a const ref. to a random element from a vector
 /// </summary>
 template<typename T>
 const T& _rand::choice(const std::vector<T>& container, std::vector<float> probs) {
@@ -62,14 +62,12 @@ const T& _rand::choice(const std::vector<T>& container, std::vector<float> probs
 		else sum += p;
 	}
 
-	if (sum > (1 + 1e-6)) throw std::invalid_argument("proba > 100%?");
-
 	sum = 1 - sum; // this how much to be divided
 	neg_sum = sum / -neg_sum; // this how much (-1) is worth
 
 	for (auto& p : probs) {
 		if (p >= 0) continue;
-		p *= neg_sum;
+		p = std::max(0.0f, p * neg_sum);
 	}
 
 	std::discrete_distribution<size_t> dist(probs.begin(), probs.end());

@@ -15,4 +15,7 @@ public:
 
 	void OnCollide(Collisions::CollisionData* cd) override;
 	void OnActivate() override;
+
+	void Update() override;
+	void OnDestroy() override;
 };

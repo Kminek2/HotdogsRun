@@ -16,3 +16,6 @@ void PUMaxSpeed::OnActivate() {
 
 	collided = nullptr;
 }
+
+void PUMaxSpeed::Update() {}
+void PUMaxSpeed::OnDestroy() {}
