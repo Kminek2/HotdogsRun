@@ -1,7 +1,7 @@
 #include "objects/PowerUps/PUMaxSpeed.hpp"
 
 void PUMaxSpeed::OnCollide(Collisions::CollisionData* cd) {
-	collided == (cd->obj1 == gameObject 
+	collided = (cd->obj1 == gameObject 
 		? cd->obj2 
 		: cd->obj1);
 
