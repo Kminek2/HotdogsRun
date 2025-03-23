@@ -94,7 +94,7 @@ bool AudioSource2d::LoadTrack(const char* filename, float volume, unsigned short
 	}
 
 	// Set the volume to max.
-	alSourcef(m_audioSourceId, AL_GAIN, 1.0f);
+	alSourcef(m_audioSourceId, AL_GAIN, volume);
 	if (alGetError() != AL_NO_ERROR)
 	{
 		return false;
