@@ -12,7 +12,7 @@ void PUMaxSpeed::OnActivate() {
 	float& cv = collided->cm->_maxSpeed;
 	cv *= (1 + increase);
 
-	SetValue(cv, -1.0f, duration);
+	SetValue(cv, 1.0f, duration);
 
 	collided = nullptr;
 }

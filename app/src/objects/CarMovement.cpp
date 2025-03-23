@@ -53,7 +53,7 @@ void CarMovement::Update() {
 			
 	}
 	else if (gameObject->transform->position.z > 0) {
-		downSpeed += -carWeight * multiplier * 1000 * Time::deltaTime;
+		downSpeed += -__carWeight * __multiplier * 1000 * Time::deltaTime;
 	}
 	auto old_rot = gameObject->transform->rotation;
 	auto old_pos = gameObject->transform->position;
@@ -107,18 +107,18 @@ void CarMovement::handleGas() {
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
 		actSpeed -= Time::deltaTime * accelBack * surfaces_data[road_type].acc_multiplier * (-1.6f * powf(speedPr, 2) + 1.6f) * __multiplier * 3.0f; //y = -1.6x^2 + 1.6
-		actSpeed = std::max(actSpeed, minSpeed * multiplier);
+		actSpeed = std::max(actSpeed, minSpeed * __multiplier);
 	}
 }
 
 void CarMovement::handleBreaks() {
 	if (actActions.hand_break) {
 		if (actSpeed > 0) {
-			actSpeed -= surfaces_data[road_type].break_multiplier * carWeight * breaksStrength * 200.0f * Time::deltaTime * multiplier;
+			actSpeed -= surfaces_data[road_type].break_multiplier * __carWeight * breaksStrength * 200.0f * Time::deltaTime * __multiplier;
 			actSpeed = std::max(actSpeed, 0.0f);
 		}
 		else {
-			actSpeed += surfaces_data[road_type].break_multiplier * carWeight * breaksStrength * 200.0f * Time::deltaTime * multiplier;
+			actSpeed += surfaces_data[road_type].break_multiplier * __carWeight * breaksStrength * 200.0f * Time::deltaTime * __multiplier;
 			actSpeed = std::min(actSpeed, 0.0f);
 		}
 	}
@@ -126,10 +126,10 @@ void CarMovement::handleBreaks() {
 
 void CarMovement::handleEngBreak() {
 	if (actSpeed > 0) {
-		actSpeed -= surfaces_data[road_type].eng_break_multiplier * carWeight * 10.0f * Time::deltaTime * multiplier * std::max(((actSpeed - maxSpeed*multiplier*surfaces_data[road_type].max_speed_multiplier)*3.0f), 1.0f);
+		actSpeed -= surfaces_data[road_type].eng_break_multiplier * __carWeight * 10.0f * Time::deltaTime * __multiplier * std::max(((actSpeed - __maxSpeed*__multiplier*surfaces_data[road_type].max_speed_multiplier)*3.0f), 1.0f);
 		actSpeed = std::max(actSpeed, 0.0f);
 	} else {
-		actSpeed += surfaces_data[road_type].eng_break_multiplier * carWeight * 10.0f * Time::deltaTime * multiplier;
+		actSpeed += surfaces_data[road_type].eng_break_multiplier * __carWeight * 10.0f * Time::deltaTime * __multiplier;
 		actSpeed = std::min(actSpeed, 0.0f);
 	}
 }
@@ -181,11 +181,11 @@ void CarMovement::handleForces() {
 		} else if (axleAngle > 0.0f+EPSILON) {
 			forces.y -= 0.1f*(axleAngle/45.0f)*Time::deltaTime;
 		}
-		if (actSpeed > 40.0f * multiplier) {
-			actSpeed -= carWeight * Time::deltaTime * accelFront * multiplier;
+		if (actSpeed > 40.0f * __multiplier) {
+			actSpeed -= __carWeight * Time::deltaTime * __accelFront * __multiplier;
 			actSpeed = std::max(actSpeed, 0.0f);
-		} else if (actSpeed < -40.0f * multiplier) {
-			actSpeed += carWeight * Time::deltaTime * accelBack * multiplier;
+		} else if (actSpeed < -40.0f * __multiplier) {
+			actSpeed += __carWeight * Time::deltaTime * accelBack * __multiplier;
 			actSpeed = std::min(actSpeed, 0.0f);
 		}
 	}
@@ -249,7 +249,7 @@ void CarMovement::handleNitroAcc() {
 	nitro_timer -= Time::deltaTime;
 	std::cout << nitro_timer << '\n';
 	nitro_timer = std::max(0.0f, nitro_timer);
-	actSpeed += Time::deltaTime * accelFront * surfaces_data[road_type].acc_multiplier * 0.1f * multiplier * std::max(before_nitro_mem, 50.0f);
+	actSpeed += Time::deltaTime * __accelFront * surfaces_data[road_type].acc_multiplier * 0.1f * __multiplier * std::max(before_nitro_mem, 50.0f);
 	if (nitro_timer == 0.0f) {
 		actSpeed = before_nitro_mem;
 		if (nitro_trail) {
@@ -261,5 +261,5 @@ void CarMovement::handleNitroAcc() {
 
 void CarMovement::handleGrip()
 {
-	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime * (gameObject->transform->position.z > 0 ? 0.01f : 1.0f) + (1 - surfaces_data[road_type].grip) * gripMult * std::abs(actSpeed / (gripToSpeed * maxSpeed)) * (std::pow(axleAngle * (actSpeed / (maxSpeed * multiplier)) / 30, 2.0f) + 0.5f));
+	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime * (gameObject->transform->position.z > 0 ? 0.01f : 1.0f) + (1 - surfaces_data[road_type].grip) * gripMult * std::abs(actSpeed / (gripToSpeed * __maxSpeed)) * (std::pow(axleAngle * (actSpeed / (__maxSpeed * __multiplier)) / 30, 2.0f) + 0.5f));
 }
