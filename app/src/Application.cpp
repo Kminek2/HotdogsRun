@@ -217,25 +217,32 @@ void Application::Update() {
 
 		frameTimes.clear();
 	}
-	threadPool.enqueue(std::bind(&SceeneScript::EarlyUpdate, Scene::loadedScene.get()->sceneScript));
-	GameObject::EarlyUpdateAllObjectScripts(threadPool);
-	while (!threadPool.isEmpty())
-		continue;
-	threadPool.enqueue(std::bind(&SceeneScript::Update, Scene::loadedScene.get()->sceneScript));
-	GameObject::UpdateAllObjectScripts(threadPool);
-	while (!threadPool.isEmpty())
-		continue;
-	threadPool.enqueue(std::bind(&SceeneScript::LateUpdate, Scene::loadedScene.get()->sceneScript));
-	GameObject::LateUpdateAllObjectScripts(threadPool);
-	while (!threadPool.isEmpty())
-		continue;
-	threadPool.enqueue(LightObject::UpdateShadows); // TODO: make it all lights
 
-	soundEngine->UpdatePos();
-	
-	threadPool.enqueue(AudioSource3d::UpdateAllPosition);
-	while (!threadPool.isEmpty())
-		continue;
+	try {
+		threadPool.enqueue(std::bind(&SceeneScript::EarlyUpdate, Scene::loadedScene.get()->sceneScript));
+		GameObject::EarlyUpdateAllObjectScripts(threadPool);
+		while (!threadPool.isEmpty())
+			continue;
+		threadPool.enqueue(std::bind(&SceeneScript::Update, Scene::loadedScene.get()->sceneScript));
+		GameObject::UpdateAllObjectScripts(threadPool);
+		while (!threadPool.isEmpty())
+			continue;
+		threadPool.enqueue(std::bind(&SceeneScript::LateUpdate, Scene::loadedScene.get()->sceneScript));
+		GameObject::LateUpdateAllObjectScripts(threadPool);
+		while (!threadPool.isEmpty())
+			continue;
+		threadPool.enqueue(LightObject::UpdateShadows); // TODO: make it all lights
+
+		soundEngine->UpdatePos();
+
+		threadPool.enqueue(AudioSource3d::UpdateAllPosition);
+		while (!threadPool.isEmpty())
+			continue;
+	}
+	catch (std::exception e)
+	{
+		threadPool.StopAll();
+	}
 	Transform::ClearMemory();
 	GameObject::TransformTransformsToMemory();
 	Sprite::UpdateBuffer();
