@@ -5,6 +5,7 @@ std::list<Sprite*> Sprite::createdSprites;
 Texture* Sprite::textures = new Texture();
 Buffer<Sprite::SpriteSendData>* Sprite::spriteBuffer = new Buffer<Sprite::SpriteSendData>(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 const std::string Sprite::spriteModelName = "Sprite";
+std::mutex Sprite::createdSpriteMutex;
 
 Sprite::Sprite(std::string name, glm::vec4 color)
 {
@@ -12,6 +13,7 @@ Sprite::Sprite(std::string name, glm::vec4 color)
 
 	*this = *loadedSprites[name];
 	this->color = color;
+	std::lock_guard<std::mutex> createdSpritesLock(createdSpriteMutex);
 	createdSprites.push_back(this);
 	i = std::prev(createdSprites.end());
 	rectTransform = new RectTransform();
@@ -25,6 +27,7 @@ Sprite::Sprite(std::string name, glm::uvec2 texSize, glm::uvec2 offset, glm::vec
 	this->texSize = texSize;
 	this->offSet += offset;
 	this->color = color;
+	std::lock_guard<std::mutex> createdSpritesLock(createdSpriteMutex);
 	createdSprites.push_back(this);
 	i = std::prev(createdSprites.end());
 	rectTransform = new RectTransform();
@@ -38,6 +41,7 @@ Sprite::Sprite(std::string name, int, glm::vec2 texSize01, glm::vec2 offset01, g
 	this->offSet += offset01 * (glm::vec2)this->texSize;
 	this->texSize = (glm::vec2)texSize * texSize01;
 	this->color = color;
+	std::lock_guard<std::mutex> createdSpritesLock(createdSpriteMutex);
 	createdSprites.push_back(this);
 	i = std::prev(createdSprites.end());
 	rectTransform = new RectTransform();
@@ -62,8 +66,12 @@ void Sprite::LoadImageFromFile(std::string name, std::string filePath)
 
 Sprite::~Sprite()
 {
+	std::unique_lock<std::mutex> createdSpritesLock(createdSpriteMutex, std::defer_lock);
+	createdSpritesLock.lock();
 	if (!createdSprites.empty())
 		createdSprites.erase(i);
+
+	createdSpritesLock.unlock();
 	model->DeleteSprite();
 
 	if(rectTransform != nullptr)
@@ -72,10 +80,14 @@ Sprite::~Sprite()
 
 void Sprite::DeleteAll()
 {
+	std::unique_lock<std::mutex> createdSpritesLock(createdSpriteMutex, std::defer_lock);
+	createdSpritesLock.lock();
 	std::list<Sprite*>::iterator i = createdSprites.begin();
 	while (i != createdSprites.end()) {
 		std::list<Sprite*>::iterator i2 = std::next(i);
+		createdSpritesLock.unlock();
 		delete (*i);
+		createdSpritesLock.lock();
 		i = i2;
 	}
 }
@@ -99,6 +111,7 @@ void Sprite::SendDataToGPU()
 
 void Sprite::UpdateBuffer()
 {
+	std::lock_guard<std::mutex> createdSpritesLock(createdSpriteMutex);
 	std::list<Sprite*>::iterator i = createdSprites.begin();
 
 	std::vector<glm::mat4> matrixes;

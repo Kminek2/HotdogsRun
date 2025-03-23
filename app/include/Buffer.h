@@ -126,6 +126,7 @@ void Buffer<T>::AddToBuffer(std::vector<T> dataToStore)
 template<typename T>
 void Buffer<T>::SendBufferToMemory()
 {
+    // add mutex to guard this function
     VkDeviceSize bufferSize = sizeof(data[0]) * data.size();
     if (bufferSize == 0)
         return;

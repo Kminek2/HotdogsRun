@@ -12,6 +12,7 @@ Text::Text(std::string fontName, glm::vec3 pos, glm::vec2 anchor, float fontSize
 
 void Text::SetText(std::string text)
 {
+	std::lock_guard<std::mutex> textLock(textMutex);
 	for (Sprite* sp : textSprites)
 		delete sp;
 
@@ -27,30 +28,44 @@ void Text::SetText(std::string text)
 
 void Text::ChangeSize(float size)
 {
+	if (textSprites.size() == 0)
+		return;
 	this->size = size;
 	SetText(text);
 }
 
 void Text::SetPos(glm::vec3 pos)
 {
+	if (textSprites.size() == 0)
+		return;
 	this->pos = pos;
 	SetText(text);
 }
 
 void Text::SetAnchor(glm::vec2 anchor)
 {
+	if (textSprites.size() == 0)
+		return;
 	this->center = anchor;
 	SetText(text);
 }
 
 void Text::SetColor(glm::vec4 color)
 {
+	if (textSprites.size() == 0)
+		return;
 	this->color = color;
 	SetText(text);
 }
 
 Text::~Text(){
+	std::unique_lock<std::mutex> textLock(textMutex, std::defer_lock);
+	textLock.lock();
 	for(Sprite* sprite : textSprites){
 		delete sprite;
 	}
+
+	textSprites.clear();
+
+	textLock.unlock();
 }

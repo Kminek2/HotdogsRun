@@ -82,6 +82,7 @@
     <ClCompile Include="app\src\Sprite.cpp" />
     <ClCompile Include="app\src\SwapChain.cpp" />
     <ClCompile Include="app\src\Text.cpp" />
+    <ClCompile Include="app\src\ThreadPool.cpp" />
     <ClCompile Include="app\src\Transform.cpp" />
     <ClCompile Include="app\src\UiObject.cpp" />
     <ClCompile Include="app\src\Uniform.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="app\include\Sprite.h" />
     <ClInclude Include="app\include\StringOperations.hpp" />
     <ClInclude Include="app\include\Text.h" />
+    <ClInclude Include="app\include\ThreadPool.h" />
     <ClInclude Include="app\include\_rand.hpp" />
     <ClInclude Include="app\include\RenderPass.h" />
     <ClInclude Include="app\include\resource.h" />

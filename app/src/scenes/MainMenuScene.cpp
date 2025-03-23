@@ -169,6 +169,7 @@ void MainMenuScene::UpdateMenu() {
         {
         case 0:
             to_maps_animation();
+            //Application::LoadScene("map_demo");
             break;
         case 1:
             to_appearance_animation();

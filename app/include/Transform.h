@@ -12,6 +12,7 @@
 #include <algorithm>
 
 #include "Buffer.h"
+#include <mutex>
 
 class GameObject;
 
@@ -210,8 +211,9 @@ struct Transform {
 		delete transformBuffer;
 	}
 
-	glm::mat4 getModelMatrix() { return modelTransform; }
+	glm::mat4 getModelMatrix() { std::lock_guard<std::mutex> matrixLock(matrixMutex); return modelTransform; }
 private:
+	std::mutex matrixMutex;
 	/// <summary>
 	/// Takes in a rotation vector in degrees, and clamps each angle to [0, 360)
 	/// </summary>
@@ -232,6 +234,7 @@ private:
 	}
 
 	void UpdateMatrix() {
+		std::lock_guard<std::mutex> matrixLock(matrixMutex);
 		modelTransform = glm::mat4(1);
 
 		modelTransform = glm::translate(modelTransform, position);

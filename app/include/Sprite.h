@@ -33,6 +33,7 @@ private:
 	std::list<Sprite*>::iterator i;
 
 	static std::map<std::string, Sprite*> loadedSprites;
+	static std::mutex createdSpriteMutex;
 	static std::list<Sprite*> createdSprites;
 	static Texture* textures;
 
