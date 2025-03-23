@@ -9,6 +9,7 @@
 #include <functional>
 #include <set>
 #include "objects/AnimationManager.h"
+#include "objects/CarMovement.h"
 
 class RaceManager {
 public:

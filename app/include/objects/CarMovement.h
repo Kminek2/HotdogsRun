@@ -73,12 +73,14 @@ public:
     void useHandBreak();
     void useNitro();
     friend WheelsScript;
-
+    
     // overrides [percent change]
     float _multiplier = 1;
     float _maxSpeed   = 1;
     float _accelFront = 1;
     float _carWeight  = 1;
+    
+    static bool disabled_inputs;
 
     void addNitros(int count);
 };

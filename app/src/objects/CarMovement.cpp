@@ -12,6 +12,7 @@ const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
 	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.1f, 0.3f, 0.4f)  // OIL
 };
 const float CarMovement::nitro_duration = 1.0f;
+bool CarMovement::disabled_inputs = false;
 
 CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode, float multiplier, glm::vec3 nitro_trail_offset) :
 	carWeight(carWeight), breaksStrength(breaksStrength), maxSpeed(maxSpeed), minSpeed(minSpeed), accelFront(accelFront), accelBack(accelBack), expertMode(expertMode), multiplier(multiplier), nitro_trail_offset(nitro_trail_offset), gripToSpeed(gripToSpeedMult) {
@@ -191,22 +192,32 @@ void CarMovement::handleForces() {
 }
 
 void CarMovement::goForward() {
+	if (disabled_inputs)
+		return;
 	actActions.forward = true;
 }
 
 void CarMovement::goBackwards() {
+	if (disabled_inputs)
+		return;
 	actActions.backwards = true;
 }
 
 void CarMovement::makeLeftTurn() {
+	if (disabled_inputs)
+		return;
 	actActions.left_turn = true;
 }
 
 void CarMovement::makeRightTurn() {
+	if (disabled_inputs)
+		return;
 	actActions.right_turn = true;
 }
 
 void CarMovement::useHandBreak() {
+	if (disabled_inputs)
+		return;
 	actActions.hand_break = true;
 }
 
@@ -220,7 +231,8 @@ CarMovement::road_type_data::road_type_data(float acc_multiplier, float eng_brea
 }
 
 void CarMovement::useNitro() {
-	if (nitros_available < 1) return;
+	if (disabled_inputs || nitros_available < 1)
+		return;
 	--nitros_available;
 	before_nitro_mem = actSpeed;
 	nitro_timer = nitro_duration;
