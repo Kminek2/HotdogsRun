@@ -20,18 +20,26 @@ const std::string car_models_label[] = {
 };
 
 bool MainMenuScene::first_load = true;
-int MainMenuScene::model_choosen = Settings::read("model_choosen");
+int MainMenuScene::model_choosen = Settings::read("model_choosen").value_or(0);
 
 std::shared_ptr<Scene> MainMenuScene::Init() {
 	Scene* scene = new Scene(this);
 
     Application::SetCursor(true);
 
-    qc = new QuickCamera();
-    qc->_sr(0.75f);
-	qc->_sm(100.0f);
+    // qc = new QuickCamera();
+    // qc->_sr(0.75f);
+	// qc->_sm(100.0f);
+
+    music_timer = 0.0f;
 
     logo = nullptr;
+
+    music_first = new AudioSource2d("music/first-intro-accordion", static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
+	music_cont = new AudioSource2d("music/continue-intro-accordion", static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
+
+	music_first->PlayTrack(false);
+	music_timer = 75.0f;
 
     cm = new CarMovement(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
 
@@ -95,8 +103,16 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 }
 
 void MainMenuScene::Update() {
-    qc->HandleMove();
-    qc->HandleRotate();
+    music_timer -= Time::deltaTime;
+    music_timer = std::max(music_timer, 0.0f);
+
+    if (music_timer == 0.0f) {
+        music_cont->PlayTrack(false);
+        music_timer = 71.0f;
+    }
+
+    // qc->HandleMove();
+    // qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();
     if (!maps_options.empty())

@@ -10,7 +10,7 @@ AudioSource3d::AudioSource3d(GameObject* gameObject, std::string filename, float
 
     m_waveData = 0;
     if (!LoadTrack(("sounds/" + filename + ".wav").c_str(), volume, 1))
-        throw std::runtime_error("CHeck these sounds");
+        throw std::runtime_error("CHeck these sounds: " + filename);
 
     created3dAudio.push_back(this);
     i = std::prev(created3dAudio.end());
@@ -60,9 +60,9 @@ bool AudioSource3d::UpdatePos()
 
 
     // Set the 3D position of the sound.
-    position[0] = transform->position.x;
-    position[1] = transform->position.z;
-    position[2] = transform->position.y;
+    position[0] = transform->position.x/10.0f;
+    position[1] = transform->position.z/10.0f;
+    position[2] = transform->position.y/10.0f;
 
     alSourcefv(m_audioSourceId, AL_POSITION, position);
     if (alGetError() != AL_NO_ERROR)

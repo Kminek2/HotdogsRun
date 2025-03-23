@@ -185,8 +185,6 @@ void RaceManager::StartAnimation() {
 				       false,
 				       [&]() {
 					       CarMovement::disabled_inputs = true;
-					       AudioSource2d *music = new AudioSource2d("music/first-race-accordion", 1.0f);
-					       music->PlayTrack(false);
 				       }});
 	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
 					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 18.25f}},

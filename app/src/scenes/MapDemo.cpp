@@ -8,12 +8,17 @@
 #include "BotMovement.h"
 #include "PowerUp.hpp"
 #include "objects/PUManager.hpp"
+#include "_rand.hpp"
 
 #include <glm/vec3.hpp>
 #include <iostream>
 
 using namespace mapgen;
 using tc = RaceManager::TerminationCondition;
+
+const std::string car_models[] = {
+    "f1car", "hotrod", "pickup", "racing_car"
+};
 
 const size_t seed = 45;
 const unsigned int cityNum = 3;
@@ -34,9 +39,18 @@ std::shared_ptr<Scene> MapDemo::Init() {
     //qc->_sr(0.75f);
 	//qc->_sm(100.0f);
 
-	on_end_screen = false;
+	music_timer = 0.0f;
+	first_music = true;
 
 	_rand rand(seed);
+	
+	music_type = rand.choice(std::vector<std::string>({"race-accordion", "race-bhrams"}), {0.5f, 0.5f});
+
+	music_first = new AudioSource2d("music/first-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
+	music_cont = new AudioSource2d("music/continue-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
+
+	on_end_screen = false;
+
 
 	MapManager::MapSettingsValues svals;
 	svals.map_len = 20;
@@ -74,7 +88,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	car = new GameObject("hotrod");
+	car = new GameObject(car_models[Settings::read("model_choosen").value_or(0)]);
 	car->AddDefaultOBB();
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
@@ -113,6 +127,12 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	amobj->AddScript(am);
 	race_manager->SetAnimationManager(am);
 	race_manager->StartRace();
+	
+	music_first->PlayTrack(false);
+	if (music_type == "race-accordion")
+		music_timer = 243.0f;
+	else
+		music_timer = 138.0f;
 
 	return std::shared_ptr<Scene>(scene);
 }
@@ -123,6 +143,17 @@ void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
 }
 
 void MapDemo::Update() {
+	music_timer -= Time::deltaTime;
+	music_timer = std::max(music_timer, 0.0f);
+
+	if (music_timer == 0.0f) {
+		music_cont->PlayTrack(false);
+		if (music_type == "race-accordion")
+			music_timer = 241.0f;
+		else
+			music_timer = 136.0f;
+	}
+
 	//qc->HandleMove();
 	//qc->HandleRotate();
 	race_manager->Update();

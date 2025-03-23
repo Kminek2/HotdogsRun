@@ -6,6 +6,7 @@
 
 #include "objects/LockPosition.h"
 #include "objects/LockRotation.h"
+#include "AudioSource2d.h"
 
 constexpr float EPSILON = 1e-3;
 
@@ -61,6 +62,12 @@ private:
     static const std::array<road_type_data,5> surfaces_data;
     static const float nitro_duration;
     int road_type; // 0 - no surface (grass), 1 - classical road (asphalt), 2 - dirt road, 3 - icy road, 4 - oil puddle
+
+    float crashsound_timer;
+    float gassound_timer;
+
+    AudioSource2d* crashsound_audio;
+    AudioSource2d* gassound_audio;
 public:
     CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode = false, float multiplier = 0.1f, glm::vec3 nitro_trail_offset = glm::vec3(1.7f, 0.0f, 0.0f));
     void Init() override;
@@ -72,6 +79,7 @@ public:
     void makeRightTurn();
     void useHandBreak();
     void useNitro();
+    void handleAudio();
     friend WheelsScript;
     
     // overrides [percent change]

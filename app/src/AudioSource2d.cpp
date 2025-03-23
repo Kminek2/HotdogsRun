@@ -9,7 +9,7 @@ AudioSource2d::AudioSource2d(std::string filename, float volume, unsigned short 
 {
 	m_waveData = 0;
 	if (!LoadTrack(("sounds/" + filename + ".wav").c_str(), volume, maxNumOfChanels))
-		throw std::runtime_error("CHeck these sounds");
+		throw std::runtime_error("CHeck these sounds: " + filename);
 
 	createdAudio.push_back(this);
 	i = std::prev(createdAudio.end());

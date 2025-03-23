@@ -26,6 +26,11 @@ private:
 	bool on_end_screen;
 	void ShowEndScreen();
 	bool UpdateEndScreen();
+	bool first_music;
+	float music_timer;
+	std::string music_type;
+	AudioSource2d* music_first;
+    AudioSource2d* music_cont;
 
 public:
 	std::shared_ptr<Scene> Init() override;

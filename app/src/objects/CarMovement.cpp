@@ -24,6 +24,12 @@ CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, 
 	nitro_timer = 0.0f;
 	nitro_trail = nullptr;
 	gripMult = glm::vec3(1);
+	crashsound_timer = 0.0f;
+	gassound_timer = 0.0f;
+	if (gameObject == nullptr)
+		gameObject = new GameObject();
+	crashsound_audio = new AudioSource3d(gameObject, "crash", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
+	gassound_audio = new AudioSource3d(gameObject, "gas", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
 }
 
 void CarMovement::Init() {
@@ -35,6 +41,8 @@ void CarMovement::Update() {
 	__maxSpeed   = maxSpeed   * _maxSpeed  ;
 	__accelFront = accelFront * _accelFront;
 	__carWeight  = carWeight  * _carWeight ;
+
+	handleAudio();
 
 	handleBreaks();
 	handleEngBreak();
@@ -50,8 +58,8 @@ void CarMovement::Update() {
 			downSpeed = 0.3f * std::max(0.0f, std::abs(downSpeed));
 		else
 			downSpeed = 0.3f * std::max(0.0f, std::abs(downSpeed)- 1000 * Time::deltaTime);
-			
 	}
+
 	else if (gameObject->transform->position.z > 0) {
 		downSpeed += -__carWeight * __multiplier * 1000 * Time::deltaTime;
 	}
@@ -76,6 +84,10 @@ void CarMovement::Update() {
 			road_type = std::max(road_type, obj->surface_type);
 	}
 	if (coll) {
+		if (crashsound_timer == 0.0f) {
+			crashsound_audio->PlayTrack(false);
+			crashsound_timer = 0.5f;
+		}
 		gameObject->transform->MoveTo(old_pos);
 		gameObject->transform->RotateTo(old_rot);
 		actSpeed *= -1;
@@ -94,6 +106,11 @@ void CarMovement::handleGas() {
 	if (forces.x != 1.0f) return;
 	if (__maxSpeed == 0) return;
 	if (actActions.forward) {
+		if (gassound_timer == 0.0f) {
+			gassound_timer = 1.6f;
+			gassound_audio->PlayTrack(false);
+		}
+
 		float speedPr = actSpeed / __maxSpeed*__multiplier*surfaces_data[road_type].max_speed_multiplier;
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
@@ -103,6 +120,11 @@ void CarMovement::handleGas() {
 		}
 	}
 	if (actActions.backwards) {
+		if (gassound_timer == 0.0f) {
+			gassound_timer = 1.6f;
+			gassound_audio->PlayTrack(false);
+		}
+
 		float speedPr = actSpeed / minSpeed*__multiplier;
 		if (speedPr >= 1.0f) return;
 		if (speedPr < 0.0f) speedPr = 0.0f;
@@ -259,7 +281,13 @@ void CarMovement::handleNitroAcc() {
 	}
 }
 
-void CarMovement::handleGrip()
-{
+void CarMovement::handleGrip() {
 	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime * (gameObject->transform->position.z > 0 ? 0.01f : 1.0f) + (1 - surfaces_data[road_type].grip) * gripMult * std::abs(actSpeed / (gripToSpeed * __maxSpeed)) * (std::pow(axleAngle * (actSpeed / (__maxSpeed * __multiplier)) / 30, 2.0f) + 0.5f));
+}
+
+void CarMovement::handleAudio() {
+	crashsound_timer -= Time::deltaTime;
+	gassound_timer -= Time::deltaTime;
+	crashsound_timer = std::max(0.0f, crashsound_timer);
+	gassound_timer = std::max(0.0f, gassound_timer);
 }

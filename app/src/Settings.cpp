@@ -1,35 +1,40 @@
 #include "Settings.h"
 
 const std::string Settings::filename = "settings.json";
+nlohmann::json Settings::json_data = nlohmann::json();
+bool Settings::initialized = false;
 
 void Settings::save(std::string key, int x) {
-    std::ifstream inp(filename);
-    nlohmann::json j;
+    if (!initialized)
+        initialize();
 
-    if (inp.is_open()) {
-        j = nlohmann::json::parse(inp);
-        inp.close();
-        j[key] = x;
-    }
+    json_data[key] = x;
 
     std::ofstream out(filename);
-    out << std::setw(4) << j << std::endl;
+    out << std::setw(4) << json_data << std::endl;
     out.close();
 }
 
-int Settings::read(std::string key) {
+std::optional<int> Settings::read(std::string key) {
+    if (!initialized)
+        initialize();
+
+    auto found = json_data.find(key);
+
+    if (found == json_data.end())
+        return {};
+
+    return json_data[key].get<int>();
+}
+
+void Settings::initialize() {
     std::ifstream inp(filename);
 
     if (!inp.is_open())
-        return 0;
+        return;
 
-    nlohmann::json j = nlohmann::json::parse(inp);
+    json_data = nlohmann::json::parse(inp);
     inp.close();
-    
-    auto found = j.find(key);
 
-    if (found == j.end())
-        return 0;
-
-    return j[key].get<int>();
+    initialized = true;
 }

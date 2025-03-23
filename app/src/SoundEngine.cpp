@@ -21,9 +21,9 @@ void SoundEngine::UpdatePos()
     float position[3];
 
     // Set the initial position of the listener.
-    position[0] = Camera::main->cameraTransform->position.x;
-    position[1] = Camera::main->cameraTransform->position.z;
-    position[2] = Camera::main->cameraTransform->position.y;
+    position[0] = Camera::main->cameraTransform->position.x/10.0f;
+    position[1] = Camera::main->cameraTransform->position.z/10.0f;
+    position[2] = Camera::main->cameraTransform->position.y/10.0f;
 
     // Clear any previous unaddressed error codes.
     alGetError();

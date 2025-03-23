@@ -9,7 +9,7 @@ class MainMenuScene :
 {
 private:
     CarMovement* cm;
-    QuickCamera* qc;
+    // QuickCamera* qc;
     AnimationManager* am;
     std::vector<GameObject*> objs;
     static bool first_load;
@@ -19,6 +19,10 @@ private:
     std::vector<std::pair<Sprite*, std::pair<Text*, Text*>>> maps_options;
     UiObject* logo;
     GameObject* user_car;
+
+    float music_timer;
+    AudioSource2d* music_first;
+    AudioSource2d* music_cont;
     
     int menu_choosen_option;
     void ShowMenu();
