@@ -264,6 +264,9 @@
     <ClCompile Include="app\src\scenes\LoadingScreenScene.cpp">
       <Filter>Source Files\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\objects\SmoothCamera.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -496,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="app\include\scenes\LoadingScreenScene.h">
       <Filter>Header Files\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\SmoothCamera.hpp">
+      <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿#include "scenes/MapDemo.h"
 #include "Scene.h"
 
+#include "objects/SmoothCamera.hpp"
 #include "objects/CameraLockScript.h"
 #include "objects/CarInputs.h"
 #include "objects/WheelsScript.h"
