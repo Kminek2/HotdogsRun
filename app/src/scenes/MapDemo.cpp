@@ -119,8 +119,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	PowerUp::car_names = race_manager->GetCarNames();
 
 	PUManager* pum = (new PUManager(rand))->setMapManager(map);
-	pum->addPowerUp((new GameObject("cube", glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f)))->AddScript(new PUNitro()), -1.0f);
-	pum->addPowerUp((new GameObject("crate", glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f)))->AddScript(new PUMaxSpeed(.1f, 10 * 1000)), -1.0f);
+	pum->addPowerUp((new GameObject("cube", glm::vec3(1000.0f)))->AddScript(new PUNitro()), -1.0f);
+	pum->addPowerUp((new GameObject("crate", glm::vec3(1000.0f)))->AddScript(new PUMaxSpeed(.1f, 10 * 1000)), -1.0f);
 	pum->generatePowerUps(15);
 
 	GameObject* amobj = new GameObject; // 'am' stands for Animation Manager, apparently
