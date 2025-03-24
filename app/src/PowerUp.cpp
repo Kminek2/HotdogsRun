@@ -8,8 +8,9 @@ void PowerUp::Init() {
 
 	if (car_names.size() == 0) std::cout << "[!] There are no models linked to PowerUps!\n";
 
-	for (const std::string& car : car_names)
-		Collisions::addCallback(gameObject->GetModelName(), car, [this](Collisions::CollisionData* cd) { OnCollide(cd); });
+	for (const std::string& car : car_names) {
+		Collisions::addCallback(gameObject->GetModelName(), car, [this](Collisions::CollisionData* cd) { if(cd->obj1 == gameObject || cd->obj2 == gameObject) OnCollide(cd); });
+	}
 
 	_Init();
 }

@@ -99,6 +99,7 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 
     LightObject::SetDirLight(glm::vec3(0, 0.5, -0.5), glm::vec3(0.2), glm::vec3(0.7), glm::vec3(0.9));
 
+    Camera::main->ChangeCubeMap(new CubeMap({ "CubeMaps/Skybox/skybox-front.png", "CubeMaps/Skybox/skybox-back.png", "CubeMaps/Skybox/skybox-top.png", "CubeMaps/Skybox/skybox-bottom.png", "CubeMaps/Skybox/skybox-right.png", "CubeMaps/Skybox/skybox-left.png" }));
 	return std::shared_ptr<Scene>(scene);
 }
 
