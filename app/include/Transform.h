@@ -214,7 +214,7 @@ struct Transform {
 		delete transformBuffer;
 	}
 
-	glm::mat4 getModelMatrix() { std::lock_guard<std::mutex> matrixLock(matrixMutex); return modelTransform; }
+	glm::mat4 getModelMatrix() { RecalculateMatrix(); std::lock_guard<std::mutex> matrixLock(matrixMutex); return modelTransform; }
 private:
 	std::mutex matrixMutex;
 	/// <summary>
@@ -237,6 +237,12 @@ private:
 	}
 
 	void UpdateMatrix() {
+		changedTransform = true;
+	}
+
+	void RecalculateMatrix() {
+		if (!changedTransform)
+			return;
 		std::lock_guard<std::mutex> matrixLock(matrixMutex);
 		modelTransform = glm::mat4(1);
 
@@ -247,7 +253,11 @@ private:
 		modelTransform = glm::rotate(modelTransform, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
 		modelTransform = glm::scale(modelTransform, scale);
+
+		changedTransform = false;
 	}
+
+	bool changedTransform = false;
 
 	glm::mat4 modelTransform = glm::mat4(1);
 

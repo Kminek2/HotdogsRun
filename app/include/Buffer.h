@@ -24,10 +24,6 @@ private:
     uint64_t actBufferSize = 0;
 
 	std::vector<T> data;
-    //std::vector<T> gpuData;
-
-    //std::map<uint32_t, bool> sendThis;
-    //bool lastData = true;
 
 	VkBufferUsageFlags bufferUsage;
 	static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
@@ -121,42 +117,12 @@ void Buffer<T>::AddToBuffer(T dataToStore)
 {
     data.push_back(dataToStore);
 
-    /*if ((gpuData.size() < data.size()) && !lastData) {
-        sendThis.emplace(data.size() - 1, true);
-        lastData = !lastData;
-    }
-    else if ((data[data.size() - 1] != gpuData[data.size() - 1]) && !lastData) {
-        sendThis.emplace(data.size() - 1, true);
-        lastData = !lastData;
-    }
-    else if(lastData){
-        sendThis.emplace(data.size() - 1, false);
-        lastData = !lastData;
-    }*/
-
 }
 
 template<typename T>
 void Buffer<T>::AddToBuffer(std::vector<T> dataToStore)
 {
     data.insert(data.end(), dataToStore.begin(), dataToStore.end());
-    /*for (int i = 0; i < dataToStore.size(); i++)
-    {
-        data.push_back(dataToStore[i]);
-
-        if ((gpuData.size() < data.size()) && !lastData) {
-            sendThis.emplace(data.size() - 1, true);
-            lastData = !lastData;
-        }
-        else if ((data[data.size() - 1] != gpuData[data.size() - 1]) && !lastData) {
-            sendThis.emplace(data.size() - 1, true);
-            lastData = !lastData;
-        }
-        else if (lastData) {
-            sendThis.emplace(data.size() - 1, false);
-            lastData = !lastData;
-        }
-    }*/
 }
 
 
@@ -164,7 +130,6 @@ void Buffer<T>::AddToBuffer(std::vector<T> dataToStore)
 template<typename T>
 void Buffer<T>::SendBufferToMemory()
 {
-    // add mutex to guard this function
     VkDeviceSize bufferSize = sizeof(data[0]) * data.size();
     if (bufferSize == 0)
         return;
@@ -182,17 +147,6 @@ void Buffer<T>::SendBufferToMemory()
         CreateBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
         stagingBufferSize = bufferSize;
     }
-
-    //sendThis.emplace(data.size(), !lastData);
-
-    //VkDeviceSize pos = 0;
-    //for (auto& chang : sendThis) {
-        //void* data;
-        //vkMapMemory(Device::getDevice(), stagingBufferMemory, pos, static_cast<VkDeviceSize>(chang.first), 0, &data);
-        //memcpy(data, std::next(this->data.data(), pos), (size_t)((chang.first - pos) * sizeof(data[0])));
-        //vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
-        //pos = chang.first;
-    //}
 
     if (bufferSize > actBufferSize)
         vkMapMemory(Device::getDevice(), stagingBufferMemory, 0, bufferSize, 0, &dataPtr);
@@ -212,10 +166,6 @@ void Buffer<T>::SendBufferToMemory()
     CopyBuffer(stagingBuffer, buffer, bufferSize);
 
     actBufferSize = bufferSize;
-
-    //gpuData = this->data;
-    //lastData = true;
-    //sendThis.clear();
 }
 
 template<typename T>
