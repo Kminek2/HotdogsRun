@@ -27,7 +27,10 @@ namespace glm {
 		assert(std::is_arithmetic<T>::value);
 
 		while (n < 0) n += max;
-		return n % max;
+
+		if(!std::is_floating_point<T>())
+			return (long long)n % (long long)max;
+		return fmod(n, max);
 	}
 };
 
