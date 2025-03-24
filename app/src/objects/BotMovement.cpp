@@ -91,17 +91,18 @@ void BotMovement::followPath() {
     float angle = glm::degrees(glm::acos(dotProduct));
 
     glm::vec3 crossProduct = glm::cross(front, direction);
-    bool turnLeft = crossProduct.z > 0.1f;  
-    bool turnRight = crossProduct.z < -0.1f; 
+    bool turnLeft = crossProduct.z > 0.1f;
+    bool turnRight = crossProduct.z < -0.1f;
 
     float distance = glm::distance(botPos, targetPos);
     bool shouldBrake = false;
+    bool shouldAccelerate = true;
 
-    if ((crossProduct.z > 0.5f || crossProduct.z < -0.5f) && speed > 50.0f) {
+    // W przypadku zakrętu, jeśli prędkość jest zbyt duża, zwolnij
+    if ((turnLeft || turnRight) && speed > 70.0f) {
         shouldBrake = true;
+        shouldAccelerate = false;
     }
-
-    bool shouldAccelerate = !shouldBrake;
 
     if (shouldAccelerate) {
         this->carmv->goForward();
@@ -109,6 +110,7 @@ void BotMovement::followPath() {
     else if (shouldBrake) {
         this->carmv->useHandBreak();
     }
+
     if (turnLeft) {
         this->carmv->makeLeftTurn();
     }
@@ -116,7 +118,8 @@ void BotMovement::followPath() {
         this->carmv->makeRightTurn();
     }
 
-    if (distance < 8.0f) {
+    // Jeśli jesteśmy blisko waypointa, przechodzimy do następnego
+    if (distance < 20.0f) {
         currentWaypointIndex++;
         if (currentWaypointIndex >= waypoints.size()) {
             currentWaypointIndex = 0;
@@ -125,54 +128,70 @@ void BotMovement::followPath() {
 }
 
 void BotMovement::avoidObstacles() {
-    if (!map) return;
+    if (this->carmv == nullptr || this->map == nullptr) {
+        std::cout << "Car movement or map not set!\n";
+        return;
+    }
 
-    glm::vec3 botPosition = botObject->transform->position;
-    glm::vec3 frontDirection = glm::normalize(botObject->transform->front);
-    float detectionRange = 1.5f; 
+    glm::vec3 botPos = botObject->transform->position;
+    glm::vec3 front = glm::normalize(botObject->transform->front);
+    float detectionRange = 80.0f;  // Zwiększamy zasięg wykrywania przeszkód
+    float avoidanceStrength = 0.5f; // Zwiększamy siłę korekty
+    static float lastAvoidanceTime = 0.0f;  // Czas ostatniej reakcji na przeszkodę
+    float cooldownTime = 1.0f;  // Minimalny czas między kolejnymi reakcjami na przeszkodę
 
-    bool obstacleDetected = false;
-    glm::vec3 obstaclePos;
-    
+    std::vector<GameObject*> obstacles = map->getDecors();
+    glm::vec3 avoidanceVector(0.0f);
+    bool obstacleAhead = false;
 
-    for (GameObject* decor : map->getDecors()) {
-        if (!decor) continue;
+    // Iterujemy przez przeszkody
+    for (GameObject* obstacle : obstacles) {
+        glm::vec3 obstaclePos = obstacle->transform->position;
+        glm::vec3 toObstacle = obstaclePos - botPos;
 
-        glm::vec3 decorPosition = decor->transform->position;
-        float distance = glm::distance(botPosition, decorPosition);
+        float distance = glm::length(toObstacle);
+        if (distance > detectionRange) continue; // Za daleko, pomijamy
 
-         if (distance < detectionRange) {
-            glm::vec3 toObstacle = glm::normalize(decorPosition - botPosition);
-            float dotProduct = glm::dot(frontDirection, toObstacle);
+        glm::vec3 toObstacleNorm = glm::normalize(toObstacle);
+        float dotProduct = glm::dot(toObstacleNorm, front);
 
-            if (dotProduct < 0.1f || dotProduct > -0.1f) { // check if obstacle is in front
-                obstacleDetected = true;
-                obstaclePos = decorPosition;
-                break;
-            }
+        if (dotProduct < 0.7f) continue;  // Teraz sprawdzamy tylko obiekty prawie na wprost
+
+        obstacleAhead = true;
+
+        glm::vec3 crossProduct = glm::cross(front, toObstacleNorm);
+        // Ustalanie kierunku unikania
+        if (crossProduct.z > 0) {
+            avoidanceVector += glm::vec3(-front.y, front.x, 0) * avoidanceStrength;
+        }
+        else {
+            avoidanceVector += glm::vec3(front.y, -front.x, 0) * avoidanceStrength;
+        }
+
+        // Jeśli przeszkoda jest bardzo blisko i znajduje się dokładnie na kursie, zwolnij
+        if (distance < 20.0f && carmv->getActSpeed() > 30.0f) {
+            std::cout << "Obstacle too close! Braking!\n";
+            this->carmv->useHandBreak();
         }
     }
 
-    if (obstacleDetected) {
-        botActions.accelerate = false;
+    // Jeśli przeszkody są zbyt blisko i jesteśmy w trakcie "uniku", dajemy im chwilę na "chłodzenie"
+    if (obstacleAhead && glm::length(avoidanceVector) > 0.01f) {
+        float currentTime = static_cast<float>(glfwGetTime());
+        if (currentTime - lastAvoidanceTime > cooldownTime) {
+            glm::vec3 newDirection = glm::normalize(front + avoidanceVector);
+            float correctionAngle = glm::degrees(glm::acos(glm::dot(front, newDirection)));
 
-        // avoid the obstacle
-        glm::vec3 rightDirection = glm::cross(frontDirection, glm::vec3(0, 1, 0));
-        glm::vec3 leftDirection = -rightDirection;
+            if (correctionAngle > 5.0f) { // Unikamy niepotrzebnych korekt
+                if (avoidanceVector.x > 0) {
+                    this->carmv->makeRightTurn();
+                }
+                else {
+                    this->carmv->makeLeftTurn();
+                }
+            }
 
-        glm::vec3 rightCheck = botPosition + rightDirection * 2.0f;
-        glm::vec3 leftCheck = botPosition + leftDirection * 2.0f;
-
-        float rightDist = glm::distance(rightCheck, obstaclePos);
-        float leftDist = glm::distance(leftCheck, obstaclePos);
-
-        if (leftDist > rightDist) {
-            botActions.turnLeft = true;
-            botActions.turnRight = false;
-        }
-        else {
-            botActions.turnLeft = false;
-            botActions.turnRight = true;
+            lastAvoidanceTime = currentTime; // Zaktualizuj czas ostatniego uniku
         }
     }
 }
