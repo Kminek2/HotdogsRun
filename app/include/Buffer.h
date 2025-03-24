@@ -9,6 +9,7 @@
 #include <stdexcept>
 
 #include <cstring>
+#include <map>
 
 template <typename T>
 class UniformBuffer;
@@ -23,12 +24,16 @@ private:
     uint64_t actBufferSize = 0;
 
 	std::vector<T> data;
+    //std::vector<T> gpuData;
+
+    //std::map<uint32_t, bool> sendThis;
+    //bool lastData = true;
 
 	VkBufferUsageFlags bufferUsage;
 	static void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	static void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
-
+    void* dataPtr;
 
     VkDeviceSize stagingBufferSize = 0;
 
@@ -57,6 +62,8 @@ public:
 template<typename T>
 Buffer<T>::~Buffer()
 {
+    if (actBufferSize != 0)
+        vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
 	vkDestroyBuffer(Device::getDevice(), buffer, nullptr);
 	vkFreeMemory(Device::getDevice(), bufferMemory, nullptr);
     vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
@@ -113,12 +120,43 @@ template<typename T>
 void Buffer<T>::AddToBuffer(T dataToStore)
 {
     data.push_back(dataToStore);
+
+    /*if ((gpuData.size() < data.size()) && !lastData) {
+        sendThis.emplace(data.size() - 1, true);
+        lastData = !lastData;
+    }
+    else if ((data[data.size() - 1] != gpuData[data.size() - 1]) && !lastData) {
+        sendThis.emplace(data.size() - 1, true);
+        lastData = !lastData;
+    }
+    else if(lastData){
+        sendThis.emplace(data.size() - 1, false);
+        lastData = !lastData;
+    }*/
+
 }
 
 template<typename T>
 void Buffer<T>::AddToBuffer(std::vector<T> dataToStore)
 {
     data.insert(data.end(), dataToStore.begin(), dataToStore.end());
+    /*for (int i = 0; i < dataToStore.size(); i++)
+    {
+        data.push_back(dataToStore[i]);
+
+        if ((gpuData.size() < data.size()) && !lastData) {
+            sendThis.emplace(data.size() - 1, true);
+            lastData = !lastData;
+        }
+        else if ((data[data.size() - 1] != gpuData[data.size() - 1]) && !lastData) {
+            sendThis.emplace(data.size() - 1, true);
+            lastData = !lastData;
+        }
+        else if (lastData) {
+            sendThis.emplace(data.size() - 1, false);
+            lastData = !lastData;
+        }
+    }*/
 }
 
 
@@ -130,6 +168,12 @@ void Buffer<T>::SendBufferToMemory()
     VkDeviceSize bufferSize = sizeof(data[0]) * data.size();
     if (bufferSize == 0)
         return;
+
+    if (bufferSize > actBufferSize)
+        if (actBufferSize != 0)
+            vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
+
+
     if (stagingBufferSize < bufferSize) {
         if (stagingBuffer != VK_NULL_HANDLE) {
             vkDestroyBuffer(Device::getDevice(), stagingBuffer, nullptr);
@@ -139,10 +183,21 @@ void Buffer<T>::SendBufferToMemory()
         stagingBufferSize = bufferSize;
     }
 
-    void* data;
-    vkMapMemory(Device::getDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, this->data.data(), (size_t)bufferSize);
-    vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
+    //sendThis.emplace(data.size(), !lastData);
+
+    //VkDeviceSize pos = 0;
+    //for (auto& chang : sendThis) {
+        //void* data;
+        //vkMapMemory(Device::getDevice(), stagingBufferMemory, pos, static_cast<VkDeviceSize>(chang.first), 0, &data);
+        //memcpy(data, std::next(this->data.data(), pos), (size_t)((chang.first - pos) * sizeof(data[0])));
+        //vkUnmapMemory(Device::getDevice(), stagingBufferMemory);
+        //pos = chang.first;
+    //}
+
+    if (bufferSize > actBufferSize)
+        vkMapMemory(Device::getDevice(), stagingBufferMemory, 0, bufferSize, 0, &dataPtr);
+
+    memcpy(dataPtr, this->data.data(), (size_t)bufferSize);
 
     if (!createdBuffer || bufferSize > actBufferSize) {
         vkDeviceWaitIdle(Device::getDevice());
@@ -157,6 +212,10 @@ void Buffer<T>::SendBufferToMemory()
     CopyBuffer(stagingBuffer, buffer, bufferSize);
 
     actBufferSize = bufferSize;
+
+    //gpuData = this->data;
+    //lastData = true;
+    //sendThis.clear();
 }
 
 template<typename T>
