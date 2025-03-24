@@ -19,6 +19,8 @@ const std::string car_models_label[] = {
     "<  F1 Car  >", "<  Hotrod  >", "<  Pickup  >", "<  Racing Car  >"
 };
 
+const std::vector<std::string> colors = {"primary", "secondary", "other"};
+
 bool MainMenuScene::first_load = true;
 int MainMenuScene::model_choosen = Settings::read("model_choosen").value_or(0);
 
@@ -358,6 +360,18 @@ void MainMenuScene::ShowAppearance() {
     appearance_options[appearance_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
     appearance_options[appearance_options.size()-1].first = (new Text("SansSerif", {0.6f,0.5f,0.8f}, {0,0}, 0.3f, glm::vec4(1.0f), -2.0f));
     appearance_options[appearance_options.size()-1].first->SetText(car_models_label[model_choosen]);
+    for (int i = 0; i < static_cast<int>(colors.size()); ++i) {
+        appearance_options.push_back({nullptr, nullptr});
+        appearance_options[appearance_options.size()-1].second = (new Text("SansSerif", {0.608f, 0.1f - (0.4f * static_cast<float>(i)) - 0.01f,0.9f}, {1,-1}, 0.3f, glm::vec4(1.0f), -2.0f));
+        appearance_options[appearance_options.size()-1].second->SetText(static_cast<char>(colors[i][0]-32) + colors[i].substr(1, colors[i].length()-1));
+        appearance_options[appearance_options.size()-1].second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+        appearance_options[appearance_options.size()-1].first = (new Text("SansSerif", {0.6f, 0.1f - (0.4f * static_cast<float>(i)),0.8f}, {1,-1}, 0.3f, glm::vec4(1.0f), -2.0f));
+        appearance_options[appearance_options.size()-1].first->SetText(static_cast<char>(colors[i][0]-32) + colors[i].substr(1, colors[i].length()-1));
+        Sprite* pick = new Sprite("color_wheel");
+        pick->rectTransform->Move(glm::vec2(0.8f, 0.1f - (0.4f * static_cast<float>(i))));
+        pick->rectTransform->SetHeight(0.2f);
+        cp.add_picker(pick, colors[i]);
+    }
 }
 
 void MainMenuScene::HideAppearance() {
@@ -366,9 +380,12 @@ void MainMenuScene::HideAppearance() {
         delete x.second;
     }
     appearance_options.clear();
+    cp.close_all_pickers();
 }
 
 void MainMenuScene::UpdateAppearance() {
+    cp.update();
+
     if (Input::getKeyClicked(GLFW_KEY_ESCAPE)) {
         from_appearance_animation();
         return;

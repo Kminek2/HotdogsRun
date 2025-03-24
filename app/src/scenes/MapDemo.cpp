@@ -21,6 +21,15 @@ const std::string car_models[] = {
     "f1car", "hotrod", "pickup", "racing_car"
 };
 
+const std::vector<std::vector<glm::vec3>> default_colors = {
+    {glm::vec3(), glm::vec3(), glm::vec3()},
+    {glm::vec3(), glm::vec3(), glm::vec3()},
+    {glm::vec3(), glm::vec3(), glm::vec3()},
+    {glm::vec3(), glm::vec3(), glm::vec3()}
+};
+
+const std::vector<std::string> colors = {"primary", "secondary", "other"};
+
 const size_t seed = 45;
 const unsigned int cityNum = 3;
 
@@ -89,7 +98,21 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	car = new GameObject(car_models[Settings::read("model_choosen").value_or(1)]);
+	int model_choosen = Settings::read("model_choosen").value_or(1);
+	car = new GameObject(car_models[model_choosen]);
+
+	for (int i = 0; i < colors.size(); ++i) {
+        int ri = Settings::read(colors[i]+"_r").value_or(-1);
+        int gi = Settings::read(colors[i]+"_g").value_or(-1);
+        int bi = Settings::read(colors[i]+"_b").value_or(-1);
+        if (ri == -1 || gi == -1 || bi == -1)
+            continue;
+        float r = static_cast<float>(ri)/1000.0f;
+        float g = static_cast<float>(bi)/1000.0f;
+        float b = static_cast<float>(gi)/1000.0f;
+        car->AddColorChange(default_colors[model_choosen][i], glm::vec3(r,g,b));
+    }
+
 	car->AddDefaultOBB();
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);

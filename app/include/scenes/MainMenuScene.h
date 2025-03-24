@@ -2,6 +2,7 @@
 #include "SceeneScript.h"
 #include "objects/AnimationManager.h"
 #include "QuickCamera.h"
+#include "objects/ColorPicker.hpp"
 #include <utility>
 #include <vector>
 class MainMenuScene :
@@ -23,6 +24,8 @@ private:
     float music_timer;
     AudioSource2d* music_first;
     AudioSource2d* music_cont;
+
+    ColorPicker cp;
     
     int menu_choosen_option;
     void ShowMenu();

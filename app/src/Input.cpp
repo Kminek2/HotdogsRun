@@ -1,4 +1,5 @@
 #include "Input.h"
+#include <GLFW/glfw3.h>
 
 GLFWwindow* Input::window;
 uint16_t Input::width, Input::height;
@@ -53,6 +54,7 @@ void Input::startKeyCallback() {
 		keyEventMap[i] = 0;
 
 	glfwSetKeyCallback(window, handleKeyCallback);
+	glfwSetMouseButtonCallback(window, handleButtonCallback);
 }
 
 void Input::stopKeyCallback() {
@@ -60,8 +62,9 @@ void Input::stopKeyCallback() {
 		delete[] keyEventMap;
 		keyEventMap = nullptr;
 	}
-
+	
 	glfwSetKeyCallback(window, NULL);
+	glfwSetMouseButtonCallback(window, NULL);
 }
 
 void Input::handleKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -72,4 +75,14 @@ void Input::handleKeyCallback(GLFWwindow* window, int key, int scancode, int act
 		keyEventMap[key] = 1;
 	else if (action == GLFW_RELEASE)
 		keyEventMap[key] = 0;
+}
+
+void Input::handleButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+	if (keyEventMap == nullptr || button > GLFW_KEY_LAST || button < 0)
+		return;
+
+	if (action == GLFW_PRESS)
+		keyEventMap[button] = 1;
+	else if (action == GLFW_RELEASE)
+		keyEventMap[button] = 0;
 }

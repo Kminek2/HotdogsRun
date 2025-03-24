@@ -15,6 +15,7 @@ private:
 	static uint16_t* keyEventMap;
 	static void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 	static void handleKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void handleButtonCallback(GLFWwindow* window, int button, int action, int mods);
 public:
 	static glm::vec2 mousePos;
 	static glm::vec2 mouseOff;
