@@ -89,14 +89,18 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	car = new GameObject(car_models[Settings::read("model_choosen").value_or(0)]);
+	car = new GameObject(car_models[Settings::read("model_choosen").value_or(1)]);
 	car->AddDefaultOBB();
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
 		car->AddScript(cmv);
 		car->AddScript(new WheelsScript(*cmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
 		car->AddScript(new CarInputs(*cmv, GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL));
-		car->AddScript(new CameraLockScript(Perspective, glm::vec3(-16, 0, 0), -20.0f, 45.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C));
+		if (Settings::read("camera_view").value_or(0))
+			car->AddScript(new CameraLockScript(Perspective, glm::vec3(-16, 0, 0), -20.0f, 45.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C));
+		else
+			car->AddScript(new CameraLockScript(Perspective, glm::vec3(-50, 0, 0), -90.0f, 45.0f, false, false, GLFW_KEY_Z, GLFW_KEY_C));
+
 	}
 
 	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(tc::LAPS, 1)->SetCarsRelativeOffset(.1f);

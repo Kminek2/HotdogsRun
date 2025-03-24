@@ -35,7 +35,7 @@ ThreadPool::ThreadPool(size_t num_threads)
                         }
 
                         // Get the next task from the queue
-                        task = move(tasks_.front());
+                        task = std::move(tasks_.front());
                         tasks_.pop();
 
                         std::lock_guard<std::mutex> freeThreadsLock(amountFinishedMutex);
@@ -89,7 +89,7 @@ void ThreadPool::enqueue(std::function<void()> task)
 
     {
         std::unique_lock<std::mutex> lock(queue_mutex_);
-        tasks_.emplace(move(task));
+        tasks_.emplace(std::move(task));
     }
     cv_.notify_one();
 }
