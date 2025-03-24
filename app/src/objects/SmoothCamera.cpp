@@ -1,15 +1,28 @@
 #include "objects/SmoothCamera.hpp"
 
+bool SmoothCamera::disabled = false;
+
 void SmoothCamera::Init() {
 	Camera::main->view = view;
 
 	position = gameObject->transform->position;
 	rotation = gameObject->transform->rotation;
+
+	disabled = false;
 }
 
 void SmoothCamera::Update() {}
 
 void SmoothCamera::LateUpdate() {
+	if (disabled) {
+		cnt_after_disabled = 0;
+		return;
+	}
+	
+	++cnt_after_disabled;
+	if (cnt_after_disabled < 3)
+		return;
+
     glm::vec3 targetPosition = gameObject->transform->position;
     glm::vec3 targetRotation = gameObject->transform->rotation;
 

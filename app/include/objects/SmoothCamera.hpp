@@ -3,6 +3,8 @@
 #include "ObjectScript.h"
 #include "GameObject.h"
 
+class CinematicCamera;
+
 class SmoothCamera : public ObjectScript {
 private: 
 	glm::vec3 offset;
@@ -14,6 +16,9 @@ private:
 
 	ViewType view;
 
+	static bool disabled;
+	int cnt_after_disabled = 0;
+
 public:
 	SmoothCamera(glm::vec3 offset, float speed = .125f, ViewType view = Isometric) : offset(offset), speed(speed), view(view) {}
 
@@ -21,4 +26,6 @@ public:
 	void Update() override;
 	void LateUpdate() override;
 	void OnDestroy() override;
+
+	friend CinematicCamera;
 };
