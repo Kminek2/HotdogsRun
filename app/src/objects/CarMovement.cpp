@@ -267,6 +267,11 @@ void CarMovement::addNitros(int count)
 	nitros_available += count;
 }
 
+std::tuple<float, float, float> CarMovement::getSpeeds()
+{
+	return { abs(actSpeed), 0, maxSpeed };
+}
+
 void CarMovement::handleNitroAcc() {
 	nitro_timer -= Time::deltaTime;
 	std::cout << nitro_timer << '\n';

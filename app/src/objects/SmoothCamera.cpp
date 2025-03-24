@@ -11,7 +11,13 @@ void SmoothCamera::Init() {
 	disabled = false;
 }
 
-void SmoothCamera::Update() {}
+void SmoothCamera::Update() {
+	if (!dynamic_fov)
+		return;
+
+	std::tuple<float, float, float> speeds = gameObject->cm->getSpeeds();
+	Camera::main->fov = glm::mix(Camera::main->fov, min_fov + (std::get<0>(speeds) - std::get<1>(speeds)) * (max_fov - min_fov) / (std::get<2>(speeds) - std::get<1>(speeds)), .125f);
+}
 
 void SmoothCamera::LateUpdate() {
 	if (disabled) {
@@ -61,4 +67,12 @@ void SmoothCamera::LateUpdate() {
 
 void SmoothCamera::OnDestroy() {
 	Camera::main->view = Perspective;
+}
+
+SmoothCamera* SmoothCamera::SetDynamicFov(bool on, float min, float max)
+{
+	dynamic_fov = on;
+	min_fov = min;
+	max_fov = max;
+	return this;
 }

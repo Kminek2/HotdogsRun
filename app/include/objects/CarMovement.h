@@ -93,4 +93,5 @@ public:
     static bool disabled_inputs;
 
     void addNitros(int count);
+    std::tuple<float, float, float> getSpeeds();
 };

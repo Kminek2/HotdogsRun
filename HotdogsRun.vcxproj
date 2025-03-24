@@ -48,6 +48,7 @@
     <ClCompile Include="app\src\objects\BuildingManager.cpp" />
     <ClCompile Include="app\src\objects\CarInputs.cpp" />
     <ClCompile Include="app\src\objects\CinematicCamera.cpp" />
+    <ClCompile Include="app\src\objects\ColorPicker.cpp" />
     <ClCompile Include="app\src\objects\Lights.cpp" />
     <ClCompile Include="app\src\objects\MapManager.cpp" />
     <ClCompile Include="app\src\Model.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="app\include\objects\BuildingManager.hpp" />
     <ClInclude Include="app\include\objects\CarInputs.h" />
     <ClInclude Include="app\include\objects\CinematicCamera.h" />
+    <ClInclude Include="app\include\objects\ColorPicker.hpp" />
     <ClInclude Include="app\include\objects\Lights.h" />
     <ClInclude Include="app\include\objects\MapManager.h" />
     <ClInclude Include="app\include\Model.h" />

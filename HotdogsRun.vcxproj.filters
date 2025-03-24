@@ -267,6 +267,9 @@
     <ClCompile Include="app\src\objects\SmoothCamera.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\objects\ColorPicker.cpp">
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -501,6 +504,9 @@
       <Filter>Header Files\scenes</Filter>
     </ClInclude>
     <ClInclude Include="app\include\objects\SmoothCamera.hpp">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\ColorPicker.hpp">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>

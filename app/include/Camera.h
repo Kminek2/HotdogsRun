@@ -34,5 +34,7 @@ public:
 	void ChangeCubeMap(CubeMap* cubeMap);
 
 	UniformBuffer<UniformCameraBuffer>* getBuffer() { return cameraBuffer; }
+
+	float fov = 45.0f;
 };
 
