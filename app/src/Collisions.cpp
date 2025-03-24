@@ -1,4 +1,5 @@
 #include "Collisions.h"
+#include <glm/fwd.hpp>
 
 bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
 	glm::mat3 rotation, absRotation;
@@ -40,6 +41,17 @@ bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
 }
 
 bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, bool callback) {
+	glm::vec3 pos_diff = obj1.transform->position - obj2.transform->position;
+	float pos_diff_dist = pos_diff.x*pos_diff.x+pos_diff.y*pos_diff.y+pos_diff.z*pos_diff.z;
+	std::array<glm::vec2, 3> ver1 = obj1.model->GetMaxDistVert();
+	std::array<glm::vec2, 3> ver2 = obj2.model->GetMaxDistVert();
+	float obj1_max_size = std::max(ver1[0].x, std::max(ver1[0].y, std::max(ver1[1].x, std::max(ver1[1].y, std::max(ver1[2].x, ver1[2].y)))));
+	float obj2_max_size = std::max(ver2[0].x, std::max(ver2[0].y, std::max(ver2[1].x, std::max(ver2[1].y, std::max(ver2[2].x, ver2[2].y)))));
+	obj1_max_size *= std::max(obj1.transform->scale.x, std::max(obj1.transform->scale.y, obj1.transform->scale.z))*3;
+	obj2_max_size *= std::max(obj2.transform->scale.x, std::max(obj2.transform->scale.y, obj2.transform->scale.z))*3;
+	if (pos_diff_dist > (obj1_max_size+obj2_max_size)*(obj1_max_size+obj2_max_size))
+		return false;
+
 	bool coll = false;
 
 	for (int i = 0; i < obj1.obbs.size(); ++i) {
