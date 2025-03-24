@@ -2,7 +2,6 @@
 
 BotMovement::BotMovement(CarMovement* car)
 {
-    currentWaypointIndex = 0;
     carmv = car;
 }
 
@@ -12,7 +11,7 @@ void BotMovement::Init()
     std::cout << "BotMovement::Init() called\n"; //debug
     this->botBehavior = AGGRESSIVE;
     chooseAction();
-    currentWaypointIndex = 0;
+    currentWaypointIndex = 1;
 }
 
 void BotMovement::Update() {
@@ -79,9 +78,10 @@ void BotMovement::followPath() {
     GameObject* targetWaypoint = waypoints[currentWaypointIndex];
     glm::vec3 targetPos = targetWaypoint->transform->position;
     glm::vec3 botPos = botObject->transform->position;
+    float speed = carmv->getActSpeed();
 
     glm::vec3 rawDirection = targetPos - botPos;
-    if (glm::dot(rawDirection, rawDirection) < 1e-6) return; 
+    if (glm::dot(rawDirection, rawDirection) < 1e-6) return;
     glm::vec3 direction = glm::normalize(rawDirection);
 
     direction.z = 0;
@@ -91,13 +91,13 @@ void BotMovement::followPath() {
     float angle = glm::degrees(glm::acos(dotProduct));
 
     glm::vec3 crossProduct = glm::cross(front, direction);
-    bool turnLeft = crossProduct.z > .1f;
-    bool turnRight = crossProduct.z < -.1f;
+    bool turnLeft = crossProduct.z > 0.1f;  
+    bool turnRight = crossProduct.z < -0.1f; 
 
     float distance = glm::distance(botPos, targetPos);
     bool shouldBrake = false;
 
-    if (distance < 2.0f && (crossProduct.z >.1f || crossProduct.z <-.1f)) {
+    if ((crossProduct.z > 0.5f || crossProduct.z < -0.5f) && speed > 50.0f) {
         shouldBrake = true;
     }
 
@@ -116,7 +116,7 @@ void BotMovement::followPath() {
         this->carmv->makeRightTurn();
     }
 
-    if (distance < 5.0f) {
+    if (distance < 8.0f) {
         currentWaypointIndex++;
         if (currentWaypointIndex >= waypoints.size()) {
             currentWaypointIndex = 0;
@@ -129,10 +129,11 @@ void BotMovement::avoidObstacles() {
 
     glm::vec3 botPosition = botObject->transform->position;
     glm::vec3 frontDirection = glm::normalize(botObject->transform->front);
-    float detectionRange = 5.0f; 
+    float detectionRange = 1.5f; 
 
     bool obstacleDetected = false;
     glm::vec3 obstaclePos;
+    
 
     for (GameObject* decor : map->getDecors()) {
         if (!decor) continue;
@@ -144,7 +145,7 @@ void BotMovement::avoidObstacles() {
             glm::vec3 toObstacle = glm::normalize(decorPosition - botPosition);
             float dotProduct = glm::dot(frontDirection, toObstacle);
 
-            if (dotProduct > 0.7f) { // check if obstacle is in front
+            if (dotProduct < 0.1f || dotProduct > -0.1f) { // check if obstacle is in front
                 obstacleDetected = true;
                 obstaclePos = decorPosition;
                 break;
