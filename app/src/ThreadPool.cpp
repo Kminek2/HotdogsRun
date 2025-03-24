@@ -7,7 +7,7 @@ ThreadPool::ThreadPool(size_t num_threads)
 
     freeThreads = amountOfThreads;
     // Creating worker threads
-    if (num_threads > 12) {
+    if (false) {
         for (size_t i = 0; i < num_threads; ++i) {
             threads_.emplace_back([this] {
                 while (true) {
