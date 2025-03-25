@@ -72,6 +72,7 @@ bool ColorPicker::update_picker(std::pair<Sprite *, std::string> picker) {
     ang += 0.25f;
     if (ang > 1.0f)
         ang -= 1.0f;
+    ang = 1.0f - ang;
     
     glm::vec3 new_color = hsb_to_rgb(glm::vec3(ang, 1.0f, 1.0f));
 
