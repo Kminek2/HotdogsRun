@@ -84,7 +84,7 @@ void main() {
     vec3 resColor = texColor;
 
     for(int i = 0; i < colorChange.amount; i++)
-        if(length(texColor - colorChanges[colorChange.index + i].from) <= 0.2)
+        if(length(texColor - colorChanges[colorChange.index + i].from) <= 1000)
             resColor = colorChanges[colorChange.index + i].to;
 
 

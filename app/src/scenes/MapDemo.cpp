@@ -1,6 +1,7 @@
 ﻿#include "scenes/MapDemo.h"
 #include "Scene.h"
 
+#include "objects/ColorPicker.hpp"
 #include "objects/SmoothCamera.hpp"
 #include "objects/CameraLockScript.h"
 #include "objects/CarInputs.h"
@@ -55,8 +56,6 @@ const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> de
 	{"case_8","case_8_color"}, {"case_9","case_9_color"}, {"case_10"}, {"case_11","case_11_color"},
 	{"case_12","case_12_color"}, {"case_13","case_13_color"}, {"case_14"}, {"case_15"}
 } }, {.1f, -1.0f} };
-
-GameObject* car;
 
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
@@ -117,17 +116,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	int model_choosen = Settings::read("model_choosen").value_or(1);
 	car = new GameObject(car_models[model_choosen]);
 
-	for (int i = 0; i < colors.size(); ++i) {
-        int ri = Settings::read(colors[i]+"_r").value_or(-1);
-        int gi = Settings::read(colors[i]+"_g").value_or(-1);
-        int bi = Settings::read(colors[i]+"_b").value_or(-1);
-        if (ri == -1 || gi == -1 || bi == -1)
-            continue;
-        float r = static_cast<float>(ri)/1000.0f;
-        float g = static_cast<float>(bi)/1000.0f;
-        float b = static_cast<float>(gi)/1000.0f;
-        car->AddColorChange(default_colors[model_choosen][i], glm::vec3(r,g,b));
-    }
+	ColorPicker cp(car);
+	cp.update_car();
 
 	car->AddDefaultOBB();
 	{

@@ -251,13 +251,14 @@ void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)
 	colorChange.from = from;
 	colorChange.to = to;
 
-	amountOfColorChanges++;
 	if(amountOfColorChanges > 1)
 		changeColor.insert(colorChangesIndex, colorChange);
 	else {
 		changeColor.push_back(colorChange);
 		colorChangesIndex = std::prev(changeColor.end());
 	}
+
+	amountOfColorChanges++;
 }
 
 GameObject* GameObject::ChangeModel(std::string model)
