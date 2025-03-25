@@ -17,6 +17,9 @@ public:
 	friend ShowOBB;
 
 	static void addCallback(std::string a, std::string b, std::function<void(CollisionData*)> callback);
+	
+	static float getL1Distance(glm::vec3 a, glm::vec3 b);
+	static float getL1Distance(GameObject* a, GameObject* b);
 
 private:
 	static bool checkOBBCollision(const OBB& a, const OBB& b);

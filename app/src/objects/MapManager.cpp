@@ -134,27 +134,27 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 /// Return the pointer to the i-th tile's GameObject
 /// </summary>
 GameObject* MapManager::GetPoint(unsigned long long index) {
-	return points[index];
+	return points[glm::normalize(index, points.size())];
 }
 
 /// <summary>
 /// Return the pointer to the i-th checkpoint's GameObject
 /// </summary>
 GameObject* MapManager::GetCheckPoint(unsigned long long index) {
-	return check_points[index];
+	return check_points[glm::normalize(index, check_points.size())];
 }
 
 /// <summary>
 /// Returns the number of road tiles
 /// </summary>
-int MapManager::GetLen() {
+unsigned MapManager::GetLen() {
 	return points.size();
 }
 
 /// <summary>
 /// Returns the number of checkpoints
 /// </summary>
-int MapManager::GetCheckPoints() {
+unsigned MapManager::GetCheckPoints() {
 	return check_points.size();
 }
 

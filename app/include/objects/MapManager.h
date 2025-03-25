@@ -88,8 +88,8 @@ public:
 	GameObject* GetPoint(unsigned long long index);
 	GameObject* GetCheckPoint(unsigned long long index);
 
-	int GetLen();
-	int GetCheckPoints();
+	unsigned GetLen();
+	unsigned GetCheckPoints();
 	float GetMapTileSize();
 	float GetMapScale();
 	std::vector<GameObject*>* GetPoints();

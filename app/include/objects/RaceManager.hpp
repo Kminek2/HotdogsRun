@@ -5,6 +5,8 @@
 #include "Collisions.h"
 
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
 #include <array>
 #include <functional>
 #include <set>
@@ -21,6 +23,11 @@ public:
 		GameObject* car;
 		unsigned long long checkpoint;
 		double time;
+	};
+
+	struct LiveRaceObject {
+		GameObject* car;
+		double progress;
 	};
 
 	RaceManager* SetMapManager(MapManager* map_manager);
@@ -40,10 +47,13 @@ public:
 	void OnCheckpoint(Collisions::CollisionData* collision_data);
 	void SubscribeToRaceEnd(const std::function<void(CarObject*)>& callback);
 
+	std::vector<LiveRaceObject*> GetLiveRace();
 	std::set<std::string> GetCarNames();
 
 private:
 	MapManager* map_manager = nullptr;
+	double avg_cp_dist = -1;
+
 	int cars_placed = 0;
 
 	std::vector<CarObject*> car_objects;
@@ -66,4 +76,6 @@ private:
 
 	void StartAnimation();
 	void AfterCountdown();
+
+	void CalcAvgDist();
 };

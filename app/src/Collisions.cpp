@@ -119,3 +119,6 @@ std::map<std::pair<std::string, std::string>, std::vector<std::function<void(Col
 void Collisions::addCallback(std::string a, std::string b, std::function<void(Collisions::CollisionData*)> callback) {
 	callbacks[{std::min(a, b), std::max(a, b)}].push_back(callback);
 }
+
+float Collisions::getL1Distance(glm::vec3 a, glm::vec3 b) { return std::abs(a.x - b.x) + std::abs(a.y - b.y) + std::abs(a.z - b.z); }
+float Collisions::getL1Distance(GameObject* a, GameObject* b) { return getL1Distance(a->transform->position, b->transform->position); }
