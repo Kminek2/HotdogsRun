@@ -250,12 +250,30 @@ void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)
 	ColorChangeStruct colorChange;
 	colorChange.from = from;
 	colorChange.to = to;
+	
+	auto it = colorChangesIndex;
+	for (int i = 0; i < amountOfColorChanges; i++) {
+		
+		if (it == changeColor.end())
+			break;
 
-	if(amountOfColorChanges > 1)
-		changeColor.insert(colorChangesIndex, colorChange);
+		if (it->from == from) {
+			it->to = to;
+			return;
+		}
+
+		it = std::next(it);
+	}
+
+	if (amountOfColorChanges >= 1) {
+		std::cout << std::distance(changeColor.begin(), colorChangesIndex) << " - " << from.x << ',' << from.y << ',' << from.z << " - ";
+		colorChangesIndex = changeColor.insert(colorChangesIndex, colorChange);
+		std::cout << std::distance(changeColor.begin(), colorChangesIndex);
+	}
 	else {
 		changeColor.push_back(colorChange);
 		colorChangesIndex = std::prev(changeColor.end());
+		std::cout << std::distance(changeColor.begin(), colorChangesIndex) << " index " << GetModelName() <<"\n";
 	}
 
 	amountOfColorChanges++;
@@ -272,5 +290,13 @@ GameObject* GameObject::ChangeModel(std::string model)
 	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
 
 	i = std::next(createdGameObject.begin(), newModel.second);
+
+	auto it = colorChangesIndex;
+	for (int i = 0; i < amountOfColorChanges; i++) {
+		it = changeColor.erase(it);
+	}
+
+	amountOfColorChanges = 0;
+	colorChangesIndex = changeColor.end();
 	return this;
 }
