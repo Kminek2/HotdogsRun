@@ -83,5 +83,5 @@ bool CinematicCamera::hasEnded() {
 }
 
 void CinematicCamera::skip() {
-    time = animation_time+1.0f;
+    time = animation_time;
 }

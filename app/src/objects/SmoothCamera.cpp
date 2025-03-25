@@ -1,4 +1,5 @@
 #include "objects/SmoothCamera.hpp"
+#include "Transform.h"
 
 bool SmoothCamera::disabled = false;
 
@@ -33,10 +34,22 @@ void SmoothCamera::LateUpdate() {
     glm::vec3 targetRotation = gameObject->transform->rotation;
 
 	glm::vec3 newPos = gameObject->transform->getModelMatrix() * glm::vec4(offset, 1);
-	glm::vec2 newRot = glm::vec2(glm::normalize(targetRotation.z + 180, 360.0f), targetRotation.y);
+	glm::vec2 newRot = glm::vec2(glm::normalize(targetRotation.z + 180.0f, 360.0f), targetRotation.y);
 
 	glm::vec3 dir = newPos - Camera::main->cameraTransform->position;
 	glm::vec2 rotDir = newRot - Camera::main->cameraTransform->rotation;
+	rotDir.x = glm::normalize(rotDir.x+360.0f, 360.0f);
+
+
+	if (rotDir.x > 180.0f)
+		rotDir.x = -360.0f+rotDir.x;
+	if (rotDir.x < -180.0f)
+		rotDir.x = 360.0f+rotDir.x;
+
+	std::cout << Camera::main->cameraTransform->rotation.x << '\n';
+	std::cout << newRot.x << '\n';
+	std::cout << "> " << rotDir.x << '\n';
+
 	//STYLE 1 - lazy but rotating
     //Camera::main->cameraTransform->MoveTo(glm::mix(Camera::main->cameraTransform->position, newPos, speed * Time::deltaTime));
 	//Camera::main->cameraTransform->RotateTo({ targetRotation.z +  180, targetRotation.y });
@@ -50,19 +63,21 @@ void SmoothCamera::LateUpdate() {
 	//Camera::main->cameraTransform->RotateTo({ targetRotation.z + 180, targetRotation.y });
 
 	//STYLE 4 - smoth rot
-	Camera::main->cameraTransform->MoveTo(glm::mix(Camera::main->cameraTransform->position, newPos, speed * Time::deltaTime));
-	Camera::main->cameraTransform->RotateTo(glm::mix(Camera::main->cameraTransform->rotation, newRot, speed * Time::deltaTime));
+	std::cout << "# " << Camera::main->cameraTransform->rotation.x << '\n';
+	Camera::main->cameraTransform->MoveTo(glm::mix(Camera::main->cameraTransform->position, newPos, std::min(speed * Time::deltaTime, 1.0f)));
+	Camera::main->cameraTransform->RotateTo(glm::mix(Camera::main->cameraTransform->rotation, Camera::main->cameraTransform->rotation + rotDir, std::min(speed * Time::deltaTime, 1.0f)));	
+	std::cout << "$ " << Camera::main->cameraTransform->rotation.x << '\n';
 
-	glm::vec3 newDir = newPos - Camera::main->cameraTransform->position;
-	glm::vec2 newRotDir = newRot - Camera::main->cameraTransform->rotation;
+	// glm::vec3 newDir = newPos - Camera::main->cameraTransform->position;
+	// glm::vec2 newRotDir = newRot - Camera::main->cameraTransform->rotation;
 
-	if (dir == -newDir) {
-		Camera::main->cameraTransform->MoveTo(newPos);
-	}
+	// if (dir == -newDir) {
+	// 	Camera::main->cameraTransform->MoveTo(newPos);
+	// }
 
-	if (rotDir == -newRotDir) {
-		Camera::main->cameraTransform->RotateTo(newRotDir);
-	}
+	// if (rotDir == -newRotDir) {
+	// 	Camera::main->cameraTransform->RotateTo(newRotDir);
+	// }
 }
 
 void SmoothCamera::OnDestroy() {
