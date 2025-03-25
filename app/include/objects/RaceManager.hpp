@@ -38,7 +38,10 @@ public:
 	void Update();
 	
 	void handleClock();
+	void handleLoops();
+
 	Text* clock = nullptr;
+	Text* loop_tracker = nullptr;
 
 	void StartRace();
 	RaceManager* SetEndCondition(TerminationCondition condition, unsigned long long val);
@@ -60,6 +63,7 @@ private:
 	static std::set<std::string> car_names;
 
 	bool race_started = false;
+	bool race_ended = false;
 
 	float cars_relative_offset = .25f;
 	const static std::array<glm::vec2, 5> offsets;

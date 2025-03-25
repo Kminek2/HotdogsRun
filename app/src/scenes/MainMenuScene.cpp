@@ -411,5 +411,6 @@ void MainMenuScene::UpdateAppearance() {
         user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1] = new WheelsScript(*cm);
         user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->gameObject = user_car;
         user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->Init();
+        cp.update_car();
     }
 }

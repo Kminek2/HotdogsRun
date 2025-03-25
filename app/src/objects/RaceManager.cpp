@@ -123,6 +123,8 @@ void RaceManager::AfterCountdown() {
 
 	clock = new Text("HackBold", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
 	clock->SetText("Get ready!");
+	loop_tracker = new Text("HackBold", {0.95, 0.75, 0.1}, {1, 1}, 0.3f);
+	loop_tracker->SetText(std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/3");
 }
 
 void RaceManager::CalcAvgDist()
@@ -159,6 +161,11 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 		return nullptr; // race might have been force-ended already
 
 	car_names.clear();
+
+	race_ended = true;
+
+	delete clock;
+	delete loop_tracker;
 
 	std::sort(car_objects.begin(), car_objects.end(), [](CarObject *a, CarObject *b) {
 		if (a->checkpoint == b->checkpoint)
@@ -291,8 +298,10 @@ void RaceManager::StartAnimation() {
 }
 
 void RaceManager::Update() {
-	if (race_started)
+	if (race_started && !race_ended) {
 		handleClock();
+		handleLoops();
+	}
 }
 
 void RaceManager::handleClock() {
@@ -307,4 +316,9 @@ void RaceManager::handleClock() {
 	int seconds = total_seconds % 60;
 
 	clock->SetText(String::padZeros(minutes, 2) + ':' + String::padZeros(seconds, 2) + '.' + String::padZeros(milliseconds, 3));
+}
+
+void RaceManager::handleLoops() {
+	if ((std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/"+std::to_string(LAPS)) != loop_tracker->getText())
+		loop_tracker->SetText(std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/"+std::to_string(LAPS));
 }

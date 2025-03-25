@@ -75,9 +75,9 @@ bool ColorPicker::update_picker(std::pair<Sprite *, std::string> picker) {
     
     glm::vec3 new_color = hsb_to_rgb(glm::vec3(ang, 1.0f, 1.0f));
 
-    Settings::save(picker.second+"_r", new_color.x*100000.0f);
-    Settings::save(picker.second+"_g", new_color.y*100000.0f);
-    Settings::save(picker.second+"_b", new_color.z*100000.0f);
+    Settings::save(picker.second+"_r", new_color.x*10000000.0f);
+    Settings::save(picker.second+"_g", new_color.y*10000000.0f);
+    Settings::save(picker.second+"_b", new_color.z*10000000.0f);
 
     update_car();
 
@@ -132,10 +132,10 @@ void ColorPicker::update_car() {
         int bi = Settings::read(colors[i]+"_b").value_or(-1);
         if (ri == -1 || gi == -1 || bi == -1)
             continue;
-        std::cout << i << '\n';
-        float r = static_cast<float>(ri)/100000.0f;
-        float g = static_cast<float>(bi)/100000.0f;
-        float b = static_cast<float>(gi)/100000.0f;
+
+        float r = static_cast<float>(ri)/10000000.0f;
+        float g = static_cast<float>(bi)/10000000.0f;
+        float b = static_cast<float>(gi)/10000000.0f;
         std::cout << r << ' ' << g << ' ' << b << '\n';
         car->AddColorChange(default_colors[car_type][i], glm::vec3(r,g,b));
     }
