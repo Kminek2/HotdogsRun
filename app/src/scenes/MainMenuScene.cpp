@@ -1,4 +1,5 @@
 #include "scenes/MainMenuScene.h"
+#include "objects/ColorPicker.hpp"
 #include "scenes/DebugScene.h"
 #include "scenes/MapDemo.h"
 
@@ -54,6 +55,9 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     
     user_car = new GameObject(car_models[model_choosen], glm::vec3(-6.0f, 0.0f, 0.3f));
     user_car->AddScript(new WheelsScript(*cm));
+
+    cp = ColorPicker(user_car);
+    cp.update_car();
 
     objs.push_back(new GameObject("stacjaBenzynowaCalosc"));
     objs.push_back(new GameObject("wjazd"));
@@ -188,7 +192,6 @@ void MainMenuScene::UpdateMenu() {
         {
         case 0:
             to_maps_animation();
-            //Application::LoadScene("map_demo");
             break;
         case 1:
             to_appearance_animation();
@@ -400,8 +403,8 @@ void MainMenuScene::UpdateAppearance() {
 
     if (model_changed) {
         Settings::save("model_choosen", model_choosen);
-        appearance_options[appearance_options.size()-1].second->SetText(car_models_label[model_choosen]);
-        appearance_options[appearance_options.size()-1].first->SetText(car_models_label[model_choosen]);
+        appearance_options[0].second->SetText(car_models_label[model_choosen]);
+        appearance_options[0].first->SetText(car_models_label[model_choosen]);
         user_car->ChangeModel(car_models[model_choosen]);
         user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->OnDestroy();
         delete user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1];

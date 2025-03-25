@@ -7,11 +7,28 @@
 const float ColorPicker::PI = std::acos(-1);
 
 const std::vector<std::vector<glm::vec3>> default_colors = {
-    {glm::vec3(), glm::vec3(), glm::vec3()},
-    {glm::vec3(), glm::vec3(), glm::vec3()},
-    {glm::vec3(), glm::vec3(), glm::vec3()},
-    {glm::vec3(), glm::vec3(), glm::vec3()}
+    {
+		glm::vec3(0.9686274509803922f, 0.37254901960784315f, 0.17647058823529413f),
+		glm::vec3(0.8666666666666667f, 0.8666666666666667f, 0.8666666666666667f),
+		glm::vec3(0.43137254901960786f, 0.43137254901960786f, 0.43137254901960786f)
+	},
+	{
+		glm::vec3(0.26666666666666666f, 0.26666666666666666f, 0.26666666666666666f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		glm::vec3(1.0f, 1.0f, 0.0f)
+	},
+	{
+		glm::vec3(0.9333333333333333f, 0.0f, 0.0f),
+		glm::vec3(0.3333333333333333f, 0.3333333333333333f, 0.3333333333333333f),
+		glm::vec3(0.9333333333333333f, 0.9333333333333333f, 0.9333333333333333f)
+	},
+	{
+		glm::vec3(0.0f, 0.4f, 0.8f),
+		glm::vec3(0.9333333333333333f, 0.9333333333333333f, 0.9333333333333333f),
+		glm::vec3(0.06666666666666667f, 0.06666666666666667f, 0.06666666666666667f)
+	}
 };
+
 
 const std::vector<std::string> colors = {"primary", "secondary", "other"};
 
@@ -115,6 +132,7 @@ void ColorPicker::update_car() {
         int bi = Settings::read(colors[i]+"_b").value_or(-1);
         if (ri == -1 || gi == -1 || bi == -1)
             continue;
+        std::cout << i << '\n';
         float r = static_cast<float>(ri)/1000.0f;
         float g = static_cast<float>(bi)/1000.0f;
         float b = static_cast<float>(gi)/1000.0f;

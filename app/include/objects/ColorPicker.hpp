@@ -12,7 +12,6 @@ class ColorPicker {
         
         bool update_picker(std::pair<Sprite*, std::string> picker);
         glm::vec3 hsb_to_rgb(const glm::vec3 hsb);
-        void update_car();
     public:
         ColorPicker();
         ColorPicker(GameObject* car);
@@ -21,4 +20,5 @@ class ColorPicker {
         void add_picker(Sprite *picker, const std::string part);
         void update();
         void close_all_pickers();
+        void update_car();
 };
