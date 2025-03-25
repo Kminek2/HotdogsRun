@@ -1,6 +1,7 @@
 #include "objects/MapManager.h"
 #include "GameObject.h"
 #include "objects/ShowOBB.h"
+#include <exception>
 
 MapManager* MapManager::Init()
 {
@@ -8,8 +9,15 @@ MapManager* MapManager::Init()
 	road_segments.reserve(road_types.first.size());
 	for (const std::string& key : road_types.first) road_segments.push_back(createRoadMap(key));
 
-	std::vector<MapPoint> map_points = generateMap(map_len, ellipse, seed);
-	spreadMapPoints(map_points, MAP_TILE_SIZE * MAP_TILE_SCALE);
+	std::vector<MapPoint> map_points;
+	bool not_done = true;
+	for (int i = 0; not_done; ++i) {
+		try {
+			map_points = generateMap(map_len, ellipse, seed+i);
+			spreadMapPoints(map_points, MAP_TILE_SIZE * MAP_TILE_SCALE);
+			not_done = false;
+		} catch (std::exception e) {}
+	}
 
 	int n = map_points.size(); // number of map tiles
 	points.reserve(n);

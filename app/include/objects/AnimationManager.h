@@ -6,6 +6,7 @@
 class AnimationManager :
     public ObjectScript {
     public:
+        bool disabled_skips;
         struct data {
             CinematicCamera::obj_data start;
             CinematicCamera::obj_data end;

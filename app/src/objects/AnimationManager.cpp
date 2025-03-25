@@ -4,6 +4,7 @@ AnimationManager::AnimationManager(std::vector<data> animation_queue) {
     this->animation_queue = animation_queue;
     last_animation = nullptr;
     id = 0;
+    disabled_skips = false;
 }
 
 void AnimationManager::Init() {}
@@ -28,6 +29,8 @@ void AnimationManager::addToQueue(data animation) {
 }
 
 void AnimationManager::skip() {
+    if (disabled_skips)
+        return;
     if (last_animation == nullptr)
         return;
     last_animation->skip();

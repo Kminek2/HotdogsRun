@@ -1,5 +1,6 @@
 ﻿#include "objects/RaceManager.hpp"
 #include "Application.h"
+#include "objects/CarMovement.h"
 #include "objects/ShowOBB.h"
 
 #include "StringOperations.hpp"
@@ -181,6 +182,11 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 	for (const auto &sub : subscribers)
 		sub(car_objects[0]);
 
+	CarMovement::disabled_inputs = true;
+
+	Sprite* bg = new Sprite("end_race_bg");
+	bg->rectTransform->ScaleTo(glm::vec2(100.0f, 100.0f));
+
 	return car_objects[0];
 }
 
@@ -319,6 +325,6 @@ void RaceManager::handleClock() {
 }
 
 void RaceManager::handleLoops() {
-	if ((std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/"+std::to_string(LAPS)) != loop_tracker->getText())
-		loop_tracker->SetText(std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/"+std::to_string(LAPS));
+	if ((std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/"+std::to_string(termination_condition_value)) != loop_tracker->getText())
+		loop_tracker->SetText(std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/"+std::to_string(termination_condition_value));
 }
