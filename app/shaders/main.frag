@@ -76,6 +76,10 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col);
 float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir);
 
+
+float gamma = 2.2;
+
+
 void main() {
     vec3 norm = normalize(fragNormal);
     vec3 viewDir = normalize(cPos.xyz - fragPos);
@@ -84,10 +88,12 @@ void main() {
     vec3 resColor = texColor;
 
     for(int i = 0; i < colorChange.amount; i++)
-        if(length(normalize(texColor) - normalize(colorChanges[colorChange.index + i].from)) <= 0.2 && abs(length(texColor) - length(colorChanges[colorChange.index + i].from)) <= 0.4)
+        //if(length(normalize(texColor) - normalize(colorChanges[colorChange.index + i].from)) <= 0.2 && abs(length(texColor) - length(colorChanges[colorChange.index + i].from)) <= 0.4)
+        if(distance(texColor, pow(colorChanges[colorChange.index + i].from, vec3(2.2))) <= 0.04)
             resColor = colorChanges[colorChange.index + i].to;
 
 
+    //resColor = pow(resColor, vec3(gamma));
     DirLight dirLight;
     dirLight.direction = lDirection.xyz;
     dirLight.ambient = lAmbient.xyz;
@@ -112,6 +118,7 @@ void main() {
     }
 
     outColor = vec4(result * resColor, 1.0);
+    //outColor.rgb = pow(outColor.rgb, vec3(1.0/gamma));
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

@@ -44,6 +44,8 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 	music_first->PlayTrack(false);
 	music_timer = 75.0f;
 
+    MainMenuScene::model_choosen = Settings::read("model_choosen").value_or(0);
+
     cm = new CarMovement(0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f);
 
     objs.push_back(new GameObject());
