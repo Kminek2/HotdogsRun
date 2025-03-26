@@ -117,8 +117,12 @@ void RaceManager::AfterCountdown() {
 
 	clock = new Text("HackBold", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
 	clock->SetText("Get ready!");
-	loop_tracker = new Text("HackBold", {0.95, 0.75, 0.1}, {1, 1}, 0.3f);
-	loop_tracker->SetText(std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/3");
+
+	velocity = new Text("HackBold", { .95,.75,.1 }, { 1,1 }, .3);
+	velocity->SetText("--");
+
+	loop_tracker = new Text("HackBold", {0.95, 0.55, 0.1}, {1, 1}, 0.3f);
+	loop_tracker->SetText(std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+'/'+std::to_string(termination_condition_value));
 }
 
 void RaceManager::CalcAvgDist()
@@ -299,6 +303,7 @@ void RaceManager::StartAnimation() {
 void RaceManager::Update() {
 	if (race_started && !race_ended) {
 		handleClock();
+		handleVelocityDisplay();
 		handleLoops();
 	}
 }
@@ -315,6 +320,10 @@ void RaceManager::handleClock() {
 	int seconds = total_seconds % 60;
 
 	clock->SetText(String::padZeros(minutes, 2) + ':' + String::padZeros(seconds, 2) + '.' + String::padZeros(milliseconds, 3));
+}
+
+void RaceManager::handleVelocityDisplay() {
+	velocity->SetText(String::formatDouble(std::abs(car_objects[0]->car->cm->getActSpeed() * 10), 2) + " km/h");
 }
 
 void RaceManager::handleLoops() {

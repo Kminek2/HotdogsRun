@@ -16,7 +16,6 @@
 #include <iostream>
 
 using namespace mapgen;
-using tc = RaceManager::TerminationCondition;
 
 const std::string car_models[] = {
     "f1car", "hotrod", "pickup", "racing_car"
@@ -131,7 +130,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 			car->AddScript(new CameraLockScript(Perspective, glm::vec3(-50, 0, 0), -90.0f, 45.0f, false, false, GLFW_KEY_Z, GLFW_KEY_C));
 	}
 
-	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(tc::LAPS, 3)->SetCarsRelativeOffset(.1f);
+	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(3)->SetCarsRelativeOffset(.1f);
 	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
 
 	race_manager->AddCar(car);
