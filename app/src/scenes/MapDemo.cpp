@@ -51,16 +51,16 @@ const unsigned int cityNum = 3;
 
 const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> defaultBuildings = { { {
 	{""}, {"case_1","case_1_color"}, {"case_2","case_2_color"}, {"case_3","case_3_color"},
-	{"case_4","case_4_color"}, {"case_5"}, {"case_6","case_6_color"}, {"case_7","case_7_color"},
-	{"case_8","case_8_color"}, {"case_9","case_9_color"}, {"case_10"}, {"case_11","case_11_color"},
-	{"case_12","case_12_color"}, {"case_13","case_13_color"}, {"case_14"}, {"case_15"}
+	{"case_4","case_4_color"}, {"case_5","case_5_color"}, {"case_6","case_6_color"}, {"case_7","case_7_color"},
+	{"case_8","case_8_color"}, {"case_9","case_9_color"}, {"case_10","case_10_color"}, {"case_11","case_11_color"},
+	{"case_12","case_12_color"}, {"case_13","case_13_color"}, {"case_14","case_14_color"}, {"case_15","case_15_color"}
 } }, {.1f, -1.0f} };
 
 std::shared_ptr<Scene> MapDemo::Init() {
 	Scene* scene = new Scene(this);
 
 	//qc = new QuickCamera();
-    //qc->_sr(0.75f);
+	//qc->_sr(0.75f);
 	//qc->_sm(100.0f);
 
 	music_timer = 0.0f;
@@ -75,7 +75,6 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	on_end_screen = false;
 
-
 	MapManager::MapSettingsValues svals;
 	svals.map_len = 20;
 	svals.checkpoint_offset = 10;
@@ -88,7 +87,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 			{"kamien1",.8}, {"kamien2",.8},	{"krzak",.8}, {"maleDrzewo",.8},
 			{"malyKrzak",.8}, {"pacholki",1}, {"barrel",.2},{"bus",1},
 		},
-		{	
+		{
 			-1.0f,-0.75f,-0.25f,0.1f,
 			-0.6f,0.05f,-0.8f,-0.8f,
 			-0.4f,0.025f,-0.6f,-0.4f,
@@ -133,7 +132,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(3)->SetCarsRelativeOffset(.1f);
 	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
 
-	race_manager->AddCar(car);
+	race_manager->AddCar(car, true);
 	for (int i = 0; i < 1; i++) {
 		GameObject* bot = new GameObject("hotrod");
 

@@ -28,7 +28,7 @@ public:
 
 	RaceManager* SetMapManager(MapManager* map_manager);
 	RaceManager* SetCarsRelativeOffset(float offset);
-	RaceManager* AddCar(GameObject* car);
+	RaceManager* AddCar(GameObject* car, bool main = false);
 	RaceManager* SetAnimationManager(AnimationManager* am);
 
 	void Update();
@@ -36,10 +36,14 @@ public:
 	void handleClock();
 	void handleVelocityDisplay();
 	void handleLoops();
+	void handleTracking();
 
 	Text* clock = nullptr;
 	Text* loop_tracker = nullptr;
 	Text* velocity = nullptr;
+
+	Sprite* progress_bar = nullptr;
+	std::vector<Sprite*> race_trackers;
 
 	void StartRace();
 	RaceManager* SetEndCondition(unsigned long long laps);
@@ -57,6 +61,7 @@ private:
 
 	int cars_placed = 0;
 
+	GameObject* main_car = nullptr;
 	std::vector<CarObject*> car_objects;
 	static std::set<std::string> car_names;
 

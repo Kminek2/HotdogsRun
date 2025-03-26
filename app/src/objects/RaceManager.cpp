@@ -31,7 +31,7 @@ RaceManager *RaceManager::SetCarsRelativeOffset(float offset) {
 /// <summary>
 /// Place the car in the right starting position.
 /// </summary>
-RaceManager *RaceManager::AddCar(GameObject *car) {
+RaceManager *RaceManager::AddCar(GameObject *car, bool main) {
 	if (!map_manager)
 		throw std::invalid_argument("init map_manager first");
 
@@ -58,6 +58,11 @@ RaceManager *RaceManager::AddCar(GameObject *car) {
 	++cars_placed;
 	car_objects.push_back(new RaceManager::CarObject(car, 0, 0));
 	car_names.insert(car->GetModelName());
+
+	if (main) {
+		main_car = car;
+		std::swap(car_objects[0], car_objects[cars_placed - 1]);
+	}
 
 	return this;
 }
@@ -91,8 +96,32 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 /// Start race. Has to have at least two cars and a termination condition.
 /// </summary>
 void RaceManager::StartRace() {
+	if (!main_car)
+		throw std::invalid_argument("you didn't specify the main car");
 	if (car_objects.size() < 2)
-		throw std::invalid_argument("add more cars");
+		throw std::invalid_argument("add more cars");	
+	
+	const glm::vec4 color = glm::vec4(1, 1, 1, .4);
+	const float height = .025;
+	const glm::vec3 pos = glm::vec3(0, 1 - 2 * height, 0);
+	const float scale = 1.1;
+
+	race_trackers.reserve(cars_placed);
+
+	Sprite* sp = new Sprite("tracker_main", color);
+	sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(pos);
+
+	race_trackers.push_back(sp);
+
+	for (int _ = 0; _ < cars_placed; _++) {
+		Sprite* sp = new Sprite("tracker_norm", color);
+		sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(pos);
+
+		race_trackers.push_back(sp);
+	}
+
+	progress_bar = new Sprite("progress", color);
+	progress_bar->rectTransform->SetWidth(.75, false)->SetHeight(height, false)->MoveTo(pos);
 
 	StartAnimation();
 }
@@ -196,9 +225,10 @@ void RaceManager::SubscribeToRaceEnd(const std::function<void(CarObject *)> &cal
 /// </summary>
 std::vector<RaceManager::LiveRaceObject*> RaceManager::GetLiveRace()
 {
-	std::vector<LiveRaceObject*> live_race(car_objects.size());
+	std::vector<LiveRaceObject*> live_race;
+	live_race.reserve(car_objects.size());
 
-	unsigned cp_count = map_manager->GetLen();
+	unsigned cp_count = map_manager->GetCheckPoints();
 
 	if (avg_cp_dist == -1) CalcAvgDist();
 
@@ -226,40 +256,40 @@ RaceManager *RaceManager::SetAnimationManager(AnimationManager *am) {
 void RaceManager::StartAnimation() {
 	assert(animation_manager);
 
-	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
-					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 18.25f}},
-					   {car_objects[0]->car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
-					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 18.25f}},
+	animation_manager->addToQueue({{main_car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
+					{main_car->transform->rotation.x - -320.0f, main_car->transform->rotation.y - 18.25f}},
+					   {main_car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
+					{main_car->transform->rotation.x - -320.0f, main_car->transform->rotation.y - 18.25f}},
 					   5.0f,
 					   {0.0f, 0.0f, 0.0f},
 					   false,
 					   [&]() {
 						   CarMovement::disabled_inputs = true;
 					   }});
-	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
-					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 18.25f}},
-					   {car_objects[0]->car->transform->position - glm::vec3({4.96434f, -4.10972f, -4.14516f}),
-					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 21.25f}},
+	animation_manager->addToQueue({{main_car->transform->position - glm::vec3({10.8015f, -8.80438f, -6.55353f}),
+					{main_car->transform->rotation.x - -320.0f, main_car->transform->rotation.y - 18.25f}},
+					   {main_car->transform->position - glm::vec3({4.96434f, -4.10972f, -4.14516f}),
+					{main_car->transform->rotation.x - -320.0f, main_car->transform->rotation.y - 21.25f}},
 					   1.5f,
 					   {0.0f, 0.0f, 0.0f},
 					   false});
-	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({4.96434f, -4.10972f, -4.14516f}),
-					{car_objects[0]->car->transform->rotation.x - -320.0f, car_objects[0]->car->transform->rotation.y - 21.25f}},
-					   {car_objects[0]->car->transform->position - glm::vec3({6.03574f, 3.54317f, -3.74811f}),
-					{car_objects[0]->car->transform->rotation.x - -37.25f, car_objects[0]->car->transform->rotation.y - 19.25f}},
+	animation_manager->addToQueue({{main_car->transform->position - glm::vec3({4.96434f, -4.10972f, -4.14516f}),
+					{main_car->transform->rotation.x - -320.0f, main_car->transform->rotation.y - 21.25f}},
+					   {main_car->transform->position - glm::vec3({6.03574f, 3.54317f, -3.74811f}),
+					{main_car->transform->rotation.x - -37.25f, main_car->transform->rotation.y - 19.25f}},
 					   2.0f,
 					   {0.0f, 0.0f, 0.0f},
 					   false});
-	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({6.03574f, 3.54317f, -3.74811f}),
-					{car_objects[0]->car->transform->rotation.x - -37.25f, car_objects[0]->car->transform->rotation.y - 19.25f}},
-					   {car_objects[0]->car->transform->position - glm::vec3({5.01428f, -5.82023f, -1.38018f}),
-					{car_objects[0]->car->transform->rotation.x - -275.75f, car_objects[0]->car->transform->rotation.y - 2.0f}},
+	animation_manager->addToQueue({{main_car->transform->position - glm::vec3({6.03574f, 3.54317f, -3.74811f}),
+					{main_car->transform->rotation.x - -37.25f, main_car->transform->rotation.y - 19.25f}},
+					   {main_car->transform->position - glm::vec3({5.01428f, -5.82023f, -1.38018f}),
+					{main_car->transform->rotation.x - -275.75f, main_car->transform->rotation.y - 2.0f}},
 					   2.0f,
 					   {0.0f, 0.0f, 0.0f},
 					   false,
 					   [&]() {
 						   countdown_number =
-						   new GameObject("3", car_objects[0]->car->transform->position + glm::vec3(-2.5f, -0.5f, 1.7f),
+						   new GameObject("3", main_car->transform->position + glm::vec3(-2.5f, -0.5f, 1.7f),
 								  glm::vec3(90.0f, 0.0f, -90.0f), glm::vec3(0.15));
 					   },
 					   [&]() {
@@ -267,16 +297,16 @@ void RaceManager::StartAnimation() {
 							   delete countdown_number;
 						   countdown_number = nullptr;
 					   }});
-	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({5.01428f, -5.82023f, -1.38018f}),
-					{car_objects[0]->car->transform->rotation.x - -275.75f, car_objects[0]->car->transform->rotation.y - 2.0f}},
-					   {car_objects[0]->car->transform->position - glm::vec3({-3.1062f, -6.63792f, -1.38018f}),
-					{car_objects[0]->car->transform->rotation.x - -269.0f, car_objects[0]->car->transform->rotation.y - -0.25f}},
+	animation_manager->addToQueue({{main_car->transform->position - glm::vec3({5.01428f, -5.82023f, -1.38018f}),
+					{main_car->transform->rotation.x - -275.75f, main_car->transform->rotation.y - 2.0f}},
+					   {main_car->transform->position - glm::vec3({-3.1062f, -6.63792f, -1.38018f}),
+					{main_car->transform->rotation.x - -269.0f, main_car->transform->rotation.y - -0.25f}},
 					   1.5f,
 					   {0.0f, 0.0f, 0.0f},
 					   false,
 					   [&]() {
 						   countdown_number =
-						   new GameObject("2", car_objects[0]->car->transform->position + glm::vec3(-1.0f, 1.2f, 1.5f),
+						   new GameObject("2", main_car->transform->position + glm::vec3(-1.0f, 1.2f, 1.5f),
 								  glm::vec3(90.0f, 0.0f, 180.0f), glm::vec3(0.15));
 					   },
 					   [&]() {
@@ -284,21 +314,22 @@ void RaceManager::StartAnimation() {
 							   delete countdown_number;
 						   countdown_number = nullptr;
 					   }});
-	animation_manager->addToQueue({{car_objects[0]->car->transform->position - glm::vec3({-3.1062f, -6.63792f, -1.38018f}),
-					{car_objects[0]->car->transform->rotation.x - -269.0f, car_objects[0]->car->transform->rotation.y - -0.25f}},
-					   {car_objects[0]->car->transform->position - glm::vec3({-15.0351f, 0.0f, -5.47232f}),
-					{car_objects[0]->car->transform->rotation.x - -180.0f, car_objects[0]->car->transform->rotation.y - 20.0f}},
+	animation_manager->addToQueue({{main_car->transform->position - glm::vec3({-3.1062f, -6.63792f, -1.38018f}),
+					{main_car->transform->rotation.x - -269.0f, main_car->transform->rotation.y - -0.25f}},
+					   {main_car->transform->position - glm::vec3({-15.0351f, 0.0f, -5.47232f}),
+					{main_car->transform->rotation.x - -180.0f, main_car->transform->rotation.y - 20.0f}},
 					   1.5f,
 					   {5.0f, 5.0f, 1.0f},
 					   true,
 					   [&]() {
 						   countdown_number =
-						   new GameObject("1", car_objects[0]->car->transform->position + glm::vec3(2.0f, 1.0f, 2.0f),
+						   new GameObject("1", main_car->transform->position + glm::vec3(2.0f, 1.0f, 2.0f),
 								  glm::vec3(90.0f, 0.0f, 120.0f), glm::vec3(0.2));
 					   },
 					   std::bind(&RaceManager::AfterCountdown, this)});
 }
 
+double counter_000 = 0;
 void RaceManager::Update() {
 	if (!race_started || race_ended)
 		return;
@@ -306,6 +337,13 @@ void RaceManager::Update() {
 	handleClock();
 	handleVelocityDisplay();
 	handleLoops();
+
+	counter_000 += Time::deltaTime;
+
+	if (counter_000 >= .5f) {
+		counter_000 -= .5f;
+		handleTracking();
+	}
 }
 
 void RaceManager::handleClock() {
@@ -323,7 +361,7 @@ void RaceManager::handleClock() {
 }
 
 void RaceManager::handleVelocityDisplay() {
-	std::string ntext = String::formatDouble(std::abs(car_objects[0]->car->cm->getActSpeed() * 10), 2) + " km/h";
+	std::string ntext = String::formatDouble(std::abs(main_car->cm->getActSpeed() * 10), 2) + " km/h";
 	if(ntext != velocity->getText())
 		velocity->SetText(ntext);
 }
@@ -332,4 +370,25 @@ void RaceManager::handleLoops() {
 	std::string ntext = (std::to_string((car_objects[0]->checkpoint / map_manager->GetCheckPoints()) + 1) + '/' + std::to_string(termination_condition_value));
 	if (ntext != loop_tracker->getText())
 		loop_tracker->SetText(ntext);
+}
+
+void RaceManager::handleTracking()
+{
+	std::vector<LiveRaceObject*> race_data = GetLiveRace();
+
+	bool main_found = false;
+	int i = 0;
+	while (i < cars_placed) {
+		int c_index = i + (!main_found);
+
+		if (race_data[i]->car == main_car) {
+			main_found = true;
+			c_index = 0;
+		}
+
+		glm::vec3 pos = race_trackers[c_index]->rectTransform->position;
+		race_trackers[c_index]->rectTransform->MoveTo(glm::vec3(progress_bar->rectTransform->scale.x * (2 * race_data[i]->progress - 1), pos.y, pos.z));
+
+		++i;
+	}
 }
