@@ -1,47 +1,49 @@
 ﻿#include "BotMovement.h"
+#include <glm/gtx/norm.hpp>
+#include <iostream>
 
 BotMovement::BotMovement(CarMovement* car)
-{
-    carmv = car;
-}
+    : avoidanceVector(0.0f),
+    avoidanceWeight(2.0f),
+    maxAvoidanceDistance(120.0f),
+    currentWaypointIndex(0),
+    botObject(nullptr),
+    map(nullptr),
+    carmv(car) {}
 
-void BotMovement::Init()
-{
+void BotMovement::Init() {
     botObject = gameObject;
-    std::cout << "BotMovement::Init() called\n"; //debug
+    std::cout << "BotMovement::Init() called\n";
     this->botBehavior = AGGRESSIVE;
     chooseAction();
+    waypoints = GetWaypoints(map);
     currentWaypointIndex = 1;
 }
 
 void BotMovement::Update() {
+    if (!carmv || !map) return;
+
     followPath();
-    avoidObstacles();
 }
 
 void BotMovement::OnDestroy() {
-    // TODO
+    // Cleanup logic if needed
 }
 
-BotMovement* BotMovement::SetMapManager(MapManager* map)
-{
-	this->map = map;
-	return this;
+BotMovement* BotMovement::SetMapManager(MapManager* map) {
+    this->map = map;
+    return this;
 }
 
-std::vector<GameObject*> BotMovement::GetWaypoints(MapManager* map)
-{
+std::vector<GameObject*> BotMovement::GetWaypoints(MapManager* map) {
     if (!map) {
         std::cout << "MapManager is NULL!\n";
-        return waypoints;
+        return {};
     }
-    std::cout << "Get waypoints!\n";
-    waypoints = *(map->GetPoints());
-    return waypoints;
+    return *(map->GetPoints());
 }
 
-CarMovement* BotMovement::SetCarMovement(CarMovement* car)
-{
+CarMovement* BotMovement::SetCarMovement(CarMovement* car) {
     this->carmv = car;
     return car;
 }
@@ -50,148 +52,113 @@ void BotMovement::chooseAction() {
     assert(botBehavior != BotBehavior::undefined);
 
     if (botBehavior == AGGRESSIVE) {
-        botActions.accelerate = true;
-        botActions.brake = true;
-        botActions.turnLeft = true;
-        botActions.turnRight = true;
-        botActions.useNitro = true;
+        botActions = { true, true, true, true, true };
     }
     else if (botBehavior == DUMMY) {
-        botActions.accelerate = true;
-        botActions.brake = false;
-        botActions.turnLeft = true;
-        botActions.turnRight = true;
-        botActions.useNitro = false;
+        botActions = { true, false, true, true, false };
     }
+}
+
+glm::vec3 BotMovement::calculateDesiredDirection() const {
+    if (waypoints.empty()) return glm::vec3(0);
+
+    glm::vec3 baseDirection = glm::normalize(
+        waypoints[currentWaypointIndex]->transform->position -
+        botObject->transform->position
+    );
+    return glm::normalize(baseDirection + avoidanceVector * avoidanceWeight);
+}
+
+float BotMovement::calculateSpeedModifier() const {
+    const float currentSpeed = carmv->getActSpeed();
+    const glm::vec3 desiredDir = calculateDesiredDirection();
+    const float angle = glm::degrees(glm::acos(
+        glm::dot(glm::normalize(botObject->transform->front), desiredDir)
+    ));
+
+    float speedModifier = 1.0f - glm::clamp(angle / 45.0f, 0.0f, 0.8f);
+
+    if (glm::length(avoidanceVector) > 0.3f) {
+        speedModifier *= 0.6f;
+    }
+
+    return speedModifier;
 }
 
 void BotMovement::followPath() {
-    if (this->waypoints.empty()) {
-        std::cout << "No waypoints! Bot can't move!\n";
-        return;
-    }
-    if (this->carmv == nullptr) {
-        std::cout << "Car movement not set! \n";
-        return;
-    }
+    if (waypoints.empty() || !carmv || !map) return;
 
-    GameObject* targetWaypoint = waypoints[currentWaypointIndex];
-    glm::vec3 targetPos = targetWaypoint->transform->position;
+    GameObject* currentWaypoint = waypoints[currentWaypointIndex];
     glm::vec3 botPos = botObject->transform->position;
-    float speed = carmv->getActSpeed();
+    glm::vec3 targetPos = currentWaypoint->transform->position;
 
-    glm::vec3 rawDirection = targetPos - botPos;
-    if (glm::dot(rawDirection, rawDirection) < 1e-6) return;
-    glm::vec3 direction = glm::normalize(rawDirection);
+    // Oblicz bazowy kierunek do waypointa
+    glm::vec3 baseDirection = glm::normalize(targetPos - botPos);
+    baseDirection.z = 0.0f;
 
-    direction.z = 0;
-    glm::vec3 front = glm::normalize(botObject->transform->front);
+    // Inicjalizacja wektora unikania
+    avoidanceVector = glm::vec3(0.0f);
+    const float lateralThreshold = 2.0f;
 
-    float dotProduct = glm::dot(front, direction);
-    float angle = glm::degrees(glm::acos(dotProduct));
-
-    glm::vec3 crossProduct = glm::cross(front, direction);
-    bool turnLeft = crossProduct.z > 0.1f;
-    bool turnRight = crossProduct.z < -0.1f;
-
-    float distance = glm::distance(botPos, targetPos);
-    bool shouldBrake = false;
-    bool shouldAccelerate = true;
-
-    // W przypadku zakrętu, jeśli prędkość jest zbyt duża, zwolnij
-    if ((turnLeft || turnRight) && speed > 70.0f) {
-        shouldBrake = true;
-        shouldAccelerate = false;
-    }
-
-    if (shouldAccelerate) {
-        this->carmv->goForward();
-    }
-    else if (shouldBrake) {
-        this->carmv->useHandBreak();
-    }
-
-    if (turnLeft) {
-        this->carmv->makeLeftTurn();
-    }
-    else if (turnRight) {
-        this->carmv->makeRightTurn();
-    }
-
-    // Jeśli jesteśmy blisko waypointa, przechodzimy do następnego
-    if (distance < 20.0f) {
-        currentWaypointIndex++;
-        if (currentWaypointIndex >= waypoints.size()) {
-            currentWaypointIndex = 0;
-        }
-    }
-}
-
-void BotMovement::avoidObstacles() {
-    if (this->carmv == nullptr || this->map == nullptr) {
-        std::cout << "Car movement or map not set!\n";
-        return;
-    }
-
-    glm::vec3 botPos = botObject->transform->position;
-    glm::vec3 front = glm::normalize(botObject->transform->front);
-    float detectionRange = 80.0f;  // Zwiększamy zasięg wykrywania przeszkód
-    float avoidanceStrength = 0.5f; // Zwiększamy siłę korekty
-    static float lastAvoidanceTime = 0.0f;  // Czas ostatniej reakcji na przeszkodę
-    float cooldownTime = 1.0f;  // Minimalny czas między kolejnymi reakcjami na przeszkodę
-
-    std::vector<GameObject*> obstacles = map->getDecors();
-    glm::vec3 avoidanceVector(0.0f);
-    bool obstacleAhead = false;
-
-    // Iterujemy przez przeszkody
-    for (GameObject* obstacle : obstacles) {
-        glm::vec3 obstaclePos = obstacle->transform->position;
-        glm::vec3 toObstacle = obstaclePos - botPos;
-
+    // Analizuj wszystkie przeszkody
+    for (GameObject* obstacle : map->getDecors()) {
+        glm::vec3 toObstacle = obstacle->transform->position - botPos;
         float distance = glm::length(toObstacle);
-        if (distance > detectionRange) continue; // Za daleko, pomijamy
 
-        glm::vec3 toObstacleNorm = glm::normalize(toObstacle);
-        float dotProduct = glm::dot(toObstacleNorm, front);
+        if (distance > maxAvoidanceDistance || distance < 1.0f) continue;
 
-        if (dotProduct < 0.7f) continue;  // Teraz sprawdzamy tylko obiekty prawie na wprost
+        // Sprawdź czy przeszkoda jest przed botem
+        float forwardProj = glm::dot(toObstacle, baseDirection);
+        if (forwardProj <= 0) continue;
 
-        obstacleAhead = true;
+        // Oblicz odległość boczną
+        glm::vec3 proj = baseDirection * forwardProj;
+        glm::vec3 lateral = toObstacle - proj;
+        float lateralDist = glm::length(lateral);
+        if (lateralDist > lateralThreshold) continue;
 
-        glm::vec3 crossProduct = glm::cross(front, toObstacleNorm);
-        // Ustalanie kierunku unikania
-        if (crossProduct.z > 0) {
-            avoidanceVector += glm::vec3(-front.y, front.x, 0) * avoidanceStrength;
-        }
-        else {
-            avoidanceVector += glm::vec3(front.y, -front.x, 0) * avoidanceStrength;
-        }
+        // Określ kierunek omijania
+        glm::vec3 obstacleDir = glm::normalize(toObstacle);
+        glm::vec3 cross = glm::cross(baseDirection, obstacleDir);
+        glm::vec3 repelDir = cross.z > 0 ?
+            glm::vec3(baseDirection.y, -baseDirection.x, 0.0f) : // W prawo
+            glm::vec3(-baseDirection.y, baseDirection.x, 0.0f);  // W lewo
 
-        // Jeśli przeszkoda jest bardzo blisko i znajduje się dokładnie na kursie, zwolnij
-        if (distance < 20.0f && carmv->getActSpeed() > 30.0f) {
-            std::cout << "Obstacle too close! Braking!\n";
-            this->carmv->useHandBreak();
-        }
+        // Siła unikania zależna od odległości
+        float strength = (maxAvoidanceDistance - distance) / maxAvoidanceDistance;
+        avoidanceVector += glm::normalize(repelDir) * strength;
     }
 
-    // Jeśli przeszkody są zbyt blisko i jesteśmy w trakcie "uniku", dajemy im chwilę na "chłodzenie"
-    if (obstacleAhead && glm::length(avoidanceVector) > 0.01f) {
-        float currentTime = static_cast<float>(glfwGetTime());
-        if (currentTime - lastAvoidanceTime > cooldownTime) {
-            glm::vec3 newDirection = glm::normalize(front + avoidanceVector);
-            float correctionAngle = glm::degrees(glm::acos(glm::dot(front, newDirection)));
+    // Zastosuj globalną wagę unikania
+    avoidanceVector *= avoidanceWeight;
 
-            if (correctionAngle > 5.0f) { // Unikamy niepotrzebnych korekt
-                if (avoidanceVector.x > 0) {
-                    this->carmv->makeRightTurn();
-                }
-                else {
-                    this->carmv->makeLeftTurn();
-                }
-            }
+    // Oblicz końcowy kierunek ruchu
+    glm::vec3 desiredDirection = glm::normalize(baseDirection + avoidanceVector);
 
-            lastAvoidanceTime = currentTime; // Zaktualizuj czas ostatniego uniku
-        }
+    // Sterowanie
+    glm::vec3 currentFront = glm::normalize(botObject->transform->front);
+    glm::vec3 cross = glm::cross(currentFront, desiredDirection);
+
+    if (cross.z > 0.1f) {
+        carmv->makeLeftTurn();
+    }
+    else if (cross.z < -0.1f) {
+        carmv->makeRightTurn();
+    }
+
+    // Kontrola prędkości
+    float speedModifier = 1.0f - glm::clamp(glm::length(avoidanceVector) / 2.0f, 0.0f, 0.7f);
+    float targetSpeed = 600.0f * speedModifier;
+
+    if (carmv->getActSpeed() < targetSpeed) {
+        carmv->goForward();
+    }
+    else {
+        carmv->useHandBreak();
+    }
+
+    // Aktualizacja waypointa
+    if (glm::distance(botPos, targetPos) < 25.0f) {
+        currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.size();
     }
 }
