@@ -14,26 +14,29 @@ public:
 	/// <summary>
 	/// Set position to the given vector, in world space
 	/// </summary>
-	void MoveTo(glm::vec3 position) {
+	RectTransform* MoveTo(glm::vec3 position) {
 		this->position = position;
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
 	/// Set rotation to the given vector in degrees
 	/// </summary>
-	void RotateTo(float rotation) {
+	RectTransform* RotateTo(float rotation) {
 		this->rotation = ModuloRotation(rotation);
 		UpdateVectors();
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
 	/// Set scale to the given vector
 	/// </summary>
-	void ScaleTo(glm::vec2 scale) {
+	RectTransform* ScaleTo(glm::vec2 scale) {
 		this->scale = scale;
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
@@ -41,7 +44,7 @@ public:
 	/// </summary>
 	/// <param name="width">Width</param>
 	/// <param name="preserveAspect">Should aspect ratio be preserved</param>
-	void SetWidth(float width, bool preserveAspect = true)
+	RectTransform* SetWidth(float width, bool preserveAspect = true)
 	{
 		if (!preserveAspect)
 			scale.x = width;
@@ -49,6 +52,7 @@ public:
 			scale = glm::vec2(width, (width / ASPECT_HEIGHT) * ASPECT_WIDTH);
 
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
@@ -56,7 +60,7 @@ public:
 	/// </summary>
 	/// <param name="height">Heightt</param>
 	/// <param name="preserveAspect">Should aspect ratio be preserved</param>
-	void SetHeight(float height, bool preserveAspect = true)
+	RectTransform* SetHeight(float height, bool preserveAspect = true)
 	{
 		if (!preserveAspect)
 			scale.y = height;
@@ -64,55 +68,61 @@ public:
 			scale = glm::vec2((height / ASPECT_WIDTH) * ASPECT_HEIGHT, height);
 
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
 	/// Move the object by the given vector, in world space
 	/// </summary>
-	void Move(glm::vec2 by) {
+	RectTransform* Move(glm::vec2 by) {
 		this->position += glm::vec3(by, 0);
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
 	/// Rotates the object by the given amount
 	/// </summary>
-	void Rotate(float by) {
+	RectTransform* Rotate(float by) {
 		this->rotation = ModuloRotation(this->rotation + by);
-
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
 	/// Increases the scale of the object by the given amount on each axis
 	/// </summary>
-	void Scale(glm::vec2 by) {
+	RectTransform* Scale(glm::vec2 by) {
 		this->scale += by;
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
 	/// Increases the scale of the object by the given amount on all axes
 	/// </summary>
-	void Scale(float by) {
+	RectTransform* Scale(float by) {
 		this->scale += glm::vec2(by);
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
 	/// Multiplies the scale of the object by the given amount on each axis
 	/// </summary>
-	void ScaleTimes(glm::vec2 times) {
+	RectTransform* ScaleTimes(glm::vec2 times) {
 		this->scale *= times;
 		UpdateMatrix();
+		return this;
 	}
 
 	/// <summary>
 	/// Multiplies the scale of the object by the given amount on all axes
 	/// </summary>
-	void ScaleTimes(float times) {
+	RectTransform* ScaleTimes(float times) {
 		this->scale *= times;
 		UpdateMatrix();
+		return this;
 	}
 
 	RectTransform(glm::vec3 pos = glm::vec3(0), float rot = 0.0f, glm::vec2 scale = glm::vec2(1)) {

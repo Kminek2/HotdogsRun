@@ -1,5 +1,6 @@
 #pragma once
 #include "SceeneScript.h"
+#include "UiObject.h"
 #include "objects/AnimationManager.h"
 #include "QuickCamera.h"
 #include "objects/ColorPicker.hpp"
@@ -18,6 +19,13 @@ private:
     std::vector<std::pair<Text*, Text*>> menu_options;
     std::vector<std::pair<Text*, Text*>> appearance_options;
     std::vector<std::pair<Sprite*, std::pair<Text*, Text*>>> maps_options;
+    Sprite* settings_bg;
+    std::vector<std::pair<std::pair<Text*, Text*>, std::pair<Text*, Text*>>> settings_options;
+
+    Sprite* volume_bar;
+    Sprite* bar_thumb;
+    float volume_delay;
+
     UiObject* logo;
     GameObject* user_car;
 
@@ -42,6 +50,11 @@ private:
     void ShowAppearance();
     void UpdateAppearance();
     void HideAppearance();
+
+    void ShowSettings();
+    void UpdateSettings();
+    void UpdateSettingsHighlight();
+    void HideSettings();
 
     void to_maps_animation();
     void from_maps_animation();

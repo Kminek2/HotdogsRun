@@ -38,3 +38,11 @@ void Settings::initialize() {
 
     initialized = true;
 }
+
+void Settings::clear() {
+    json_data = nlohmann::json();
+
+    std::ofstream out(filename);
+    out << std::setw(4) << json_data << std::endl;
+    out.close();
+}

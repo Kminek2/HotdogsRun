@@ -11,4 +11,5 @@ class Settings {
     public:
         static void save(std::string key, int x);
         static std::optional<int> read(std::string key);
+        static void clear();
 };
