@@ -34,10 +34,12 @@ public:
 	void Update();
 	
 	void handleClock();
+	void handleVelocityDisplay();
 	void handleLoops();
 
 	Text* clock = nullptr;
 	Text* loop_tracker = nullptr;
+	Text* velocity = nullptr;
 
 	void StartRace();
 	RaceManager* SetEndCondition(unsigned long long laps);
