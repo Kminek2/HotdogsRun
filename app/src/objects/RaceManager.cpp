@@ -122,7 +122,7 @@ void RaceManager::AfterCountdown() {
 	velocity->SetText("--");
 
 	loop_tracker = new Text("HackBold", {0.95, 0.55, 0.1}, {1, 1}, 0.3f);
-	loop_tracker->SetText(std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+'/'+std::to_string(termination_condition_value));
+	loop_tracker->SetText("-/-");
 }
 
 void RaceManager::CalcAvgDist()
@@ -178,7 +178,6 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 	Sprite* bg = new Sprite("end_race_bg");
 	bg->rectTransform->ScaleTo(glm::vec2(100.0f, 100.0f));
 	bg->rectTransform->MoveTo(glm::vec3(0.0f, 0.0f, 1.0f));
-
 
 	Text* ent = new Text("SansSerif", glm::vec3(0.1f, -0.8f, 0.0f), glm::vec2(0.0f));
 	ent->SetText("Press ENTER to continue!");
@@ -301,11 +300,12 @@ void RaceManager::StartAnimation() {
 }
 
 void RaceManager::Update() {
-	if (race_started && !race_ended) {
-		handleClock();
-		handleVelocityDisplay();
-		handleLoops();
-	}
+	if (!race_started || race_ended)
+		return;
+
+	handleClock();
+	handleVelocityDisplay();
+	handleLoops();
 }
 
 void RaceManager::handleClock() {
@@ -323,10 +323,13 @@ void RaceManager::handleClock() {
 }
 
 void RaceManager::handleVelocityDisplay() {
-	velocity->SetText(String::formatDouble(std::abs(car_objects[0]->car->cm->getActSpeed() * 10), 2) + " km/h");
+	std::string ntext = String::formatDouble(std::abs(car_objects[0]->car->cm->getActSpeed() * 10), 2) + " km/h";
+	if(ntext != velocity->getText())
+		velocity->SetText(ntext);
 }
 
 void RaceManager::handleLoops() {
-	if ((std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/"+std::to_string(termination_condition_value)) != loop_tracker->getText())
-		loop_tracker->SetText(std::to_string((car_objects[0]->checkpoint/map_manager->GetCheckPoints())+1)+"/"+std::to_string(termination_condition_value));
+	std::string ntext = (std::to_string((car_objects[0]->checkpoint / map_manager->GetCheckPoints()) + 1) + '/' + std::to_string(termination_condition_value));
+	if (ntext != loop_tracker->getText())
+		loop_tracker->SetText(ntext);
 }
