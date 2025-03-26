@@ -1,4 +1,6 @@
 #include "scenes/MainMenuScene.h"
+#include "Transform.h"
+#include "UiObject.h"
 #include "objects/ColorPicker.hpp"
 #include "scenes/DebugScene.h"
 #include "scenes/MapDemo.h"
@@ -11,6 +13,15 @@
 
 #include "objects/Lights.h"
 #include "Sprite.h"
+#include <GLFW/glfw3.h>
+
+const std::string on_off[] = {
+    "< OFF >", "< ON >"
+};
+
+const std::string camera_view_types[] = {
+    "< Third person >", "< Two dimensional >", "< First person >"
+};
 
 const std::string car_models[] = {
     "f1car", "hotrod", "pickup", "racing_car"
@@ -30,13 +41,15 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 
     Application::SetCursor(true);
 
-    qc = new QuickCamera();
-    qc->_sr(0.75f);
-	qc->_sm(100.0f);
+    //qc = new QuickCamera();
+    //qc->_sr(0.75f);
+	//qc->_sm(100.0f);
 
     music_timer = 0.0f;
 
     logo = nullptr;
+
+    volume_delay = 0.0f;
 
     music_first = new AudioSource2d("music/first-intro-accordion", static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
 	music_cont = new AudioSource2d("music/continue-intro-accordion", static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
@@ -115,19 +128,24 @@ void MainMenuScene::Update() {
     music_timer -= Time::deltaTime;
     music_timer = std::max(music_timer, 0.0f);
 
+    volume_delay -= Time::deltaTime;
+    volume_delay = std::max(volume_delay, 0.0f);
+
     if (music_timer == 0.0f) {
         music_cont->PlayTrack(false);
         music_timer = 71.0f;
     }
 
-    qc->HandleMove();
-    qc->HandleRotate();
+    //qc->HandleMove();
+    //qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();
     if (!maps_options.empty())
         UpdateMaps();
     if (!appearance_options.empty())
         UpdateAppearance();
+    if (!settings_options.empty())
+        UpdateSettings();
 
     if (Input::getKeyClicked(GLFW_KEY_B)) {
 		std::cout << Camera::main->cameraTransform->position.x << ' ' << Camera::main->cameraTransform->position.y << ' ' << Camera::main->cameraTransform->position.z << '\n' << Camera::main->cameraTransform->rotation.x << ' ' << Camera::main->cameraTransform->rotation.y << '\n';
@@ -199,7 +217,8 @@ void MainMenuScene::UpdateMenu() {
             to_appearance_animation();
             break;
         case 2:
-            
+            HideMenu();
+            ShowSettings();
             break;
         case 3:
             Application::Quit();
@@ -415,4 +434,168 @@ void MainMenuScene::UpdateAppearance() {
         user_car->GetObjectScripts()[user_car->GetObjectScripts().size()-1]->Init();
         cp.update_car();
     }
+}
+
+void MainMenuScene::ShowSettings() {
+    menu_choosen_option = 0;
+
+    //BACKGROUND
+
+    settings_bg = new Sprite("settings_bg");
+    settings_bg->rectTransform->MoveTo(glm::vec3(0.0f, 0.0f, 1.0f));
+    settings_bg->rectTransform->SetWidth(10.0f, false);
+    settings_bg->rectTransform->SetHeight(10.0f, false);
+
+    //VOLUME
+    settings_options.push_back({{nullptr,nullptr},{nullptr,nullptr}});
+    settings_options[settings_options.size()-1].first.second = new Text("SansSerif", glm::vec3(-0.89f, 0.59f, 0.5f), glm::vec2(-1.0f), 0.25f);
+    settings_options[settings_options.size()-1].first.second->SetText("Volume: ");
+    settings_options[settings_options.size()-1].first.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    settings_options[settings_options.size()-1].first.first = new Text("SansSerif", glm::vec3(-0.9f, 0.6f, 0.0f), glm::vec2(-1.0f), 0.25f);
+    settings_options[settings_options.size()-1].first.first->SetText("Volume: ");
+    settings_options[settings_options.size()-1].second.second = new Text("SansSerif", glm::vec3(0.64f, 0.49f, 0.5f), glm::vec2(1.0f, -1.0f), 0.15f);
+    settings_options[settings_options.size()-1].second.second->SetText(std::to_string(Settings::read("volume").value_or(50)));
+    settings_options[settings_options.size()-1].second.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    settings_options[settings_options.size()-1].second.first = new Text("SansSerif", glm::vec3(0.65f, 0.5f, 0.0f), glm::vec2(1.0f, -1.0f), 0.15f);
+    settings_options[settings_options.size()-1].second.first->SetText(std::to_string(Settings::read("volume").value_or(50)));
+    volume_bar = new Sprite("range_input_bg");
+    volume_bar->rectTransform->SetWidth(0.3f, false);
+    volume_bar->rectTransform->SetHeight(0.03f, false);
+    volume_bar->rectTransform->MoveTo(glm::vec3(0.35f, 0.6f, 0.5f));
+    bar_thumb = new Sprite("range_input_thumb");
+    bar_thumb->rectTransform->SetWidth(0.02f);
+    bar_thumb->rectTransform->MoveTo(glm::vec3(0.05f+(Settings::read("volume").value_or(50) * 0.006f), 0.6f, 0.5f));
+
+    //CAMERA VIEW
+    settings_options.push_back({{nullptr,nullptr},{nullptr,nullptr}});
+    settings_options[settings_options.size()-1].first.second = new Text("SansSerif", glm::vec3(-0.89f, 0.29f, 0.5f), glm::vec2(-1.0f), 0.25f);
+    settings_options[settings_options.size()-1].first.second->SetText("Camera view: ");
+    settings_options[settings_options.size()-1].first.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    settings_options[settings_options.size()-1].first.first = new Text("SansSerif", glm::vec3(-0.9f, 0.3f, 0.0f), glm::vec2(-1.0f), 0.25f);
+    settings_options[settings_options.size()-1].first.first->SetText("Camera view: ");
+    settings_options[settings_options.size()-1].second.second = new Text("SansSerif", glm::vec3(0.46f, 0.29f, 0.5f), glm::vec2(0.0f, -1.0f), 0.25f);
+    settings_options[settings_options.size()-1].second.second->SetText(camera_view_types[Settings::read("camera_view").value_or(0)]);
+    settings_options[settings_options.size()-1].second.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    settings_options[settings_options.size()-1].second.first = new Text("SansSerif", glm::vec3(0.45f, 0.3f, 0.0f), glm::vec2(0.0f, -1.0f), 0.25f);
+    settings_options[settings_options.size()-1].second.first->SetText(camera_view_types[Settings::read("camera_view").value_or(0)]);
+
+    //DEBUG
+    settings_options.push_back({{nullptr,nullptr},{nullptr,nullptr}});
+    settings_options[settings_options.size()-1].first.second = new Text("SansSerif", glm::vec3(-0.89f, -0.01f, 0.5f), glm::vec2(-1.0f), 0.25f);
+    settings_options[settings_options.size()-1].first.second->SetText("Debug mode: ");
+    settings_options[settings_options.size()-1].first.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    settings_options[settings_options.size()-1].first.first = new Text("SansSerif", glm::vec3(-0.9f, 0.0f, 0.0f), glm::vec2(-1.0f), 0.25f);
+    settings_options[settings_options.size()-1].first.first->SetText("Debug mode: ");
+    settings_options[settings_options.size()-1].second.second = new Text("SansSerif", glm::vec3(0.46f, -0.01f, 0.5f), glm::vec2(0.0f, -1.0f), 0.25f);
+    settings_options[settings_options.size()-1].second.second->SetText(on_off[Settings::read("debug_mode").value_or(0)]);
+    settings_options[settings_options.size()-1].second.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    settings_options[settings_options.size()-1].second.first = new Text("SansSerif", glm::vec3(0.45f, 0.0f, 0.0f), glm::vec2(0.0f, -1.0f), 0.25f);
+    settings_options[settings_options.size()-1].second.first->SetText(on_off[Settings::read("debug_mode").value_or(0)]);
+    UpdateSettingsHighlight();
+
+    //CLEAR ALL DATA
+    settings_options.push_back({{nullptr,nullptr},{nullptr,nullptr}});
+    settings_options[settings_options.size()-1].first.second = new Text("SansSerif", glm::vec3(-0.89f, -0.3f, 0.5f), glm::vec2(-1.0f), 0.25f);
+    settings_options[settings_options.size()-1].first.second->SetText("CLEAR ALL GAME DATA!");
+    settings_options[settings_options.size()-1].first.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    settings_options[settings_options.size()-1].first.first = new Text("SansSerif", glm::vec3(-0.9f, -0.31f, 0.0f), glm::vec2(-1.0f), 0.25f);
+    settings_options[settings_options.size()-1].first.first->SetText("CLEAR ALL GAME DATA!");
+    UpdateSettingsHighlight();
+}
+
+void MainMenuScene::UpdateSettings() {
+    if (Input::getKeyClicked(GLFW_KEY_ESCAPE)) {
+        HideSettings();
+        ShowMenu();
+        return;
+    }
+
+    bool changed = 0;
+    if (Input::getKeyClicked(GLFW_KEY_DOWN) || Input::getKeyClicked(GLFW_KEY_S)) ++menu_choosen_option, changed ^= 1;
+    if (Input::getKeyClicked(GLFW_KEY_UP) || Input::getKeyClicked(GLFW_KEY_W)) --menu_choosen_option, changed ^= 1;
+
+    menu_choosen_option = glm::normalize(menu_choosen_option, static_cast<int>(settings_options.size()));
+
+    if (changed)
+        UpdateSettingsHighlight();
+
+    int suboption_choosen, new_suboption_choosen;
+    switch (menu_choosen_option) {
+        case 0:
+            if (volume_delay != 0.0f)
+                break;
+            suboption_choosen = Settings::read("volume").value_or(50);
+            if (Input::getKeyPressed(GLFW_KEY_RIGHT) || Input::getKeyPressed(GLFW_KEY_D)) Settings::save("volume", suboption_choosen+1), volume_delay = 0.1f;
+            if (Input::getKeyPressed(GLFW_KEY_LEFT) || Input::getKeyPressed(GLFW_KEY_A)) Settings::save("volume", suboption_choosen-1), volume_delay = 0.1f;
+            new_suboption_choosen = Settings::read("volume").value_or(50);
+            if (new_suboption_choosen < 0) Settings::save("volume", 0), new_suboption_choosen = 0;
+            if (new_suboption_choosen > 100) Settings::save("volume", 100), new_suboption_choosen = 100;
+            if (suboption_choosen != new_suboption_choosen) {
+                settings_options[0].second.second->SetText(std::to_string(new_suboption_choosen));
+                settings_options[0].second.first->SetText(std::to_string(new_suboption_choosen));
+                bar_thumb->rectTransform->MoveTo(glm::vec3(0.05f+(new_suboption_choosen * 0.006f), 0.6f, 0.5f));
+            }
+            break;
+        case 1:
+            suboption_choosen = Settings::read("camera_view").value_or(0);
+            new_suboption_choosen = suboption_choosen;
+            if (Input::getKeyClicked(GLFW_KEY_RIGHT) || Input::getKeyClicked(GLFW_KEY_D)) ++new_suboption_choosen;
+            if (Input::getKeyClicked(GLFW_KEY_LEFT) || Input::getKeyClicked(GLFW_KEY_A)) --new_suboption_choosen;
+            new_suboption_choosen = glm::normalize(new_suboption_choosen, 3);
+            if (suboption_choosen != new_suboption_choosen) {
+                Settings::save("camera_view", new_suboption_choosen);
+                settings_options[1].second.second->SetText(camera_view_types[new_suboption_choosen]);
+                settings_options[1].second.first->SetText(camera_view_types[new_suboption_choosen]);
+            }
+            break;
+        case 2:
+            suboption_choosen = Settings::read("debug_mode").value_or(0);
+            new_suboption_choosen = suboption_choosen;
+            if (Input::getKeyClicked(GLFW_KEY_RIGHT) || Input::getKeyClicked(GLFW_KEY_D)) ++new_suboption_choosen;
+            if (Input::getKeyClicked(GLFW_KEY_LEFT) || Input::getKeyClicked(GLFW_KEY_A)) --new_suboption_choosen;
+            new_suboption_choosen = glm::normalize(new_suboption_choosen, 2);
+            if (suboption_choosen != new_suboption_choosen) {
+                Settings::save("debug_mode", new_suboption_choosen);
+                settings_options[2].second.second->SetText(on_off[new_suboption_choosen]);
+                settings_options[2].second.first->SetText(on_off[new_suboption_choosen]);
+            }
+            break;
+        case 3:
+            if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
+                Settings::clear();
+                cp.update_car();
+                HideSettings();
+                ShowMenu();
+                return;
+            }
+            break;
+    }
+}
+
+void MainMenuScene::HideSettings() {
+    for (auto& x : settings_options) {
+        if (x.first.first != nullptr)
+            delete x.first.first;
+        if (x.first.second != nullptr)
+            delete x.first.second;
+        if (x.second.first != nullptr)
+            delete x.second.first;
+        if (x.second.second != nullptr)
+            delete x.second.second;
+    }
+    settings_options.clear();
+    delete volume_bar;
+    delete bar_thumb;
+    delete settings_bg;
+}
+
+void MainMenuScene::UpdateSettingsHighlight() {
+    for (int i = 0; i < settings_options.size(); ++i) {
+        settings_options[i].first.first->SetColor(glm::vec4(1.0f));
+        settings_options[i].first.second->ChangeSize(0.25f);
+        settings_options[i].first.first->ChangeSize(0.25f);
+    }
+    settings_options[menu_choosen_option].first.second->ChangeSize(0.27f);
+    settings_options[menu_choosen_option].first.first->SetColor(glm::vec4(0.5254901960784314f,0.7294117647058823f,0.9568627450980392f,1.0f));
+    settings_options[menu_choosen_option].first.first->ChangeSize(0.27f);
 }
