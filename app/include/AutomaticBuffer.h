@@ -26,8 +26,8 @@ inline AutomaticBuffer<T>::AutomaticBuffer(const uint16_t& numberOfFrames, Unifo
 template<typename T>
 void AutomaticBuffer<T>::UpdateBuffer(uint16_t currentFrame, const T& data)
 {
-    memcpy(uniformBuffersMapped[currentFrame], &data, bufferSize);
-    uniform->UpdateDescriptorSets(uniformBuffers, binding, bufferSize);
+    memcpy(this->uniformBuffersMapped[currentFrame], &data, this->bufferSize);
+    uniform->UpdateDescriptorSets(this->uniformBuffers, binding, this->bufferSize);
 }
 
 template<typename T>
@@ -35,9 +35,9 @@ void AutomaticBuffer<T>::UpdateBuffer(uint16_t currentFrame, const T& data, size
 {
     if (dataSize == 0)
         return;
-    else if (dataSize != bufferSize)
-        RecreateBuffer(dataSize);
-    bufferSize = dataSize;
-    memcpy(uniformBuffersMapped[currentFrame], &data, bufferSize);
-    uniform->UpdateDescriptorSets(uniformBuffers, binding, bufferSize);
+    else if (dataSize != this->bufferSize)
+        this->RecreateBuffer(dataSize);
+    this->bufferSize = dataSize;
+    memcpy(this->uniformBuffersMapped[currentFrame], &data, this->bufferSize);
+    uniform->UpdateDescriptorSets(this->uniformBuffers, binding, this->bufferSize);
 }
