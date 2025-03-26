@@ -1,6 +1,8 @@
 #pragma once
 #include "Shader.h"
-class CustomRenderPass
+#include "Uniform.h"
+
+class CustomRenderPass // Render pass 2.0
 {
 public:
 	enum RenderPassFunction {
@@ -11,7 +13,7 @@ public:
 private:
 	const RenderPassFunction function;
 	std::vector<VkDescriptorSetLayoutBinding> layoutBindings{};
-
+	Uniform uniform;
 
 	void CreateCompute(std::string shaderPath);
 	void AddComputeBinding(VkDescriptorType bindingType);

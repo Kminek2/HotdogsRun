@@ -10,7 +10,7 @@
 template <typename T>
 class UniformBuffer
 {
-private:
+protected:
 	std::vector<VkBuffer> uniformBuffers;
 	std::vector<VkDeviceMemory> uniformBuffersMemory;
 	std::vector<void*> uniformBuffersMapped;
