@@ -29,7 +29,7 @@ RaceManager *RaceManager::SetCarsRelativeOffset(float offset) {
 }
 
 /// <summary>
-/// Place the car in the right starting position. Returns the id of the car
+/// Place the car in the right starting position.
 /// </summary>
 RaceManager *RaceManager::AddCar(GameObject *car) {
 	if (!map_manager)
@@ -83,7 +83,7 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 
 	std::cout << car->GetModelName() << " reached " << car_obj->checkpoint << "-th chekpoint at " << car_obj->time << '\n';
 
-	if (termination_condition == LAPS && (car_obj->checkpoint / map_manager->GetCheckPoints()) >= termination_condition_value)
+	if (car_obj->checkpoint / map_manager->GetCheckPoints() >= termination_condition_value)
 		EndRace();
 }
 
@@ -93,8 +93,6 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 void RaceManager::StartRace() {
 	if (car_objects.size() < 2)
 		throw std::invalid_argument("add more cars");
-	if (termination_condition == undefined)
-		throw std::invalid_argument("define a condition");
 
 	StartAnimation();
 }
@@ -107,11 +105,6 @@ void RaceManager::AfterCountdown() {
 	CarMovement::disabled_inputs = false;
 
 	race_started = true;
-	std::cout << "Race stared with the termination condition of " << (termination_condition == TIME ? "TIME" : "LAPS") << " ("
-		  << termination_condition_value << ")\n";
-
-	if (termination_condition == TIME)
-		Application::Invoke(&RaceManager::EndRace, termination_condition_value, this, true);
 
 	for (int i = 0; i < map_manager->GetCheckPoints(); i++) {
 		map_manager->GetCheckPoint(i)->AddDefaultOBB(glm::vec3(1), true)->surface_type = NEVER_COLLIDE;
@@ -140,16 +133,10 @@ void RaceManager::CalcAvgDist()
 }
 
 /// <summary>
-/// Sets the termination condition. If the condition is LAPS, val is the number of laps to win. If
-/// the condition is TIME, val is the number of miliseconds to end the race.
+/// Sets the termination condition. If the condition is LAPS, val is the number of laps to win.
 /// </summary>
-RaceManager *RaceManager::SetEndCondition(TerminationCondition condition, unsigned long long val) {
-	if (condition == undefined)
-		throw std::invalid_argument("...really?");
-
-	termination_condition = condition;
-	termination_condition_value = val;
-
+RaceManager *RaceManager::SetEndCondition(unsigned long long laps) {
+	termination_condition_value = laps;
 	return this;
 }
 
@@ -212,7 +199,7 @@ std::vector<RaceManager::LiveRaceObject*> RaceManager::GetLiveRace()
 
 	if (avg_cp_dist == -1) CalcAvgDist();
 
-	double Δp = 1 / (cp_count * (termination_condition == LAPS ? termination_condition_value : 1));
+	double Δp = 1 / (cp_count * termination_condition_value);
 
 	// yes, i could write this in one line, but this is *a bit* more readible
 	for (CarObject* car : car_objects) {
