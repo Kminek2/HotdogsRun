@@ -270,6 +270,9 @@
     <ClCompile Include="app\src\objects\ColorPicker.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\CustomRenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -508,6 +511,9 @@
     </ClInclude>
     <ClInclude Include="app\include\objects\ColorPicker.hpp">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\CustomRenderPass.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
