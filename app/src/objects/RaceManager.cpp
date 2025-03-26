@@ -184,14 +184,15 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 
 	CarMovement::disabled_inputs = true;
 
-	Text* ent = new Text("SansSerif", glm::vec3(0.1f, -0.8f, 0.0f), glm::vec2(0.0f));
-	ent->SetText("Press ENTER to continue!");
-	ent->ChangeSize(0.2);
-
 	Sprite* bg = new Sprite("end_race_bg");
 	bg->rectTransform->ScaleTo(glm::vec2(100.0f, 100.0f));
 	bg->rectTransform->MoveTo(glm::vec3(0.0f, 0.0f, 1.0f));
 
+
+	Text* ent = new Text("SansSerif", glm::vec3(0.1f, -0.8f, 0.0f), glm::vec2(0.0f));
+	ent->SetText("Press ENTER to continue!");
+	ent->ChangeSize(0.2);
+	
 	return car_objects[0];
 }
 
