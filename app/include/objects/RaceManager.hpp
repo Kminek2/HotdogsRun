@@ -15,10 +15,6 @@
 
 class RaceManager {
 public:
-	enum TerminationCondition {
-		undefined, LAPS, TIME
-	};
-
 	struct CarObject {
 		GameObject* car;
 		unsigned long long checkpoint;
@@ -44,7 +40,7 @@ public:
 	Text* loop_tracker = nullptr;
 
 	void StartRace();
-	RaceManager* SetEndCondition(TerminationCondition condition, unsigned long long val);
+	RaceManager* SetEndCondition(unsigned long long laps);
 	CarObject* EndRace(bool executeCallbacks = true);
 
 	void OnCheckpoint(Collisions::CollisionData* collision_data);
@@ -69,8 +65,7 @@ private:
 	const static std::array<glm::vec2, 5> offsets;
 	float race_time_elapsed = 0.0f;
 
-	TerminationCondition termination_condition = undefined;
-	unsigned long long termination_condition_value;
+	unsigned long long termination_condition_value; // aka laps
 
 	std::vector<std::function<void(CarObject*)>> subscribers;
 
