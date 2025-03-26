@@ -30,9 +30,9 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 
     Application::SetCursor(true);
 
-    // qc = new QuickCamera();
-    // qc->_sr(0.75f);
-	// qc->_sm(100.0f);
+    qc = new QuickCamera();
+    qc->_sr(0.75f);
+	qc->_sm(100.0f);
 
     music_timer = 0.0f;
 
@@ -107,7 +107,7 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 
     LightObject::SetDirLight(glm::vec3(0, 0.5, -0.5), glm::vec3(0.2), glm::vec3(0.7), glm::vec3(0.9));
 
-    Camera::main->ChangeCubeMap(new CubeMap({ "CubeMaps/Skybox/skybox-front.png", "CubeMaps/Skybox/skybox-back.png", "CubeMaps/Skybox/skybox-top.png", "CubeMaps/Skybox/skybox-bottom.png", "CubeMaps/Skybox/skybox-right.png", "CubeMaps/Skybox/skybox-left.png" }));
+    Camera::main->ChangeCubeMap(new CubeMap({ "CubeMaps/Skybox/skybox-right.png", "CubeMaps/Skybox/skybox-left.png", "CubeMaps/Skybox/skybox-top.png", "CubeMaps/Skybox/skybox-bottom.png", "CubeMaps/Skybox/skybox-front.png", "CubeMaps/Skybox/skybox-back.png" }));
 	return std::shared_ptr<Scene>(scene);
 }
 
@@ -120,8 +120,8 @@ void MainMenuScene::Update() {
         music_timer = 71.0f;
     }
 
-    // qc->HandleMove();
-    // qc->HandleRotate();
+    qc->HandleMove();
+    qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();
     if (!maps_options.empty())
