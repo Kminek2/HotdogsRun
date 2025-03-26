@@ -80,13 +80,11 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 
 	CarObject *car_obj = *std::find_if(car_objects.begin(), car_objects.end(), [car](CarObject *a) { return a->car == car; });
 
-	if (map_manager->GetCheckPoint(glm::normalize(car_obj->checkpoint + 1, static_cast<unsigned long long>(map_manager->GetCheckPoints()))) != cp)
+	if (map_manager->GetCheckPoint(car_obj->checkpoint + 1) != cp)
 		return;
 
 	car_obj->checkpoint++;
 	car_obj->time = Time::lastTime;
-
-	std::cout << car->GetModelName() << " reached " << car_obj->checkpoint << "-th chekpoint at " << car_obj->time << '\n';
 
 	if (car_obj->checkpoint / map_manager->GetCheckPoints() >= termination_condition_value)
 		EndRace();
@@ -113,7 +111,7 @@ void RaceManager::StartRace() {
 
 	race_trackers.push_back(sp);
 
-	for (int _ = 0; _ < cars_placed; _++) {
+	for (int _ = 1; _ < cars_placed; _++) {
 		Sprite* sp = new Sprite("tracker_norm", color);
 		sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(pos);
 
@@ -140,17 +138,15 @@ void RaceManager::AfterCountdown() {
 	}
 
 	for (const std::string &car_name : car_names) {
-		Collisions::addCallback("checkpoint", car_name, std::bind(&RaceManager::OnCheckpoint, this, std::placeholders::_1));
-		std::cout << "Added callback to [checkpoint - " << car_name << "] collision\n";
 	}
 
 	clock = new Text("HackBold", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
 	clock->SetText("Get ready!");
 
-	velocity = new Text("HackBold", { .95,.75,.1 }, { 1,1 }, .3);
+	velocity = new Text("HackBold", { -.95,.95,.1 }, { -1,1 }, .3);
 	velocity->SetText("--");
 
-	loop_tracker = new Text("HackBold", {0.95, 0.55, 0.1}, {1, 1}, 0.3f);
+	loop_tracker = new Text("HackBold", {0.95, 0.75, 0.1}, {1, 1}, 0.3f);
 	loop_tracker->SetText("-/-");
 }
 
@@ -223,7 +219,7 @@ void RaceManager::SubscribeToRaceEnd(const std::function<void(CarObject *)> &cal
 /// <summary>
 /// Kinda heavy function. Don't use every frame (please)
 /// </summary>
-std::vector<RaceManager::LiveRaceObject*> RaceManager::GetLiveRace()
+std::vector<RaceManager::LiveRaceObject*> RaceManager::GetLiveRace(bool sorted)
 {
 	std::vector<LiveRaceObject*> live_race;
 	live_race.reserve(car_objects.size());
@@ -232,17 +228,19 @@ std::vector<RaceManager::LiveRaceObject*> RaceManager::GetLiveRace()
 
 	if (avg_cp_dist == -1) CalcAvgDist();
 
-	double Δp = 1 / (cp_count * termination_condition_value);
+	double Δp = 1 / static_cast<double>(cp_count * termination_condition_value);
 
 	// yes, i could write this in one line, but this is *a bit* more readible
 	for (CarObject* car : car_objects) {
 		float checkpoint_progress = car->checkpoint 
-			+ Collisions::getL1Distance(car->car, map_manager->GetCheckPoint(car->checkpoint)) / avg_cp_dist;
+			+ Collisions::getL1Distance(car->car, map_manager->GetCheckPoint(car->checkpoint + 1)) / avg_cp_dist;
 
 		live_race.push_back(new LiveRaceObject(car->car, checkpoint_progress * Δp));
 	}
 
-	std::sort(live_race.begin(), live_race.end(), [](LiveRaceObject* a, LiveRaceObject* b) {return a->progress > b->progress; });
+	if(sorted)
+		std::sort(live_race.begin(), live_race.end(), [](LiveRaceObject* a, LiveRaceObject* b) {return a->progress > b->progress; });
+
 	return live_race;
 }
 
@@ -335,8 +333,8 @@ void RaceManager::Update() {
 		return;
 
 	handleClock();
-	handleVelocityDisplay();
 	handleLoops();
+	handleVelocityDisplay();
 
 	counter_000 += Time::deltaTime;
 
@@ -374,16 +372,18 @@ void RaceManager::handleLoops() {
 
 void RaceManager::handleTracking()
 {
-	std::vector<LiveRaceObject*> race_data = GetLiveRace();
+	std::vector<LiveRaceObject*> race_data = GetLiveRace(false);
 
 	bool main_found = false;
 	int i = 0;
 	while (i < cars_placed) {
 		int c_index = i + (!main_found);
 
-		if (race_data[i]->car == main_car) {
+		if (!main_found && race_data[i]->car == main_car) {
 			main_found = true;
 			c_index = 0;
+
+			std::cout << "%: " << race_data[i]->progress << '\n';
 		}
 
 		glm::vec3 pos = race_trackers[c_index]->rectTransform->position;

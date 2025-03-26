@@ -52,7 +52,7 @@ public:
 	void OnCheckpoint(Collisions::CollisionData* collision_data);
 	void SubscribeToRaceEnd(const std::function<void(CarObject*)>& callback);
 
-	std::vector<LiveRaceObject*> GetLiveRace();
+	std::vector<LiveRaceObject*> GetLiveRace(bool sorted = true);
 	std::set<std::string> GetCarNames();
 
 private:
