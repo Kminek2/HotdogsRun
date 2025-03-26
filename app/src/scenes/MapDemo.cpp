@@ -137,10 +137,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	for (int i = 0; i < 1; i++) {
 		GameObject* bot = new GameObject("hotrod");
 
-		CarMovement* carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
+		CarMovement* carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f);
 		BotMovement* botmv = new BotMovement(carmv);
 
-		botmv->SetMapManager(map)->SetCarMovement(carmv);
+		botmv->SetMapManager(map);
 		botmv->GetWaypoints(map);
 		bot->AddScript(botmv)->AddScript(carmv);
 		bot->AddDefaultOBB();

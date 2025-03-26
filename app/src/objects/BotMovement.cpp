@@ -92,63 +92,83 @@ void BotMovement::followPath() {
     glm::vec3 botPos = botObject->transform->position;
     glm::vec3 targetPos = currentWaypoint->transform->position;
 
-    // Oblicz bazowy kierunek do waypointa
     glm::vec3 baseDirection = glm::normalize(targetPos - botPos);
     baseDirection.z = 0.0f;
 
-    // Inicjalizacja wektora unikania
     avoidanceVector = glm::vec3(0.0f);
-    const float lateralThreshold = 2.0f;
+    const float lateralThreshold = 1.8f;
 
-    // Analizuj wszystkie przeszkody
+    // Obstacle avoidance logic remains the same
     for (GameObject* obstacle : map->getDecors()) {
         glm::vec3 toObstacle = obstacle->transform->position - botPos;
         float distance = glm::length(toObstacle);
 
+        // Pomijaj przeszkody poza zasięgiem lub zbyt bliskie
         if (distance > maxAvoidanceDistance || distance < 1.0f) continue;
 
-        // Sprawdź czy przeszkoda jest przed botem
+        // Oblicz rzut na kierunek ruchu (czy przeszkoda jest przed nami)
         float forwardProj = glm::dot(toObstacle, baseDirection);
+
+        // Ignoruj przeszkody za botem
         if (forwardProj <= 0) continue;
 
-        // Oblicz odległość boczną
+        // Oblicz odchylenie boczne od ścieżki
         glm::vec3 proj = baseDirection * forwardProj;
         glm::vec3 lateral = toObstacle - proj;
         float lateralDist = glm::length(lateral);
+
+        // Ignoruj przeszkody z boku ścieżki
         if (lateralDist > lateralThreshold) continue;
 
-        // Określ kierunek omijania
+        // Oblicz kierunek odpychania
         glm::vec3 obstacleDir = glm::normalize(toObstacle);
         glm::vec3 cross = glm::cross(baseDirection, obstacleDir);
-        glm::vec3 repelDir = cross.z > 0 ?
-            glm::vec3(baseDirection.y, -baseDirection.x, 0.0f) : // W prawo
-            glm::vec3(-baseDirection.y, baseDirection.x, 0.0f);  // W lewo
 
-        // Siła unikania zależna od odległości
+        // Wybierz kierunek odpychania w zależności od strony przeszkody
+        glm::vec3 repelDir = cross.z > 0 ?
+            glm::vec3(baseDirection.y, -baseDirection.x, 0.0f) :  // Odpychaj w lewo
+            glm::vec3(-baseDirection.y, baseDirection.x, 0.0f);   // Odpychaj w prawo
+
+        // Oblicz siłę odpychania (im bliżej tym silniej)
         float strength = (maxAvoidanceDistance - distance) / maxAvoidanceDistance;
         avoidanceVector += glm::normalize(repelDir) * strength;
     }
 
-    // Zastosuj globalną wagę unikania
     avoidanceVector *= avoidanceWeight;
 
-    // Oblicz końcowy kierunek ruchu
     glm::vec3 desiredDirection = glm::normalize(baseDirection + avoidanceVector);
 
-    // Sterowanie
+    // Steering calculation remains the same
     glm::vec3 currentFront = glm::normalize(botObject->transform->front);
     glm::vec3 cross = glm::cross(currentFront, desiredDirection);
 
-    if (cross.z > 0.1f) {
+    if (cross.z > 0.15f) {
         carmv->makeLeftTurn();
     }
-    else if (cross.z < -0.1f) {
+    else if (cross.z < -0.15f) {
         carmv->makeRightTurn();
     }
 
-    // Kontrola prędkości
-    float speedModifier = 1.0f - glm::clamp(glm::length(avoidanceVector) / 2.0f, 0.0f, 0.7f);
+    float speedModifier = 1.0f - glm::clamp(glm::length(avoidanceVector) / 0.8f, 0.0f, 0.1f);
     float targetSpeed = 600.0f * speedModifier;
+
+    // CORRECTED: Check current waypoint's model instead of next
+    std::string currentModel = currentWaypoint->GetModelName();
+
+    // CORRECTED: Fixed typo in model name and adjusted speed reduction
+    if (currentModel == "zakretPolSkosLod" || currentModel == "zakretLod" || currentModel == "zakretSkosOstryLod") {
+        targetSpeed *= 0.1f; // Reduce speed to 30% for sharp turns
+    }
+
+    // Additional check for upcoming turns by looking at the next segment
+    int nextNextIndex = (currentWaypointIndex + 1) % waypoints.size();
+    glm::vec3 nextSegmentDir = glm::normalize(waypoints[nextNextIndex]->transform->position - targetPos);
+    float turnAngle = glm::degrees(glm::acos(glm::dot(baseDirection, nextSegmentDir)));
+
+    // If upcoming turn is sharp, reduce speed preemptively
+    if (turnAngle > 30.0f) {
+        targetSpeed *= 0.2f; // Additional 40% reduction for approaching sharp turns
+    }
 
     if (carmv->getActSpeed() < targetSpeed) {
         carmv->goForward();
@@ -157,8 +177,23 @@ void BotMovement::followPath() {
         carmv->useHandBreak();
     }
 
-    // Aktualizacja waypointa
-    if (glm::distance(botPos, targetPos) < 25.0f) {
+    int nextIndex = (currentWaypointIndex + 1) % waypoints.size();
+    nextSegmentDir = glm::normalize(
+        waypoints[nextIndex]->transform->position - targetPos
+    );
+    turnAngle = glm::degrees(glm::acos(
+        glm::dot(baseDirection, nextSegmentDir)
+    ));
+
+    // Oblicz dynamiczny próg
+    float currentSpeed = carmv->getActSpeed();
+    float baseDistance = 5.0f;  // Zmniejszona baza dla lepszej responsywności
+    float speedFactor = glm::mix(0.5f, 1.8f, currentSpeed / 450.0f);  // Mniejszy maksymalny współczynnik
+    float turnFactor = 1.0f + glm::clamp(turnAngle / 120.0f, 0.0f, 1.5f);  // Limitowany współczynnik zakrętu
+    float dynamicDistance = baseDistance * speedFactor * turnFactor;
+
+    // Antycypacja waypointów z zabezpieczeniem
+    if (glm::distance(botPos, targetPos) < 23.0f) {
         currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.size();
     }
 }

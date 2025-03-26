@@ -51,7 +51,6 @@ public:
     // G³ówne funkcje steruj¹ce
     void chooseAction();
     void followPath();
-    void avoidObstacles();
 
     // Setters
     BotMovement* SetMapManager(MapManager* map);

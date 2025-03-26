@@ -131,6 +131,11 @@ std::string GameObject::GetModelName()
 	return model->GetName();
 }
 
+std::vector<OBB> GameObject::GetOBBs()
+{
+	return this->obbs;
+}
+
 std::array<glm::vec2, 3> GameObject::GetModelMaxDistVert()
 {
 	return model->GetMaxDistVert();
