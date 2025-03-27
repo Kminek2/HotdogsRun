@@ -17,10 +17,21 @@ void PUMaxSpeed::OnActivate() {
 	float& cv = collided->cm->_maxSpeed;
 	cv *= (1 + increase);
 
-	SetValue(cv, 1.0f, duration);
+	collected = true;
+	who_collected = collided;
+	timer = duration/1000.0f;
 
 	collided = nullptr;
 }
 
-void PUMaxSpeed::Update() {}
+void PUMaxSpeed::Update() {
+	if (collected) {
+		if (timer == 0.0f) {
+			who_collected->cm->_maxSpeed = 1.0f;
+			collected = false;
+		}
+		timer -= Time::deltaTime;
+		timer = std::max(0.0f, timer);
+	}
+}
 void PUMaxSpeed::OnDestroy() {}

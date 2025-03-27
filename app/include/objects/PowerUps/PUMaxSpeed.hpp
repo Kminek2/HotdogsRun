@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GameObject.h"
 #include "PowerUp.hpp"
 
 /// <summary>
@@ -9,6 +10,9 @@ class PUMaxSpeed : public PowerUp {
 private:
 	float increase;
 	unsigned duration;
+	bool collected = false;
+	float timer;
+	GameObject *who_collected;
 
 public:
 	PUMaxSpeed(float increase_percent, unsigned duration_ms) : increase(increase_percent), duration(duration_ms) {};
