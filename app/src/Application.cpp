@@ -37,7 +37,7 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 	for (int i = 0; i < LoadScene::preLoadModels.size(); i++)
 	{
 		Model::LoadModelFromFile(LoadScene::preLoadModels[i],
-			"models_obj_test/" + LoadScene::preLoadModels[i] + ".obj", 
+			"models_obj/" + LoadScene::preLoadModels[i] + ".obj", 
 			"textures/" + LoadScene::preLoadModels[i] + ".png", true, LoadScene::preLoadModels[i] != "Sprite");
 	}
 	
@@ -47,7 +47,7 @@ Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
 			"textures/" + LoadScene::preLoadModels[i] + ".png");
 	}
 
-	for (const auto& entry : fs::directory_iterator("models_obj_test")) {
+	for (const auto& entry : fs::directory_iterator("models_obj")) {
 		entries.push_back(entry);
 	}
 

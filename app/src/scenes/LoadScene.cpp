@@ -38,7 +38,7 @@ std::shared_ptr<Scene> LoadScene::Init() {
 
 	loadingText->SetText("Loading...");
 	count = 0;
-	for (auto& p : std::filesystem::directory_iterator("models_obj_test"))
+	for (auto& p : std::filesystem::directory_iterator("models_obj"))
 		++count;
 
 	amountOfLoaded->SetText("Loading " + std::to_string(count) + " models...");

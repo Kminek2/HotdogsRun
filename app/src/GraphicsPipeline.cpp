@@ -29,7 +29,7 @@ GraphicsPipeline::GraphicsPipeline(std::string vetrexShaderPath, std::string fra
     //texturesConst
     uint32_t maxTextures = 0;
 
-    for (const auto& entry : std::filesystem::directory_iterator("models_obj_test")) {
+    for (const auto& entry : std::filesystem::directory_iterator("models_obj")) {
         maxTextures++;
     }
 
