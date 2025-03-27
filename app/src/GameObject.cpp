@@ -276,14 +276,14 @@ void GameObject::AddColorChange(glm::vec3 from, glm::vec3 to)
 	}
 
 	if (amountOfColorChanges >= 1) {
-		std::cout << std::distance(changeColor.begin(), colorChangesIndex) << " - " << from.x << ',' << from.y << ',' << from.z << " - ";
+		//std::cout << std::distance(changeColor.begin(), colorChangesIndex) << " - " << from.x << ',' << from.y << ',' << from.z << " - ";
 		colorChangesIndex = changeColor.insert(colorChangesIndex, colorChange);
-		std::cout << std::distance(changeColor.begin(), colorChangesIndex);
+		//std::cout << std::distance(changeColor.begin(), colorChangesIndex);
 	}
 	else {
 		changeColor.push_back(colorChange);
 		colorChangesIndex = std::prev(changeColor.end());
-		std::cout << std::distance(changeColor.begin(), colorChangesIndex) << " index " << GetModelName() <<"\n";
+		//std::cout << std::distance(changeColor.begin(), colorChangesIndex) << " index " << GetModelName() <<"\n";
 	}
 
 	amountOfColorChanges++;

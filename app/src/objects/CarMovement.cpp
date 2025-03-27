@@ -294,7 +294,7 @@ std::tuple<float, float, float> CarMovement::getSpeeds()
 
 void CarMovement::handleNitroAcc() {
 	nitro_timer -= Time::deltaTime;
-	std::cout << nitro_timer << '\n';
+	//std::cout << nitro_timer << '\n';
 	nitro_timer = std::max(0.0f, nitro_timer);
 	actSpeed += Time::deltaTime * __accelFront * surfaces_data[road_type].acc_multiplier * 0.1f * __multiplier * std::max(before_nitro_mem, 50.0f);
 	if (nitro_timer == 0.0f) {

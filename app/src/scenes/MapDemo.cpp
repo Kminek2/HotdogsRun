@@ -15,6 +15,7 @@
 
 #include <glm/vec3.hpp>
 #include <iostream>
+#include <random>
 
 #include "objects/StraightKingBot.h"
 
@@ -49,7 +50,11 @@ const std::vector<std::vector<glm::vec3>> default_colors = {
 
 const std::vector<std::string> colors = {"primary", "secondary", "other"};
 
-const size_t seed = 45;
+MapManager::MapSettingsValues MapDemo::svals;
+
+std::random_device rd;
+std::mt19937_64 rng(rd());
+size_t seed = rng();
 const unsigned int cityNum = 3;
 
 const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> defaultBuildings = { { {
@@ -66,6 +71,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	//qc->_sr(0.75f);
 	//qc->_sm(100.0f);
 
+	std::cout << "USING SEED: " << seed << '\n';
+
 	music_timer = 0.0f;
 	first_music = true;
 
@@ -78,30 +85,6 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	sound_race_end = new AudioSource2d("race_end", Settings::read("volume").value_or(50)/100.0f);
 
 	on_end_screen = false;
-
-	MapManager::MapSettingsValues svals;
-	svals.map_len = 20;
-	svals.checkpoint_offset = 10;
-	svals.ellipse.a = 5; svals.ellipse.b = 10;
-	svals.ellipse.min_offset = -2.5; svals.ellipse.max_offset = 2.5;
-	svals.small_decors = {
-		{		  
-			{"fucked_up_car",1}, {"fucked_up_pickup",1}, {"goat",.05}, {"hydrant",.2},
-			{"smietnik",.2},{"TNT",0} , {"drzewo",.5}, {"jodla",.5},
-			{"kamien1",.8}, {"kamien2",.8},	{"krzak",.8}, {"maleDrzewo",.8},
-			{"malyKrzak",.8}, {"pacholki",1}, {"barrel",.2},{"bus",1},
-		},
-		{
-			-1.0f,-0.75f,-0.25f,0.1f,
-			-0.6f,0.05f,-0.8f,-0.8f,
-			-0.4f,0.025f,-0.6f,-0.4f,
-			-0.25f,-0.3f,0.025f,-0.6f,
-		}
-	};
-	svals.decors_per_tile = 1.25f;
-	svals.decor_max_dist = 5;
-	svals.road_types = { {"Asfalt","Zwir","Lod"},{.8,.15,.05} };
-	svals.num_sur_changes = 5;
 
 	MapManager::BuildsSettingsValues bvals;
 	bvals.cities_count = cityNum;
@@ -202,7 +185,7 @@ void MapDemo::Update() {
 		return;
 	}
 
-	if (Input::getKeyClicked(GLFW_KEY_R))
+	if (Settings::read("debug_mode").value_or(0) && Input::getKeyClicked(GLFW_KEY_R))
 		race_manager->EndRace();
 }
 

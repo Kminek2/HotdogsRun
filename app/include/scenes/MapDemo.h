@@ -39,5 +39,7 @@ public:
 	void Update() override;
 	void UnLoad() override;
 
+	static MapManager::MapSettingsValues svals;
+
 	void OnRaceEnd(RaceManager::CarObject* winner);
 };

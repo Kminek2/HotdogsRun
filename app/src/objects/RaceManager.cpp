@@ -383,7 +383,7 @@ void RaceManager::handleTracking()
 			main_found = true;
 			c_index = 0;
 
-			std::cout << "%: " << race_data[i]->progress << '\n';
+			//std::cout << "%: " << race_data[i]->progress << '\n';
 		}
 
 		glm::vec3 pos = race_trackers[c_index]->rectTransform->position;
