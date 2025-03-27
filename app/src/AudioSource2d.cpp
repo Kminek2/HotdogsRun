@@ -103,6 +103,17 @@ bool AudioSource2d::LoadTrack(const char* filename, float volume, unsigned short
 	return true;
 }
 
+bool AudioSource2d::setVolume(float volume)
+{
+	alSourcef(m_audioSourceId, AL_GAIN, volume);
+	if (alGetError() != AL_NO_ERROR)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void AudioSource2d::ReleaseTrack()
 {
 	// Release the audio source.

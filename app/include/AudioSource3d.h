@@ -13,7 +13,6 @@ public:
     ~AudioSource3d();
 
     Transform* transform;
-
 private:
     static void DeleteAllSources3d();
     static void UpdateAllPosition();

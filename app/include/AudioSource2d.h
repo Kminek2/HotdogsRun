@@ -38,6 +38,8 @@ public:
 
     bool PlayTrack(bool looping);
     bool StopTrack();
+
+    bool setVolume(float volume);
 protected:
     static bool deleteingAll;
     bool LoadTrack(const char* filename, float volume, unsigned short maxChanelNum);
