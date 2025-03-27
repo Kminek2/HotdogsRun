@@ -1,4 +1,5 @@
 #include "objects/MapManager.h"
+#include "Collisions.h"
 #include "GameObject.h"
 #include "objects/ShowOBB.h"
 #include <exception>
@@ -113,7 +114,7 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 	bef = cur = nxt = -1;
 
 	for (long long i = 0; i < points.size(); i++) {
-		if (!Collisions::checkCollision(*points[i], *decor)) continue;
+		if (!Collisions::checkCollision(*points[i], *decor) && i != 0) continue;
 
 		bef = glm::normalize(i - 1, static_cast<long long>(points.size()));
 		cur = i;
