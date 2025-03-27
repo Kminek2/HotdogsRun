@@ -7,8 +7,8 @@
 
 class _rand {
 public:
-	_rand() : gen(std::random_device{}()) {};
-	explicit _rand(size_t _seed) : gen(_seed) {};
+	_rand() : seed(std::random_device{}()) { gen = std::mt19937(seed); };
+	explicit _rand(size_t _seed) : seed(_seed), gen(_seed) {};
 
 	bool coin_toss(double weight = 0.5);
 
@@ -17,8 +17,11 @@ public:
 
 	template<typename T>
 	const T& choice(const std::vector<T>& container, std::vector<float> probs = std::vector<float>());
+
+	size_t getSeed();
 private:
 	std::mt19937 gen;
+	size_t seed;
 };
 
 /// <summary>

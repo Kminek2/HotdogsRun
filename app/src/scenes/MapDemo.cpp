@@ -52,9 +52,7 @@ const std::vector<std::string> colors = {"primary", "secondary", "other"};
 
 MapManager::MapSettingsValues MapDemo::svals;
 
-std::random_device rd;
-std::mt19937_64 rng(rd());
-size_t seed = rng();
+ //size_t seed = 391107728;
 const unsigned int cityNum = 3;
 
 const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> defaultBuildings = { { {
@@ -71,12 +69,13 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	//qc->_sr(0.75f);
 	//qc->_sm(100.0f);
 
-	std::cout << "USING SEED: " << seed << '\n';
-
 	music_timer = 0.0f;
 	first_music = true;
 
-	_rand rand(seed);
+	 //_rand rand(seed);
+	_rand rand;
+
+	std::cout << "USING SEED: " << rand.getSeed() << '\n';
 	
 	music_type = rand.choice(std::vector<std::string>({"race-accordion", "race-bhrams"}), {0.5f, 0.5f});
 
@@ -94,7 +93,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		{"prostaLod", {{"przejscieDlaPieszychLod"},{.1}}}
 	};
 
-	map = (new MapManager(seed, svals, bvals))->Init();
+	map = (new MapManager(rand.getSeed(), svals, bvals))->Init();
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
