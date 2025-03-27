@@ -99,14 +99,14 @@ void RaceManager::StartRace() {
 	if (car_objects.size() < 2)
 		throw std::invalid_argument("add more cars");	
 	
-	const glm::vec4 color = glm::vec4(1, 1, 1, .8);
+	const glm::vec4 color = glm::vec4(1, 1, 1, 1);
 	const float height = .025;
 	const glm::vec2 pos = glm::vec2(0, 1 - 2 * height);
 	const float scale = 1.75;
 
 	race_trackers.reserve(cars_placed);
 
-	progress_bar = new Sprite("progress", glm::vec4(color.x, color.y, color.z, .3));
+	progress_bar = new Sprite("progress", color);
 	progress_bar->rectTransform->SetWidth(.75, false)->SetHeight(height, false)->MoveTo(glm::vec3(pos, 1));
 
 	for (int _ = 1; _ < cars_placed; _++) {
@@ -120,6 +120,8 @@ void RaceManager::StartRace() {
 	sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(glm::vec3(pos, .25));
 
 	race_trackers.push_back(sp);
+
+	//nitro_icon = new UiObject("nitroOgien", glm::vec3(0));
 
 	StartAnimation();
 }
@@ -180,6 +182,12 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 
 	delete clock;
 	delete loop_tracker;
+	delete velocity;
+
+	delete progress_bar;
+	for (Sprite* t : race_trackers) delete t;
+
+	delete nitro_icon;
 
 	std::sort(car_objects.begin(), car_objects.end(), [](CarObject *a, CarObject *b) {
 		if (a->checkpoint == b->checkpoint)

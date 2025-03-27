@@ -3,6 +3,7 @@
 #include "MapManager.h"
 #include "GameObject.h"
 #include "Collisions.h"
+#include "UiObject.h"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -44,6 +45,8 @@ public:
 
 	Sprite* progress_bar = nullptr;
 	std::vector<Sprite*> race_trackers;
+
+	UiObject* nitro_icon = nullptr;
 
 	void StartRace();
 	RaceManager* SetEndCondition(unsigned long long laps);
