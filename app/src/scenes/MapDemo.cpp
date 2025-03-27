@@ -1,5 +1,6 @@
 ﻿#include "scenes/MapDemo.h"
 #include "AudioSource2d.h"
+#include "GameObject.h"
 #include "Scene.h"
 
 #include "objects/ColorPicker.hpp"
@@ -13,6 +14,7 @@
 #include "objects/PUManager.hpp"
 #include "_rand.hpp"
 
+#include <exception>
 #include <glm/vec3.hpp>
 #include <iostream>
 #include <random>
@@ -52,7 +54,7 @@ const std::vector<std::string> colors = {"primary", "secondary", "other"};
 
 MapManager::MapSettingsValues MapDemo::svals;
 
- //size_t seed = 1384966059;
+//size_t seed = 1384966059;
 const unsigned int cityNum = 3;
 
 const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> defaultBuildings = { { {
@@ -72,7 +74,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	music_timer = 0.0f;
 	first_music = true;
 
-	 //_rand rand(seed);
+	//_rand rand(seed);
 	_rand rand;
 
 	std::cout << "USING SEED: " << rand.getSeed() << '\n';
@@ -93,7 +95,15 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		{"prostaLod", {{"przejscieDlaPieszychLod"},{.1}}}
 	};
 
-	map = (new MapManager(rand.getSeed(), svals, bvals))->Init();
+	bool done = false;
+	for (int i = 0; !done; ++i) {
+		try {
+			map = (new MapManager(rand.getSeed() + i, svals, bvals))->Init();
+			done = true;
+		} catch (std::exception e) {
+			GameObject::DeleteAll();
+		}
+	}
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 

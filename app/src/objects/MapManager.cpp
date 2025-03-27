@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "objects/ShowOBB.h"
 #include <exception>
+#include <stdexcept>
 
 MapManager* MapManager::Init()
 {
@@ -59,6 +60,9 @@ MapManager* MapManager::Init()
 				? road_segments[cur_sur_type_id].at({ point.out, point.in })
 				: road_segments[cur_sur_type_id].at({ point.in, point.out }));
 		}
+
+		if (data->model == "debug_star")
+			throw std::invalid_argument("debug_star");
 
 		// so that the original doesn't get changed
 		data = new ObjectSchema(*data);
@@ -201,4 +205,8 @@ BuildingManager* MapManager::getBuildingManager() {
 
 std::vector<GameObject*>& MapManager::getDecors() {
 	return decors;
+}
+
+std::vector<GameObject*>& MapManager::getCheckPointsObj() {
+	return check_points;
 }

@@ -7,6 +7,8 @@
 
 using namespace mapgen;
 
+class MapDemo;
+
 class MapManager
 {
 private:
@@ -93,7 +95,10 @@ public:
 	float GetMapTileSize();
 	float GetMapScale();
 	std::vector<GameObject*>* GetPoints();
+	std::vector<GameObject*>& getCheckPointsObj();
 	std::vector<GameObject*>& getDecors();
 	BuildingManager* getBuildingManager();
+
+	friend MapDemo;
 };
 
