@@ -14,11 +14,15 @@
 #include <iostream>
 
 const std::vector<std::string> models = {
-	"racing_car", "racing_car", "arrow", "racing_car", "zakretPolSkosAsfalt"
+	"racing_car", "racing_car", "arrow", "racing_car", "case_14_color"
 };
 
 std::shared_ptr<Scene> DebugScene::Init() {
 	Scene* scene = new Scene(this);
+
+	qc = new QuickCamera();
+	qc->_sr(0.75f);
+	qc->_sm(100.0f);
 	
 	objs.reserve(models.size()+Model::loadedModels.size());
 
@@ -33,7 +37,7 @@ std::shared_ptr<Scene> DebugScene::Init() {
 		position_offset += 10.0f;
 	}
 
-	objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C));
+	// objs[0]->AddScript(new CameraLockScript(Perspective, glm::vec3(-35, 0, 0), -15.0f, 45.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C));
 	
 	objs[0]->AddScript(new ShowOBB);
 	objs[1]->AddScript(new ShowOBB);
@@ -62,7 +66,6 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	objs[2]->AddScript(new LockPosition(objs[3]->transform));
 	objs[2]->AddScript(new LockRotation(objs[3]->transform));
 
-	objs[4]->transform->ScaleTo(glm::vec3(-2.0f));
 	objs[4]->transform->RotateTo(glm::vec3(0.0f, 0.0f, 90.0f));
 	objs[4]->AddDefaultOBB()->AddScript(new ShowOBB());
 	objs[4]->surface_type = 1;
@@ -72,15 +75,17 @@ std::shared_ptr<Scene> DebugScene::Init() {
 	am_obj->AddDefaultOBB();
 	am_obj->AddScript(new ShowOBB);
 	am_obj->AddScript(am);
-	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
-	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {20.0f,0.0f,0.0f}));
-	am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}, true));
+	//am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}));
+	//am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {20.0f,0.0f,0.0f}));
+	//am->addToQueue(AnimationManager::data({{-23.0f,-23.0f,9.0f},{45.0f,-15.0f}}, {{-23.0f,-40.0f,9.0f},{45.0f,-15.0f}}, 3.0f, {-20.0f,0.0f,0.0f}, true));
 	
 	return std::shared_ptr<Scene>(scene);
 }
 
 const float cam_speed = 100.0f;
 void DebugScene::Update() {
+	qc->HandleMove();
+	qc->HandleRotate();
 	Camera::main->cameraTransform->Rotate(Input::mouseOff.x, Input::mouseOff.y);
 
 	/*if (Input::getKeyPressed(GLFW_KEY_W))
