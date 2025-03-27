@@ -1,4 +1,5 @@
 #pragma once
+#include "AudioSource2d.h"
 #include "SceeneScript.h"
 #include "UiObject.h"
 #include "objects/AnimationManager.h"
@@ -32,6 +33,7 @@ private:
     float music_timer;
     AudioSource2d* music_first;
     AudioSource2d* music_cont;
+    AudioSource2d* sound_select;
 
     ColorPicker cp;
     

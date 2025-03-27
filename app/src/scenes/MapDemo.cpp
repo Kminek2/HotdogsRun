@@ -1,4 +1,5 @@
 ﻿#include "scenes/MapDemo.h"
+#include "AudioSource2d.h"
 #include "Scene.h"
 
 #include "objects/ColorPicker.hpp"
@@ -70,8 +71,9 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	
 	music_type = rand.choice(std::vector<std::string>({"race-accordion", "race-bhrams"}), {0.5f, 0.5f});
 
-	music_first = new AudioSource2d("music/first-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
-	music_cont = new AudioSource2d("music/continue-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
+	music_first = new AudioSource2d("music/first-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/500.0f);
+	music_cont = new AudioSource2d("music/continue-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/500.0f);
+	sound_race_end = new AudioSource2d("race_end", Settings::read("volume").value_or(50)/100.0f);
 
 	on_end_screen = false;
 
@@ -170,8 +172,9 @@ std::shared_ptr<Scene> MapDemo::Init() {
 }
 
 void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
+	sound_race_end->PlayTrack(false);
 	std::cout << "===\n\t" << winner->car->GetModelName() << "\n\t" << winner->checkpoint << "\n\t" << winner->time << '\n';
-	Application::Invoke([&](){ShowEndScreen();}, 1000);
+	Application::Invoke([&](){ShowEndScreen();}, 10);
 }
 
 void MapDemo::Update() {

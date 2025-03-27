@@ -1,4 +1,5 @@
 #include "scenes/MainMenuScene.h"
+#include "AudioSource2d.h"
 #include "Transform.h"
 #include "UiObject.h"
 #include "objects/ColorPicker.hpp"
@@ -51,11 +52,11 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 
     volume_delay = 0.0f;
 
-    music_first = new AudioSource2d("music/first-intro-accordion", static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
-	music_cont = new AudioSource2d("music/continue-intro-accordion", static_cast<float>(Settings::read("volume").value_or(50))/100.0f);
+    music_first = new AudioSource2d("music/first-intro-accordion", static_cast<float>(Settings::read("volume").value_or(50))/500.0f);
+	music_cont = new AudioSource2d("music/continue-intro-accordion", static_cast<float>(Settings::read("volume").value_or(50))/500.0f);
+    sound_select = new AudioSource2d("select", Settings::read("volume").value_or(50)/500.0f);
 
-	music_first->PlayTrack(false);
-	music_timer = 75.0f;
+	music_timer = 0.0f;
 
     MainMenuScene::model_choosen = Settings::read("model_choosen").value_or(0);
 
@@ -112,6 +113,8 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     Camera::main->cameraTransform->RotateTo(glm::vec2(47.0f, -4.0f));
     
     if (first_load) {
+        music_first->PlayTrack(false);
+	    music_timer = 75.0f;
         first_animation();
         first_load = false;
     } else {
@@ -211,16 +214,20 @@ void MainMenuScene::UpdateMenu() {
         switch (menu_choosen_option)
         {
         case 0:
+            sound_select->PlayTrack(false);
             to_maps_animation();
             break;
         case 1:
+            sound_select->PlayTrack(false);
             to_appearance_animation();
             break;
         case 2:
+            sound_select->PlayTrack(false);
             HideMenu();
             ShowSettings();
             break;
         case 3:
+            sound_select->PlayTrack(false);
             Application::Quit();
             break;
         }
@@ -291,16 +298,19 @@ void MainMenuScene::UpdateMaps() {
         switch (menu_choosen_option)
         {
         case 0:
+            sound_select->PlayTrack(false);
             HideMaps();
             Application::LoadScene("loading_screen");
             break;
-        case 1:    
+        case 1:
+            sound_select->PlayTrack(false);    
             HideMaps();
             Application::LoadScene("loading_screen");
             break;
         case 2:
+            sound_select->PlayTrack(false);
             HideMaps();
-            Application::LoadScene("loading_screen"); 
+            Application::LoadScene("loading_screen");
             break;
         }
     }
@@ -461,7 +471,7 @@ void MainMenuScene::ShowSettings() {
     volume_bar = new Sprite("range_input_bg");
     volume_bar->rectTransform->SetWidth(0.3f, false);
     volume_bar->rectTransform->SetHeight(0.03f, false);
-    volume_bar->rectTransform->MoveTo(glm::vec3(0.35f, 0.6f, 0.5f));
+    volume_bar->rectTransform->MoveTo(glm::vec3(0.35f, 0.6f, 0.6f));
     bar_thumb = new Sprite("range_input_thumb");
     bar_thumb->rectTransform->SetWidth(0.02f);
     bar_thumb->rectTransform->MoveTo(glm::vec3(0.05f+(Settings::read("volume").value_or(50) * 0.006f), 0.6f, 0.5f));
@@ -534,6 +544,9 @@ void MainMenuScene::UpdateSettings() {
                 settings_options[0].second.second->SetText(std::to_string(new_suboption_choosen));
                 settings_options[0].second.first->SetText(std::to_string(new_suboption_choosen));
                 bar_thumb->rectTransform->MoveTo(glm::vec3(0.05f+(new_suboption_choosen * 0.006f), 0.6f, 0.5f));
+                music_first->setVolume(new_suboption_choosen / 500.0f);
+                music_cont->setVolume(new_suboption_choosen / 500.0f);
+                sound_select->setVolume(new_suboption_choosen / 100.0f);
             }
             break;
         case 1:
@@ -562,6 +575,7 @@ void MainMenuScene::UpdateSettings() {
             break;
         case 3:
             if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
+                sound_select->PlayTrack(false);
                 Settings::clear();
                 cp.update_car();
                 HideSettings();

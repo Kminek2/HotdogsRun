@@ -32,6 +32,7 @@ private:
 	std::string music_type;
 	AudioSource2d* music_first;
     AudioSource2d* music_cont;
+	AudioSource2d* sound_race_end;
 
 public:
 	std::shared_ptr<Scene> Init() override;
