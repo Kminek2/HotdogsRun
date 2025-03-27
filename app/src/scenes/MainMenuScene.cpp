@@ -43,7 +43,7 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     Application::SetCursor(true);
 
     //qc = new QuickCamera();
-    //qc->_sr(0.75f);
+   // qc->_sr(0.75f);
 	//qc->_sm(100.0f);
 
     music_timer = 0.0f;
@@ -139,7 +139,7 @@ void MainMenuScene::Update() {
         music_timer = 71.0f;
     }
 
-    //qc->HandleMove();
+  // qc->HandleMove();
     //qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();

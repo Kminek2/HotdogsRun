@@ -12,7 +12,7 @@ class MainMenuScene :
 {
 private:
     CarMovement* cm;
-    QuickCamera* qc;
+    //QuickCamera* qc;
     AnimationManager* am;
     std::vector<GameObject*> objs;
     static bool first_load;

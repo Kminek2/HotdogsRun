@@ -11,7 +11,7 @@ const std::array<CarMovement::road_type_data,5> CarMovement::surfaces_data = {
 	CarMovement::road_type_data(0.7f, 1.0f, 0.5f, 0.6f, 1.0f, 0.2f), // ICE
 	CarMovement::road_type_data(0.2f, 0.5f, 0.2f, 1.1f, 0.3f, 0.4f)  // OIL
 };
-const float CarMovement::nitro_duration = 1.0f;
+const float CarMovement::nitro_duration = 2.0f;
 bool CarMovement::disabled_inputs = false;
 
 CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode, float multiplier, glm::vec3 nitro_trail_offset) :
