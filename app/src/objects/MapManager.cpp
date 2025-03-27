@@ -141,14 +141,14 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 /// <summary>
 /// Return the pointer to the i-th tile's GameObject
 /// </summary>
-GameObject* MapManager::GetPoint(unsigned long long index) {
+GameObject* MapManager::GetPoint(unsigned long long index) const {
 	return points[glm::normalize(index, static_cast<unsigned long long>(points.size()))];
 }
 
 /// <summary>
 /// Return the pointer to the i-th checkpoint's GameObject
 /// </summary>
-GameObject* MapManager::GetCheckPoint(unsigned long long index) {
+GameObject* MapManager::GetCheckPoint(unsigned long long index) const {
 	return check_points[glm::normalize(index, static_cast<unsigned long long>(check_points.size()))];
 }
 

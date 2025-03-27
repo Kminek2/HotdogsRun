@@ -217,6 +217,11 @@ void GameObject::TransformTransformsToMemory()
 	Transform::AddToMemory(transforms);
 }
 
+std::list<GameObject*>& GameObject::getAllGameObjects()
+{
+	return createdGameObject;
+}
+
 GameObject* GameObject::addOBB(OBB obb) {
 	obbs.push_back(obb);
 	return this;

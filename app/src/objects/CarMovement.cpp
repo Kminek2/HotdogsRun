@@ -325,3 +325,13 @@ float CarMovement::getActSpeed() {
 float CarMovement::getAxleAngle() {
 	return axleAngle;
 }
+
+glm::vec3 CarMovement::getFuturePos() const
+{
+	return actSpeed * gripMult * Time::deltaTime * glm::length(forces);
+}
+
+float CarMovement::getMaxSpeed() const
+{
+	return __maxSpeed * __multiplier;
+}

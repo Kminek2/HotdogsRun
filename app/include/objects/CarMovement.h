@@ -85,6 +85,9 @@ public:
     float getActSpeed();
     float getAxleAngle();
     friend WheelsScript;
+
+    glm::vec3 getFuturePos() const;
+    float getMaxSpeed() const;
     
     // overrides [percent change]
     float _multiplier = 1;

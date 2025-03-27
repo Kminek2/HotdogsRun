@@ -126,6 +126,8 @@ public:
 	static void LateUpdateAllObjectScripts(ThreadPool& threadPool);
 
 	static void TransformTransformsToMemory();
+
+	static std::list<GameObject*>& getAllGameObjects();
 	friend Commands;
 	friend Collisions;
 	friend ShowOBB;

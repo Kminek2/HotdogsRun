@@ -65,6 +65,7 @@
     <ClCompile Include="app\src\objects\RaceManager.cpp" />
     <ClCompile Include="app\src\objects\ShowOBB.cpp" />
     <ClCompile Include="app\src\objects\SmoothCamera.cpp" />
+    <ClCompile Include="app\src\objects\StraightKingBot.cpp" />
     <ClCompile Include="app\src\objects\WheelsScript.cpp" />
     <ClCompile Include="app\src\PointLight.cpp" />
     <ClCompile Include="app\src\PowerUp.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="app\include\objects\RaceManager.hpp" />
     <ClInclude Include="app\include\objects\ShowOBB.h" />
     <ClInclude Include="app\include\objects\SmoothCamera.hpp" />
+    <ClInclude Include="app\include\objects\StraightKingBot.h" />
     <ClInclude Include="app\include\objects\WheelsScript.h" />
     <ClInclude Include="app\include\PointLight.h" />
     <ClInclude Include="app\include\PowerUp.hpp" />

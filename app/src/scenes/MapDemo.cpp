@@ -16,6 +16,8 @@
 #include <glm/vec3.hpp>
 #include <iostream>
 
+#include "objects/StraightKingBot.h"
+
 using namespace mapgen;
 
 const std::string car_models[] = {
@@ -139,12 +141,14 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		GameObject* bot = new GameObject("hotrod");
 
 		CarMovement* carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f);
-		BotMovement* botmv = new BotMovement(carmv);
+		bot->AddScript(new WheelsScript(*carmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
+		bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map));
+		//BotMovement* botmv = new BotMovement(carmv);
 
-		botmv->SetMapManager(map);
-		botmv->GetWaypoints(map);
-		bot->AddScript(botmv)->AddScript(carmv);
-		bot->AddDefaultOBB();
+		//botmv->SetMapManager(map);
+		//botmv->GetWaypoints(map);
+		//bot->AddScript(botmv)->AddScript(carmv);
+		//bot->AddDefaultOBB();
 
 		race_manager->AddCar(bot);
 	}
