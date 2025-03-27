@@ -112,12 +112,12 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 	int bef, cur, nxt;
 	bef = cur = nxt = -1;
 
-	for (size_t i = 0; i < points.size(); i++) {
+	for (long long i = 0; i < points.size(); i++) {
 		if (!Collisions::checkCollision(*points[i], *decor)) continue;
 
-		bef = glm::normalize(i - 1, points.size());
+		bef = glm::normalize(i - 1, (long long)points.size());
 		cur = i;
-		nxt = glm::normalize(i + 1, points.size());
+		nxt = glm::normalize(i + 1, (long long)points.size());
 
 		break;
 	}
