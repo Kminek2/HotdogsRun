@@ -46,11 +46,18 @@ void StraightKingBot::EarlyUpdate()
 	toPoint = nextToPoint;
 
 	nextPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toPoint);
+	float forwardDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toPoint);
 
 	if (nextPointDot < -breakMult / 2.0f)
 		carMovement->makeLeftTurn();
 	else if (nextPointDot > breakMult / 2.0f)
 		carMovement->makeRightTurn();
+	else if (forwardDot < 0) {
+		if(nextPointDot <= 0)
+			carMovement->makeLeftTurn();
+		else
+			carMovement->makeRightTurn();
+	}
 }
 
 void StraightKingBot::Update()
