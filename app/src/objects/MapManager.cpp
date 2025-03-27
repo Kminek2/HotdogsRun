@@ -76,7 +76,6 @@ MapManager* MapManager::Init()
 			{ checkpoint_positions[i].x, checkpoint_positions[i].y, 0}, 
 			GetPoint(i * cp_offset)->transform->rotation, 
 			glm::vec3(MAP_TILE_SCALE)));
-		check_points[check_points.size()-1]->transform->Translate(glm::vec3(0.0f, -(MAP_TILE_SIZE*MAP_TILE_SCALE*0.5f), 0.0f));
 	}
 
 	unsigned int decors_count = n * decors_per_tile;
