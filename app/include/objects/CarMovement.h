@@ -68,6 +68,8 @@ private:
 
     AudioSource2d* crashsound_audio;
     AudioSource2d* gassound_audio;
+
+    void Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot);
 public:
     CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode = false, float multiplier = 0.1f, glm::vec3 nitro_trail_offset = glm::vec3(1.7f, 0.0f, 0.0f));
     void Init() override;

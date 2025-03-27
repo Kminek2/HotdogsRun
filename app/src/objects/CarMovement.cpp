@@ -72,35 +72,47 @@ void CarMovement::Update() {
 	road_type = 0;
 
 	GameObject* collidedWith = nullptr;
+	CarMovement* carCollided = nullptr;
 	for (auto const& obj : GameObject::createdGameObject) {
 		if (obj == gameObject || !Collisions::checkCollision(*gameObject, *obj))
 			continue;
 
 		if (obj->surface_type < 0) {
 			coll = (obj->surface_type == ALWAYS_COLLIDE);
-			if (coll)
+			if (coll) {
 				collidedWith = obj;
+				if (collidedWith->cm != nullptr)
+					carCollided = collidedWith->cm;
+			}
 		} else
 			road_type = std::max(road_type, obj->surface_type);
 	}
 	if (coll) {
-		if (crashsound_timer == 0.0f) {
-			crashsound_audio->PlayTrack(false);
-			crashsound_timer = 0.5f;
-		}
-		gameObject->transform->MoveTo(old_pos);
-		gameObject->transform->RotateTo(old_rot);
-		actSpeed *= -1;
-		forces.x = -forces.x;
-		gripMult += collidedWith->transform->position - gameObject->transform->position;
-		axleAngle = 0.0f;
-		//actSpeed = std::min(actSpeed/2.5f, 20.0f * (actSpeed > 0 ? 1 : -1));
-		downSpeed += std::abs((1 / (__carWeight * __multiplier)) * actSpeed) * 0.03f;
+		Collided(collidedWith, old_pos, old_rot);
+		if (carCollided != nullptr)
+			carCollided->Collided(gameObject, carCollided->gameObject->transform->position, carCollided->gameObject->transform->rotation);
 	}
 	actActions = clearedActions;
 }
 
 void CarMovement::OnDestroy() {}
+
+
+void CarMovement::Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot)
+{
+	if (crashsound_timer == 0.0f) {
+		crashsound_audio->PlayTrack(false);
+		crashsound_timer = 0.5f;
+	}
+	gameObject->transform->MoveTo(oldPos);
+	gameObject->transform->RotateTo(oldRot);
+	actSpeed *= -1;
+	forces.x = -forces.x;
+	gripMult = with->transform->position - gameObject->transform->position;
+	axleAngle = 0.0f;
+	//actSpeed = std::min(actSpeed/2.5f, 20.0f * (actSpeed > 0 ? 1 : -1));
+	downSpeed += std::abs((1 / (__carWeight * __multiplier)) * actSpeed) * 0.03f;
+}
 
 void CarMovement::handleGas() {
 	if (forces.x != 1.0f) return;
@@ -184,6 +196,14 @@ void CarMovement::handleSteeringWheel() {
 //Please don't read this part. It would make you feel a lot of pain.
 void CarMovement::handleForces() {
 	if (forces.x < 1.0f) {
+		forces.x += 0.7f * Time::deltaTime;
+		forces.x = std::min(forces.x, 1.0f);
+		if (forces.x > 0.0f) {
+			forces.x = 1.0f;
+			actSpeed = 0.0f;
+		}
+	}
+/*	if (forces.x < 1.0f) {
 		forces.x += 0.7f*Time::deltaTime;
 		forces.x = std::min(forces.x, 1.0f);
 		if (forces.x > 0.0f) {
@@ -191,7 +211,7 @@ void CarMovement::handleForces() {
 			actSpeed = 0.0f;
 		}
 	}
-	
+
 	bool yNeg = (forces.y < 0);
 	
 	if (axleAngle < 0.0f+EPSILON && axleAngle > 0.0f-EPSILON) {
@@ -210,7 +230,7 @@ void CarMovement::handleForces() {
 			actSpeed += __carWeight * Time::deltaTime * accelBack * __multiplier;
 			actSpeed = std::min(actSpeed, 0.0f);
 		}
-	}
+	}*/
 }
 
 void CarMovement::goForward() {
@@ -287,6 +307,8 @@ void CarMovement::handleNitroAcc() {
 }
 
 void CarMovement::handleGrip() {
+	if (forces.x < 1.0f)
+		gripMult = glm::normalize(gripMult);
 	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime * (gameObject->transform->position.z > 0 ? 0.01f : 1.0f) + (1 - surfaces_data[road_type].grip) * gripMult * std::abs(actSpeed / (gripToSpeed * __maxSpeed)) * (std::pow(axleAngle * (actSpeed / (__maxSpeed * __multiplier)) / 30, 2.0f) + 0.5f));
 }
 
