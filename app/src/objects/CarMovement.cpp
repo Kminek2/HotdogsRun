@@ -273,7 +273,7 @@ CarMovement::road_type_data::road_type_data(float acc_multiplier, float eng_brea
 }
 
 void CarMovement::useNitro() {
-	if (disabled_inputs || nitros_available < 1)
+	if (disabled_inputs || nitros_available < 1 || nitro_timer != .0f)
 		return;
 	--nitros_available;
 	before_nitro_mem = actSpeed;
@@ -298,7 +298,6 @@ void CarMovement::handleNitroAcc() {
 	nitro_timer = std::max(0.0f, nitro_timer);
 	actSpeed += Time::deltaTime * __accelFront * surfaces_data[road_type].acc_multiplier * 0.1f * __multiplier * std::max(before_nitro_mem, 50.0f);
 	if (nitro_timer == 0.0f) {
-		actSpeed = before_nitro_mem;
 		if (nitro_trail) {
 			delete nitro_trail;
 			nitro_trail = nullptr;
