@@ -21,7 +21,7 @@ private:
 	bool HandlePredictions();
 	bool HandleCollision();
 public:
-	StraightKingBot(CarMovement* carMovement, MapManager* map, float brakMult = 0.3);
+	StraightKingBot(CarMovement* carMovement, MapManager* map, float brakMult = 0.2);
 
 	void Init() override;
 	void EarlyUpdate() override;

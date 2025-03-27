@@ -10,10 +10,10 @@ StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, floa
 void StraightKingBot::Init()
 {
 	carSize = gameObject->GetModelMaxDistVert()[0].x - gameObject->GetModelMaxDistVert()[0].y;
-	glm::vec3 obbSizes = glm::vec3(carSize * 3, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y);
+	glm::vec3 obbSizes = glm::vec3(carSize * 2, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y);
 
 	antiCollider = new GameObject("", gameObject->transform->position, gameObject->transform->rotation, gameObject->transform->scale, NEVER_COLLIDE);
-	antiCollider->addOBB(*new OBB({ -carSize * 3 / 2, 0, 0 }, obbSizes / 2.0f));
+	antiCollider->addOBB(*new OBB({ -carSize * 2 / 2, 0, 0 }, obbSizes / 2.0f));
 }
 
 void StraightKingBot::EarlyUpdate()
@@ -31,11 +31,15 @@ void StraightKingBot::EarlyUpdate()
 	if (!MovedOverPoint(gameObject->transform->position))
 		nextToPoint = glm::normalize(glm::vec2(points[currentPoint]->transform->position - gameObject->transform->position));
 
-	if (abs(1 - nextPointDot) > breakMult && abs(1 + nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > breakMult)
+	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint);
+
+	if (abs(1 - nextPointDot) > breakMult && abs(1 - thisPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > breakMult)
 		carMovement->useHandBreak();
 	else {
 		carMovement->goForward();
-		if (abs(1 - nextPointDot) < breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() < breakMult)
+		float nextPointDot2 = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2(points[(currentPoint + 2) % points.size()]->transform->position - gameObject->transform->position)));
+		float nextPointDot3 = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2(points[(currentPoint + 3) % points.size()]->transform->position - gameObject->transform->position)));
+		if (abs(1 - nextPointDot) < breakMult && abs(1 - thisPointDot) < breakMult && abs(1 - nextPointDot2) < breakMult / 3.0f && abs(1 - nextPointDot3) < breakMult / 4.0f)
 			carMovement->useNitro();
 	}
 
@@ -43,9 +47,9 @@ void StraightKingBot::EarlyUpdate()
 
 	nextPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toPoint);
 
-	if (nextPointDot < -breakMult / 5.0f)
+	if (nextPointDot < -breakMult / 2.0f)
 		carMovement->makeLeftTurn();
-	else if (nextPointDot > breakMult / 5.0f)
+	else if (nextPointDot > breakMult / 2.0f)
 		carMovement->makeRightTurn();
 }
 
