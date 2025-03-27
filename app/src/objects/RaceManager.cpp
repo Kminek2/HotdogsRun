@@ -99,27 +99,27 @@ void RaceManager::StartRace() {
 	if (car_objects.size() < 2)
 		throw std::invalid_argument("add more cars");	
 	
-	const glm::vec4 color = glm::vec4(1, 1, 1, .4);
+	const glm::vec4 color = glm::vec4(1, 1, 1, .8);
 	const float height = .025;
-	const glm::vec3 pos = glm::vec3(0, 1 - 2 * height, 0);
-	const float scale = 1.1;
+	const glm::vec2 pos = glm::vec2(0, 1 - 2 * height);
+	const float scale = 1.75;
 
 	race_trackers.reserve(cars_placed);
 
-	Sprite* sp = new Sprite("tracker_main", color);
-	sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(pos);
-
-	race_trackers.push_back(sp);
+	progress_bar = new Sprite("progress", glm::vec4(color.x, color.y, color.z, .3));
+	progress_bar->rectTransform->SetWidth(.75, false)->SetHeight(height, false)->MoveTo(glm::vec3(pos, 1));
 
 	for (int _ = 1; _ < cars_placed; _++) {
 		Sprite* sp = new Sprite("tracker_norm", color);
-		sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(pos);
+		sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(glm::vec3(pos, .9 + _ / 100.0f));
 
 		race_trackers.push_back(sp);
 	}
 
-	progress_bar = new Sprite("progress", color);
-	progress_bar->rectTransform->SetWidth(.75, false)->SetHeight(height, false)->MoveTo(pos);
+	Sprite* sp = new Sprite("tracker_main", color);
+	sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(glm::vec3(pos, .25));
+
+	race_trackers.push_back(sp);
 
 	StartAnimation();
 }
@@ -133,11 +133,8 @@ void RaceManager::AfterCountdown() {
 
 	race_started = true;
 
-	for (int i = 0; i < map_manager->GetCheckPoints(); i++) {
-		map_manager->GetCheckPoint(i)->AddDefaultOBB(glm::vec3(1), true)->surface_type = NEVER_COLLIDE;
-	}
-
 	for (const std::string &car_name : car_names) {
+		Collisions::addCallback("checkpoint", car_name, std::bind(&RaceManager::OnCheckpoint, this, std::placeholders::_1));
 	}
 
 	clock = new Text("HackBold", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
@@ -233,7 +230,7 @@ std::vector<RaceManager::LiveRaceObject*> RaceManager::GetLiveRace(bool sorted)
 	// yes, i could write this in one line, but this is *a bit* more readible
 	for (CarObject* car : car_objects) {
 		float checkpoint_progress = car->checkpoint 
-			+ Collisions::getL1Distance(car->car, map_manager->GetCheckPoint(car->checkpoint + 1)) / avg_cp_dist;
+			+ 1 - Collisions::getL1Distance(car->car, map_manager->GetCheckPoint(car->checkpoint + 1)) / avg_cp_dist;
 
 		live_race.push_back(new LiveRaceObject(car->car, checkpoint_progress * Δp));
 	}

@@ -72,11 +72,15 @@ MapManager* MapManager::Init()
 	std::vector<glm::vec2> checkpoint_positions = getCheckPoints(points, cp_offset);
 	check_points.reserve(checkpoint_positions.size());
 	for (int i=0; i< checkpoint_positions.size(); i++) {
-		check_points.push_back(new GameObject(
-			"checkpoint", 
-			{ checkpoint_positions[i].x, checkpoint_positions[i].y, 0}, 
-			GetPoint(i * cp_offset)->transform->rotation, 
-			glm::vec3(MAP_TILE_SCALE)));
+		GameObject* ncp = new GameObject(
+			"checkpoint",
+			{ checkpoint_positions[i].x, checkpoint_positions[i].y, 0 },
+			GetPoint(i * cp_offset)->transform->rotation,
+			glm::vec3(MAP_TILE_SCALE));
+
+		ncp->AddDefaultOBB(glm::vec3(1), true)->surface_type = NEVER_COLLIDE;
+
+		check_points.push_back(ncp);
 	}
 
 	unsigned int decors_count = n * decors_per_tile;

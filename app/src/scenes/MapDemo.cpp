@@ -52,7 +52,7 @@ const std::vector<std::string> colors = {"primary", "secondary", "other"};
 
 MapManager::MapSettingsValues MapDemo::svals;
 
- //size_t seed = 391107728;
+ //size_t seed = 1384966059;
 const unsigned int cityNum = 3;
 
 const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> defaultBuildings = { { {
