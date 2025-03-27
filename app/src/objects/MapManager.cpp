@@ -109,15 +109,15 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 
 	if (rand.coin_toss(obj_data.second)) return decor; // allow for on-road placement if TRUE
 
-	int bef, cur, nxt;
+	size_t bef, cur, nxt;
 	bef = cur = nxt = -1;
 
-	for (long long i = 0; i < points.size(); i++) {
+	for (size_t i = 0; i < points.size(); i++) {
 		if (!Collisions::checkCollision(*points[i], *decor)) continue;
 
-		bef = glm::normalize(i - 1, (long long)points.size());
+		bef = glm::normalize(i - 1, points.size());
 		cur = i;
-		nxt = glm::normalize(i + 1, (long long)points.size());
+		nxt = glm::normalize(i + 1, points.size());
 
 		break;
 	}
