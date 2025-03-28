@@ -7,6 +7,7 @@
 #include "StringOperations.hpp"
 
 #include <algorithm>
+#include <glm/geometric.hpp>
 #include <glm/vec3.hpp>
 
 const std::array<glm::vec2, 5> RaceManager::offsets = std::array<glm::vec2, 5>({
@@ -87,6 +88,14 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 
 	car_obj->checkpoint++;
 	car_obj->time = Time::lastTime;
+	if (car == main_car) {
+		int i = 0;
+		for (; i < static_cast<int>(map_manager->GetCheckPoints()); ++i)
+			if (map_manager->getCheckPointsObj()[i] == cp)
+				break;
+		map_manager->getCheckPointsObj()[glm::normalize(i-1, static_cast<int>(map_manager->GetCheckPoints()))]->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+		cp->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	}
 
 	if (car_obj->checkpoint / map_manager->GetCheckPoints() >= termination_condition_value)
 		EndRace();
