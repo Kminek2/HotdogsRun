@@ -52,7 +52,7 @@ void MedBot::EarlyUpdate()
 
 	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position)));
 
-	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 4.0f), breakPower))
+	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 5.0f), breakPower))
 		carMovement->useHandBreak();
 	else if (carMovement->getActSpeed() / carMovement->getMaxSpeed() < prefaredSpeed) {
 		carMovement->goForward();
@@ -107,7 +107,7 @@ bool MedBot::MovedOverPoint(glm::vec3 pos, int previous)
 	long long pointToCheck = glm::normalize((long long)currentPoint - previous, (long long)points.size());
 	glm::vec3 toPointFromLast = points[pointToCheck]->transform->position - points[glm::normalize((long long)pointToCheck - 1, (long long)points.size())]->transform->position;
 	glm::vec3 toNextPoint = points[glm::normalize((long long)pointToCheck + 1, (long long)points.size())]->transform->position - points[pointToCheck]->transform->position;
-	float ang = (glm::dot(glm::normalize(glm::vec2(toPointFromLast)), glm::normalize(glm::vec2(toNextPoint))) - 1) * -0.5f;
+	float ang = (glm::dot(glm::normalize(glm::vec2(toPointFromLast)), glm::normalize(glm::vec2(toNextPoint))) - 1) * -3.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed();
 	if ((glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint) < 0 && glm::distance(points[pointToCheck]->transform->position, pos) < carSize * 4.0f) || glm::distance(points[pointToCheck]->transform->position, pos) < carSize * ((carMovement->getActSpeed() * 2.0f / carMovement->getMaxSpeed()) + 2) || glm::distance(points[pointToCheck]->transform->position, pos) < carSize * 2.0f * (ang + 1) || glm::distance(pos, points[glm::normalize((long long)pointToCheck + 1, (long long)points.size())]->transform->position) * 2.0f < glm::distance(pos, points[glm::normalize((long long)pointToCheck, (long long)points.size())]->transform->position))
 		return true;
 
