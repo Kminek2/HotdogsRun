@@ -106,7 +106,7 @@ void MedBot::OnDestroy()
 bool MedBot::MovedOverPoint(glm::vec3 pos, int previous)
 {
 	long long pointToCheck = glm::normalize((long long)currentPoint - previous, (long long)points.size());
-	if ((glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint) < 0 && glm::distance(points[pointToCheck]->transform->position, pos) < 6) || glm::distance(points[pointToCheck]->transform->position, pos) < carSize * 4.0f)
+	if ((glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint) < 0 && glm::distance(points[pointToCheck]->transform->position, pos) < 6) || glm::distance(points[pointToCheck]->transform->position, pos) < carSize * ((carMovement->getActSpeed() * 4.0f / carMovement->getMaxSpeed()) + 2))
 		return true;
 
 	return false;

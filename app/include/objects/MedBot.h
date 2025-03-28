@@ -29,7 +29,7 @@ private:
 	bool HandleCollision();
 	bool HandleCheckPoint();
 public:
-	MedBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float prefaredSpeed = 0.7f, float breakPower = 0.6f, float brakMult = 0.5);
+	MedBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float prefaredSpeed = 0.6f, float breakPower = 0.6f, float brakMult = 0.5);
 
 	void Init() override;
 	void EarlyUpdate() override;

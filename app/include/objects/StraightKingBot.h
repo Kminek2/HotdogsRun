@@ -28,7 +28,7 @@ private:
 	bool HandleCollision();
 	bool HandleCheckPoint();
 public:
-	StraightKingBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float breakPower = 0.4f , float brakMult = 0.2);
+	StraightKingBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float breakPower = 0.2f , float brakMult = 0.3);
 
 	void Init() override;
 	void EarlyUpdate() override;
