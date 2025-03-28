@@ -33,11 +33,12 @@ private:
 	AudioSource2d* music_first;
     AudioSource2d* music_cont;
 	AudioSource2d* sound_race_end;
-
+	
 public:
 	std::shared_ptr<Scene> Init() override;
 	void Update() override;
 	void UnLoad() override;
+	static int difficulty;
 
 	static MapManager::MapSettingsValues svals;
 

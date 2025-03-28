@@ -322,6 +322,7 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.decor_max_dist = 5;
             MapDemo::svals.road_types = { {"Asfalt","Zwir","Lod"},{1.0,.0,.0} };
             MapDemo::svals.num_sur_changes = 5;
+            MapDemo::difficulty = 0;
             Application::LoadScene("loading_screen");
             break;
         case 1:
@@ -349,6 +350,7 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.decor_max_dist = 5;
             MapDemo::svals.road_types = { {"Asfalt","Zwir","Lod"},{.55,.45,.0} };
             MapDemo::svals.num_sur_changes = 5;
+            MapDemo::difficulty = 1;
             Application::LoadScene("loading_screen");
             break;
         case 2:
@@ -376,6 +378,7 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.decor_max_dist = 5;
             MapDemo::svals.road_types = { {"Asfalt","Zwir","Lod"},{.7,.15,.15} };
             MapDemo::svals.num_sur_changes = 5;
+            MapDemo::difficulty = 2;
             Application::LoadScene("loading_screen");
             break;
         }

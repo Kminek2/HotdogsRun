@@ -53,6 +53,7 @@ const std::vector<std::vector<glm::vec3>> default_colors = {
 const std::vector<std::string> colors = {"primary", "secondary", "other"};
 
 MapManager::MapSettingsValues MapDemo::svals;
+int MapDemo::difficulty;
 
 //size_t seed = 1384966059;
 const unsigned int cityNum = 3;
