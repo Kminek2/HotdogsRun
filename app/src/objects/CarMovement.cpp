@@ -277,6 +277,7 @@ void CarMovement::useNitro() {
 	if (disabled_inputs || nitros_available < 1 || nitro_timer != .0f)
 		return;
 	--nitros_available;
+	++nitrosUsed;
 	before_nitro_mem = actSpeed;
 	nitro_timer = nitro_duration;
 	nitro_trail = new GameObject("nitroOgien");

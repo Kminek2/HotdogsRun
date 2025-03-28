@@ -40,16 +40,6 @@ public:
 	void handleNitros();
 	void handleTracking();
 
-	Text* clock = nullptr;
-	Text* loop_tracker = nullptr;
-	Text* velocity = nullptr;
-
-	Sprite* progress_bar = nullptr;
-	std::vector<Sprite*> race_trackers;
-
-	Sprite* nitro_icon = nullptr;
-	Text* nitro_counter = nullptr;
-
 	void StartRace();
 	RaceManager* SetEndCondition(unsigned long long laps);
 	CarObject* EndRace(bool executeCallbacks = true);
@@ -63,6 +53,8 @@ public:
 
 private:
 	MapManager* map_manager = nullptr;
+
+	double sum_x = 0;
 	double avg_cp_dist = -1;
 
 	int cars_placed = 0;
@@ -77,6 +69,7 @@ private:
 	float cars_relative_offset = .25f;
 	const static std::array<glm::vec2, 5> offsets;
 	float race_time_elapsed = 0.0f;
+	const double VELOCITY_DISPLAY_MULTIPLIER = 10.0;
 
 	unsigned long long termination_condition_value; // aka laps
 
@@ -90,4 +83,16 @@ private:
 	void AfterCountdown();
 
 	void CalcAvgDist();
+
+	Text* clock = nullptr;
+	Text* loop_tracker = nullptr;
+	Text* velocity = nullptr;
+
+	Text* place = nullptr;
+
+	Sprite* progress_bar = nullptr;
+	std::vector<Sprite*> race_trackers;
+
+	Sprite* nitro_icon = nullptr;
+	Text* nitro_counter = nullptr;
 };

@@ -147,8 +147,11 @@ void RaceManager::AfterCountdown() {
 	velocity = new Text("HackBold", { -.95,.95,.1 }, { -1,1 }, .3);
 	velocity->SetText("--");
 
-	loop_tracker = new Text("HackBold", {0.95, 0.75, 0.1}, {1, 1}, 0.3f);
+	loop_tracker = new Text("HackBold", {0.95, 0.55, 0.1}, {1, 1}, 0.3f);
 	loop_tracker->SetText("-/-");
+
+	place = new Text("HackBold", { .95,.75,.1 }, { 1,1 }, .3);
+	place->SetText("-");
 
 	nitro_icon = new Sprite("nitro");
 	nitro_icon->rectTransform->SetHeight(.08)->MoveTo({ -.925,.625,.1 })->Move({ nitro_icon->rectTransform->GetDimentions() / 2.0f });
@@ -159,11 +162,11 @@ void RaceManager::AfterCountdown() {
 
 void RaceManager::CalcAvgDist()
 {
-	double sum_x = 0;
 	unsigned n = map_manager->GetCheckPoints();
 
-	for (unsigned i = 0; i < n; i++)
-		sum_x += Collisions::getL1Distance(map_manager->GetCheckPoint(i), map_manager->GetCheckPoint(i + 1));
+	if(sum_x == 0)
+		for (unsigned i = 0; i < n; i++)
+			sum_x += Collisions::getL1Distance(map_manager->GetCheckPoint(i), map_manager->GetCheckPoint(i + 1));
 
 	avg_cp_dist = sum_x / n;
 }
@@ -192,10 +195,13 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 	delete loop_tracker;
 	delete velocity;
 
+	delete place;
+
 	delete progress_bar;
 	for (Sprite* t : race_trackers) delete t;
 
 	delete nitro_icon;
+	delete nitro_counter;
 
 	std::sort(car_objects.begin(), car_objects.end(), [](CarObject *a, CarObject *b) {
 		if (a->checkpoint == b->checkpoint)
@@ -205,21 +211,39 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 
 	std::cout << "Race ended.\n";
 
-	if (!executeCallbacks)
-		return car_objects[0];
-
-	for (const auto &sub : subscribers)
-		sub(car_objects[0]);
-
 	CarMovement::disabled_inputs = true;
 
 	Sprite* bg = new Sprite("end_race_bg");
 	bg->rectTransform->ScaleTo(glm::vec2(100.0f, 100.0f));
 	bg->rectTransform->MoveTo(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	Text* ent = new Text("SansSerif", glm::vec3(0.1f, -0.8f, 0.0f), glm::vec2(0.0f));
-	ent->SetText("Press ENTER to continue!");
-	ent->ChangeSize(0.2);
+	int place = 0;
+	while (car_objects[place]->car != main_car)
+		++place;
+	++place;
+
+	std::vector<LiveRaceObject*> lr_objects = GetLiveRace(false);
+	int lr_place = 0;
+	while (lr_objects[lr_place]->car != main_car)
+		++lr_place;
+
+	(new Text("SansSerif", glm::vec3(0.1f, 0.8f, 0.0f), glm::vec2(0.0f)))->SetText("The race ended")->ChangeSize(0.5);
+	(new Text("SansSerif", glm::vec3(0.1f, 0.575f, 0.0f), glm::vec2(0.0f)))->SetText("...and you were " + std::to_string(place) + String::getSuffix(place) + '!')->ChangeSize(0.4);
+
+	(new Text("SansSerif", glm::vec3(0.1f, 0.3f, 0.0f), glm::vec2(0.0f)))->SetText("Nitros used: " + std::to_string(main_car->cm->nitrosUsed))->ChangeSize(0.2);
+	(new Text("SansSerif", glm::vec3(0.1f, 0.1f, 0.0f), glm::vec2(0.0f)))->SetText("Time taken: " + String::formatDouble(race_time_elapsed, 2) + 's')->ChangeSize(0.2);
+
+	double dist = lr_objects[lr_place]->progress * sum_x * VELOCITY_DISPLAY_MULTIPLIER;
+	(new Text("SansSerif", glm::vec3(0.1f, -0.1f, 0.0f), glm::vec2(0.0f)))->SetText("Distance covered: " + String::formatDouble(dist, 2) + 'm')->ChangeSize(0.2);
+	(new Text("SansSerif", glm::vec3(0.1f, -0.3f, 0.0f), glm::vec2(0.0f)))->SetText("Avereage speed: " + String::formatDouble(dist / race_time_elapsed, 2) + "m/s")->ChangeSize(0.2);
+
+	(new Text("SansSerif", glm::vec3(0.1f, -0.8f, 0.0f), glm::vec2(0.0f)))->SetText("Press ENTER to continue!")->ChangeSize(0.3);
+
+	if (!executeCallbacks)
+		return car_objects[0];
+
+	for (const auto &sub : subscribers)
+		sub(car_objects[0]);
 	
 	return car_objects[0];
 }
@@ -352,8 +376,8 @@ void RaceManager::Update() {
 
 	counter_000 += Time::deltaTime;
 
-	if (counter_000 >= .5f) {
-		counter_000 -= .5f;
+	if (counter_000 >= .75f) {
+		counter_000 -= .75f;
 		handleTracking();
 	}
 }
@@ -373,7 +397,7 @@ void RaceManager::handleClock() {
 }
 
 void RaceManager::handleVelocityDisplay() {
-	std::string ntext = String::formatDouble(std::abs(main_car->cm->getActSpeed() * 10), 2) + " km/h";
+	std::string ntext = String::formatDouble(std::abs(main_car->cm->getActSpeed() * VELOCITY_DISPLAY_MULTIPLIER), 2) + " km/h";
 	if(ntext != velocity->getText())
 		velocity->SetText(ntext);
 }
@@ -392,7 +416,7 @@ void RaceManager::handleNitros() {
 
 void RaceManager::handleTracking()
 {
-	std::vector<LiveRaceObject*> race_data = GetLiveRace(false);
+	std::vector<LiveRaceObject*> race_data = GetLiveRace();
 
 	bool main_found = false;
 	int i = 0;
@@ -404,6 +428,10 @@ void RaceManager::handleTracking()
 			c_index = cars_placed - 1;
 
 			//std::cout << "%: " << race_data[i]->progress << '\n';
+
+			std::string ntext = std::to_string(i + 1) + String::getSuffix(i + 1);
+			if (ntext != place->getText())
+				place->SetText(ntext);
 		}
 
 		glm::vec3 pos = race_trackers[c_index]->rectTransform->position;

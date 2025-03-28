@@ -102,4 +102,5 @@ public:
     std::tuple<float, float, float> getSpeeds();
 
     int nitrosCount();
+    int nitrosUsed = 0;
 };

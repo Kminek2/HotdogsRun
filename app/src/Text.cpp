@@ -10,7 +10,7 @@ Text::Text(std::string fontName, glm::vec3 pos, glm::vec2 anchor, float fontSize
 	this->spacing = spacing;
 }
 
-void Text::SetText(std::string text)
+Text* Text::SetText(std::string text)
 {
 	std::lock_guard<std::mutex> textLock(textMutex);
 	for (Sprite* sp : textSprites)
@@ -24,38 +24,39 @@ void Text::SetText(std::string text)
 	textSprites = Font::ConvertText(font, text, startPos, spacing, size, color);
 
 	this->text = text;
+	return this;
 }
 
-void Text::ChangeSize(float size)
+Text* Text::ChangeSize(float size)
 {
 	if (textSprites.size() == 0)
-		return;
+		return this;
 	this->size = size;
-	SetText(text);
+	return SetText(text);
 }
 
-void Text::SetPos(glm::vec3 pos)
+Text* Text::SetPos(glm::vec3 pos)
 {
 	if (textSprites.size() == 0)
-		return;
+		return this;
 	this->pos = pos;
-	SetText(text);
+	return SetText(text);
 }
 
-void Text::SetAnchor(glm::vec2 anchor)
+Text* Text::SetAnchor(glm::vec2 anchor)
 {
 	if (textSprites.size() == 0)
-		return;
+		return this;
 	this->center = anchor;
-	SetText(text);
+	return SetText(text);
 }
 
-void Text::SetColor(glm::vec4 color)
+Text* Text::SetColor(glm::vec4 color)
 {
 	if (textSprites.size() == 0)
-		return;
+		return this;
 	this->color = color;
-	SetText(text);
+	return SetText(text);
 }
 
 Text::~Text(){

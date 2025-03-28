@@ -18,14 +18,14 @@ public:
 	Text(std::string fontName, glm::vec3 pos, glm::vec2 anchor, float fontSize = 1, glm::vec4 col = glm::vec4(1), float spacing = 1);
 	~Text();
 	std::string getText() { return text; }
-	void SetText(std::string text);
+	Text* SetText(std::string text);
 	float getSize() { return size; }
-	void ChangeSize(float size);
+	Text* ChangeSize(float size);
 	glm::vec3 GetPos() { return pos; }
-	void SetPos(glm::vec3 pos);
+	Text* SetPos(glm::vec3 pos);
 	glm::vec2 GetAnchor() { return center; }
-	void SetAnchor(glm::vec2 anchor);
+	Text* SetAnchor(glm::vec2 anchor);
 	glm::vec4 GetColor() { return color; }
-	void SetColor(glm::vec4 color);
+	Text* SetColor(glm::vec4 color);
 };
 
