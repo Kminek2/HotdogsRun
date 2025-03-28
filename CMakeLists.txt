@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(OpenAL REQUIRED)
-add_compile_options(-g)
+add_compile_options(-O3)
 
 file(GLOB_RECURSE SOURCES "app/src/*.cpp")
 
