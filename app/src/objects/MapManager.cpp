@@ -69,6 +69,10 @@ MapManager* MapManager::Init()
 		data->scale *= MAP_TILE_SCALE;
 		data->surface_type = _cur_sur_type;
 
+		for (const auto& x : points)
+			if (x->transform->position == glm::vec3(point.pos.x, point.pos.y, -0.3f))
+				throw std::invalid_argument("overlapping road tiles");
+
 		points.push_back(new GameObject(data, { point.pos.x, point.pos.y, -0.3f }));
 		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
 	}
