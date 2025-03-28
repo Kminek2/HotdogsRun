@@ -17,21 +17,22 @@ private:
 
 	ViewType view;
 
-	static bool disabled;
 	int cnt_after_disabled = 0;
-
+	
 	bool dynamic_fov = false;
 	float min_fov = 45.0f, max_fov = 90.0f;
-
+	
 public:
 	SmoothCamera(glm::vec3 offset, float speed = 5.0f, ViewType view = Isometric) : offset(offset), speed(speed), view(view) {}
-
+	
 	void Init() override;
 	void Update() override;
 	void LateUpdate() override;
 	void OnDestroy() override;
-
+	
 	SmoothCamera* SetDynamicFov(bool on, float min = 45.0f, float max = 90.0f);
+	
+	static bool disabled;
 
 	friend CinematicCamera;
 };

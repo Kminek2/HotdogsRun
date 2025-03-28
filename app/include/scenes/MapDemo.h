@@ -33,6 +33,8 @@ private:
 	AudioSource2d* music_first;
     AudioSource2d* music_cont;
 	AudioSource2d* sound_race_end;
+	int camera_view;
+	std::array<CameraLockScript*, 2> view_scripts;
 	
 public:
 	std::shared_ptr<Scene> Init() override;

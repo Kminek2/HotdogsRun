@@ -116,19 +116,26 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	ColorPicker cp(car);
 	cp.update_car();
 
+	camera_view = Settings::read("camera_view").value_or(0);
 	car->AddDefaultOBB();
 	{
 		CarMovement* cmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 100.0f, 20.0f, 0.1f, false, 0.05f);
 		car->AddScript(cmv);
 		car->AddScript(new WheelsScript(*cmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
 		car->AddScript(new CarInputs(*cmv, GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL));
-		if (Settings::read("camera_view").value_or(0) == 0)
-			car->AddScript(new CameraLockScript(Perspective, glm::vec3(-50, 0, 0), -90.0f, 45.0f, false, false, GLFW_KEY_Z, GLFW_KEY_C));
-		else if (Settings::read("camera_view").value_or(0) == 1)
-			car->AddScript((new SmoothCamera(glm::vec3(10, 0, 3), 5.0f, Perspective))->SetDynamicFov(true, 45.0f, 50.0f));
-		else if (Settings::read("camera_view").value_or(0) == 2)
-			car->AddScript(new CameraLockScript(Perspective, glm::vec3(1.7f, 0.0f, 1.5f), 0.0f, 90.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C));
+		view_scripts[0] = new CameraLockScript(Perspective, glm::vec3(-50, 0, 0), -90.0f, 45.0f, false, false, GLFW_KEY_Z, GLFW_KEY_C);
+		view_scripts[1] = new CameraLockScript(Perspective, glm::vec3(1.7f, 0.0f, 1.5f), 0.0f, 90.0f, true, false, GLFW_KEY_Z, GLFW_KEY_C);
+		car->AddScript(view_scripts[0]);
+		car->AddScript((new SmoothCamera(glm::vec3(10, 0, 3), 5.0f, Perspective))->SetDynamicFov(true, 45.0f, 50.0f));
+		car->AddScript(view_scripts[1]);
 	}
+
+	if (camera_view != 0)
+		SmoothCamera::disabled = true;
+	if (camera_view != 1)
+		view_scripts[0]->disabled2 = true;
+	if (camera_view != 2)
+		view_scripts[1]->disabled2 = true;
 
 	race_manager = (new RaceManager())->SetMapManager(map)->SetEndCondition(3)->SetCarsRelativeOffset(.1f);
 	race_manager->SubscribeToRaceEnd([this](RaceManager::CarObject* co) { this->OnRaceEnd(co); });
@@ -201,6 +208,21 @@ void MapDemo::Update() {
 			music_timer = 241.0f;
 		else
 			music_timer = 136.0f;
+	}
+
+	if (Input::getKeyClicked(GLFW_KEY_C)) {
+		camera_view = glm::normalize(camera_view + 1, 3);
+
+		SmoothCamera::disabled = false;
+		view_scripts[0]->disabled2 = false;
+		view_scripts[1]->disabled2 = false;
+
+		if (camera_view != 0)
+			SmoothCamera::disabled = true;
+		if (camera_view != 1)
+			view_scripts[0]->disabled2 = true;
+		if (camera_view != 2)
+			view_scripts[1]->disabled2 = true;
 	}
 
 	//qc->HandleMove();

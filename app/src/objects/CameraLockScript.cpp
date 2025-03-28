@@ -12,11 +12,12 @@ CameraLockScript::CameraLockScript(ViewType view, glm::vec3 offset, float pitch,
 void CameraLockScript::Init() {
 	Camera::main->view = view;
 	disabled = false;
+	disabled2 = false;
 }
 void CameraLockScript::Update() {}
 
 void CameraLockScript::LateUpdate() {
-	if (disabled) {
+	if (disabled || disabled2) {
 		cnt_after_disabled = 0;
 		return;
 	}
