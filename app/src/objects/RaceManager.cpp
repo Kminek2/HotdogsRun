@@ -121,8 +121,6 @@ void RaceManager::StartRace() {
 
 	race_trackers.push_back(sp);
 
-	//nitro_icon = new UiObject("nitroOgien", glm::vec3(0));
-
 	StartAnimation();
 }
 
@@ -147,6 +145,12 @@ void RaceManager::AfterCountdown() {
 
 	loop_tracker = new Text("HackBold", {0.95, 0.75, 0.1}, {1, 1}, 0.3f);
 	loop_tracker->SetText("-/-");
+
+	nitro_icon = new Sprite("nitro");
+	nitro_icon->rectTransform->SetHeight(.08)->MoveTo({ -.925,.625,.1 })->Move({ nitro_icon->rectTransform->GetDimentions() / 2.0f });
+
+	nitro_counter = new Text("HackBold", { -.85, .75,.1 }, { -1,1 }, .3);
+	nitro_counter->SetText("-");
 }
 
 void RaceManager::CalcAvgDist()
@@ -340,6 +344,7 @@ void RaceManager::Update() {
 	handleClock();
 	handleLoops();
 	handleVelocityDisplay();
+	handleNitros();
 
 	counter_000 += Time::deltaTime;
 
@@ -373,6 +378,12 @@ void RaceManager::handleLoops() {
 	std::string ntext = (std::to_string((car_objects[0]->checkpoint / map_manager->GetCheckPoints()) + 1) + '/' + std::to_string(termination_condition_value));
 	if (ntext != loop_tracker->getText())
 		loop_tracker->SetText(ntext);
+}
+
+void RaceManager::handleNitros() {
+	std::string ntext = std::to_string(main_car->cm->nitrosCount());
+	if (ntext != nitro_counter->getText())
+		nitro_counter->SetText(ntext);
 }
 
 void RaceManager::handleTracking()

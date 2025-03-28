@@ -100,4 +100,6 @@ public:
 
     void addNitros(int count);
     std::tuple<float, float, float> getSpeeds();
+
+    int nitrosCount();
 };

@@ -133,6 +133,9 @@ public:
 		UpdateMatrix();
 	}
 
+	glm::vec2 GetDimentions() {
+		return scale;
+	};
 
 	glm::mat4 getModelMatrix() { RecalculateTransform(); std::lock_guard<std::mutex> matrixLock(matrixMutex); return modelTransform; }
 private:

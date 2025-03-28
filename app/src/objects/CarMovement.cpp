@@ -283,14 +283,16 @@ void CarMovement::useNitro() {
 	nitro_trail->AddScript(new LockPosition(gameObject->transform, nitro_trail_offset))->AddScript(new LockRotation(gameObject->transform));
 }
 
-void CarMovement::addNitros(int count)
-{
+void CarMovement::addNitros(int count) {
 	nitros_available += count;
 }
 
-std::tuple<float, float, float> CarMovement::getSpeeds()
-{
+std::tuple<float, float, float> CarMovement::getSpeeds() {
 	return { abs(actSpeed), 0, maxSpeed };
+}
+
+int CarMovement::nitrosCount() {
+	return nitros_available;
 }
 
 void CarMovement::handleNitroAcc() {

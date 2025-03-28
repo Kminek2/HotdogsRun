@@ -37,6 +37,7 @@ public:
 	void handleClock();
 	void handleVelocityDisplay();
 	void handleLoops();
+	void handleNitros();
 	void handleTracking();
 
 	Text* clock = nullptr;
@@ -46,7 +47,8 @@ public:
 	Sprite* progress_bar = nullptr;
 	std::vector<Sprite*> race_trackers;
 
-	UiObject* nitro_icon = nullptr;
+	Sprite* nitro_icon = nullptr;
+	Text* nitro_counter = nullptr;
 
 	void StartRace();
 	RaceManager* SetEndCondition(unsigned long long laps);
