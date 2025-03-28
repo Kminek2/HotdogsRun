@@ -135,7 +135,7 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 		break;
 	}
 
-	if (cur == -1) return decor; // no collision - all good!
+	if (cur == -1 || cur == 1 || cur == points.size()-1) return decor; // no collision - all good!
 
 	glm::vec3 pos = decor->transform->position;
 	for (glm::vec2 dir : directions) {
