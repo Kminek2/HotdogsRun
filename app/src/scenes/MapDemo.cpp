@@ -151,7 +151,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 		bot = new GameObject("f1car");
 
-		carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f * (1 + (difficulty + 1) / 10.0f));
+		carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f * (1 + (difficulty + 1) / 3.0f));
 		bot->AddScript(new WheelsScript(*carmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
 
 		carObj = race_manager->AddCar(bot);

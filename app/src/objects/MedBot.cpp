@@ -52,7 +52,7 @@ void MedBot::EarlyUpdate()
 
 	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position)));
 
-	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 3.0f), breakPower))
+	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 4.0f), breakPower))
 		carMovement->useHandBreak();
 	else if (carMovement->getActSpeed() / carMovement->getMaxSpeed() < prefaredSpeed) {
 		carMovement->goForward();
@@ -106,7 +106,7 @@ void MedBot::OnDestroy()
 bool MedBot::MovedOverPoint(glm::vec3 pos, int previous)
 {
 	long long pointToCheck = glm::normalize((long long)currentPoint - previous, (long long)points.size());
-	if ((glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint) < 0 && glm::distance(points[pointToCheck]->transform->position, pos) < 6) || glm::distance(points[pointToCheck]->transform->position, pos) < carSize * 2.0f)
+	if ((glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint) < 0 && glm::distance(points[pointToCheck]->transform->position, pos) < 6) || glm::distance(points[pointToCheck]->transform->position, pos) < carSize * 4.0f)
 		return true;
 
 	return false;
