@@ -393,11 +393,11 @@ void RaceManager::handleTracking()
 	bool main_found = false;
 	int i = 0;
 	while (i < cars_placed) {
-		int c_index = i + (!main_found);
+		int c_index = i - main_found;
 
 		if (!main_found && race_data[i]->car == main_car) {
 			main_found = true;
-			c_index = 0;
+			c_index = cars_placed - 1;
 
 			//std::cout << "%: " << race_data[i]->progress << '\n';
 		}
