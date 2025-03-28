@@ -35,6 +35,7 @@ MapManager* MapManager::Init()
 	
 	while (sur_types_changes.size() < num_sur_changes) sur_types_changes.insert(rand.random<size_t>(0, static_cast<size_t>(.9 * n)));
 
+	std::vector<int> to_rem;
 	for (int i = 0; i < n; ++i) {
 		MapPoint point = map_points[i];
 		ObjectSchema* data;
@@ -53,7 +54,8 @@ MapManager* MapManager::Init()
 			data = (road_segments[cur_sur_type_id].find({point.in, map_points[i + 2].out}) == road_segments[cur_sur_type_id].end()
 				? road_segments[cur_sur_type_id].at({map_points[i + 2].out, point.in})
 				: road_segments[cur_sur_type_id].at({point.in, map_points[i + 2].out}));
-
+			to_rem.push_back(i);
+			to_rem.push_back(i-static_cast<int>(to_rem.size()));
 			i += 2;
 		} else {
 			data = (road_segments[cur_sur_type_id].find({ point.in, point.out }) == road_segments[cur_sur_type_id].end()
@@ -75,6 +77,10 @@ MapManager* MapManager::Init()
 
 		points.push_back(new GameObject(data, { point.pos.x, point.pos.y, -0.3f }));
 		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
+	}
+
+	for (int i = 0; i < static_cast<int>(to_rem.size()); ++i) {
+		map_points.erase(map_points.begin()+to_rem[i]);
 	}
 
 	float offset = MAP_TILE_SIZE * MAP_TILE_SCALE / 2.0f;
