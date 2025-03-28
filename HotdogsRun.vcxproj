@@ -46,6 +46,7 @@
     <ClCompile Include="app\src\mapgen_road.cpp" />
     <ClCompile Include="app\src\ObjectSchema.cpp" />
     <ClCompile Include="app\src\objects\AnimationManager.cpp" />
+    <ClCompile Include="app\src\objects\Bot.cpp" />
     <ClCompile Include="app\src\objects\BotMovement.cpp" />
     <ClCompile Include="app\src\objects\BuildingManager.cpp" />
     <ClCompile Include="app\src\objects\CarInputs.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="app\include\UniformBuffer.h" />
     <ClInclude Include="app\include\ValidationLayers.h" />
     <ClInclude Include="app\include\Vertex.h" />
+    <ClInclude Include="app\src\objects\Bot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app\shaders\compile.bat" />

@@ -35,7 +35,7 @@ RaceManager *RaceManager::AddCar(GameObject *car, bool main) {
 	if (!map_manager)
 		throw std::invalid_argument("init map_manager first");
 
-	if (!car->GetOBBsCount())
+	if (car->GetOBBsCount() == 0)
 		car->AddDefaultOBB();
 
 	const int n = map_manager->GetLen();

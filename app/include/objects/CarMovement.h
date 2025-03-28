@@ -88,6 +88,7 @@ public:
 
     glm::vec3 getFuturePos() const;
     float getMaxSpeed() const;
+    int getSurface() const;
     
     // overrides [percent change]
     float _multiplier = 1;

@@ -335,3 +335,8 @@ float CarMovement::getMaxSpeed() const
 {
 	return __maxSpeed * __multiplier;
 }
+
+int CarMovement::getSurface() const
+{
+	return road_type;
+}
