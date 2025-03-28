@@ -29,7 +29,7 @@ public:
 
 	RaceManager* SetMapManager(MapManager* map_manager);
 	RaceManager* SetCarsRelativeOffset(float offset);
-	RaceManager* AddCar(GameObject* car, bool main = false);
+	CarObject* AddCar(GameObject* car, bool main = false);
 	RaceManager* SetAnimationManager(AnimationManager* am);
 
 	void Update();

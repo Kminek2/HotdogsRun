@@ -2,6 +2,7 @@
 #include "CarMovement.h"
 #include "MapManager.h"
 #include "ObjectScript.h"
+#include "RaceManager.hpp"
 class MedBot : public ObjectScript
 {
 private:
@@ -14,6 +15,8 @@ private:
 	const float prefaredSpeed;
 	float carSize;
 
+	const RaceManager::CarObject* thisCar;
+
 	uint32_t currentPoint;
 	bool changedPoint;
 
@@ -24,8 +27,9 @@ private:
 	bool MovedOverPoint(glm::vec3 pos, int previous = 0);
 	bool HandlePredictions();
 	bool HandleCollision();
+	bool HandleCheckPoint();
 public:
-	MedBot(CarMovement* carMovement, MapManager* map, float prefaredSpeed = 0.7f, float breakPower = 0.6f, float brakMult = 0.5);
+	MedBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float prefaredSpeed = 0.7f, float breakPower = 0.6f, float brakMult = 0.5);
 
 	void Init() override;
 	void EarlyUpdate() override;

@@ -2,6 +2,7 @@
 #include "ObjectScript.h"
 #include "objects/CarMovement.h"
 #include "objects/MapManager.h"
+#include "objects/RaceManager.hpp"
 class StraightKingBot : public ObjectScript
 {
 private:
@@ -11,6 +12,8 @@ private:
 	const std::vector<GameObject*> points;
 	const float breakMult;
 	const float breakPower;
+
+	const RaceManager::CarObject* thisCar;
 	float carSize;
 
 	uint32_t currentPoint;
@@ -23,8 +26,9 @@ private:
 	bool MovedOverPoint(glm::vec3 pos, int previous = 0);
 	bool HandlePredictions();
 	bool HandleCollision();
+	bool HandleCheckPoint();
 public:
-	StraightKingBot(CarMovement* carMovement, MapManager* map, float breakPower = 0.4f , float brakMult = 0.2);
+	StraightKingBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float breakPower = 0.4f , float brakMult = 0.2);
 
 	void Init() override;
 	void EarlyUpdate() override;

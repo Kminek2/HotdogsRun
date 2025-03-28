@@ -1,7 +1,7 @@
 #include "objects/StraightKingBot.h"
 #include "objects/ShowOBB.h"
 
-StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, float breakPower, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult), breakPower(breakPower)
+StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float breakPower, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult), breakPower(breakPower), thisCar(thisCarObj)
 {
 	currentPoint = 1;
 	toPoint = glm::vec3(0);
@@ -44,13 +44,17 @@ void StraightKingBot::EarlyUpdate()
 		toPoint = tmpToPoint;
 	}
 
+
+
 	glm::vec2 nextToPoint = toPoint;
-	if (changedPoint)
+	if (changedPoint && !HandleCheckPoint())
 		nextToPoint = glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position));
+	else
+		nextToPoint = toPoint;
 
 	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position)));
 
-	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > ((nextPointDot + 1) * 0.25f) / (breakMult * 7.0f))
+	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 7.0f), breakPower))
 		carMovement->useHandBreak();
 	else {
 		carMovement->goForward();
@@ -154,4 +158,14 @@ bool StraightKingBot::HandleCollision()
 		avoiding = -1;
 	}
 	return true;
+}
+
+bool StraightKingBot::HandleCheckPoint()
+{
+	if (glm::length(glm::vec2(points[currentPoint]->transform->position - gameObject->transform->position)) > glm::length(map->GetCheckPoint(thisCar->checkpoint + 1)->transform->position - gameObject->transform->position)) {
+		toPoint = glm::normalize(glm::vec2(map->GetCheckPoint(thisCar->checkpoint + 1)->transform->position - gameObject->transform->position));
+		return true;
+	}
+
+	return false;
 }

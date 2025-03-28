@@ -31,7 +31,7 @@ RaceManager *RaceManager::SetCarsRelativeOffset(float offset) {
 /// <summary>
 /// Place the car in the right starting position.
 /// </summary>
-RaceManager *RaceManager::AddCar(GameObject *car, bool main) {
+RaceManager::CarObject *RaceManager::AddCar(GameObject *car, bool main) {
 	if (!map_manager)
 		throw std::invalid_argument("init map_manager first");
 
@@ -56,7 +56,8 @@ RaceManager *RaceManager::AddCar(GameObject *car, bool main) {
 	car->transform->Translate(glm::vec3(offset.x, offset.y, 0));
 
 	++cars_placed;
-	car_objects.push_back(new RaceManager::CarObject(car, 0, 0));
+	CarObject* newCarObject = new RaceManager::CarObject(car, 0, 0);
+	car_objects.push_back(newCarObject);
 	car_names.insert(car->GetModelName());
 
 	if (main) {
@@ -64,7 +65,7 @@ RaceManager *RaceManager::AddCar(GameObject *car, bool main) {
 		std::swap(car_objects[0], car_objects[cars_placed - 1]);
 	}
 
-	return this;
+	return newCarObject;
 }
 
 void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {

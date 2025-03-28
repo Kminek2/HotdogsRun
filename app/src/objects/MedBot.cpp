@@ -1,7 +1,7 @@
 #include "objects/MedBot.h"
 #include "objects/ShowOBB.h"
 
-MedBot::MedBot(CarMovement* carMovement, MapManager* map, float prefaredSpeed, float breakPower, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult), breakPower(breakPower), prefaredSpeed(prefaredSpeed)
+MedBot::MedBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float prefaredSpeed, float breakPower, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult), breakPower(breakPower), prefaredSpeed(prefaredSpeed), thisCar(thisCarObj)
 {
 	currentPoint = 1;
 	toPoint = glm::vec3(0);
@@ -45,12 +45,14 @@ void MedBot::EarlyUpdate()
 	}
 
 	glm::vec2 nextToPoint = toPoint;
-	if (changedPoint)
+	if (changedPoint && !HandleCheckPoint())
 		nextToPoint = glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position));
+	else
+		nextToPoint = toPoint;
 
 	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position)));
 
-	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > ((nextPointDot + 1) * 0.25f) / (breakMult * 4.0f))
+	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 3.0f), breakPower))
 		carMovement->useHandBreak();
 	else if (carMovement->getActSpeed() / carMovement->getMaxSpeed() < prefaredSpeed) {
 		carMovement->goForward();
@@ -143,7 +145,7 @@ bool MedBot::HandleCollision()
 	float nextPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toColl);
 
 	if (carMovement->getSurface() == 0)
-		nextPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toPoint);
+		nextPointDot = glm::dot(glm::normalize(glm::vec2(-gameObject->transform->right)), toPoint);
 
 	if ((avoiding == 1 && coll->cm == nullptr ) || (nextPointDot > 0)) {
 		carMovement->makeLeftTurn();
@@ -154,4 +156,14 @@ bool MedBot::HandleCollision()
 		avoiding = -1;
 	}
 	return true;
+}
+
+bool MedBot::HandleCheckPoint()
+{
+	if (glm::length(glm::vec2(points[currentPoint]->transform->position - gameObject->transform->position)) > glm::length(map->GetCheckPoint(thisCar->checkpoint + 1)->transform->position - gameObject->transform->position)) {
+		toPoint = glm::normalize(glm::vec2(map->GetCheckPoint(thisCar->checkpoint + 1)->transform->position - gameObject->transform->position));
+		return true;
+	}
+
+	return false;
 }

@@ -79,7 +79,7 @@ void CarMovement::Update() {
 
 		if (obj->surface_type < 0) {
 			coll = coll || (obj->surface_type == ALWAYS_COLLIDE);
-			if (coll) {
+			if (coll && obj->surface_type == ALWAYS_COLLIDE) {
 				collidedWith = obj;
 				if (collidedWith->cm != nullptr)
 					carCollided = collidedWith->cm;
@@ -109,7 +109,7 @@ void CarMovement::Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot)
 	gameObject->transform->Move(glm::normalize(gameObject->transform->position - with->transform->position) * Time::deltaTime);
 	actSpeed *= -1;
 	forces.x = -forces.x;
-	gripMult = gameObject->transform->position - with->transform->position;
+	gripMult = with->transform->position - gameObject->transform->position;
 	axleAngle = 0.0f;
 	//actSpeed = std::min(actSpeed/2.5f, 20.0f * (actSpeed > 0 ? 1 : -1));
 	downSpeed += std::abs((1 / (__carWeight * __multiplier)) * actSpeed) * 0.03f;
