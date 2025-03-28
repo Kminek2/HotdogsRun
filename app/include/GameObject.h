@@ -111,7 +111,7 @@ public:
 	std::vector<ObjectScript*>& GetObjectScripts();
 	std::string GetModelName();
 	std::vector<OBB> GetOBBs();
-	std::array<glm::vec2, 3> GetModelMaxDistVert();
+	std::array<glm::vec2, 3> GetModelMaxDistVert() const;
 	GameObject* addOBB(OBB obb);
 	GameObject* AddDefaultOBB(glm::vec3 offset = {0.0f, 0.0f, 0.0f}, bool two_dim = false);
 

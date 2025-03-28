@@ -136,7 +136,7 @@ std::vector<OBB> GameObject::GetOBBs()
 	return this->obbs;
 }
 
-std::array<glm::vec2, 3> GameObject::GetModelMaxDistVert()
+std::array<glm::vec2, 3> GameObject::GetModelMaxDistVert() const
 {
 	return model->GetMaxDistVert();
 }

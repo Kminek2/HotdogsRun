@@ -42,6 +42,25 @@ bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
 }
 
 bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, bool callback) {
+	if (obj1.obbs.size() == 0 || obj2.obbs.size() == 0)
+		return false;
+
+	float obj1S;
+	if (obj1.model->GetName() != "")
+		obj1S = obj1.GetModelMaxDistVert()[0].x * obj1.GetModelMaxDistVert()[0].y + obj1.GetModelMaxDistVert()[1].x * obj1.GetModelMaxDistVert()[1].y + obj1.GetModelMaxDistVert()[2].x * obj1.GetModelMaxDistVert()[2].y;
+	else
+		obj1S = obj1.obbs[0].sizes.x * obj1.obbs[0].sizes.x + obj1.obbs[0].sizes.y * obj1.obbs[0].sizes.y + obj1.obbs[0].sizes.z * obj1.obbs[0].sizes.z;
+	float obj2S;
+	if (obj2.model->GetName() != "")
+		obj2S = obj2.GetModelMaxDistVert()[0].x * obj2.GetModelMaxDistVert()[0].y + obj2.GetModelMaxDistVert()[1].x * obj2.GetModelMaxDistVert()[1].y + obj2.GetModelMaxDistVert()[2].x * obj2.GetModelMaxDistVert()[2].y;
+	else
+		obj2S = obj2.obbs[0].sizes.x * obj2.obbs[0].sizes.x + obj2.obbs[0].sizes.y * obj2.obbs[0].sizes.y + obj2.obbs[0].sizes.z * obj2.obbs[0].sizes.z;
+
+	glm::vec3 posDif = (obj1.transform->position - obj2.transform->position);
+	if ((obj1S * std::max(obj1.transform->scale.x, std::max(obj1.transform->scale.y, obj1.transform->scale.z)) + obj2S * std::max(obj2.transform->scale.x, std::max(obj2.transform->scale.y, obj2.transform->scale.z))) > (posDif.x * posDif.x + posDif.y * posDif.y + posDif.z * posDif.z) * 4.0f)
+		return false;
+		
+
 	bool coll = false;
 
 	for (int i = 0; i < obj1.obbs.size(); ++i) {
