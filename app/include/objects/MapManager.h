@@ -25,9 +25,6 @@ private:
 	const Ellipse ellipse;
 	const float MAP_TILE_SCALE = 2.4;
 
-	// -- checkpoints --
-	const unsigned cp_offset; // cp stands for checkpoint 💀 
-
 	// -- decors -- 
 	const float decors_per_tile;
 	const float MAP_TILE_SIZE = 12.7; // 127x127 mv size
@@ -98,6 +95,9 @@ public:
 	std::vector<GameObject*>& getCheckPointsObj();
 	std::vector<GameObject*>& getDecors();
 	BuildingManager* getBuildingManager();
+
+	// -- checkpoints --
+	const unsigned cp_offset; // cp stands for checkpoint 💀 
 
 	friend MapDemo;
 };

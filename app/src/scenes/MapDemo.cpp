@@ -150,6 +150,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		RaceManager::CarObject* carObj = race_manager->AddCar(bot);
 
 		bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map, carObj));
+		//bot->AddScript(carmv)->AddScript(new MedBot(carmv, map, carObj, 1.0f, 2.0f, 3.0f));
 		/*if (difficulty == 0)
 			bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map, carObj));
 		else if(difficulty == 1)
