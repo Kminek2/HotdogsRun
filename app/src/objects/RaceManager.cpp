@@ -1,5 +1,6 @@
 ﻿#include "objects/RaceManager.hpp"
 #include "Application.h"
+#include "mapgen.h"
 #include "objects/CarMovement.h"
 #include "objects/ShowOBB.h"
 
@@ -134,8 +135,10 @@ void RaceManager::AfterCountdown() {
 
 	race_started = true;
 
-	for (const std::string &car_name : car_names) {
-		Collisions::addCallback("checkpoint", car_name, std::bind(&RaceManager::OnCheckpoint, this, std::placeholders::_1));
+	for (int i = 0; i < map_manager->GetCheckPoints(); ++i) {
+		for (const auto &car : car_objects) {
+			Collisions::addCallback(map_manager->GetCheckPoint(i), car->car, std::bind(&RaceManager::OnCheckpoint, this, std::placeholders::_1));
+		}
 	}
 
 	clock = new Text("HackBold", {0.95, 0.95, 0.1}, {1, 1}, 0.3f);
@@ -408,4 +411,8 @@ void RaceManager::handleTracking()
 
 		++i;
 	}
+}
+
+std::vector<RaceManager::CarObject*>& RaceManager::getCarObjects() {
+	return car_objects;
 }

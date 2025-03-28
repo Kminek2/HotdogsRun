@@ -59,6 +59,7 @@ public:
 
 	std::vector<LiveRaceObject*> GetLiveRace(bool sorted = true);
 	std::set<std::string> GetCarNames();
+	std::vector<CarObject*>& getCarObjects(); 
 
 private:
 	MapManager* map_manager = nullptr;

@@ -16,7 +16,7 @@ public:
 	static bool checkCollision(const GameObject& obj1, const GameObject& obj2, bool callback = true);
 	friend ShowOBB;
 
-	static void addCallback(std::string a, std::string b, std::function<void(CollisionData*)> callback);
+	static void addCallback(GameObject* a, GameObject* b, std::function<void(CollisionData*)> callback);
 	
 	static float getL1Distance(glm::vec3 a, glm::vec3 b);
 	static float getL1Distance(GameObject* a, GameObject* b);
@@ -26,5 +26,5 @@ private:
 	static OBB getAbsOBB(const OBB& obb, const GameObject& obj);
 	static glm::mat4 getRotationMatrix(glm::vec3 v, glm::vec3 scale);
 
-	static std::map<std::pair<std::string, std::string>, std::vector<std::function<void(CollisionData*)>>> callbacks;
+	static std::map<std::pair<GameObject*, GameObject*>, std::vector<std::function<void(CollisionData*)>>> callbacks;
 };

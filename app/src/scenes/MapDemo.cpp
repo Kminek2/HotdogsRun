@@ -56,7 +56,7 @@ const std::vector<std::string> colors = {"primary", "secondary", "other"};
 MapManager::MapSettingsValues MapDemo::svals;
 int MapDemo::difficulty;
 
-//size_t seed = 1384966059;
+//size_t seed = 123306034;
 const unsigned int cityNum = 3;
 
 const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> defaultBuildings = { { {
@@ -160,7 +160,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 			bot->AddScript(carmv)->AddScript(new MedBot(carmv, map, carObj, 0.9f, 0.6f, 0.3f));
 	}
 
-	PowerUp::car_names = race_manager->GetCarNames();
+	PowerUp::car_objects = race_manager->getCarObjects();
 
 	PUManager* pum = (new PUManager(rand))->setMapManager(map);
 	pum->addPowerUp((new GameObject("cube", glm::vec3(1000.0f)))->AddScript(new PUNitro()), -1.0f);

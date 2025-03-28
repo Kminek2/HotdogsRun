@@ -4,8 +4,7 @@
 #include "GameObject.h"
 #include "Collisions.h"
 #include "objects/CarMovement.h"
-
-#include <set>
+#include "objects/RaceManager.hpp"
 
 class PowerUp : public ObjectScript {
 protected:
@@ -18,5 +17,5 @@ public:
 	void Init() override;
 	virtual void _Init() {};
 
-	static std::set<std::string> car_names;
+	static std::vector<RaceManager::CarObject*> car_objects;
 };

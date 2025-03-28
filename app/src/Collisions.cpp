@@ -1,4 +1,5 @@
 #include "Collisions.h"
+#include "GameObject.h"
 #include <glm/fwd.hpp>
 
 bool Collisions::checkOBBCollision(const OBB& a, const OBB& b) {
@@ -60,10 +61,7 @@ bool Collisions::checkCollision(const GameObject& obj1, const GameObject& obj2, 
 
 	if (!coll || !callback) return coll;
 
-	const std::string name1 = obj1.model->GetName();
-	const std::string name2 = obj2.model->GetName();
-
-	const std::pair<std::string, std::string> colliders = { std::min(name1, name2), std::max(name1, name2) };
+	const std::pair<GameObject*, GameObject*> colliders = { std::min(const_cast<GameObject*>(&obj1), const_cast<GameObject*>(&obj2)), std::max(const_cast<GameObject*>(&obj1), const_cast<GameObject*>(&obj2)) };
 
 	if (callbacks.find(colliders) != callbacks.end()) {
 		CollisionData* collision_data = new CollisionData(const_cast<GameObject*>(&obj1), const_cast<GameObject*>(&obj2));
@@ -104,8 +102,8 @@ glm::mat4 Collisions::getRotationMatrix(glm::vec3 rot, glm::vec3 scale) {
 	return model_transform;
 }
 
-std::map<std::pair<std::string, std::string>, std::vector<std::function<void(Collisions::CollisionData*)>>> Collisions::callbacks;
-void Collisions::addCallback(std::string a, std::string b, std::function<void(Collisions::CollisionData*)> callback) {
+std::map<std::pair<GameObject*, GameObject*>, std::vector<std::function<void(Collisions::CollisionData*)>>> Collisions::callbacks;
+void Collisions::addCallback(GameObject* a, GameObject* b, std::function<void(Collisions::CollisionData*)> callback) {
 	callbacks[{std::min(a, b), std::max(a, b)}].push_back(callback);
 }
 
