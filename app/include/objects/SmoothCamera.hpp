@@ -33,6 +33,7 @@ public:
 	SmoothCamera* SetDynamicFov(bool on, float min = 45.0f, float max = 90.0f);
 	
 	static bool disabled;
+	static bool disabled2;
 
 	friend CinematicCamera;
 };

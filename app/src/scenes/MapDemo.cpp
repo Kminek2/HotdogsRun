@@ -131,7 +131,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	}
 
 	if (camera_view != 0)
-		SmoothCamera::disabled = true;
+		SmoothCamera::disabled2 = true;
 	if (camera_view != 1)
 		view_scripts[0]->disabled2 = true;
 	if (camera_view != 2)
@@ -213,12 +213,12 @@ void MapDemo::Update() {
 	if (Input::getKeyClicked(GLFW_KEY_C)) {
 		camera_view = glm::normalize(camera_view + 1, 3);
 
-		SmoothCamera::disabled = false;
+		SmoothCamera::disabled2 = false;
 		view_scripts[0]->disabled2 = false;
 		view_scripts[1]->disabled2 = false;
 
 		if (camera_view != 0)
-			SmoothCamera::disabled = true;
+			SmoothCamera::disabled2 = true;
 		if (camera_view != 1)
 			view_scripts[0]->disabled2 = true;
 		if (camera_view != 2)

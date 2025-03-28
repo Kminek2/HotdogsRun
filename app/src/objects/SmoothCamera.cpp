@@ -2,6 +2,7 @@
 #include "Transform.h"
 
 bool SmoothCamera::disabled = false;
+bool SmoothCamera::disabled2 = false;
 
 void SmoothCamera::Init() {
 	Camera::main->view = view;
@@ -10,6 +11,7 @@ void SmoothCamera::Init() {
 	rotation = gameObject->transform->rotation;
 
 	disabled = false;
+	disabled2 = false;
 }
 
 void SmoothCamera::Update() {
@@ -21,7 +23,7 @@ void SmoothCamera::Update() {
 }
 
 void SmoothCamera::LateUpdate() {
-	if (disabled) {
+	if (disabled || disabled2) {
 		cnt_after_disabled = 0;
 		return;
 	}
