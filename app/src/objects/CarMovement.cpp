@@ -78,7 +78,7 @@ void CarMovement::Update() {
 			continue;
 
 		if (obj->surface_type < 0) {
-			coll = (obj->surface_type == ALWAYS_COLLIDE);
+			coll = coll || (obj->surface_type == ALWAYS_COLLIDE);
 			if (coll) {
 				collidedWith = obj;
 				if (collidedWith->cm != nullptr)

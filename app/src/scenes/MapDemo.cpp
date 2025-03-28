@@ -136,7 +136,12 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 		CarMovement* carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f);
 		bot->AddScript(new WheelsScript(*carmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
-		bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map));
+		if(difficulty == 0)
+			bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map));
+		else if(difficulty == 1)
+			bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map, 0.6f, 0.3f));
+		else if(difficulty == 2)
+			bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map, 0.7f, 0.3f));
 
 		race_manager->AddCar(bot);
 
@@ -144,7 +149,12 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 		carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f);
 		bot->AddScript(new WheelsScript(*carmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
-		bot->AddScript(carmv)->AddScript(new MedBot(carmv, map));
+		if(difficulty == 0)
+			bot->AddScript(carmv)->AddScript(new MedBot(carmv, map));
+		else if(difficulty == 1)
+			bot->AddScript(carmv)->AddScript(new MedBot(carmv, map, 0.8f));
+		else if(difficulty == 2)
+			bot->AddScript(carmv)->AddScript(new MedBot(carmv, map, 0.9f, 0.5f, 0.3f));
 
 		race_manager->AddCar(bot);
 	}

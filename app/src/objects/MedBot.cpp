@@ -12,7 +12,7 @@ MedBot::MedBot(CarMovement* carMovement, MapManager* map, float prefaredSpeed, f
 void MedBot::Init()
 {
 	carSize = gameObject->GetModelMaxDistVert()[0].x - gameObject->GetModelMaxDistVert()[0].y;
-	glm::vec3 obbSizes = glm::vec3(carSize * 2.5, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * 1.1f;
+	glm::vec3 obbSizes = glm::vec3(carSize * 2.5, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(1.1f, 1.3f, 1.3f);
 
 	antiCollider = new GameObject("", gameObject->transform->position, gameObject->transform->rotation, gameObject->transform->scale, NEVER_COLLIDE);
 	antiCollider->addOBB(*new OBB({ -carSize * 2.5 / 2, 0, 0 }, obbSizes / 2.0f));
@@ -37,7 +37,7 @@ void MedBot::EarlyUpdate()
 	if (changesToPoint || changedPoint) {
 		glm::vec2 tmpToPoint = toPoint;
 		toPoint = glm::normalize((glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint) - (gameObject->transform->position))));
-		if (!MovedOverPoint(gameObject->transform->position + gameObject->transform->front * 4.0f, 1))
+		if (!MovedOverPoint(gameObject->transform->position + gameObject->transform->front * 5.0f, 1))
 			changedPoint = true;
 		else
 			changedPoint = false;
@@ -142,14 +142,14 @@ bool MedBot::HandleCollision()
 	glm::vec2 toColl = glm::normalize(glm::vec2(coll->transform->position - gameObject->transform->position));
 	float nextPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toColl);
 
-	if (avoiding == 0 && carMovement->getSurface() == 0)
+	if (carMovement->getSurface() == 0)
 		nextPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toPoint);
 
-	if ((avoiding == 1 && coll->cm == nullptr ) || (nextPointDot > 0 && avoiding == 0)) {
+	if ((avoiding == 1 && coll->cm == nullptr ) || (nextPointDot > 0)) {
 		carMovement->makeLeftTurn();
 		avoiding = 1;
 	}
-	else if ((avoiding == -1 && coll->cm == nullptr) || (nextPointDot < 0 && avoiding == 0)) {
+	else if ((avoiding == -1 && coll->cm == nullptr) || (nextPointDot < 0)) {
 		carMovement->makeRightTurn();
 		avoiding = -1;
 	}
