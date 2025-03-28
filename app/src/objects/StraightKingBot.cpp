@@ -1,7 +1,7 @@
 #include "objects/StraightKingBot.h"
 #include "objects/ShowOBB.h"
 
-StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult)
+StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, float breakPower, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult), breakPower(breakPower)
 {
 	currentPoint = 1;
 	toPoint = glm::vec3(0);
@@ -48,9 +48,9 @@ void StraightKingBot::EarlyUpdate()
 	if (changedPoint)
 		nextToPoint = glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position));
 
-	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint);
+	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position)));
 
-	if (abs(1 - nextPointDot) > breakMult && abs(1 - thisPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > breakMult)
+	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > breakPower)
 		carMovement->useHandBreak();
 	else {
 		carMovement->goForward();

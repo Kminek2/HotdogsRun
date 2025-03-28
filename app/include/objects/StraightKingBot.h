@@ -10,6 +10,7 @@ private:
 	const MapManager* map;
 	const std::vector<GameObject*> points;
 	const float breakMult;
+	const float breakPower;
 	float carSize;
 
 	uint32_t currentPoint;
@@ -23,7 +24,7 @@ private:
 	bool HandlePredictions();
 	bool HandleCollision();
 public:
-	StraightKingBot(CarMovement* carMovement, MapManager* map, float brakMult = 0.2);
+	StraightKingBot(CarMovement* carMovement, MapManager* map, float breakPower = 0.4f , float brakMult = 0.2);
 
 	void Init() override;
 	void EarlyUpdate() override;
