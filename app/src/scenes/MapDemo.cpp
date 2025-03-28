@@ -237,8 +237,10 @@ void MapDemo::Update() {
 		return;
 	}
 
-	if (Settings::read("debug_mode").value_or(0) && Input::getKeyClicked(GLFW_KEY_R))
-		race_manager->EndRace();
+	if (Settings::read("debug_mode").value_or(0)) {
+		if(Input::getKeyPressed(GLFW_KEY_N)) race_manager->main_car->cm->addNitros(1);
+		if(Input::getKeyClicked(GLFW_KEY_R)) race_manager->EndRace();
+	}
 }
 
 void MapDemo::UnLoad() {
