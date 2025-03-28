@@ -20,6 +20,7 @@
 #include <random>
 
 #include "objects/StraightKingBot.h"
+#include "objects/MedBot.h"
 
 using namespace mapgen;
 
@@ -136,12 +137,14 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		CarMovement* carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f);
 		bot->AddScript(new WheelsScript(*carmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
 		bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map));
-		//BotMovement* botmv = new BotMovement(carmv);
 
-		//botmv->SetMapManager(map);
-		//botmv->GetWaypoints(map);
-		//bot->AddScript(botmv)->AddScript(carmv);
-		//bot->AddDefaultOBB();
+		race_manager->AddCar(bot);
+
+		bot = new GameObject("f1car");
+
+		carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f);
+		bot->AddScript(new WheelsScript(*carmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
+		bot->AddScript(carmv)->AddScript(new MedBot(carmv, map));
 
 		race_manager->AddCar(bot);
 	}
