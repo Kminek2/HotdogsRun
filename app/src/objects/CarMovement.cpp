@@ -106,7 +106,7 @@ void CarMovement::Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot)
 	}
 	gameObject->transform->MoveTo(oldPos);
 	gameObject->transform->RotateTo(oldRot);
-	gameObject->transform->Move(glm::normalize(glm::vec2(gameObject->transform->position - with->transform->position)) * Time::deltaTime);
+	gameObject->transform->Move(glm::vec3(glm::normalize(glm::vec2(gameObject->transform->position - with->transform->position)) * Time::deltaTime, 0.0f));
 	actSpeed *= -1;
 	forces.x = -forces.x;
 	gripMult = with->transform->position - gameObject->transform->position;
