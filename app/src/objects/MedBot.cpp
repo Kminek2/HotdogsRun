@@ -7,6 +7,8 @@ MedBot::MedBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject
 	toPoint = glm::vec3(0);
 	avoiding = 0;
 	changedPoint = false;
+	shouldReverse = false;
+	lastCollided = 100;
 }
 
 void MedBot::Init()
@@ -20,6 +22,11 @@ void MedBot::Init()
 
 void MedBot::EarlyUpdate()
 {
+	lastCollided += Time::deltaTime;
+	if (shouldReverse) {
+		carMovement->goBackwards();
+		return;
+	}
 	bool changesToPoint = changedPoint;
 	changedPoint = false;
 	if (HandlePredictions()) {
@@ -99,6 +106,13 @@ void MedBot::LateUpdate()
 	antiCollider->transform->MoveTo(gameObject->transform->position + gameObject->transform->front * carSize * (2.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 1));
 	antiCollider->transform->RotateTo(gameObject->transform->rotation);
 	antiCollider->transform->ScaleTo(gameObject->transform->scale);
+
+	if (carMovement->getDidColide() && lastCollided < 5.0f)
+		shouldReverse = true;
+	else if (carMovement->getDidColide())
+		lastCollided = 0;
+	else if (shouldReverse && lastCollided > 3.0f)
+		shouldReverse = false;
 }
 
 void MedBot::OnDestroy()
@@ -125,6 +139,9 @@ bool MedBot::HandlePredictions()
 		currentPoint = (currentPoint + 1) % points.size();
 		changedPoint = true;
 	}
+	else if (carMovement->getDidColide() && !MovedOverPoint(gameObject->transform->position, 1)) {
+		currentPoint = glm::normalize((long long)currentPoint - 1, (long long)points.size());
+	}
 
 	toPoint = glm::normalize(glm::vec2(points[currentPoint]->transform->position - (gameObject->transform->position + futurePos)));
 
@@ -138,9 +155,8 @@ bool MedBot::HandleCollision()
 	GameObject* coll = nullptr;
 
 	for (GameObject* obj : GameObject::getAllGameObjects()) {
-		if (obj->surface_type == ALWAYS_COLLIDE && obj != gameObject && Collisions::checkCollision(*obj, *antiCollider)) {
+		if (obj->surface_type == ALWAYS_COLLIDE && obj != gameObject && Collisions::checkCollision(*obj, *antiCollider) && (coll == nullptr || glm::distance(obj->transform->position, gameObject->transform->position) < glm::distance(coll->transform->position, gameObject->transform->position) )) {
 			coll = obj;
-			break;
 		}
 	}
 

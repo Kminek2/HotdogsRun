@@ -7,6 +7,8 @@ StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, Race
 	toPoint = glm::vec3(0);
 	avoiding = 0;
 	changedPoint = false;
+	shouldReverse = false;
+	lastCollided = 100;
 }
 
 void StraightKingBot::Init()
@@ -20,12 +22,17 @@ void StraightKingBot::Init()
 
 void StraightKingBot::EarlyUpdate()
 {
+	lastCollided += Time::deltaTime;
+	if (shouldReverse) {
+		carMovement->goBackwards();
+		return;
+	}
 	bool changesToPoint = changedPoint;
 	changedPoint = false;
 	if (HandlePredictions()) {
-		if (carMovement->getActSpeed() / carMovement->getMaxSpeed() < breakMult * 0.5f)
+		if (carMovement->getActSpeed() / carMovement->getMaxSpeed() < breakMult * 0.5f && !shouldReverse)
 			carMovement->goForward();
-		else if (carMovement->getAxleAngle() > 10)
+		else if (carMovement->getAxleAngle() > 10 && !shouldReverse)
 			carMovement->useHandBreak();
 
 		return;
@@ -101,6 +108,13 @@ void StraightKingBot::LateUpdate()
 	antiCollider->transform->MoveTo(gameObject->transform->position + gameObject->transform->front * carSize * (2.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 1));
 	antiCollider->transform->RotateTo(gameObject->transform->rotation);
 	antiCollider->transform->ScaleTo(gameObject->transform->scale);
+
+	if (carMovement->getDidColide() && lastCollided < 5.0f)
+		shouldReverse = true;
+	else if (carMovement->getDidColide())
+		lastCollided = 0;
+	else if (shouldReverse && lastCollided > 3.0f)
+		shouldReverse = false;
 }
 
 void StraightKingBot::OnDestroy()
@@ -127,6 +141,9 @@ bool StraightKingBot::HandlePredictions()
 		currentPoint = (currentPoint + 1) % points.size();
 		changedPoint = true;
 	}
+	else if (carMovement->getDidColide() && !MovedOverPoint(gameObject->transform->position, 1)) {
+		currentPoint = glm::normalize((long long)currentPoint - 1, (long long)points.size());
+	}
 	
 	toPoint = glm::normalize(glm::vec2(points[currentPoint]->transform->position - (gameObject->transform->position + futurePos)));
 
@@ -140,14 +157,18 @@ bool StraightKingBot::HandleCollision()
 	GameObject* coll = nullptr;
 
 	for (GameObject* obj : GameObject::getAllGameObjects()) {
-		if (obj->surface_type == ALWAYS_COLLIDE && obj != gameObject && Collisions::checkCollision(*obj, *antiCollider)) {
+		if (obj->surface_type == ALWAYS_COLLIDE && obj != gameObject && Collisions::checkCollision(*obj, *antiCollider) && (coll == nullptr || glm::distance(obj->transform->position, gameObject->transform->position) < glm::distance(coll->transform->position, gameObject->transform->position))) {
 			coll = obj;
-			break;
 		}
 	}
 
 	if (coll == nullptr)
 		return false;
+	else if (shouldReverse)
+	{
+		carMovement->goBackwards();
+		return true;
+	}
 
 	glm::vec2 toColl = glm::normalize(glm::vec2(coll->transform->position - gameObject->transform->position));
 	float nextPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toColl);

@@ -37,6 +37,7 @@ void CarMovement::Init() {
 }
 
 void CarMovement::Update() {
+	didCollide = false;
 	__multiplier = multiplier * _multiplier;
 	__maxSpeed   = maxSpeed   * _maxSpeed  ;
 	__accelFront = accelFront * _accelFront;
@@ -100,6 +101,7 @@ void CarMovement::OnDestroy() {}
 
 void CarMovement::Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot)
 {
+	didCollide = true;
 	if (crashsound_timer == 0.0f) {
 		crashsound_audio->PlayTrack(false);
 		crashsound_timer = 0.5f;
@@ -328,6 +330,10 @@ float CarMovement::getActSpeed() {
 
 float CarMovement::getAxleAngle() {
 	return axleAngle;
+}
+
+bool CarMovement::getDidColide() const {
+	return didCollide;
 }
 
 glm::vec3 CarMovement::getFuturePos() const

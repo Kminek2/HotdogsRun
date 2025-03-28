@@ -18,6 +18,8 @@ private:
 
 	uint32_t currentPoint;
 	bool changedPoint;
+	bool shouldReverse;
+	float lastCollided;
 
 	glm::vec2 toPoint;
 

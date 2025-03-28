@@ -66,6 +66,8 @@ private:
     float crashsound_timer;
     float gassound_timer;
 
+    bool didCollide;
+
     AudioSource2d* crashsound_audio;
     AudioSource2d* gassound_audio;
 
@@ -89,6 +91,7 @@ public:
     glm::vec3 getFuturePos() const;
     float getMaxSpeed() const;
     int getSurface() const;
+    bool getDidColide() const;
     
     // overrides [percent change]
     float _multiplier = 1;

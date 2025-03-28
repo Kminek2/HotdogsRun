@@ -23,6 +23,8 @@ private:
 	glm::vec2 toPoint;
 
 	GameObject* antiCollider;
+	float lastCollided;
+	bool shouldReverse;
 
 	bool MovedOverPoint(glm::vec3 pos, int previous = 0);
 	bool HandlePredictions();
