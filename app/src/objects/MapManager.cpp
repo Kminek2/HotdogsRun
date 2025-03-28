@@ -77,15 +77,17 @@ MapManager* MapManager::Init()
 		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
 	}
 
-	std::vector<glm::vec2> checkpoint_positions = getCheckPoints(points, cp_offset);
-	check_points.reserve(checkpoint_positions.size());
-	for (int i=0; i< checkpoint_positions.size(); i++) {
+	float offset = MAP_TILE_SIZE * MAP_TILE_SCALE / 2.0f;
+	for (int i=0; i< points.size(); i+=cp_offset) {
+		GameObject* parent_road = GetPoint(i);
+
 		GameObject* ncp = new GameObject(
 			"checkpoint",
-			{ checkpoint_positions[i].x, checkpoint_positions[i].y, 0 },
-			GetPoint(i * cp_offset)->transform->rotation,
+			{ parent_road->transform->position.x, parent_road->transform->position.y, 0 + i / 1e5 },
+			glm::vec3(0, 0, 45 * map_points[i].out + 90),
 			glm::vec3(MAP_TILE_SCALE));
 
+		ncp->transform->Translate(glm::vec3(0, -offset, 0));
 		ncp->AddDefaultOBB(glm::vec3(1), true)->surface_type = NEVER_COLLIDE;
 
 		check_points.push_back(ncp);
