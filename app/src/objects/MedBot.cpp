@@ -12,10 +12,10 @@ MedBot::MedBot(CarMovement* carMovement, MapManager* map, float prefaredSpeed, f
 void MedBot::Init()
 {
 	carSize = gameObject->GetModelMaxDistVert()[0].x - gameObject->GetModelMaxDistVert()[0].y;
-	glm::vec3 obbSizes = glm::vec3(carSize * 2.5, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(1.1f, 1.3f, 1.3f);
+	glm::vec3 obbSizes = glm::vec3(carSize * 3, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(1.1f, 1.3f, 1.3f);
 
 	antiCollider = new GameObject("", gameObject->transform->position, gameObject->transform->rotation, gameObject->transform->scale, NEVER_COLLIDE);
-	antiCollider->addOBB(*new OBB({ -carSize * 2.5 / 2, 0, 0 }, obbSizes / 2.0f));
+	antiCollider->addOBB(*new OBB({ -carSize * 3 / 2, 0, 0 }, obbSizes / 2.0f));
 }
 
 void MedBot::EarlyUpdate()
@@ -50,7 +50,7 @@ void MedBot::EarlyUpdate()
 
 	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position)));
 
-	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > breakPower)
+	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > ((nextPointDot + 1) * 0.25f) / (breakMult * 4.0f))
 		carMovement->useHandBreak();
 	else if (carMovement->getActSpeed() / carMovement->getMaxSpeed() < prefaredSpeed) {
 		carMovement->goForward();

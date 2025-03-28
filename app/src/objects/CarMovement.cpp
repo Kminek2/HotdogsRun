@@ -106,9 +106,10 @@ void CarMovement::Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot)
 	}
 	gameObject->transform->MoveTo(oldPos);
 	gameObject->transform->RotateTo(oldRot);
+	gameObject->transform->Move(glm::normalize(gameObject->transform->position - with->transform->position) * Time::deltaTime);
 	actSpeed *= -1;
 	forces.x = -forces.x;
-	gripMult = with->transform->position - gameObject->transform->position;
+	gripMult = gameObject->transform->position - with->transform->position;
 	axleAngle = 0.0f;
 	//actSpeed = std::min(actSpeed/2.5f, 20.0f * (actSpeed > 0 ? 1 : -1));
 	downSpeed += std::abs((1 / (__carWeight * __multiplier)) * actSpeed) * 0.03f;
