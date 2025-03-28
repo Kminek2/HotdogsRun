@@ -42,9 +42,9 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
 
     Application::SetCursor(true);
 
-    //qc = new QuickCamera();
-   // qc->_sr(0.75f);
-	//qc->_sm(100.0f);
+    // qc = new QuickCamera();
+    // qc->_sr(0.75f);
+	// qc->_sm(100.0f);
 
     music_timer = 0.0f;
 
@@ -107,7 +107,106 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, 12.7f, -0.05f));
     objs[objs.size()-1]->transform->Rotate(glm::vec3(0.0f, 0.0f, -90.0f));
     objs.push_back(new GameObject("f1car"));
-    objs[objs.size()-1]->AddScript(new CarMovement(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-1.1f, -15.7f, 0.3f));
+    objs[objs.size()-1]->transform->Rotate(glm::vec3(0.0f, 0.0f, 70.0f));
+    objs[objs.size()-1]->AddScript(new WheelsScript(*cm));
+    objs.push_back(new GameObject("pickup"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(2.6f, 0.0f, 0.0f));
+    objs[objs.size()-1]->transform->Rotate(glm::vec3(0.0f, 0.0f, 70.0f));
+    objs[objs.size()-1]->AddScript(new WheelsScript(*cm));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(glm::vec3(6.4f, 14.7f, 0.0f));
+    objs.push_back(new GameObject("case_8_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_9_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, 6.4f, 0.0f));
+    objs.push_back(new GameObject("case_9_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, 6.4f, 0.0f));
+    objs.push_back(new GameObject("case_9_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, 6.4f, 0.0f));
+    objs.push_back(new GameObject("case_1_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, 6.4f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 10.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_2_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-10.0f, -10.0f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_6_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_7_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_3_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-35]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_13_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_9_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_9_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_9_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_8_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(0.0f, -6.4f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    objs.push_back(new GameObject("case_12_color"));
+    objs[objs.size()-1]->transform->Move(objs[objs.size()-2]->transform->position + glm::vec3(-6.4f, 0.0f, 0.0f));
+    
 
     Camera::main->cameraTransform->MoveTo(glm::vec3(-9.96294f, -9.06299f, 2.38608f));
     Camera::main->cameraTransform->RotateTo(glm::vec2(47.0f, -4.0f));
@@ -139,8 +238,8 @@ void MainMenuScene::Update() {
         music_timer = 71.0f;
     }
 
-  // qc->HandleMove();
-    //qc->HandleRotate();
+    // qc->HandleMove();
+    // qc->HandleRotate();
     if (!menu_options.empty())
         UpdateMenu();
     if (!maps_options.empty())
@@ -422,14 +521,14 @@ void MainMenuScene::to_maps_animation() {
     }});
     am->addToQueue({{glm::vec3(-5.16202f, 1.9114f, 2.5676f), glm::vec2(24.5f, -2.0f)}, {glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, 1.0f, {0.0f, 0.0f, 0.0f}});
     am->addToQueue({{glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, {glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
-    am->addToQueue({{glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, {glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
-    am->addToQueue({{glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, {glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, 0.01f, {0.0f, 0.0f, 0.0f}, true, [](){}, [&](){
+    am->addToQueue({{glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, {glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 10.0f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
+    am->addToQueue({{glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 10.0f)}, {glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 10.0f)}, 0.01f, {0.0f, 0.0f, 0.0f}, true, [](){}, [&](){
         ShowMaps();
     }});
 }
 
 void MainMenuScene::from_maps_animation() {
-    am->addToQueue({{glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 1.0f)}, {glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, 1.5f, {0.0f, 0.0f, 0.0f}, false, [&](){
+    am->addToQueue({{glm::vec3(16.8101f, 18.9178f, 1.79752f), glm::vec2(88.25f, 10.0f)}, {glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, 1.5f, {0.0f, 0.0f, 0.0f}, false, [&](){
         HideMaps();
     }});
     am->addToQueue({{glm::vec3(15.9145f, 5.02479f, 1.79929f), glm::vec2(62.0f, -7.25f)}, {glm::vec3(6.91982f, 5.95392f, 2.12385f), glm::vec2(11.0f, -2.0f)}, 1.5f, {0.0f, 0.0f, 0.0f}});
