@@ -258,12 +258,14 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 	(new Text("SansSerif", glm::vec3(0.1f, 0.8f, 0.0f), glm::vec2(0.0f)))->SetText("The race ended")->ChangeSize(0.5);
 	(new Text("SansSerif", glm::vec3(0.1f, 0.575f, 0.0f), glm::vec2(0.0f)))->SetText("...and you were " + std::to_string(place) + String::getSuffix(place) + '!')->ChangeSize(0.4);
 
-	(new Text("SansSerif", glm::vec3(0.1f, 0.3f, 0.0f), glm::vec2(0.0f)))->SetText("Nitros used: " + std::to_string(main_car->cm->nitrosUsed))->ChangeSize(0.2);
+	(new Text("SansSerif", glm::vec3(0.1f, 0.25f, 0.0f), glm::vec2(0.0f)))->SetText("Nitros used: " + std::to_string(main_car->cm->nitrosUsed))->ChangeSize(0.2);
 	(new Text("SansSerif", glm::vec3(0.1f, 0.1f, 0.0f), glm::vec2(0.0f)))->SetText("Time taken: " + String::formatDouble(race_time_elapsed, 2) + 's')->ChangeSize(0.2);
 
 	double dist = lr_objects[lr_place]->progress * sum_x * VELOCITY_DISPLAY_MULTIPLIER;
-	(new Text("SansSerif", glm::vec3(0.1f, -0.1f, 0.0f), glm::vec2(0.0f)))->SetText("Distance covered: " + String::formatDouble(dist, 2) + 'm')->ChangeSize(0.2);
-	(new Text("SansSerif", glm::vec3(0.1f, -0.3f, 0.0f), glm::vec2(0.0f)))->SetText("Avereage speed: " + String::formatDouble(dist / race_time_elapsed, 2) + "m/s")->ChangeSize(0.2);
+	(new Text("SansSerif", glm::vec3(0.1f, -0.05f, 0.0f), glm::vec2(0.0f)))->SetText("Distance covered: " + String::formatDouble(dist, 2) + 'm')->ChangeSize(0.2);
+	(new Text("SansSerif", glm::vec3(0.1f, -0.2f, 0.0f), glm::vec2(0.0f)))->SetText("Avereage speed: " + String::formatDouble(dist / race_time_elapsed, 2) + "m/s")->ChangeSize(0.2);
+
+	(new Text("SansSerif", glm::vec3(.1, -.7, 0), glm::vec2(0)))->SetText("Seed: " + std::to_string(map_manager->getSeed()))->ChangeSize(.125);
 
 	(new Text("SansSerif", glm::vec3(0.1f, -0.8f, 0.0f), glm::vec2(0.0f)))->SetText("Press ENTER to continue!")->ChangeSize(0.3);
 

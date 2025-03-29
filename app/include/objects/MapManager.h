@@ -96,6 +96,8 @@ public:
 	std::vector<GameObject*>& getDecors();
 	BuildingManager* getBuildingManager();
 
+	size_t getSeed();
+
 	// -- checkpoints --
 	const unsigned cp_offset; // cp stands for checkpoint 💀 
 

@@ -214,6 +214,10 @@ BuildingManager* MapManager::getBuildingManager() {
 	return build;
 }
 
+size_t MapManager::getSeed() {
+	return seed;
+}
+
 std::vector<GameObject*>& MapManager::getDecors() {
 	return decors;
 }
