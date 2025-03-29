@@ -1,5 +1,6 @@
 #include "objects/CarMovement.h"
 #include "AppTime.h"
+#include "GameObject.h"
 
 #include <iostream>
 
@@ -74,19 +75,27 @@ void CarMovement::Update() {
 
 	GameObject* collidedWith = nullptr;
 	CarMovement* carCollided = nullptr;
-	for (auto const& obj : GameObject::createdGameObject) {
-		if (obj == gameObject || !Collisions::checkCollision(*gameObject, *obj))
-			continue;
 
-		if (obj->surface_type < 0) {
-			coll = coll || (obj->surface_type == ALWAYS_COLLIDE);
-			if (coll && obj->surface_type == ALWAYS_COLLIDE) {
-				collidedWith = obj;
-				if (collidedWith->cm != nullptr)
-					carCollided = collidedWith->cm;
+	for (int x = -1; x < 2; ++x) {
+		for (int y = -1; y < 2; ++y) {
+			if (GameObject::chunks.find({gameObject->act_chunk.first + x, gameObject->act_chunk.second + y}) == GameObject::chunks.end())
+				continue;
+
+			for (auto const& obj : GameObject::chunks[{gameObject->act_chunk.first + x, gameObject->act_chunk.second + y}]) {
+				if (obj == gameObject || !Collisions::checkCollision(*gameObject, *obj))
+					continue;
+
+				if (obj->surface_type < 0) {
+					coll = coll || (obj->surface_type == ALWAYS_COLLIDE);
+					if (coll && obj->surface_type == ALWAYS_COLLIDE) {
+						collidedWith = obj;
+						if (collidedWith->cm != nullptr)
+							carCollided = collidedWith->cm;
+					}
+				} else
+					road_type = std::max(road_type, obj->surface_type);
 			}
-		} else
-			road_type = std::max(road_type, obj->surface_type);
+		}
 	}
 	if (coll) {
 		Collided(collidedWith, old_pos, old_rot);

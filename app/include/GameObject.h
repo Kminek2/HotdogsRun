@@ -7,6 +7,7 @@
 #include <list>
 #include <vector>
 #include <array>
+#include <set>
 
 #include "ColorChangeBuffer.h"
 class Commands;
@@ -76,6 +77,7 @@ private:
 	Model* model;
 
 	static std::list<GameObject*> createdGameObject;
+	std::pair<int,int> act_chunk;
 
 	std::list<GameObject*>::iterator i;
 	std::vector<OBB> obbs;
@@ -95,15 +97,20 @@ private:
 	void EarlyUpdate(ThreadPool& threadPool);
 	void Update(ThreadPool& threadPool);
 	void LateUpdate(ThreadPool& threadPool);
+	
+	void UpdateChunk(std::pair<int,int> old_chunk);
 public:
 	GameObject(std::string model = "", glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1), int surface_type = -1);
 	GameObject(ObjectSchema* schema, glm::vec3 position = glm::vec3(0)) : GameObject(schema->model, position, schema->rotation, schema->scale, schema->surface_type) {};
 	~GameObject();
+	static std::map<std::pair<int,int>, std::set<GameObject*>> chunks;
 
 	Transform* transform;
-
+	
 	std::vector<ObjectScript*> objectScripts;
 	CarMovement* cm = nullptr;
+
+	std::pair<int,int> getChunk();
 
 	int surface_type;
 
