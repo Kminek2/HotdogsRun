@@ -1,11 +1,13 @@
 #include "GameObject.h"
 #include "default_obb_data.h"
+#include <exception>
 
 bool GameObject::deletingAll = false;
 std::list<GameObject*> GameObject::createdGameObject;
 Buffer<ThisColorChanges>* GameObject::colorChangesPrObject = nullptr;
 UniformBuffer<ColorChangeStruct>* GameObject::allColorChanges = nullptr;
 std::list<ColorChangeStruct> GameObject::changeColor;
+std::map<std::pair<int,int>, std::set<GameObject*>> GameObject::chunks;
 
 GameObject::GameObject(int, std::string model, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int surface_type) 
 : surface_type(surface_type)
@@ -14,6 +16,8 @@ GameObject::GameObject(int, std::string model, glm::vec3 position, glm::vec3 rot
 	this->model = newModel.first;
 
 	transform = new Transform(position, rotation, scale);
+	act_chunk = {static_cast<int>(transform->position.x/30.0f), static_cast<int>(transform->position.y/30.0f)};
+	UpdateChunk({0, 0});
 
 	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
 
@@ -59,6 +63,13 @@ void GameObject::EarlyUpdate(ThreadPool& threadPool)
 
 		threadPool.enqueue(upd);
 	}
+	
+	std::pair<int,int> old_chunk;
+	act_chunk = {static_cast<int>(transform->position.x/30.0f), static_cast<int>(transform->position.y/30.0f)};
+	
+	if (act_chunk != old_chunk) {
+		UpdateChunk(old_chunk);
+	}
 }
 
 void GameObject::Update(ThreadPool& threadPool)
@@ -88,6 +99,8 @@ GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation
 	this->model = newModel.first;
 
 	transform = new Transform(position, rotation, scale);
+	act_chunk = {static_cast<int>(transform->position.x/30.0f), static_cast<int>(transform->position.y/30.0f)};
+	UpdateChunk({0, 0});
 
 	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
 
@@ -103,8 +116,13 @@ GameObject::~GameObject()
 		objectScripts[i]->OnDestroy();
 		delete objectScripts[i];
 	}
-	if(!deletingAll)
+	if(!deletingAll) {
 		createdGameObject.erase(i);
+		auto& chunk = chunks[this->act_chunk];
+		auto found = chunk.find(this);
+		if (found != chunk.end())
+			chunk.erase(found);
+	}
 	delete transform;
 	delete model;
 
@@ -160,6 +178,11 @@ void GameObject::DeleteAll()
 		delete *it;
 		it = createdGameObject.erase(it);
 	}
+
+	for (auto& chunk : chunks)
+		chunk.second.clear();
+
+	chunks.clear();
 
 	deletingAll = false;
 }
@@ -309,4 +332,16 @@ GameObject* GameObject::ChangeModel(std::string model)
 	amountOfColorChanges = 0;
 	colorChangesIndex = changeColor.end();
 	return this;
+}
+
+void GameObject::UpdateChunk(std::pair<int,int> old_chunk) {
+	auto& old_chunk_set = chunks[old_chunk];
+	auto found = old_chunk_set.find(this);
+	if (found != old_chunk_set.end())
+		old_chunk_set.erase(found);
+	chunks[act_chunk].insert(this);
+}
+
+std::pair<int,int> GameObject::getChunk() {
+	return act_chunk;
 }
