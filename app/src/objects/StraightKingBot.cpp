@@ -1,4 +1,5 @@
 #include "objects/StraightKingBot.h"
+#include "GameObject.h"
 #include "objects/ShowOBB.h"
 
 StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float breakPower, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult), breakPower(breakPower), thisCar(thisCarObj)
@@ -156,9 +157,13 @@ bool StraightKingBot::HandleCollision()
 {
 	GameObject* coll = nullptr;
 
-	for (GameObject* obj : GameObject::getAllGameObjects()) {
-		if (obj->surface_type == ALWAYS_COLLIDE && obj != gameObject && Collisions::checkCollision(*obj, *antiCollider) && (coll == nullptr || glm::distance(obj->transform->position, gameObject->transform->position) < glm::distance(coll->transform->position, gameObject->transform->position))) {
-			coll = obj;
+	for (int x = -1; x < 2; ++x) {
+		for (int y = -1; y < 2; ++y) {
+			for (GameObject* obj : GameObject::chunks[{antiCollider->act_chunk.first + x, antiCollider->act_chunk.second + y}]) {
+				if (obj->surface_type == ALWAYS_COLLIDE && obj != gameObject && Collisions::checkCollision(*obj, *antiCollider) && (coll == nullptr || glm::distance(obj->transform->position, gameObject->transform->position) < glm::distance(coll->transform->position, gameObject->transform->position))) {
+					coll = obj;
+				}
+			}
 		}
 	}
 

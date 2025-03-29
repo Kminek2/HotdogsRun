@@ -16,7 +16,7 @@ GameObject::GameObject(int, std::string model, glm::vec3 position, glm::vec3 rot
 	this->model = newModel.first;
 
 	transform = new Transform(position, rotation, scale);
-	act_chunk = {static_cast<int>(transform->position.x/30.0f), static_cast<int>(transform->position.y/30.0f)};
+	act_chunk = {static_cast<int>(transform->position.x)/30, static_cast<int>(transform->position.y)/30};
 	UpdateChunk({0, 0});
 
 	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);
@@ -64,8 +64,8 @@ void GameObject::EarlyUpdate(ThreadPool& threadPool)
 		threadPool.enqueue(upd);
 	}
 	
-	std::pair<int,int> old_chunk;
-	act_chunk = {static_cast<int>(transform->position.x/30.0f), static_cast<int>(transform->position.y/30.0f)};
+	std::pair<int,int> old_chunk = act_chunk;
+	act_chunk = {static_cast<int>(transform->position.x)/30, static_cast<int>(transform->position.y)/30};
 	
 	if (act_chunk != old_chunk) {
 		UpdateChunk(old_chunk);
@@ -99,7 +99,7 @@ GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation
 	this->model = newModel.first;
 
 	transform = new Transform(position, rotation, scale);
-	act_chunk = {static_cast<int>(transform->position.x/30.0f), static_cast<int>(transform->position.y/30.0f)};
+	act_chunk = {static_cast<int>(transform->position.x)/30, static_cast<int>(transform->position.y)/30};
 	UpdateChunk({0, 0});
 
 	createdGameObject.insert(std::next(createdGameObject.begin(), newModel.second), this);

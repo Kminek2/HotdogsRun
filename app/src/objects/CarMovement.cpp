@@ -76,12 +76,12 @@ void CarMovement::Update() {
 	GameObject* collidedWith = nullptr;
 	CarMovement* carCollided = nullptr;
 
-	for (int x = -4; x < 5; ++x) {
-		for (int y = -4; y < 5; ++y) {
-			if (GameObject::chunks.find({gameObject->act_chunk.first + x, gameObject->act_chunk.first + y}) == GameObject::chunks.end())
+	for (int x = -1; x < 2; ++x) {
+		for (int y = -1; y < 2; ++y) {
+			if (GameObject::chunks.find({gameObject->act_chunk.first + x, gameObject->act_chunk.second + y}) == GameObject::chunks.end())
 				continue;
 
-			for (auto const& obj : GameObject::chunks[{gameObject->act_chunk.first + x, gameObject->act_chunk.first + y}]) {
+			for (auto const& obj : GameObject::chunks[{gameObject->act_chunk.first + x, gameObject->act_chunk.second + y}]) {
 				if (obj == gameObject || !Collisions::checkCollision(*gameObject, *obj))
 					continue;
 
