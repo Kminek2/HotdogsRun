@@ -51,6 +51,8 @@ public:
 	std::set<std::string> GetCarNames();
 	std::vector<CarObject*>& getCarObjects(); 
 
+	GameObject* main_car = nullptr;
+
 private:
 	MapManager* map_manager = nullptr;
 
@@ -59,7 +61,6 @@ private:
 
 	int cars_placed = 0;
 
-	GameObject* main_car = nullptr;
 	std::vector<CarObject*> car_objects;
 	static std::set<std::string> car_names;
 

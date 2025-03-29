@@ -35,6 +35,7 @@ MapManager* MapManager::Init()
 	
 	while (sur_types_changes.size() < num_sur_changes) sur_types_changes.insert(rand.random<size_t>(0, static_cast<size_t>(.9 * n)));
 
+	std::vector<int> to_rem;
 	for (int i = 0; i < n; ++i) {
 		MapPoint point = map_points[i];
 		ObjectSchema* data;
@@ -53,7 +54,8 @@ MapManager* MapManager::Init()
 			data = (road_segments[cur_sur_type_id].find({point.in, map_points[i + 2].out}) == road_segments[cur_sur_type_id].end()
 				? road_segments[cur_sur_type_id].at({map_points[i + 2].out, point.in})
 				: road_segments[cur_sur_type_id].at({point.in, map_points[i + 2].out}));
-
+			to_rem.push_back(i);
+			to_rem.push_back(i-static_cast<int>(to_rem.size()));
 			i += 2;
 		} else {
 			data = (road_segments[cur_sur_type_id].find({ point.in, point.out }) == road_segments[cur_sur_type_id].end()
@@ -77,15 +79,21 @@ MapManager* MapManager::Init()
 		points[points.size()-1]->AddDefaultOBB({0.0f, 0.0f, 0.0f}, true);
 	}
 
-	std::vector<glm::vec2> checkpoint_positions = getCheckPoints(points, cp_offset);
-	check_points.reserve(checkpoint_positions.size());
-	for (int i=0; i< checkpoint_positions.size(); i++) {
+	for (int i = 0; i < static_cast<int>(to_rem.size()); ++i) {
+		map_points.erase(map_points.begin()+to_rem[i]);
+	}
+
+	float offset = MAP_TILE_SIZE * MAP_TILE_SCALE / 2.0f;
+	for (int i=0; i< points.size(); i+=cp_offset) {
+		GameObject* parent_road = GetPoint(i);
+
 		GameObject* ncp = new GameObject(
 			"checkpoint",
-			{ checkpoint_positions[i].x, checkpoint_positions[i].y, 0 },
-			GetPoint(i * cp_offset)->transform->rotation,
+			{ parent_road->transform->position.x, parent_road->transform->position.y, 0 + i / 1e5 },
+			glm::vec3(0, 0, 45 * map_points[i].out + 90),
 			glm::vec3(MAP_TILE_SCALE));
 
+		ncp->transform->Translate(glm::vec3(0, -offset, 0));
 		ncp->AddDefaultOBB(glm::vec3(1), true)->surface_type = NEVER_COLLIDE;
 
 		check_points.push_back(ncp);
@@ -135,7 +143,7 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 		break;
 	}
 
-	if (cur == -1) return decor; // no collision - all good!
+	if (cur == -1 || cur == 1 || cur == points.size()-1) return decor; // no collision - all good!
 
 	glm::vec3 pos = decor->transform->position;
 	for (glm::vec2 dir : directions) {

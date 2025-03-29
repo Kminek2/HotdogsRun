@@ -13,6 +13,7 @@
 #include "Sprite.h"
 #include "objects/LockPosition.h"
 #include "objects/LockRotation.h"
+#include "scenes/TutorialScene.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -22,6 +23,7 @@ std::vector<std::pair<std::string, SceeneScript*>> LoadScene::scenes = {
 	{"main_menu", new MainMenuScene()},
 	{"loading_screen", new LoadingScreenScene()},
 	{"map_demo", new MapDemo()},
+	{"tutorial", new TutorialScene()},
 	{"debug", new DebugScene()},
 };
 

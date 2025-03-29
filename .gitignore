@@ -406,3 +406,6 @@ vox/
 
 .clang-format
 settings.json
+
+/stb/
+/objLoader/
