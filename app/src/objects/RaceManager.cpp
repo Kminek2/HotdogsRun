@@ -86,19 +86,25 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 	if (map_manager->GetCheckPoint(car_obj->checkpoint + 1) != cp)
 		return;
 
-	car_obj->checkpoint++;
-	car_obj->time = Time::lastTime;
 	if (car == main_car) {
 		int i = 0;
-		for (; i < static_cast<int>(map_manager->GetCheckPoints()); ++i)
-			if (map_manager->getCheckPointsObj()[i] == cp)
+		for (; i < static_cast<int>(map_manager->GetCheckPoints()); ++i) // bro just use while
+			if (map_manager->GetCheckPoint(i) == cp)
 				break;
-		map_manager->getCheckPointsObj()[glm::normalize(i-1, static_cast<int>(map_manager->GetCheckPoints()))]->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-		cp->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		map_manager->GetCheckPoint(i-1)->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)); // yellow -> yellow
+		cp->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // yellow -> red
 	}
+
+	car_obj->time = Time::lastTime;
+	car_obj->checkpoint++;
 
 	if (car_obj->checkpoint / map_manager->GetCheckPoints() >= termination_condition_value)
 		EndRace();
+}
+
+double posFromProgress(double progress, double width) {
+	return width * (2 * progress - 1);
 }
 
 /// <summary>
@@ -120,9 +126,21 @@ void RaceManager::StartRace() {
 	progress_bar = new Sprite("progress", color);
 	progress_bar->rectTransform->SetWidth(.75, false)->SetHeight(height, false)->MoveTo(glm::vec3(pos, 1));
 
+	int cp_count = map_manager->GetCheckPoints();
+	checkpoint_trackers.reserve(cp_count * termination_condition_value);
+
+	for(int lap = 0; lap < termination_condition_value; lap++)
+		for (int i = 0; i < cp_count; i++) {
+			Sprite* sp = new Sprite("tracker_chec", glm::vec4(1,1,1,.8));
+			sp->rectTransform->SetHeight(height)->ScaleTimes(1.1)->MoveTo(glm::vec3(posFromProgress(i / static_cast<double>(cp_count * termination_condition_value) + lap / static_cast<double>(termination_condition_value), progress_bar->rectTransform->scale.x), pos.y, .85));
+
+			checkpoint_trackers.push_back(sp);
+		}
+
+	race_trackers.reserve(cars_placed);
 	for (int _ = 1; _ < cars_placed; _++) {
 		Sprite* sp = new Sprite("tracker_norm", color);
-		sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(glm::vec3(pos, .9 + _ / 100.0f));
+		sp->rectTransform->SetHeight(height)->ScaleTimes(scale)->MoveTo(glm::vec3(pos, .5 + _ / 100.0f));
 
 		race_trackers.push_back(sp);
 	}
@@ -207,6 +225,7 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 	delete place;
 
 	delete progress_bar;
+	for (Sprite* t : checkpoint_trackers) delete t;
 	for (Sprite* t : race_trackers) delete t;
 
 	delete nitro_icon;
@@ -444,7 +463,8 @@ void RaceManager::handleTracking()
 		}
 
 		glm::vec3 pos = race_trackers[c_index]->rectTransform->position;
-		race_trackers[c_index]->rectTransform->MoveTo(glm::vec3(progress_bar->rectTransform->scale.x * (2 * race_data[i]->progress - 1), pos.y, pos.z));
+		//race_trackers[c_index]->rectTransform->MoveTo(glm::vec3(progress_bar->rectTransform->scale.x * (2 * race_data[i]->progress - 1), pos.y, pos.z));
+		race_trackers[c_index]->rectTransform->MoveTo(glm::vec3(posFromProgress(race_data[i]->progress, progress_bar->rectTransform->scale.x), pos.y, pos.z));
 
 		++i;
 	}

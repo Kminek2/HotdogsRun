@@ -161,15 +161,15 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 /// <summary>
 /// Return the pointer to the i-th tile's GameObject
 /// </summary>
-GameObject* MapManager::GetPoint(unsigned long long index) const {
-	return points[glm::normalize(index, static_cast<unsigned long long>(points.size()))];
+GameObject* MapManager::GetPoint(long long index) const {
+	return points[glm::normalize(index, static_cast<long long>(points.size()))];
 }
 
 /// <summary>
 /// Return the pointer to the i-th checkpoint's GameObject
 /// </summary>
-GameObject* MapManager::GetCheckPoint(unsigned long long index) const {
-	return check_points[glm::normalize(index, static_cast<unsigned long long>(check_points.size()))];
+GameObject* MapManager::GetCheckPoint(long long index) const {
+	return check_points[glm::normalize(index, static_cast<long long>(check_points.size()))];
 }
 
 /// <summary>
@@ -203,8 +203,7 @@ float MapManager::GetMapScale() {
 /// <summary>
 /// Returns the reference (pointer) to the whole vector of map tiles (unadviced to use).
 /// </summary>
-std::vector<GameObject*>* MapManager::GetPoints()
-{
+std::vector<GameObject*>* MapManager::GetPoints() {
 	return &points;
 }
 

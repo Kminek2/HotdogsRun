@@ -84,8 +84,8 @@ public:
 	};
 
 	MapManager* Init();
-	GameObject* GetPoint(unsigned long long index) const;
-	GameObject* GetCheckPoint(unsigned long long index) const;
+	GameObject* GetPoint(long long index) const;
+	GameObject* GetCheckPoint(long long index) const;
 
 	unsigned GetLen();
 	unsigned GetCheckPoints();

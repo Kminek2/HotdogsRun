@@ -81,6 +81,7 @@
     <ClCompile Include="app\src\scenes\LoadScene.cpp" />
     <ClCompile Include="app\src\scenes\MainMenuScene.cpp" />
     <ClCompile Include="app\src\scenes\MapDemo.cpp" />
+    <ClCompile Include="app\src\scenes\TutorialScene.cpp" />
     <ClCompile Include="app\src\Settings.cpp" />
     <ClCompile Include="app\src\Shader.cpp" />
     <ClCompile Include="app\src\Shadow.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="app\include\RectTransform.h" />
     <ClInclude Include="app\include\scenes\LoadingScreenScene.h" />
     <ClInclude Include="app\include\scenes\MainMenuScene.h" />
+    <ClInclude Include="app\include\scenes\TutorialScene.hpp" />
     <ClInclude Include="app\include\Settings.h" />
     <ClInclude Include="app\include\Shadow.h" />
     <ClInclude Include="app\include\SoundEngine.h" />

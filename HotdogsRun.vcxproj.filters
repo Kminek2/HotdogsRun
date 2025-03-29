@@ -279,8 +279,11 @@
     <ClCompile Include="app\src\objects\StraightKingBot.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\objects\Bot.cpp">
+    <ClCompile Include="app\src\objects\MedBot.cpp">
       <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\scenes\TutorialScene.cpp">
+      <Filter>Source Files\scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -530,8 +533,11 @@
     <ClInclude Include="app\include\objects\StraightKingBot.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
-    <ClInclude Include="app\src\objects\Bot.h">
+    <ClInclude Include="app\include\objects\MedBot.h">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\scenes\TutorialScene.hpp">
+      <Filter>Header Files\scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

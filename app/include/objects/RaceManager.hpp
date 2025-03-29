@@ -70,7 +70,7 @@ private:
 	float cars_relative_offset = .25f;
 	const static std::array<glm::vec2, 5> offsets;
 	float race_time_elapsed = 0.0f;
-	const double VELOCITY_DISPLAY_MULTIPLIER = 10.0;
+	const double VELOCITY_DISPLAY_MULTIPLIER = 5;
 
 	unsigned long long termination_condition_value; // aka laps
 
@@ -92,6 +92,7 @@ private:
 	Text* place = nullptr;
 
 	Sprite* progress_bar = nullptr;
+	std::vector<Sprite*> checkpoint_trackers;
 	std::vector<Sprite*> race_trackers;
 
 	Sprite* nitro_icon = nullptr;
