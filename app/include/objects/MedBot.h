@@ -24,6 +24,8 @@ private:
 
 	GameObject* antiCollider;
 	float lastCollided;
+	glm::vec3 lastCollPos;
+
 	bool shouldReverse;
 
 	bool MovedOverPoint(glm::vec3 pos, int previous = 0);
@@ -31,7 +33,7 @@ private:
 	bool HandleCollision();
 	bool HandleCheckPoint();
 public:
-	MedBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float prefaredSpeed = 0.6f, float breakPower = 0.5f, float brakMult = 0.5);
+	MedBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float prefaredSpeed = 0.6f, float breakPower = 0.4f, float brakMult = 0.6);
 
 	void Init() override;
 	void EarlyUpdate() override;
