@@ -192,7 +192,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		bot->AddScript(new WheelsScript(*carmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
 
 		carObj = race_manager->AddCar(bot);
-		bot->AddScript(carmv)->AddScript(new AntiPersonelBot(carmv, map, carObj, race_manager->getMainCar(), 0.3f, 0.2f));
+		bot->AddScript(carmv)->AddScript(new AntiPersonelBot(carmv, map, carObj, race_manager->getMainCar()));
 	}
 
 	PowerUp::car_objects = race_manager->getCarObjects();

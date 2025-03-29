@@ -20,6 +20,7 @@ class AntiPersonelBot :
 	bool changedPoint;
 	bool shouldReverse;
 	float lastCollided;
+	glm::vec3 lastCollPos;
 
 	glm::vec2 toPoint;
 
