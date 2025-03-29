@@ -76,24 +76,18 @@ void MedBot::EarlyUpdate()
 
 	if (nextPointDot < -breakMult * glm::max(abs(carMovement->getAxleAngle() / 30.0f), 0.0001f)) {
 		carMovement->makeLeftTurn();
-		avoiding = 1;
 	}
 	else if (nextPointDot > breakMult * glm::max(abs(carMovement->getAxleAngle() / 30.0f), 0.0001f)) {
 		carMovement->makeRightTurn();
-		avoiding = -1;
 	}
 	else if (forwardDot < 0) {
 		if (nextPointDot <= 0) {
 			carMovement->makeLeftTurn();
-			avoiding = 1;
 		}
 		else {
 			carMovement->makeRightTurn();
-			avoiding = -1;
 		}
 	}
-	else
-		avoiding = 0;
 }
 
 void MedBot::Update()
@@ -102,8 +96,8 @@ void MedBot::Update()
 
 void MedBot::LateUpdate()
 {
-	antiCollider->obbs[0].sizes = glm::vec3(carSize, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(2.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 1.0f, 1.1f, 1.1f);
-	antiCollider->transform->MoveTo(gameObject->transform->position + gameObject->transform->front * carSize * (2.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 1));
+	antiCollider->obbs[0].sizes = glm::vec3(carSize, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(4.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 1.0f, 1.1f, 1.1f);
+	antiCollider->transform->MoveTo(gameObject->transform->position + gameObject->transform->front * carSize * (4.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 1));
 	antiCollider->transform->RotateTo(gameObject->transform->rotation);
 	antiCollider->transform->ScaleTo(gameObject->transform->scale);
 
@@ -113,6 +107,9 @@ void MedBot::LateUpdate()
 		lastCollided = 0;
 	else if (shouldReverse && lastCollided > 3.0f)
 		shouldReverse = false;
+
+	if(lastCollided > 5.0f)
+		avoiding = 0;
 }
 
 void MedBot::OnDestroy()
@@ -163,19 +160,26 @@ bool MedBot::HandleCollision()
 	if (coll == nullptr)
 		return false;
 
+	if (carMovement->getActSpeed() / carMovement->getMaxSpeed() < breakMult * 0.5f && !shouldReverse)
+		carMovement->goForward();
+	else if (!shouldReverse && coll->cm == nullptr)
+		carMovement->useHandBreak();
+
 	glm::vec2 toColl = glm::normalize(glm::vec2(coll->transform->position - gameObject->transform->position));
 	float nextPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->right)), toColl);
 
 	if (carMovement->getSurface() == 0)
 		nextPointDot = glm::dot(glm::normalize(glm::vec2(-gameObject->transform->right)), toPoint);
 
-	if ((avoiding == 1 && glm::length(glm::vec2(coll->transform->position - gameObject->transform->position)) < carSize) || (nextPointDot > 0)) {
+	if ((avoiding == 1 && coll->cm == nullptr) || (nextPointDot > 0)) {
 		carMovement->makeLeftTurn();
-		avoiding = 1;
+		if (coll->cm != nullptr)
+			avoiding = 1;
 	}
-	else if ((avoiding == -1 && glm::length(glm::vec2(coll->transform->position - gameObject->transform->position)) < carSize) || (nextPointDot < 0)) {
+	else if ((avoiding == -1 && coll->cm == nullptr) || (nextPointDot < 0)) {
 		carMovement->makeRightTurn();
-		avoiding = -1;
+		if (coll->cm != nullptr)
+			avoiding = -1;
 	}
 	return true;
 }

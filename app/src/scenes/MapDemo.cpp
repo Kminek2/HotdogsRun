@@ -23,6 +23,7 @@
 
 #include "objects/StraightKingBot.h"
 #include "objects/MedBot.h"
+#include "objects/AntiPersonelBot.h"
 
 using namespace mapgen;
 
@@ -184,6 +185,14 @@ std::shared_ptr<Scene> MapDemo::Init() {
 			bot->AddScript(carmv)->AddScript(new MedBot(carmv, map, carObj, 0.8f));
 		else if(difficulty == 2)
 			bot->AddScript(carmv)->AddScript(new MedBot(carmv, map, carObj, 0.9f, 0.6f, 0.3f));*/
+
+		bot = new GameObject("pickup");
+
+		carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f * (1 + (difficulty + 1) / 3.0f));
+		bot->AddScript(new WheelsScript(*carmv, "", 0.9f, 0.9f, 0.0f, 2.2f));
+
+		carObj = race_manager->AddCar(bot);
+		bot->AddScript(carmv)->AddScript(new AntiPersonelBot(carmv, map, carObj, race_manager->getMainCar(), 0.3f, 0.2f));
 	}
 
 	PowerUp::car_objects = race_manager->getCarObjects();
@@ -251,7 +260,7 @@ void MapDemo::Update() {
 	}
 
 	if (Settings::read("debug_mode").value_or(0)) {
-		if(Input::getKeyPressed(GLFW_KEY_N)) race_manager->main_car->cm->addNitros(1);
+		if(Input::getKeyPressed(GLFW_KEY_N)) race_manager->getMainCar()->cm->addNitros(1);
 		if(Input::getKeyClicked(GLFW_KEY_R)) race_manager->EndRace();
 	}
 }

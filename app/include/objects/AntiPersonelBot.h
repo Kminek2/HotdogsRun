@@ -3,9 +3,9 @@
 #include "objects/CarMovement.h"
 #include "objects/MapManager.h"
 #include "objects/RaceManager.hpp"
-class StraightKingBot : public ObjectScript
+class AntiPersonelBot :
+    public ObjectScript
 {
-private:
 	int avoiding;
 	CarMovement* carMovement;
 	const MapManager* map;
@@ -20,18 +20,20 @@ private:
 	bool changedPoint;
 	bool shouldReverse;
 	float lastCollided;
-	glm::vec3 lastCollPos;
 
 	glm::vec2 toPoint;
 
 	GameObject* antiCollider;
 
+	GameObject* mainCar;
+
 	bool MovedOverPoint(glm::vec3 pos, int previous = 0);
 	bool HandlePredictions();
 	bool HandleCollision();
 	bool HandleCheckPoint();
+	bool HandleKill();
 public:
-	StraightKingBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float breakPower = 0.2f , float brakMult = 0.3);
+	AntiPersonelBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, GameObject* mainCar, float breakPower = 0.2f, float brakMult = 0.3);
 
 	void Init() override;
 	void EarlyUpdate() override;

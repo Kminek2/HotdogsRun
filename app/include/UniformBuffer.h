@@ -36,6 +36,7 @@ inline void UniformBuffer<T>::RecreateBuffer(size_t dataSize)
 {
     for (size_t i = 0; i < uniformBuffers.size(); i++) {
         if (uniformBuffers[i] != VK_NULL_HANDLE) {
+            vkUnmapMemory(Device::getDevice(), uniformBuffersMemory[i]);
             vkDestroyBuffer(Device::getDevice(), uniformBuffers[i], nullptr);
             vkFreeMemory(Device::getDevice(), uniformBuffersMemory[i], nullptr);
         }
@@ -67,6 +68,7 @@ template<typename T>
 UniformBuffer<T>::~UniformBuffer()
 {
     for (size_t i = 0; i < uniformBuffers.size(); i++) {
+        vkUnmapMemory(Device::getDevice(), uniformBuffersMemory[i]);
         vkDestroyBuffer(Device::getDevice(), uniformBuffers[i], nullptr);
         vkFreeMemory(Device::getDevice(), uniformBuffersMemory[i], nullptr);
     }

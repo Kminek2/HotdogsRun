@@ -182,7 +182,7 @@ void Application::UpdateBuffer(uint16_t frame, Uniform *uniform, Uniform* cubeMa
 		uniform->UpdateDescriptorSets(*LightObject::getSpotBuffer()->GetBuffer(), 3, glm::max(static_cast<uint32_t>(SpotLight::lightNum * sizeof(SpotLightBuffer)), static_cast<uint32_t>(1)));
 
 	if (GameObject::allColorChanges->getSize() != GameObject::SendColorData(frame) && GameObject::changeColor.size() > 0)
-		uniform->UpdateDescriptorSets(*GameObject::allColorChanges->GetBuffer(), 4, glm::max(static_cast<uint32_t>(GameObject::allColorChanges->getSize()), static_cast<uint32_t>(1)));
+		uniform->UpdateDescriptorSets(*GameObject::allColorChanges->GetBuffer(), 4, glm::max(GameObject::allColorChanges->getSize(), static_cast<VkDeviceSize>(1)));
 }
 
 std::list <float> frameTimes;

@@ -137,7 +137,7 @@ void ColorPicker::update_car() {
         float r = static_cast<float>(ri)/10000000.0f;
         float g = static_cast<float>(bi)/10000000.0f;
         float b = static_cast<float>(gi)/10000000.0f;
-        std::cout << r << ' ' << g << ' ' << b << '\n';
+        //std::cout << r << ' ' << g << ' ' << b << '\n';
         car->AddColorChange(default_colors[car_type][i], glm::vec3(r,g,b));
     }
 }
