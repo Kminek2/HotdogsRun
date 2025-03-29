@@ -14,7 +14,6 @@
 
 #include "objects/Lights.h"
 #include "Sprite.h"
-#include <GLFW/glfw3.h>
 
 const std::string on_off[] = {
     "< OFF >", "< ON >"
@@ -379,6 +378,12 @@ void MainMenuScene::ShowMaps() {
     text->SetText("HARD");
     text->SetColor(glm::vec4(glm::vec3(0.7f, 0.0f, 0.0f), 1.0f));
     maps_options.push_back({sp,{text,shadow}});
+
+    tutorial_text.second = (new Text("SansSerif", {0.907f,-0.707f,0.9f}, {1,0}, 0.2f, glm::vec4(1.0f), -2.0f));
+    tutorial_text.second->SetText("Press T for tutorial");
+    tutorial_text.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
+    tutorial_text.first = (new Text("SansSerif", {0.9f,-0.7f,0.9f}, {1,0}, 0.2f, glm::vec4(1.0f), -2.0f));
+    tutorial_text.first->SetText("Press T for tutorial");
 }
 
 void MainMenuScene::UpdateMaps() {
@@ -423,6 +428,7 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.num_sur_changes = 5;
             MapDemo::difficulty = 0;
             Application::LoadScene("loading_screen");
+            return;
             break;
         case 1:
             sound_select->PlayTrack(false);    
@@ -451,6 +457,7 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.num_sur_changes = 5;
             MapDemo::difficulty = 1;
             Application::LoadScene("loading_screen");
+            return;
             break;
         case 2:
             sound_select->PlayTrack(false);
@@ -479,8 +486,14 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.num_sur_changes = 5;
             MapDemo::difficulty = 2;
             Application::LoadScene("loading_screen");
+            return;
             break;
         }
+    }
+
+    if (Input::getKeyClicked(GLFW_KEY_T)) {
+        Application::LoadScene("tutorial");
+        return;
     }
 }
 
@@ -502,6 +515,8 @@ void MainMenuScene::HideMaps() {
         delete x.second.second;
     }
     maps_options.clear();
+    delete tutorial_text.first;
+    delete tutorial_text.second;
 }
 
 void MainMenuScene::first_animation() {
