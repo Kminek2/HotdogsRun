@@ -14,6 +14,7 @@
 #include "PowerUp.hpp"
 #include "objects/PUManager.hpp"
 #include "_rand.hpp"
+#include "StringOperations.hpp"
 
 #include <exception>
 #include <glm/vec3.hpp>
@@ -57,7 +58,6 @@ const std::vector<std::string> colors = {"primary", "secondary", "other"};
 MapManager::MapSettingsValues MapDemo::svals;
 int MapDemo::difficulty;
 
-//size_t seed = 123306034;
 const unsigned int cityNum = 3;
 
 const std::pair<std::array<std::vector<std::string>, 16>, std::vector<float>> defaultBuildings = { { {
@@ -77,8 +77,21 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	music_timer = 0.0f;
 	first_music = true;
 
-	//_rand rand(seed);
-	_rand rand;
+	_rand* randptr = nullptr;
+
+	std::vector<std::string> seed_txt = String::getFile("seed.txt");
+	
+	if (seed_txt.empty()) 
+		randptr = new _rand();
+	else {
+		size_t seed;
+		try { seed = stoull(seed_txt[0]); } 
+		catch (std::exception& e) { seed = String::getHash(seed_txt[0]); }
+
+		randptr = new _rand(seed);
+	}
+
+	_rand rand = *randptr;
 
 	std::cout << "USING SEED: " << rand.getSeed() << '\n';
 	

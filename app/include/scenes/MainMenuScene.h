@@ -21,6 +21,7 @@ private:
     std::vector<std::pair<Text*, Text*>> appearance_options;
     std::vector<std::pair<Sprite*, std::pair<Text*, Text*>>> maps_options;
     std::pair<Text*, Text*> tutorial_text;
+    std::pair<Text*, Text*> seed_text;
     Sprite* settings_bg;
     std::vector<std::pair<std::pair<Text*, Text*>, std::pair<Text*, Text*>>> settings_options;
 

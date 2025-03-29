@@ -4,6 +4,9 @@
 #include <sstream>
 #include <string>
 #include <type_traits>
+#include <fstream>
+#include <vector>
+#include <functional>
 
 namespace String {
 	inline std::string formatDouble(double v, unsigned n) {
@@ -36,5 +39,27 @@ namespace String {
 			case 3:  return "rd";
 			default: return "th";
 		}
+	}
+
+	inline std::vector<std::string> getFile(std::string file) {
+		std::ifstream input(file);
+
+		std::string line;
+		std::vector<std::string> text;
+
+		while (getline(input, line))
+			text.push_back(line);
+
+		input.close();
+		return text;
+	}
+
+	inline std::string cropString(std::string s, unsigned n, std::string indicator = "...") {
+		if (n >= s.size()) return s;
+		return s.substr(0, n) + indicator;
+	}
+
+	inline size_t getHash(std::string s) {
+		return std::hash<std::string>{}(s);
 	}
 }

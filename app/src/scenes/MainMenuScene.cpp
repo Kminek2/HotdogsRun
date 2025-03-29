@@ -14,6 +14,7 @@
 
 #include "objects/Lights.h"
 #include "Sprite.h"
+#include "StringOperations.hpp"
 
 const std::string on_off[] = {
     "< OFF >", "< ON >"
@@ -379,11 +380,14 @@ void MainMenuScene::ShowMaps() {
     text->SetColor(glm::vec4(glm::vec3(0.7f, 0.0f, 0.0f), 1.0f));
     maps_options.push_back({sp,{text,shadow}});
 
-    tutorial_text.second = (new Text("SansSerif", {0.907f,-0.707f,0.9f}, {1,0}, 0.2f, glm::vec4(1.0f), -2.0f));
-    tutorial_text.second->SetText("Press T for tutorial");
-    tutorial_text.second->SetColor(glm::vec4(glm::vec3(0.0f), 1.0f));
-    tutorial_text.first = (new Text("SansSerif", {0.9f,-0.7f,0.9f}, {1,0}, 0.2f, glm::vec4(1.0f), -2.0f));
-    tutorial_text.first->SetText("Press T for tutorial");
+    tutorial_text.second = (new Text("SansSerif", {0.907f,-0.707f,0.9f}, {1,0}, 0.2f, glm::vec4(0,0,0,1.0f), -2.0f))->SetText("Press T for tutorial");
+    tutorial_text.first = (new Text("SansSerif", { 0.900f,-0.700f,0.9f }, { 1,0 }, 0.2f, glm::vec4(1.0f), -2.0f))->SetText("Press T for tutorial");
+
+    std::vector<std::string> seed_txt = String::getFile("seed.txt");
+    std::string seed = "Seed: " + (seed_txt.empty() ? "[RANDOM]" : String::cropString(seed_txt[0], 10));
+
+    seed_text.second = (new Text("SansSerif", { -.9,-.707,.9 }, { -1,0 }, .2, glm::vec4(0, 0, 0, 1), -2))->SetText(seed);
+    seed_text.first = (new Text("SansSerif", { -.9,-.7  ,.9 }, { -1,0 }, .2, glm::vec4(1), -2))->SetText(seed);
 }
 
 void MainMenuScene::UpdateMaps() {
@@ -517,6 +521,8 @@ void MainMenuScene::HideMaps() {
     maps_options.clear();
     delete tutorial_text.first;
     delete tutorial_text.second;
+    delete seed_text.first;
+    delete seed_text.second;
 }
 
 void MainMenuScene::first_animation() {
