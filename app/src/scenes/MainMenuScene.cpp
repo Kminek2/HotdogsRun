@@ -496,6 +496,7 @@ void MainMenuScene::UpdateMaps() {
     }
 
     if (Input::getKeyClicked(GLFW_KEY_T)) {
+        HideMaps();
         Application::LoadScene("tutorial");
         return;
     }
