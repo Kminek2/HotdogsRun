@@ -54,8 +54,9 @@ MapManager* MapManager::Init()
 			data = (road_segments[cur_sur_type_id].find({point.in, map_points[i + 2].out}) == road_segments[cur_sur_type_id].end()
 				? road_segments[cur_sur_type_id].at({map_points[i + 2].out, point.in})
 				: road_segments[cur_sur_type_id].at({point.in, map_points[i + 2].out}));
-			to_rem.push_back(i);
 			to_rem.push_back(i-static_cast<int>(to_rem.size()));
+			to_rem.push_back(i+1-static_cast<int>(to_rem.size()));
+			map_points[i+2].in = map_points[i].in;
 			i += 2;
 		} else {
 			data = (road_segments[cur_sur_type_id].find({ point.in, point.out }) == road_segments[cur_sur_type_id].end()
