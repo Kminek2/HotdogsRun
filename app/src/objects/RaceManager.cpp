@@ -12,10 +12,10 @@
 
 const std::array<glm::vec2, 5> RaceManager::offsets = std::array<glm::vec2, 5>({
 	glm::vec2(2.0, 1.5),
-	glm::vec2(2.0, 0.75),
 	glm::vec2(2.0, 0),
-	glm::vec2(2.0, -0.75),
-	glm::vec2(2.0, -1.5)
+	glm::vec2(2.0, -1.5),
+	glm::vec2(0.3, -1.0),
+	glm::vec2(0.3, 1.0)
 });
 
 std::set<std::string> RaceManager::car_names;
