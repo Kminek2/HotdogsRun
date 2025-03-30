@@ -209,7 +209,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	PUManager* pum = (new PUManager(rand))->setMapManager(map);
 	pum->addPowerUp((new GameObject("cube", glm::vec3(1000.0f)))->AddScript(new PUNitro()), -1.0f);
 	pum->addPowerUp((new GameObject("crate", glm::vec3(1000.0f)))->AddScript(new PUMaxSpeed(.1f, 10 * 1000)), -1.0f);
-	pum->addPowerUp((new GameObject("banan2", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(2)))->AddScript(new PUBanana(2500)), 1.0f);
+	pum->addPowerUp((new GameObject("banan2", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(2)))->AddScript(new PUBanana(2500)), -1.0f);
 	pum->generatePowerUps(10);
 
 	GameObject* amobj = new GameObject; // 'am' stands for Animation Manager, apparently
@@ -223,6 +223,16 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		music_timer = 243.0f;
 	else
 		music_timer = 138.0f;
+
+	map->addAnimal((new GameObject("krowa", glm::vec3(10000)))->AddDefaultOBB()->AddScript(new Animal(rand, glm::vec2(10), 1)));
+	map->addAnimal((new GameObject("krowa", glm::vec3(10000)))->AddDefaultOBB()->AddScript(new Animal(rand, glm::vec2(50), 1.25)));
+	map->addAnimal((new GameObject("krowa", glm::vec3(10000)))->AddDefaultOBB()->AddScript(new Animal(rand, glm::vec2(100), 1.75)));
+
+	map->generateAnimals([&](int n) {
+		std::vector<glm::vec2> p; p.reserve(n);
+		while (n-- > 0) p.push_back({ rand.random(-100.0f, 100.0f), rand.random(-100.0f,100.0f) });
+		return p;
+	}(20));
 
 	return std::shared_ptr<Scene>(scene);
 }

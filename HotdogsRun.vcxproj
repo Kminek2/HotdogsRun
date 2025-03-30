@@ -45,6 +45,7 @@
     <ClCompile Include="app\src\mapgen.cpp" />
     <ClCompile Include="app\src\mapgen_road.cpp" />
     <ClCompile Include="app\src\ObjectSchema.cpp" />
+    <ClCompile Include="app\src\objects\Animal.cpp" />
     <ClCompile Include="app\src\objects\AnimationManager.cpp" />
     <ClCompile Include="app\src\objects\AntiPersonelBot.cpp" />
     <ClCompile Include="app\src\objects\BadBreakingBot.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="app\include\LightObject.h" />
     <ClInclude Include="app\include\mapgen.h" />
     <ClInclude Include="app\include\mapgen_road.hpp" />
+    <ClInclude Include="app\include\objects\Animal.hpp" />
     <ClInclude Include="app\include\objects\AnimationManager.h" />
     <ClInclude Include="app\include\objects\AntiPersonelBot.h" />
     <ClInclude Include="app\include\objects\BadBreakingBot.h" />

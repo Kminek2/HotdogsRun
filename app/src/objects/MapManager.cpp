@@ -220,6 +220,21 @@ size_t MapManager::getSeed() {
 	return seed;
 }
 
+void MapManager::addAnimal(GameObject* animal) {
+	animals.push_back(animal);
+}
+
+void MapManager::generateAnimals(std::vector<glm::vec2> pos) {
+	for (const glm::vec2& p : pos) {
+		GameObject* chosen = rand.choice(animals);
+		chosen->transform->MoveTo(glm::vec3(p, .3));
+
+		animal_instances.push_back(new GameObject(*chosen));
+	}
+
+	for (const GameObject* a : animals) a->transform->MoveTo(glm::vec3(10000));
+}
+
 std::vector<GameObject*>& MapManager::getDecors() {
 	return decors;
 }

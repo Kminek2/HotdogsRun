@@ -4,6 +4,7 @@
 #include "_rand.hpp"
 #include "mapgen.h"
 #include "objects/BuildingManager.hpp"
+#include "objects/Animal.hpp"
 
 using namespace mapgen;
 
@@ -40,6 +41,9 @@ private:
 	GameObject* add_decor(const std::vector<MapPoint>& map_points);
 
 	BuildingManager* build;
+
+	std::vector<GameObject*> animals;
+	std::vector<GameObject*> animal_instances;
 
 public:
 	struct MapSettingsValues {
@@ -98,9 +102,11 @@ public:
 
 	size_t getSeed();
 
+	void addAnimal(GameObject* animal);
+	void generateAnimals(std::vector<glm::vec2> pos);
+
 	// -- checkpoints --
 	const unsigned cp_offset; // cp stands for checkpoint 💀 
 
 	friend MapDemo;
 };
-
