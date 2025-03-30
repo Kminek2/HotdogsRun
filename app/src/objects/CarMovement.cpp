@@ -33,7 +33,7 @@ CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, 
 void CarMovement::Init() {
 	gameObject->cm = this;
 	crashsound_audio = new AudioSource3d(gameObject, "crash", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
-	gassound_audio = new AudioSource3d(gameObject, "gas", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
+	gassound_audio = new AudioSource3d(gameObject, "gas", static_cast<float>(Settings::read("volume").value_or(100))/400.0f);
 }
 
 void CarMovement::Update() {

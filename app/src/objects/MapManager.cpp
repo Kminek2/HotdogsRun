@@ -115,7 +115,7 @@ MapManager* MapManager::Init()
 
 const std::array<glm::vec2, 8> directions = { {{0,1}, {1,1}, {1,0}, {1,-1}, {0,-1}, {-1,-1}, {-1,0}, {-1,1}} };
 GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
-	glm::vec2 tile = rand.choice(map_points).pos;
+	glm::vec2 tile = rand.choice(std::vector<MapPoint>(map_points.begin()+1, map_points.end())).pos;
 
 	std::pair<std::string, float> obj_data = rand.choice(small_decors.first, small_decors.second);
 	GameObject* decor = new GameObject(obj_data.first, {
@@ -129,13 +129,11 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 
 	decor->AddDefaultOBB();
 
-	if (rand.coin_toss(obj_data.second)) return decor; // allow for on-road placement if TRUE
-
 	long long bef, cur, nxt;
 	bef = cur = nxt = -1;
 
 	for (long long i = 0; i < points.size(); i++) {
-		if (!Collisions::checkCollision(*points[i], *decor) && i != 0) continue;
+		if (!Collisions::checkCollision(*points[i], *decor)) continue;
 
 		bef = glm::normalize(i - 1, static_cast<long long>(points.size()));
 		cur = i;
@@ -144,7 +142,9 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 		break;
 	}
 
-	if (cur == -1 || cur == 1 || cur == points.size()-1) return decor; // no collision - all good!
+	if (rand.coin_toss(obj_data.second) && cur != 0) return decor; // allow for on-road placement if TRUE
+
+	if (cur == -1) return decor; // no collision - all good!
 
 	glm::vec3 pos = decor->transform->position;
 	for (glm::vec2 dir : directions) {
