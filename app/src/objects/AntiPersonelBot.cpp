@@ -100,10 +100,11 @@ void AntiPersonelBot::Update()
 
 void AntiPersonelBot::LateUpdate()
 {
-	antiCollider->obbs[0].sizes = glm::vec3(carSize, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(2.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 1.5f, 1.1f, 1.4f);
+	antiCollider->obbs[0].sizes = glm::vec3(carSize, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(3.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 2.5f, 1.45f, 1.4f);
 	antiCollider->obbs[0].sizes /= 2.0f;
-	antiCollider->transform->MoveTo(gameObject->transform->position + gameObject->transform->front * carSize * (2.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 1.5f) / 2.0f + glm::vec3(0, 0, 1) * antiCollider->obbs[0].sizes.z);
-	antiCollider->transform->RotateTo(gameObject->transform->rotation);
+	antiCollider->obbs[0].center = glm::vec3(-1, 0, 0) * carSize * (2.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 3.0f) / 2.0f + glm::vec3(0, 0, 1) * antiCollider->obbs[0].sizes.z;
+	antiCollider->transform->MoveTo(gameObject->transform->position);
+	antiCollider->transform->RotateTo(gameObject->transform->rotation + glm::vec3(0, 0, 0.33) * carMovement->getAxleAngle());
 	antiCollider->transform->ScaleTo(gameObject->transform->scale);
 
 	if (carMovement->getDidColide() && lastCollided < 20.0f && glm::distance(lastCollPos, gameObject->transform->position) < carSize * 2.0f) {
@@ -117,7 +118,7 @@ void AntiPersonelBot::LateUpdate()
 	}
 	else if (shouldReverse && lastCollided > 3.0f)
 		shouldReverse = false;
-	if (lastCollided > 5.0f)
+	if (lastCollided > 8.0f)
 		avoiding = 0;
 }
 
@@ -151,8 +152,8 @@ bool AntiPersonelBot::HandlePredictions()
 
 	toPoint = glm::normalize(glm::vec2(points[currentPoint]->transform->position - (gameObject->transform->position + futurePos)));
 
-	HandleCheckPoint();
 	HandleKill();
+	HandleCheckPoint();
 	bool colli = HandleCollision();
 
 	return colli;
@@ -194,12 +195,22 @@ bool AntiPersonelBot::HandleCollision()
 	//if(carMovement->getSurface() == 0)
 	//	nextPointDot = glm::dot(glm::normalize(glm::vec2(-gameObject->transform->right)), toPoint);
 
-	if ((avoiding == 1 && coll->cm == nullptr) || (nextPointDot > 0 && (avoiding == 0 || glm::distance(coll->transform->position, gameObject->transform->position) < carSize * 3.0f))) {
+	if (glm::distance(coll->transform->position, gameObject->transform->position) < carSize * 2.0f)
+	{
+		if (nextPointDot > 0)
+			carMovement->makeLeftTurn();
+		else
+			carMovement->makeRightTurn();
+
+		return true;
+	}
+
+	if ((avoiding == 1 && coll->cm == nullptr) || (nextPointDot > 0 && (avoiding == 0 || coll->cm != nullptr))) {
 		carMovement->makeLeftTurn();
 		if (coll->cm != nullptr)
 			avoiding = 1;
 	}
-	else if ((avoiding == -1 && coll->cm == nullptr) || (nextPointDot < 0 && (avoiding == 0 || glm::distance(coll->transform->position, gameObject->transform->position) < carSize * 3.0f))) {
+	else if ((avoiding == -1 && coll->cm == nullptr) || (nextPointDot <= 0 && (avoiding == 0 || coll->cm != nullptr))) {
 		carMovement->makeRightTurn();
 		if (coll->cm != nullptr)
 			avoiding = -1;
@@ -222,7 +233,7 @@ bool AntiPersonelBot::HandleCheckPoint()
 bool AntiPersonelBot::HandleKill()
 {
 	glm::vec2 toMain = glm::vec2(mainCar->transform->position - gameObject->transform->position);
-	if (glm::dot(glm::normalize(toMain), glm::normalize((glm::vec2)gameObject->transform->front)) < -0.1f || glm::dot(glm::normalize(toMain), toPoint) < 0 || glm::length(toMain) > carSize * 6.0f)
+	if (glm::dot(glm::normalize(toMain), glm::normalize((glm::vec2)gameObject->transform->front)) < -0.1f || glm::dot(glm::normalize(toMain), toPoint) < 0 || glm::length(toMain) > carSize * 6.0f || carMovement->getActSpeed() / carMovement->getMaxSpeed() < 0.1f)
 		return false;
 
 	toPoint = glm::normalize(toMain);

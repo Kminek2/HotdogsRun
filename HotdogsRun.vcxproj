@@ -99,6 +99,7 @@
     <ClCompile Include="app\src\UniformBuffer.cpp" />
     <ClCompile Include="app\src\ValidationLayers.cpp" />
     <ClCompile Include="app\src\_rand.cpp" />
+    <ClCompile Include="BadBreakingBot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\Application.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="app\include\mapgen_road.hpp" />
     <ClInclude Include="app\include\objects\AnimationManager.h" />
     <ClInclude Include="app\include\objects\AntiPersonelBot.h" />
+    <ClInclude Include="app\include\objects\BadBreakingBot.h" />
     <ClInclude Include="app\include\objects\BuildingManager.hpp" />
     <ClInclude Include="app\include\objects\CarInputs.h" />
     <ClInclude Include="app\include\objects\CinematicCamera.h" />

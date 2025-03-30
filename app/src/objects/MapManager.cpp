@@ -183,7 +183,7 @@ unsigned MapManager::GetLen() {
 /// <summary>
 /// Returns the number of checkpoints
 /// </summary>
-unsigned MapManager::GetCheckPoints() {
+unsigned MapManager::GetCheckPoints() const {
 	return check_points.size();
 }
 

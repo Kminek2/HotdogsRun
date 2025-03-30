@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -290,6 +290,10 @@
     </ClCompile>
     <ClCompile Include="app\src\objects\PowerUps\PUBanana.cpp">
       <Filter>Source Files\objects\PowerUps</Filter>
+      <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="BadBreakingBot.cpp">
+      <Filter>Source Files\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -550,6 +554,10 @@
     </ClInclude>
     <ClInclude Include="app\include\objects\PowerUps\PUBanana.hpp">
       <Filter>Header Files\objects\PowerUps</Filter>
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\BadBreakingBot.h">
+      <Filter>Header Files\objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

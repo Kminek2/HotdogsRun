@@ -13,7 +13,7 @@ void PUBanana::OnCollide(Collisions::CollisionData* cd)
 void PUBanana::OnActivate()
 {
 	std::cout << "banana\n";
-	collided->cm->disabled_inputs = 1;
+	collided->cm->__gripMult = 1;
 	timer = duration / 1000.0f;
 	collected = true;
 }
@@ -25,7 +25,7 @@ void PUBanana::Update()
 	timer -= Time::deltaTime;
 	if (timer > 0) return;
 
-	collided->cm->disabled_inputs = 0;
+	collided->cm->__gripMult = 0.5f;
 	collided = nullptr;
 }
 

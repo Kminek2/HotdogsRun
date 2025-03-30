@@ -92,7 +92,7 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 			if (map_manager->GetCheckPoint(i) == cp)
 				break;
 
-		//map_manager->GetCheckPoint(i-1)->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)); // yellow -> yellow
+		map_manager->GetCheckPoint(i-1)->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)); // yellow -> yellow
 		cp->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // yellow -> red
 	}
 
@@ -479,4 +479,9 @@ std::vector<RaceManager::CarObject*>& RaceManager::getCarObjects() {
 GameObject* RaceManager::getMainCar()
 {
 	return main_car;
+}
+
+unsigned int RaceManager::getLapCount()
+{
+	return termination_condition_value;
 }

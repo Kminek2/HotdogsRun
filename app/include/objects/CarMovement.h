@@ -98,7 +98,7 @@ public:
     float _maxSpeed   = 1;
     float _accelFront = 1;
     float _carWeight  = 1;
-    
+    float __gripMult = 0.5f;
     static bool disabled_inputs;
 
     void addNitros(int count);

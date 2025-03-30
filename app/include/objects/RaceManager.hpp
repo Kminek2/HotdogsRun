@@ -53,6 +53,7 @@ public:
 
 	GameObject* getMainCar();
 
+	unsigned int getLapCount();
 private:
 	MapManager* map_manager = nullptr;
 

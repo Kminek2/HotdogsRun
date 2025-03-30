@@ -1,8 +1,8 @@
-#include "objects/StraightKingBot.h"
+#include "objects/BadBreakingBot.h"
 #include "GameObject.h"
 #include "objects/ShowOBB.h"
 
-StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, float breakPower, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult), breakPower(breakPower), thisCar(thisCarObj)
+BadBreakingBot::BadBreakingBot(CarMovement* carMovement, MapManager* map, RaceManager::CarObject* thisCarObj, GameObject* mainCar, RaceManager* race, float breakPower, float brakMult) : carMovement(carMovement), map(map), points(*map->GetPoints()), breakMult(brakMult), breakPower(breakPower), thisCar(thisCarObj)
 {
 	currentPoint = 1;
 	toPoint = glm::vec3(0);
@@ -10,19 +10,26 @@ StraightKingBot::StraightKingBot(CarMovement* carMovement, MapManager* map, Race
 	changedPoint = false;
 	shouldReverse = false;
 	lastCollided = 100;
+	this->mainCar = mainCar;
+	this->race = race;
+	breaking = false;
 }
 
-void StraightKingBot::Init()
+void BadBreakingBot::Init()
 {
 	carSize = gameObject->GetModelMaxDistVert()[0].x - gameObject->GetModelMaxDistVert()[0].y;
 	glm::vec3 obbSizes = glm::vec3(carSize * 3, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y);
 
 	antiCollider = new GameObject("", gameObject->transform->position, gameObject->transform->rotation, gameObject->transform->scale, NEVER_COLLIDE);
 	antiCollider->addOBB(*new OBB({ 0, 0, 0 }, obbSizes / 2.0f));
+
+	antiCollider->AddScript(new ShowOBB());
 }
 
-void StraightKingBot::EarlyUpdate()
+void BadBreakingBot::EarlyUpdate()
 {
+	breaking = false;
+
 	lastCollided += Time::deltaTime;
 	if (shouldReverse) {
 		carMovement->goBackwards();
@@ -41,7 +48,7 @@ void StraightKingBot::EarlyUpdate()
 
 	if (changesToPoint || changedPoint) {
 		glm::vec2 tmpToPoint = toPoint;
-		toPoint = glm::normalize((glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint ) - (gameObject->transform->position))));
+		toPoint = glm::normalize((glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint) - (gameObject->transform->position))));
 		if (!MovedOverPoint(gameObject->transform->position + gameObject->transform->front * 3.0f, 1))
 			changedPoint = true;
 		else
@@ -52,16 +59,16 @@ void StraightKingBot::EarlyUpdate()
 
 
 	glm::vec2 nextToPoint = toPoint;
-	if (changedPoint && !HandleCheckPoint())
+	if (changedPoint && !HandleCheckPoint() && !HandleKill())
 		nextToPoint = glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position));
 	else
 		nextToPoint = toPoint;
 
 	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position)));
 
-	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 5.0f), breakPower))
+	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 2.0f), breakPower / 3.0f))
 		carMovement->useHandBreak();
-	else {
+	else if(!breaking) {
 		carMovement->goForward();
 		float nextPointDot2 = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2(points[(currentPoint + 1) % points.size()]->transform->position - gameObject->transform->position)));
 		float nextPointDot3 = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2(points[(currentPoint + 2) % points.size()]->transform->position - gameObject->transform->position)));
@@ -94,15 +101,15 @@ void StraightKingBot::EarlyUpdate()
 		avoiding = 0;
 }
 
-void StraightKingBot::Update()
+void BadBreakingBot::Update()
 {
 }
 
-void StraightKingBot::LateUpdate()
+void BadBreakingBot::LateUpdate()
 {
 	antiCollider->obbs[0].sizes = glm::vec3(carSize, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(3.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 2.5f, 1.3f, 1.4f);
 	antiCollider->obbs[0].sizes /= 2.0f;
-	antiCollider->obbs[0].center = glm::vec3(-1, 0, 0) * carSize * (2.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 3.0f) / 2.0f + glm::vec3(0, 0, 1) * antiCollider->obbs[0].sizes.z;
+	antiCollider->obbs[0].center = glm::vec3(-1, 0, 0) * carSize * (3.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 2.5f) / 2.0f + glm::vec3(0, 0, 1) * antiCollider->obbs[0].sizes.z;
 	antiCollider->transform->MoveTo(gameObject->transform->position);
 	antiCollider->transform->RotateTo(gameObject->transform->rotation + glm::vec3(0, 0, 0.33) * carMovement->getAxleAngle());
 	antiCollider->transform->ScaleTo(gameObject->transform->scale);
@@ -116,30 +123,30 @@ void StraightKingBot::LateUpdate()
 		lastCollided = 0;
 		lastCollPos = gameObject->transform->position;
 	}
-	else if (shouldReverse && lastCollided > 7.0f)
+	else if (shouldReverse && lastCollided > 6.0f)
 		shouldReverse = false;
 	if (lastCollided > 5.0f)
 		avoiding = 0;
 }
 
-void StraightKingBot::OnDestroy()
+void BadBreakingBot::OnDestroy()
 {
 	delete antiCollider;
 }
 
-bool StraightKingBot::MovedOverPoint(glm::vec3 pos, int previous)
+bool BadBreakingBot::MovedOverPoint(glm::vec3 pos, int previous)
 {
 	long long pointToCheck = glm::normalize((long long)currentPoint - previous, (long long)points.size());
 	glm::vec3 toPointFromLast = points[pointToCheck]->transform->position - points[glm::normalize((long long)pointToCheck - 1, (long long)points.size())]->transform->position;
-	glm::vec3 toNextPoint = points[glm::normalize((long long)pointToCheck + 1, (long long)points.size())]->transform->position -  points[pointToCheck]->transform->position;
+	glm::vec3 toNextPoint = points[glm::normalize((long long)pointToCheck + 1, (long long)points.size())]->transform->position - points[pointToCheck]->transform->position;
 	float ang = (glm::dot(glm::normalize(glm::vec2(toPointFromLast)), glm::normalize(glm::vec2(toNextPoint))) - 1) * -0.5f;
-	if (!HandleCheckPoint() && (glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint) < 0 && glm::distance(points[pointToCheck]->transform->position, pos) < 12) || glm::distance(points[pointToCheck]->transform->position, pos) < carSize * 3.0f * (ang + 1))
+	if (!HandleCheckPoint() && (glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), toPoint) < 0 && glm::distance(points[pointToCheck]->transform->position, pos) < 20.0f) || glm::distance(points[pointToCheck]->transform->position, pos) < carSize * 2.0f * (ang + 1))
 		return true;
 
 	return false;
 }
 
-bool StraightKingBot::HandlePredictions()
+bool BadBreakingBot::HandlePredictions()
 {
 	glm::vec3 futurePos = carMovement->getFuturePos() * (1.0f / Time::deltaTime);
 	if (MovedOverPoint(gameObject->transform->position + futurePos)) {
@@ -149,16 +156,17 @@ bool StraightKingBot::HandlePredictions()
 	//else if (carMovement->getDidColide() && !MovedOverPoint(gameObject->transform->position, 1)) {
 	//	currentPoint = glm::normalize((long long)currentPoint - 1, (long long)points.size());
 	//}
-	
+
 	toPoint = glm::normalize(glm::vec2(points[currentPoint]->transform->position - (gameObject->transform->position + futurePos)));
 
+	HandleKill();
 	HandleCheckPoint();
 	bool colli = HandleCollision();
 
 	return colli;
 }
 
-bool StraightKingBot::HandleCollision()
+bool BadBreakingBot::HandleCollision()
 {
 	GameObject* coll = nullptr;
 
@@ -196,7 +204,7 @@ bool StraightKingBot::HandleCollision()
 
 	if (glm::distance(coll->transform->position, gameObject->transform->position) < carSize * 2.0f)
 	{
-		if (nextPointDot > 0)
+		if(nextPointDot > 0)
 			carMovement->makeLeftTurn();
 		else
 			carMovement->makeRightTurn();
@@ -217,7 +225,7 @@ bool StraightKingBot::HandleCollision()
 	return true;
 }
 
-bool StraightKingBot::HandleCheckPoint()
+bool BadBreakingBot::HandleCheckPoint()
 {
 	if (glm::normalize((size_t)currentPoint, points.size()) % map->cp_offset == 0 && glm::distance(map->GetCheckPoint(thisCar->checkpoint + 1)->transform->position, gameObject->transform->position) < carSize * 6.0f) {
 		toPoint = glm::normalize(glm::vec2(map->GetCheckPoint(thisCar->checkpoint + 1)->transform->position - gameObject->transform->position));
@@ -226,4 +234,19 @@ bool StraightKingBot::HandleCheckPoint()
 	}
 
 	return false;
+}
+
+bool BadBreakingBot::HandleKill()
+{
+	glm::vec2 toMain = glm::vec2((mainCar->transform->position + mainCar->transform->front * carSize * 7.0f) - gameObject->transform->position);
+	
+	if (glm::dot(glm::normalize(toMain), glm::normalize((glm::vec2)gameObject->transform->front)) < -0.1f || glm::dot(glm::normalize(toMain), toPoint) < 0 || glm::distance(mainCar->transform->position, gameObject->transform->position) > carSize * 4.0f || carMovement->getActSpeed() / carMovement->getMaxSpeed() < 0.1f || (race->getCarObjects()[0]->checkpoint / map->GetCheckPoints()) == race->getLapCount())
+		return false;
+
+	toPoint = glm::normalize(toMain);
+	if (glm::dot(glm::normalize(mainCar->transform->front), glm::normalize(gameObject->transform->front)) >= 0.8 && glm::dot(glm::normalize(mainCar->transform->front), glm::normalize(mainCar->transform->position - gameObject->transform->position)) <= -0.9) {
+		carMovement->useHandBreak();
+		breaking = true;
+	}
+	return true;
 }
