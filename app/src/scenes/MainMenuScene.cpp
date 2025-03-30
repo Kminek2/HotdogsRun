@@ -65,7 +65,6 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     objs.push_back(new GameObject());
     am = new AnimationManager();
     objs[objs.size()-1]->AddScript(am);
-    objs[objs.size()-1]->AddScript(cm);
     
     objs.push_back(new GameObject("BaseCube", glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0.0f), glm::vec3(1000.0f, 1000.0f, 0.0f)));
     objs[objs.size()-1]->AddColorChange(glm::vec3(1.0f), glm::vec3(0.1f, 0.5f, 0.1f));

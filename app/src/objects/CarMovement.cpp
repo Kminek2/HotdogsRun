@@ -27,14 +27,12 @@ CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, 
 	gripMult = glm::vec3(1);
 	crashsound_timer = 0.0f;
 	gassound_timer = 0.0f;
-	if (gameObject == nullptr)
-		gameObject = new GameObject();
-	crashsound_audio = new AudioSource3d(gameObject, "crash", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
-	gassound_audio = new AudioSource3d(gameObject, "gas", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
 }
 
 void CarMovement::Init() {
 	gameObject->cm = this;
+	crashsound_audio = new AudioSource3d(gameObject, "crash", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
+	gassound_audio = new AudioSource3d(gameObject, "gas", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
 }
 
 void CarMovement::Update() {
