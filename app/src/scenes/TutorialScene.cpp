@@ -116,9 +116,8 @@ std::shared_ptr<Scene> TutorialScene::Init() {
 	const float forest_dist = 100.0f;
 	int trees_count = 125;
 	const std::vector<std::string> trees_models = { "krzak","malyKrzak","drzewo" };
-	//const std::vector<std::string> trees_models = { "brzoza","drzewo","jodla","krzak","maleDrzewo","malyKrzak" };
 	while (trees_count --> 0) {
-		glm::vec2 pos = glm::vec2(rand.coin_toss() ? rand.random(-forest_dist, -20.0f) : rand.random(20.0f, forest_dist), rand.random(-forest_dist, 3 * seg_len * MAP_TILE_SIZE * MAP_TILE_SCALE + forest_dist));
+		glm::vec2 pos = glm::vec2(rand.coin_toss() ? rand.random(-forest_dist, -25.0f) : rand.random(25.0f, forest_dist), rand.random(-forest_dist, 3 * seg_len * MAP_TILE_SIZE * MAP_TILE_SCALE + forest_dist));
 
 		for (int i = 0; i < rand.random(4, 8); i++) {
 			GameObject* o = (new GameObject(rand.choice(trees_models), glm::vec3(pos, 0) + glm::vec3(rand.random(-5.0f, 5.0f), rand.random(-5.0f, 5.0f), 0)))->AddDefaultOBB();
@@ -144,13 +143,12 @@ std::vector<std::vector<std::string>> tutorial_texts = {
 	{ "Surfaces matter!", "Asphalt gives best grip.", "Gravel is slower.", "Ice? Slippery fun!" },
 	{ "Stay on track!", "Going off-road is bad.", "You'll slow down a lot!", "Stick to the path!" },
 	{ "Watch out!", "Obstacles can stop you!", "Avoid them to stay fast!", "React quickly!" },
-	{ "But not all is bad!", "Grab powerups!", "They help you win!", "Use them wisely!" },
+	{ "But not all is bad!", "Grab powerups!", "They help you win!", "To use them, press E." },
 	{ "Checkpoints ahead!", "Drive through each one.", "It turns red when passed!", "Don't miss any!" },
 	{ "That's all, racer!", "Now hit the track!", "Show them your skills!", "Good luck! [ESC to exit]" }
 };
 
 void TutorialScene::Update() {
-	std::cout << text_id << '\n';
 	music_timer -= Time::deltaTime;
 	music_timer = std::max(music_timer, 0.0f);
 
@@ -162,7 +160,7 @@ void TutorialScene::Update() {
 	if (Input::getKeyClicked(GLFW_KEY_C)) {
 		camera_view = glm::normalize(camera_view + 1, 3);
 
-		SmoothCamera::disabled2 = false;
+		   SmoothCamera::disabled2 = false;
 		view_scripts[0]->disabled2 = false;
 		view_scripts[1]->disabled2 = false;
 

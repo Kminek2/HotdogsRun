@@ -63,6 +63,7 @@
     <ClCompile Include="app\src\objects\LockRotation.cpp" />
     <ClCompile Include="app\src\objects\PowerUps\PUMaxSpeed.cpp" />
     <ClCompile Include="app\src\objects\PowerUps\PUNitro.cpp" />
+    <ClCompile Include="app\src\objects\PowerUps\PUBanana.cpp" />
     <ClCompile Include="app\src\objects\PUManager.cpp" />
     <ClCompile Include="app\src\objects\RaceManager.cpp" />
     <ClCompile Include="app\src\objects\ShowOBB.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="app\include\objects\LockPosition.h" />
     <ClInclude Include="app\include\objects\LockRotation.h" />
     <ClInclude Include="app\include\objects\MedBot.h" />
+    <ClInclude Include="app\include\objects\PowerUps\PUBanana.hpp" />
     <ClInclude Include="app\include\objects\PowerUps\PUNitro.hpp" />
     <ClInclude Include="app\include\objects\PowerUps\PUMaxSpeed.hpp" />
     <ClInclude Include="app\include\objects\PUManager.hpp" />

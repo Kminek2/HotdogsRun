@@ -8,7 +8,7 @@ void PUMaxSpeed::OnCollide(Collisions::CollisionData* cd) {
 		: cd->obj1);
 
 	gameObject->transform->Move(glm::vec3(0, 0, -10));
-	Application::Invoke([this]() { gameObject->transform->Move(glm::vec3(0, 0, 10)); }, 5000);
+	Application::Invoke([this]() { gameObject->transform->Move(glm::vec3(0, 0, 10)); }, duration + .1f);
 
 	OnActivate();
 }

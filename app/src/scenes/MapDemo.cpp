@@ -200,7 +200,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	PUManager* pum = (new PUManager(rand))->setMapManager(map);
 	pum->addPowerUp((new GameObject("cube", glm::vec3(1000.0f)))->AddScript(new PUNitro()), -1.0f);
 	pum->addPowerUp((new GameObject("crate", glm::vec3(1000.0f)))->AddScript(new PUMaxSpeed(.1f, 10 * 1000)), -1.0f);
-	pum->generatePowerUps(15);
+	pum->addPowerUp((new GameObject("banan2", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(2)))->AddScript(new PUBanana(2500)), 1.0f);
+	pum->generatePowerUps(10);
 
 	GameObject* amobj = new GameObject; // 'am' stands for Animation Manager, apparently
 	AnimationManager* am = new AnimationManager;

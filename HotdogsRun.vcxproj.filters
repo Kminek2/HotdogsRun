@@ -285,6 +285,12 @@
     <ClCompile Include="app\src\scenes\TutorialScene.cpp">
       <Filter>Source Files\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\objects\AntiPersonelBot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\PowerUps\PUBanana.cpp">
+      <Filter>Source Files\objects\PowerUps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -538,6 +544,12 @@
     </ClInclude>
     <ClInclude Include="app\include\scenes\TutorialScene.hpp">
       <Filter>Header Files\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\AntiPersonelBot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\PowerUps\PUBanana.hpp">
+      <Filter>Header Files\objects\PowerUps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,13 +4,14 @@
 
 #include "objects/PowerUps/PUMaxSpeed.hpp"
 #include "objects/PowerUps/PUNitro.hpp"
+#include "objects/PowerUps/PUBanana.hpp"
 
 #include "_rand.hpp"
 #include "MapManager.h"
 
 class PUManager {
 private:
-	_rand rand;
+	_rand& rand;
 	MapManager* map = nullptr;
 
 	std::vector<GameObject*> powerups;
