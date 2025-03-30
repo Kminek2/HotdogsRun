@@ -88,8 +88,9 @@ MapManager* MapManager::Init()
 	for (int i=0; i< points.size(); i+=cp_offset) {
 		GameObject* parent_road = GetPoint(i);
 
+		std::string cp_model = (i == 0 ? "meta" : "checkpoint");
 		GameObject* ncp = new GameObject(
-			"checkpoint",
+			cp_model,
 			{ parent_road->transform->position.x, parent_road->transform->position.y, 0 + i / 1e5 },
 			glm::vec3(0, 0, 45 * map_points[i].out + 90),
 			glm::vec3(MAP_TILE_SCALE));

@@ -92,8 +92,10 @@ void RaceManager::OnCheckpoint(Collisions::CollisionData *collision_data) {
 			if (map_manager->GetCheckPoint(i) == cp)
 				break;
 
-		map_manager->GetCheckPoint(i-1)->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)); // yellow -> yellow
-		cp->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // yellow -> red
+		if (i-1 != 0)
+			map_manager->GetCheckPoint(i-1)->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f)); // yellow -> yellow
+		if (i != 0)
+			cp->AddColorChange(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // yellow -> red
 	}
 
 	car_obj->time = Time::lastTime;
