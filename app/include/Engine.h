@@ -1,6 +1,6 @@
 #pragma once
 #define GLFW_INCLUDE_VULKAN
-#define NDEBUG 1
+#define NVALID 1
 #include <GLFW/glfw3.h>
 
 #include "SwapChain.h"
@@ -30,7 +30,7 @@ public:
 private:
     const uint32_t WIDTH;
     const uint32_t HEIGHT;
-#ifdef NDEBUG
+#ifdef NVALID
     static const bool enableValidationLayers = false;
 #else
     static const bool enableValidationLayers = true;
