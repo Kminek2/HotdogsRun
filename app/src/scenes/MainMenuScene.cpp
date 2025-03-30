@@ -5,6 +5,7 @@
 #include "objects/ColorPicker.hpp"
 #include "scenes/DebugScene.h"
 #include "scenes/MapDemo.h"
+#include "scenes/TutorialScene.hpp"
 
 #include "Scene.h"
 #include "QuickCamera.h"
@@ -380,8 +381,10 @@ void MainMenuScene::ShowMaps() {
     text->SetColor(glm::vec4(glm::vec3(0.7f, 0.0f, 0.0f), 1.0f));
     maps_options.push_back({sp,{text,shadow}});
 
-    tutorial_text.second = (new Text("SansSerif", {0.907f,-0.707f,0.9f}, {1,0}, 0.2f, glm::vec4(0,0,0,1.0f), -2.0f))->SetText("Press T for tutorial");
-    tutorial_text.first = (new Text("SansSerif", { 0.900f,-0.700f,0.9f }, { 1,0 }, 0.2f, glm::vec4(1.0f), -2.0f))->SetText("Press T for tutorial");
+    if (!TutorialScene::visited) {
+        tutorial_text.second = (new Text("SansSerif", {0.907f,-0.707f,0.9f}, {1,0}, 0.2f, glm::vec4(0,0,0,1.0f), -2.0f))->SetText("Press T for tutorial");
+        tutorial_text.first = (new Text("SansSerif", { 0.900f,-0.700f,0.9f }, { 1,0 }, 0.2f, glm::vec4(1.0f), -2.0f))->SetText("Press T for tutorial");
+    }
 
     std::vector<std::string> seed_txt = String::getFile("seed.txt");
     std::string seed = "Seed: " + (seed_txt.empty() ? "[RANDOM]" : String::cropString(seed_txt[0], 10));
@@ -495,7 +498,7 @@ void MainMenuScene::UpdateMaps() {
         }
     }
 
-    if (Input::getKeyClicked(GLFW_KEY_T)) {
+    if (!TutorialScene::visited && Input::getKeyClicked(GLFW_KEY_T)) {
         HideMaps();
         Application::LoadScene("tutorial");
         return;
@@ -520,8 +523,10 @@ void MainMenuScene::HideMaps() {
         delete x.second.second;
     }
     maps_options.clear();
-    delete tutorial_text.first;
-    delete tutorial_text.second;
+    if (!TutorialScene::visited) {
+        delete tutorial_text.first;
+        delete tutorial_text.second;
+    }
     delete seed_text.first;
     delete seed_text.second;
 }

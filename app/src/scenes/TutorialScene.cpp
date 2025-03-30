@@ -9,10 +9,21 @@
 #include "_rand.hpp"
 #include "StringOperations.hpp"
 
+bool TutorialScene::visited = false;
+
 std::shared_ptr<Scene> TutorialScene::Init() {
 	Scene* scene = new Scene(this);
 
 	_rand rand(String::getHash("TUTORIAL"));
+
+	music_timer = 0.0f;
+	first_music = true;
+	
+	visited = true;
+
+	std::string music_type = "race-accordion";
+	music_first = new AudioSource2d("music/first-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/500.0f);
+	music_cont = new AudioSource2d("music/continue-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/500.0f);
 
 	const int seg_len = 5;
 
@@ -120,6 +131,9 @@ std::shared_ptr<Scene> TutorialScene::Init() {
 	const auto createObstacles = [MAP_TILE_SCALE, MAP_TILE_SIZE](int x) { (new GameObject("pacholki", glm::vec3(0, x, 0) * MAP_TILE_SIZE * MAP_TILE_SCALE))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE); };
 	for (int i = 1; i < 3; i++) createObstacles(i * seg_len + 2);
 
+	music_first->PlayTrack(false);
+	music_timer = 243.0f;
+
 	return std::shared_ptr<Scene>(scene);
 }
 
@@ -136,6 +150,15 @@ std::vector<std::vector<std::string>> tutorial_texts = {
 };
 
 void TutorialScene::Update() {
+	std::cout << text_id << '\n';
+	music_timer -= Time::deltaTime;
+	music_timer = std::max(music_timer, 0.0f);
+
+	if (music_timer == 0.0f) {
+		music_cont->PlayTrack(false);
+		music_timer = 241.0f;
+	}
+
 	if (Input::getKeyClicked(GLFW_KEY_C)) {
 		camera_view = glm::normalize(camera_view + 1, 3);
 
