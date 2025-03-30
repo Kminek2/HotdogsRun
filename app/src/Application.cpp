@@ -218,7 +218,9 @@ void Application::Update() {
 		frameTimes.clear();
 	}
 
+	#ifdef NDEBUG
 	try {
+	#endif
 		threadPool.enqueue(std::bind(&SceeneScript::EarlyUpdate, Scene::loadedScene.get()->sceneScript));
 		GameObject::EarlyUpdateAllObjectScripts(threadPool);
 		while (!threadPool.isEmpty())
@@ -238,12 +240,14 @@ void Application::Update() {
 		threadPool.enqueue(AudioSource3d::UpdateAllPosition);
 		while (!threadPool.isEmpty())
 			continue;
+	#ifdef NDEBUG
 	}
 	catch (std::exception e)
 	{
 		std::cout << "Threading error: " << e.what() << "\nRecreating threading pool.\n";
 		threadPool.StopAll();
 	}
+	#endif
 	Transform::ClearMemory();
 	GameObject::TransformTransformsToMemory();
 	Sprite::UpdateBuffer();
