@@ -15,4 +15,6 @@ public:
 	void Init() override;
 	void Update() override;
 	void OnDestroy() override;
+
+	LockPosition* copy() override { return new LockPosition(*this); }
 };

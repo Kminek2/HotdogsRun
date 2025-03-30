@@ -47,5 +47,7 @@ public:
 	void Update() override;
 	void LateUpdate() override;
 	void OnDestroy() override;
+
+	BadBreakingBot* copy() override { return new BadBreakingBot(*this); }
 };
 

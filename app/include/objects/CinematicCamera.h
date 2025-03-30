@@ -30,5 +30,7 @@ class CinematicCamera :
         const std::function<void()> beg_func;
         const std::function<void()> end_func;
         bool ended;
+
+        CinematicCamera* copy() override { return new CinematicCamera(*this); }
 };
 

@@ -102,6 +102,7 @@ private:
 public:
 	GameObject(std::string model = "", glm::vec3 position = glm::vec3(0), glm::vec3 rotation = glm::vec3(0), glm::vec3 scale = glm::vec3(1), int surface_type = -1);
 	GameObject(ObjectSchema* schema, glm::vec3 position = glm::vec3(0)) : GameObject(schema->model, position, schema->rotation, schema->scale, schema->surface_type) {};
+	GameObject(const GameObject& obj);
 	~GameObject();
 	static std::map<std::pair<int,int>, std::set<GameObject*>> chunks;
 

@@ -14,5 +14,7 @@ public:
     void Init() override;
     void Update() override;
     void OnDestroy() override;
+
+    Lights* copy() override { return new Lights(*this); }
 };
 

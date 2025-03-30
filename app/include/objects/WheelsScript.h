@@ -21,4 +21,7 @@ public:
     void Update() override;
     void LateUpdate() override;
     void OnDestroy() override;
+
+
+    WheelsScript* copy() override { return new WheelsScript(*this); }
 };

@@ -41,5 +41,8 @@ public:
 	void Update() override;
 	void LateUpdate() override;
 	void OnDestroy() override;
+
+
+	AntiPersonelBot* copy() override { return new AntiPersonelBot(*this); }
 };
 

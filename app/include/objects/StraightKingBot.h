@@ -38,5 +38,8 @@ public:
 	void Update() override;
 	void LateUpdate() override;
 	void OnDestroy() override;
+
+
+	StraightKingBot* copy() override { return new StraightKingBot(*this); }
 };
 

@@ -22,4 +22,6 @@ public:
 
 	void Update() override;
 	void OnDestroy() override;
+
+	PUMaxSpeed* copy() override { return new PUMaxSpeed(*this); }
 };

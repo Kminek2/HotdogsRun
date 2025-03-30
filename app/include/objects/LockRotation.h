@@ -15,4 +15,6 @@ public:
 	void Init() override;
 	void Update() override;
 	void OnDestroy() override;
+
+	LockRotation* copy() override { return new LockRotation(*this); }
 };

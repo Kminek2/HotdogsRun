@@ -26,5 +26,7 @@ class CameraLockScript :
         friend CinematicCamera;
         static bool disabled;
         bool disabled2;
+
+        CameraLockScript* copy() override { return new CameraLockScript(*this); }
 };
 

@@ -17,6 +17,7 @@ public:
 	virtual void Update() = 0;
 	virtual void LateUpdate() {};
 	virtual void OnDestroy() = 0;
+	virtual ObjectScript* copy() = 0;
 
 	GameObject* gameObject;
 };

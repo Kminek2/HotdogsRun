@@ -109,6 +109,19 @@ GameObject::GameObject(std::string model, glm::vec3 position, glm::vec3 rotation
 	amountOfColorChanges = 0;
 }
 
+GameObject::GameObject(const GameObject& obj) : GameObject(obj.model->GetName(), obj.transform->position, obj.transform->rotation, obj.transform->scale, obj.surface_type)
+{
+	auto it = obj.colorChangesIndex;
+	for (int i = 0; i < obj.amountOfColorChanges; i++)
+	{
+		AddColorChange(it->from, it->to);
+		it = std::next(it);
+	}
+
+	for (auto obSc : obj.objectScripts)
+		AddScript(obSc->copy());
+}
+
 GameObject::~GameObject()
 {
 	for (int i = 0; i < objectScripts.size(); i++)

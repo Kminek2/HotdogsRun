@@ -40,5 +40,7 @@ public:
 	void Update() override;
 	void LateUpdate() override;
 	void OnDestroy() override;
+
+	MedBot* copy() override { return new MedBot(*this); }
 };
 

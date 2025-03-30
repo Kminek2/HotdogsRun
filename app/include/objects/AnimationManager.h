@@ -23,6 +23,8 @@ class AnimationManager :
         void OnDestroy() override;
         void addToQueue(data animation);
         void skip();
+
+        AnimationManager* copy() override { return new AnimationManager(*this); }
     private:
         int id;
         CinematicCamera* last_animation;

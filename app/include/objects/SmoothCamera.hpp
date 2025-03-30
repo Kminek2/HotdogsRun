@@ -35,5 +35,7 @@ public:
 	static bool disabled;
 	static bool disabled2;
 
+
+	SmoothCamera* copy() override { return new SmoothCamera(*this); }
 	friend CinematicCamera;
 };

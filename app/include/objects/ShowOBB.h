@@ -13,4 +13,7 @@ public:
 	void Update() override;
 	void LateUpdate() override;
 	void OnDestroy() override;
+
+
+	ShowOBB* copy() override { return new ShowOBB(*this); }
 };

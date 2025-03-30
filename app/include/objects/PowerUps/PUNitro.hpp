@@ -17,4 +17,6 @@ public:
 
 	void Update() override;
 	void OnDestroy() override;
+
+	PUNitro* copy() override { return new PUNitro(*this); }
 };

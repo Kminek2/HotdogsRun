@@ -25,4 +25,6 @@ public:
     void Update() override;
     void LateUpdate() override;
     void OnDestroy() override;
+
+    CarInputs* copy() override { return new CarInputs(*this); }
 };

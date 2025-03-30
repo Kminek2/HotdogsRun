@@ -106,4 +106,6 @@ public:
 
     int nitrosCount();
     int nitrosUsed = 0;
+
+    CarMovement* copy() override { return new CarMovement(*this); }
 };

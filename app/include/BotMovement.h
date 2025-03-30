@@ -58,4 +58,7 @@ public:
 
     // Gettery
     std::vector<GameObject*> GetWaypoints(MapManager* map);
+
+
+    BotMovement* copy() override { return new BotMovement(*this); }
 };

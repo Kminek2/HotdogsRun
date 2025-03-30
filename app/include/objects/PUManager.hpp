@@ -23,4 +23,6 @@ public:
 	PUManager* setMapManager(MapManager* map);
 	PUManager* addPowerUp(GameObject* pu, float p);
 	PUManager* generatePowerUps(unsigned offset);
+
+
 };

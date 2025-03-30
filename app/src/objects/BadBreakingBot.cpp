@@ -22,8 +22,6 @@ void BadBreakingBot::Init()
 
 	antiCollider = new GameObject("", gameObject->transform->position, gameObject->transform->rotation, gameObject->transform->scale, NEVER_COLLIDE);
 	antiCollider->addOBB(*new OBB({ 0, 0, 0 }, obbSizes / 2.0f));
-
-	antiCollider->AddScript(new ShowOBB());
 }
 
 void BadBreakingBot::EarlyUpdate()

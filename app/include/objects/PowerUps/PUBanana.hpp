@@ -13,6 +13,9 @@ public:
 	void Update() override;
 	void OnDestroy() override;
 
+
+	PUBanana* copy() override { return new PUBanana(*this); }
+
 private:
 	unsigned duration;
 	bool collected = false;
