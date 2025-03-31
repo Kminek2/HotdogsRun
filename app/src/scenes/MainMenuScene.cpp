@@ -417,16 +417,18 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.ellipse.min_offset = -2.5; MapDemo::svals.ellipse.max_offset = 2.5;
             MapDemo::svals.small_decors = {
                 {		  
-                    {"fucked_up_car",1}, {"fucked_up_pickup",1}, {"goat",.05}, {"hydrant",.2},
-                    {"smietnik",.2},{"TNT",0} , {"drzewo",.5}, {"jodla",.5},
-                    {"kamien1",.8}, {"kamien2",.8},	{"krzak",.8}, {"maleDrzewo",.8},
-                    {"malyKrzak",.8}, {"pacholki",1}, {"barrel",.2},{"bus",1},
+                    {"fucked_up_car",0.8}, {"fucked_up_pickup",0.9}, {"goat",.05}, {"hydrant",.2},
+                    {"smietnik",.2},{"TNT",0} , {"drzewo",.1}, {"jodla",.1},
+                    {"kamien1",.8}, {"kamien2",.4},	{"krzak",.2}, {"maleDrzewo",.2},
+                    {"malyKrzak",.4}, {"pacholki",0.9}, {"barrel",.2},{"bus",0.95},
+                    {"barierka",0.8},{"bilboardHodDog",0}, {"brzoza",0.01}
                 },
                 {
-                    -1.0f,-0.75f,-0.25f,0.1f,
-                    -0.6f,0.05f,-0.8f,-0.8f,
-                    -0.4f,0.025f,-0.6f,-0.4f,
-                    -0.25f,-0.3f,0.025f,-0.6f,
+                    -1.0f,-0.75f,-0.25f,-0.08f,
+                    -0.6f,0.05f,-0.9f,-0.8f,
+                    -0.4f,0.025f,-0.7f,-0.3f,
+                    -0.4f,-0.3f,0.025f,-0.6f,
+                    -0.4f,-0.2f,-0.8f
                 }
             };
             MapDemo::svals.decors_per_tile = 1.25f;
@@ -445,17 +447,19 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.ellipse.a = 5; MapDemo::svals.ellipse.b = 10;
             MapDemo::svals.ellipse.min_offset = -2.5; MapDemo::svals.ellipse.max_offset = 2.5;
             MapDemo::svals.small_decors = {
-                {		  
-                    {"fucked_up_car",1}, {"fucked_up_pickup",1}, {"goat",.05}, {"hydrant",.2},
-                    {"smietnik",.2},{"TNT",0} , {"drzewo",.5}, {"jodla",.5},
-                    {"kamien1",.8}, {"kamien2",.8},	{"krzak",.8}, {"maleDrzewo",.8},
-                    {"malyKrzak",.8}, {"pacholki",1}, {"barrel",.2},{"bus",1},
+              {
+                    {"fucked_up_car",0.8}, {"fucked_up_pickup",0.9}, {"goat",.05}, {"hydrant",.2},
+                    {"smietnik",.2},{"TNT",0} , {"drzewo",.1}, {"jodla",.1},
+                    {"kamien1",.8}, {"kamien2",.4},	{"krzak",.2}, {"maleDrzewo",.2},
+                    {"malyKrzak",.4}, {"pacholki",0.9}, {"barrel",.2},{"bus",0.95},
+                    {"barierka",0.8},{"bilboardHodDog",0}, {"brzoza",0.01}
                 },
                 {
-                    -1.0f,-0.75f,-0.25f,0.1f,
-                    -0.6f,0.05f,-0.8f,-0.8f,
-                    -0.4f,0.025f,-0.6f,-0.4f,
-                    -0.25f,-0.3f,0.025f,-0.6f,
+                    -1.0f,-0.75f,-0.25f,-0.08f,
+                    -0.6f,0.05f,-0.9f,-0.8f,
+                    -0.4f,0.025f,-0.7f,-0.3f,
+                    -0.4f,-0.3f,0.025f,-0.6f,
+                    -0.4f,-0.2f,-0.8f
                 }
             };
             MapDemo::svals.decors_per_tile = 1.25f;
@@ -474,17 +478,19 @@ void MainMenuScene::UpdateMaps() {
             MapDemo::svals.ellipse.a = 5; MapDemo::svals.ellipse.b = 10;
             MapDemo::svals.ellipse.min_offset = -2.5; MapDemo::svals.ellipse.max_offset = 2.5;
             MapDemo::svals.small_decors = {
-                {		  
-                    {"fucked_up_car",1}, {"fucked_up_pickup",1}, {"goat",.05}, {"hydrant",.2},
-                    {"smietnik",.2},{"TNT",0} , {"drzewo",.5}, {"jodla",.5},
-                    {"kamien1",.8}, {"kamien2",.8},	{"krzak",.8}, {"maleDrzewo",.8},
-                    {"malyKrzak",.8}, {"pacholki",1}, {"barrel",.2},{"bus",1},
+                {
+                    {"fucked_up_car",0.8}, {"fucked_up_pickup",0.9}, {"goat",.05}, {"hydrant",.2},
+                    {"smietnik",.2},{"TNT",0} , {"drzewo",.1}, {"jodla",.1},
+                    {"kamien1",.8}, {"kamien2",.4},	{"krzak",.2}, {"maleDrzewo",.2},
+                    {"malyKrzak",.4}, {"pacholki",0.9}, {"barrel",.2},{"bus",0.95},
+                    {"barierka",0.8},{"bilboardHodDog",0}, {"brzoza",0.01}
                 },
                 {
-                    -1.0f,-0.75f,-0.25f,0.1f,
-                    -0.6f,0.05f,-0.8f,-0.8f,
-                    -0.4f,0.025f,-0.6f,-0.4f,
-                    -0.25f,-0.3f,0.025f,-0.6f,
+                    -1.0f,-0.75f,-0.25f,-0.08f,
+                    -0.6f,0.05f,-0.9f,-0.8f,
+                    -0.4f,0.025f,-0.7f,-0.3f,
+                    -0.4f,-0.3f,0.025f,-0.6f,
+                    -0.4f,-0.2f,-0.8f
                 }
             };
             MapDemo::svals.decors_per_tile = 1.25f;
