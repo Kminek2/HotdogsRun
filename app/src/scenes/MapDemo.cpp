@@ -123,7 +123,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		}
 	}
 
-	if (rand.coin_toss())
+	if (music_type == "race-accordion")
 		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.4f), glm::vec3(0.8f), glm::vec3(0.9f));
 	else
 		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.01f), glm::vec3(0.01f, 0.01f, 0.05f), glm::vec3(0.1f));
