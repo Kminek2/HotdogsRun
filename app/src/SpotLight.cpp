@@ -47,6 +47,11 @@ SpotLight::SpotLight(GameObject* gameObject, SpotLightBuffer spotLight) : LightO
 	i = std::prev(createdLightObjects.end());
 }
 
+void SpotLight::UpdateDir(glm::vec3 dir)
+{
+	light.direction = dir;
+}
+
 SpotLight::~SpotLight()
 {
 	lightNum--;

@@ -89,7 +89,7 @@ void main() {
 
     for(int i = 0; i < colorChange.amount; i++)
         //if(length(normalize(texColor) - normalize(colorChanges[colorChange.index + i].from)) <= 0.2 && abs(length(texColor) - length(colorChanges[colorChange.index + i].from)) <= 0.4)
-        if(distance(texColor, pow(colorChanges[colorChange.index + i].from, vec3(2.2))) <= 0.04)
+        if(distance(texColor, pow(colorChanges[colorChange.index + i].from, vec3(gamma))) <= 0.04)
             resColor = colorChanges[colorChange.index + i].to;
 
 
@@ -136,7 +136,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 
     float shadow = ShadowCalculation(lightSpacePos, normal, lightDir);       
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular));
-    return lighting;
+    return pow(lighting, vec3(gamma));
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col){
@@ -158,7 +158,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-    return (ambient + diffuse + specular);
+    return pow(ambient + diffuse + specular, vec3(gamma));
 }
 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col){
@@ -184,7 +184,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 co
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
-    return (ambient + diffuse + specular);
+    return pow(ambient + diffuse + specular, vec3(gamma));
 
 }
 

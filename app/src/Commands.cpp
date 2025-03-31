@@ -116,7 +116,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
                 Model* model = *std::next(Model::createdModels.begin(), instanceOffSh);
                 const auto& instance = Model::modelsIndtaces[model->modelName];
 
-                vkCmdDrawIndexed(commandBuffer, model->indexSize, instance.second, model->indexOffset, model->vertexOffset, instanceOffSh);
+                //vkCmdDrawIndexed(commandBuffer, model->indexSize, instance.second, model->indexOffset, model->vertexOffset, instanceOffSh);
                 instanceOffSh += instance.second;
             }
         }

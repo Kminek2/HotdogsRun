@@ -2,6 +2,8 @@
 #include "AppTime.h"
 #include "GameObject.h"
 
+#include "SpotLight.h"
+
 #include <iostream>
 
 const CarMovement::actions CarMovement::clearedActions = {false, false, false, false, false};
@@ -34,6 +36,8 @@ void CarMovement::Init() {
 	gameObject->cm = this;
 	crashsound_audio = new AudioSource3d(gameObject, "crash", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
 	gassound_audio = new AudioSource3d(gameObject, "gas", static_cast<float>(Settings::read("volume").value_or(100))/400.0f);
+	lights.push_back(new SpotLight(gameObject, 2.0f * glm::vec3(-1, 0.5f, 1), gameObject->transform->front, glm::vec3(0.7f, 0.7f, 0), glm::vec2(glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f))), 1.0f, 0.9f, 0.36f));
+	lights.push_back(new SpotLight(gameObject, 2.0f * glm::vec3(-1, -0.5f, 1), gameObject->transform->front, glm::vec3(0.7f, 0.7f, 0)));
 }
 
 void CarMovement::Update() {
@@ -323,6 +327,12 @@ void CarMovement::handleGrip() {
 	if (forces.x < 1.0f)
 		gripMult = glm::normalize(gripMult);
 	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime * (gameObject->transform->position.z > 0 ? 0.01f : 1.0f) * (1 - __gripMult) * 2.0f + (1 - surfaces_data[road_type].grip) * gripMult * std::abs(actSpeed / (gripToSpeed * __maxSpeed)) * (std::pow(axleAngle * (actSpeed / (__maxSpeed * __multiplier)) / 30, 2.0f) + 0.5f)) * __gripMult * 2.0f;
+}
+
+void CarMovement::handleLights()
+{
+	for (auto& light : lights)
+		light->UpdateDir(gameObject->transform->front);
 }
 
 void CarMovement::handleAudio() {

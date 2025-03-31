@@ -123,6 +123,11 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		}
 	}
 
+	if (rand.coin_toss())
+		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.2f), glm::vec3(0.8f), glm::vec3(0.9f));
+	else
+		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.05f), glm::vec3(0.1f, 0.1f, 0.4f), glm::vec3(0.5f));
+
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
 	int model_choosen = Settings::read("model_choosen").value_or(1);

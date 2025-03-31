@@ -8,6 +8,8 @@
 #include "objects/LockRotation.h"
 #include "AudioSource2d.h"
 
+#include "SpotLight.h"
+
 constexpr float EPSILON = 1e-3;
 
 class WheelsScript;
@@ -38,6 +40,7 @@ private:
     void handleForces();
     void handleNitroAcc();
     void handleGrip();
+    void handleLights();
     struct actions {
         bool forward;
         bool backwards;
@@ -72,6 +75,8 @@ private:
     AudioSource2d* gassound_audio;
 
     void Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot);
+
+    std::vector<SpotLight*> lights;
 public:
     CarMovement(float carWeight, float breaksStrength, float maxSpeed, float minSpeed, float accelFront, float accelBack, float gripToSpeedMult, bool expertMode = false, float multiplier = 0.1f, glm::vec3 nitro_trail_offset = glm::vec3(1.7f, 0.0f, 0.0f));
     void Init() override;
