@@ -97,7 +97,7 @@ void MedBot::Update()
 
 void MedBot::LateUpdate()
 {
-	antiCollider->obbs[0].sizes = glm::vec3(carSize, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(3.0f * carMovement->getActSpeed() / carMovement->getMaxSpeed() + 2.5f, 1.4f, 1.4f);
+	antiCollider->obbs[0].sizes = glm::vec3(carSize, gameObject->GetModelMaxDistVert()[1].x - gameObject->GetModelMaxDistVert()[1].y, gameObject->GetModelMaxDistVert()[2].x - gameObject->GetModelMaxDistVert()[2].y) * glm::vec3(carMovement->getActSpeed() / carMovement->getMaxSpeed() + 3.5f, 1.4f, 1.4f);
 	antiCollider->obbs[0].sizes /= 2.0f;
 	antiCollider->obbs[0].center = glm::vec3(-1, 0, 0) * carSize * (carMovement->getActSpeed() / carMovement->getMaxSpeed() + 3.5f) / 2.0f + glm::vec3(0, 0, 1) * antiCollider->obbs[0].sizes.z;
 	antiCollider->transform->MoveTo(gameObject->transform->position);

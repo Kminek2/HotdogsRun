@@ -64,7 +64,7 @@ void BadBreakingBot::EarlyUpdate()
 
 	float thisPointDot = glm::dot(glm::normalize(glm::vec2(gameObject->transform->front)), glm::normalize(glm::vec2((points[glm::normalize((long long)currentPoint - 1, (long long)points.size())]->transform->position + fromLastPoint / 2.0f) - gameObject->transform->position)));
 
-	if (abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 2.0f), breakPower / 3.0f))
+	if ((abs(1 - nextPointDot) > breakMult && carMovement->getActSpeed() / carMovement->getMaxSpeed() > glm::max(((nextPointDot + 1) * 0.25f) / (breakPower * 2.0f), breakPower / 3.0f)) || (glm::distance(gameObject->transform->position, mainCar->transform->position) >= 12.0f * carSize && thisCar->checkpoint > race->getCarObjects()[0]->checkpoint && carMovement->getActSpeed() / carMovement->getMaxSpeed() > 0.1f))
 		carMovement->useHandBreak();
 	else if(!breaking) {
 		carMovement->goForward();
