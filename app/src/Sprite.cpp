@@ -117,8 +117,10 @@ void Sprite::UpdateBuffer()
 	std::vector<glm::mat4> matrixes;
 	std::vector<Sprite::SpriteSendData> sprites;
 
+	glm::vec2 aspectSize = glm::vec2(Application::width / (float)Application::unscaledWidth, Application::height / (float)Application::unscaledHeight);
+
 	while (i != createdSprites.end()) {
-		matrixes.push_back((*i)->rectTransform->getModelMatrix());
+		matrixes.push_back((*i)->rectTransform->getModelMatrix(aspectSize));
 		SpriteSendData sendData{};
 		sendData.color = (*i)->color;
 		sendData.texSize = (*i)->texSize;

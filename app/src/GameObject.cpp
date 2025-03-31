@@ -245,8 +245,14 @@ void GameObject::TransformTransformsToMemory()
 	}
 	std::vector<glm::mat4> transforms;
 	std::list<GameObject*>::iterator it = createdGameObject.begin();
+
+	glm::vec2 aspectSize = glm::vec2(Application::width / (float)Application::unscaledWidth, Application::height / (float)Application::unscaledHeight);
+
 	for (int i = 0; i < createdGameObject.size(); i++) {
-		transforms.push_back((*it)->transform->getModelMatrix());
+		if ((*it)->model->IsUI())
+			transforms.push_back((*it)->transform->getModelMatrix(aspectSize));
+		else
+			transforms.push_back((*it)->transform->getModelMatrix());
 
 		it = std::next(it);
 	}

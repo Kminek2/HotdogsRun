@@ -64,6 +64,8 @@ struct Model
 
 		return attributeDescription;
 	}
+
+	bool IsUI() { return uiModel; };
 private:
 	Model(std::vector<Vertex> verticies, std::vector<uint32_t> indices);
 

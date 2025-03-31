@@ -182,12 +182,6 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
         //UI
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
 
-        viewport.width = static_cast<float>(Application::width);
-        viewport.height = static_cast<float>(Application::height);
-
-        viewport.x = (swapChain.getExtend().width - Application::width) / 2.0f;
-        viewport.y = (swapChain.getExtend().height - Application::height) / 2.0f;
-
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
         vkCmdBindVertexBuffers(commandBuffer, 0, 3, vertexBuffers, offsets);

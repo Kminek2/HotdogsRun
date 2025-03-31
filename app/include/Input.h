@@ -10,6 +10,7 @@ class Input
 {
 private:
 	static GLFWwindow* window;
+	static glm::vec2 offset;
 	static uint16_t width, height;
 	static glm::vec2 lastPos;
 	static uint16_t* keyEventMap;

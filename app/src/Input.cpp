@@ -3,6 +3,7 @@
 
 GLFWwindow* Input::window;
 uint16_t Input::width, Input::height;
+glm::vec2 Input::offset;
 glm::vec2 Input::lastPos = glm::vec2(400, 300);
 glm::vec2 Input::mousePos, Input::mousePercPos, Input::mouseOff;
 uint16_t* Input::keyEventMap = nullptr;
@@ -10,7 +11,7 @@ uint16_t* Input::keyEventMap = nullptr;
 void Input::MouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
 	mousePos = glm::vec2(xpos, ypos);
-	mousePercPos = mousePos / glm::vec2(width, height);
+	mousePercPos = (mousePos - offset) / glm::vec2(width, height);
 	mouseOff = glm::vec2(xpos - lastPos.x, ypos - lastPos.y);
 
 	lastPos = glm::vec2(xpos, ypos);
