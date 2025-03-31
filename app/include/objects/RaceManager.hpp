@@ -104,6 +104,9 @@ private:
 	Sprite* nitro_icon = nullptr;
 	Text* nitro_counter = nullptr;
 
+	Sprite* bomb_icon = nullptr;
+	Text* bombs_counter = nullptr;
+
 	std::vector<Text*> end_screen;
 	int screen = 0;
 	int mscreen = 1;

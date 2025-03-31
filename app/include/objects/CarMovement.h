@@ -60,6 +60,7 @@ private:
     float nitro_timer;
     float before_nitro_mem;
     int nitros_available;
+    int bombs = 0;
     GameObject* nitro_trail;
     static const actions clearedActions;
     static const std::array<road_type_data,5> surfaces_data;
@@ -89,6 +90,7 @@ public:
     void makeRightTurn();
     void useHandBreak();
     void useNitro();
+    void useBomb();
     void handleAudio();
     float getActSpeed();
     float getAxleAngle();
@@ -108,9 +110,12 @@ public:
     static bool disabled_inputs;
 
     void addNitros(int count);
+    void addBombs(int count);
+
     std::tuple<float, float, float> getSpeeds();
 
     int nitrosCount();
+    int bombsCount();
     int nitrosUsed = 0;
 
     CarMovement* copy() override { return new CarMovement(*this); }

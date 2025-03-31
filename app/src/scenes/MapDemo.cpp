@@ -215,6 +215,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	pum->addPowerUp((new GameObject("nitroPowerUp", glm::vec3(1000.0f)))->AddScript(new PUNitro()), -.1f);
 	pum->addPowerUp((new GameObject("speedPowerUp", glm::vec3(1000.0f)))->AddScript(new PUMaxSpeed(.1f, 10000)), -1.0f);
 	pum->addPowerUp((new GameObject("banan2", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(2.25)))->AddScript(new PUBanana(2500)), -1.0f);
+	pum->addPowerUp((new GameObject("bomba", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(3.5)))->AddScript(new PUBomb()), -.5f);
+
+	PUBomb::SetBomb((new GameObject("TNT", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(2)))->AddScript(new Bomba()));
+
 	pum->generatePowerUps(10);
 
 	GameObject* amobj = new GameObject; // 'am' stands for Animation Manager, apparently
@@ -287,6 +291,7 @@ void MapDemo::Update() {
 
 	if (Settings::read("debug_mode").value_or(0)) {
 		if(Input::getKeyPressed(GLFW_KEY_N)) race_manager->getMainCar()->cm->addNitros(1);
+		if(Input::getKeyPressed(GLFW_KEY_B)) race_manager->getMainCar()->cm->addBombs(1);
 		if(Input::getKeyClicked(GLFW_KEY_R)) race_manager->EndRace();
 	}
 }

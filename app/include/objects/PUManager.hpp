@@ -5,6 +5,7 @@
 #include "objects/PowerUps/PUMaxSpeed.hpp"
 #include "objects/PowerUps/PUNitro.hpp"
 #include "objects/PowerUps/PUBanana.hpp"
+#include "objects/PowerUps/PUBomb.hpp"
 
 #include "_rand.hpp"
 #include "MapManager.h"

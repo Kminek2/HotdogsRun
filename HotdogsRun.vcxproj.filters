@@ -300,6 +300,12 @@
     <ClCompile Include="app\src\objects\PowerUps\FancyController.cpp">
       <Filter>Source Files\objects\PowerUps</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\objects\PowerUps\PUBomb.cpp">
+      <Filter>Source Files\objects\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\PowerUps\Bomba.cpp">
+      <Filter>Source Files\objects\PowerUps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\include\scenes\DebugScene.h">
@@ -567,6 +573,12 @@
       <Filter>Header Files\objects\PowerUps</Filter>
     </ClInclude>
     <ClInclude Include="app\include\objects\PowerUps\FancyController.hpp">
+      <Filter>Header Files\objects\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\PowerUps\PUBomb.hpp">
+      <Filter>Header Files\objects\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\PowerUps\Bomba.hpp">
       <Filter>Header Files\objects\PowerUps</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include "AppTime.h"
 #include "GameObject.h"
 
+#include "objects/PowerUps/PUBomb.hpp"
 #include "SpotLight.h"
 
 #include <iostream>
@@ -113,7 +114,6 @@ void CarMovement::Update() {
 }
 
 void CarMovement::OnDestroy() {}
-
 
 void CarMovement::Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot)
 {
@@ -311,8 +311,23 @@ void CarMovement::useNitro() {
 	nitro_trail->AddScript(new LockPosition(gameObject->transform, nitro_trail_offset))->AddScript(new LockRotation(gameObject->transform));
 }
 
+void CarMovement::useBomb()
+{
+	if (disabled_inputs || bombs < 1) return;
+	--bombs;
+
+	GameObject* bomba = new GameObject(*PUBomb::bomb);
+	bomba->transform->MoveTo(gameObject->transform->position);
+	bomba->transform->RotateTo(gameObject->transform->rotation);
+	bomba->transform->Translate(glm::vec3(-1, 0, 0));
+}
+
 void CarMovement::addNitros(int count) {
 	nitros_available += count;
+}
+
+void CarMovement::addBombs(int count) {
+	bombs += count;
 }
 
 std::tuple<float, float, float> CarMovement::getSpeeds() {
@@ -321,6 +336,10 @@ std::tuple<float, float, float> CarMovement::getSpeeds() {
 
 int CarMovement::nitrosCount() {
 	return nitros_available;
+}
+
+int CarMovement::bombsCount() {
+	return bombs;
 }
 
 void CarMovement::handleNitroAcc() {

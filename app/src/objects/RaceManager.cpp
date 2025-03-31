@@ -187,6 +187,12 @@ void RaceManager::AfterCountdown() {
 
 	nitro_counter = new Text("HackBold", { -.85, .75,.1 }, { -1,1 }, .3);
 	nitro_counter->SetText("-");
+
+	bomb_icon = new Sprite("bomva");
+	bomb_icon->rectTransform->SetHeight(.08)->MoveTo({ -.925,.425,.1 })->Move({ bomb_icon->rectTransform->GetDimentions() / 2.0f });
+
+	bombs_counter = new Text("HackBold", { -.85, .55,.1 }, { -1,1 }, .3);
+	bombs_counter->SetText("-");
 }
 
 void RaceManager::CalcAvgDist()
@@ -232,6 +238,9 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 
 	delete nitro_icon;
 	delete nitro_counter;
+
+	delete bomb_icon;
+	delete bombs_counter;
 
 	std::sort(car_objects.begin(), car_objects.end(), [](CarObject *a, CarObject *b) {
 		if (a->checkpoint == b->checkpoint)
@@ -462,6 +471,10 @@ void RaceManager::handleNitros() {
 	std::string ntext = std::to_string(main_car->cm->nitrosCount());
 	if (ntext != nitro_counter->getText())
 		nitro_counter->SetText(ntext);
+
+	ntext = std::to_string(main_car->cm->bombsCount());
+	if (ntext != bombs_counter->getText())
+		bombs_counter->SetText(ntext);
 }
 
 void RaceManager::handleTracking()

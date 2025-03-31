@@ -24,10 +24,7 @@ void PUMaxSpeed::OnActivate() {
 	collided = nullptr;
 }
 
-void PUMaxSpeed::_Init()
-{
-	fc = new FancyController(gameObject, .5f, .1f, 20.0f);
-}
+void PUMaxSpeed::_Init() { fc = new FancyController(gameObject, .5f, .1f, 20.0f); }
 
 void PUMaxSpeed::Update() {
 	fc->Update();
