@@ -5,6 +5,7 @@
 #include "objects/WheelsScript.h"
 #include "objects/CarInputs.h"
 #include "objects/SmoothCamera.hpp"
+#include "objects/MapManager.h"
 
 #include "_rand.hpp"
 #include "StringOperations.hpp"
@@ -61,7 +62,7 @@ std::shared_ptr<Scene> TutorialScene::Init() {
 			r->scale *= MAP_TILE_SCALE;
 			r->surface_type = st;
 
-			(new GameObject(r))->AddDefaultOBB(glm::vec3(0), true)->transform->MoveTo(glm::vec3(vec[i], 0) * MAP_TILE_SIZE * MAP_TILE_SCALE);
+			(new GameObject(r))->AddDefaultOBB(glm::vec3(0), true)->transform->MoveTo(glm::vec3(vec[i], -.23 / (MAP_TILE_SIZE * MAP_TILE_SCALE)) * MAP_TILE_SIZE * MAP_TILE_SCALE);
 		}
 	};
 
@@ -69,7 +70,7 @@ std::shared_ptr<Scene> TutorialScene::Init() {
 	createRoads(roadmap_ice, 1, 3);
 	createRoads(roadmap_gravel, 2, 2);
 
-	GameObject* car = new GameObject("racing_car", glm::vec3(0, 0, .3), glm::vec3(0, 0, -90));
+	GameObject* car = new GameObject("racing_car", glm::vec3(0, 0, 0), glm::vec3(0, 0, -90));
 
 	car->AddDefaultOBB();
 
@@ -88,11 +89,11 @@ std::shared_ptr<Scene> TutorialScene::Init() {
 	view_scripts[0]->disabled2 = true;
 	view_scripts[1]->disabled2 = true;
 
-	(new GameObject("szlabanPodstawa", glm::vec3(0, -.5 * MAP_TILE_SIZE * MAP_TILE_SCALE, .3)))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE);
-	(new GameObject("szlabanRurka", glm::vec3(0, -.5 * MAP_TILE_SIZE * MAP_TILE_SCALE, 1.3)))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE);
+	(new GameObject("szlabanPodstawa", glm::vec3(0, -.5 * MAP_TILE_SIZE * MAP_TILE_SCALE, 0)))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE);
+	(new GameObject("szlabanRurka", glm::vec3(0, -.5 * MAP_TILE_SIZE * MAP_TILE_SCALE, 1)))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE);
 	
-	(new GameObject("szlabanPodstawa", glm::vec3(0, (3 * seg_len - .5) * MAP_TILE_SIZE * MAP_TILE_SCALE, .3)))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE);
-	(new GameObject("szlabanRurka", glm::vec3(0, (3 * seg_len - .5) * MAP_TILE_SIZE * MAP_TILE_SCALE, 1.3)))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE);
+	(new GameObject("szlabanPodstawa", glm::vec3(0, (3 * seg_len - .5) * MAP_TILE_SIZE * MAP_TILE_SCALE, 0)))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE);
+	(new GameObject("szlabanRurka", glm::vec3(0, (3 * seg_len - .5) * MAP_TILE_SIZE * MAP_TILE_SCALE, 1)))->AddDefaultOBB()->transform->ScaleTimes(MAP_TILE_SCALE);
 
 	(new GameObject("BaseCube", glm::vec3(0, 0, -0.23f), glm::vec3(0), glm::vec3(1000, 1000, -.01)))->AddColorChange(glm::vec3(1), glm::vec3(0.1f, 0.5f, 0.1f));
 
@@ -104,7 +105,7 @@ std::shared_ptr<Scene> TutorialScene::Init() {
 	main_text.push_back(new Text("SansSerif", glm::vec3(0, .725, .9), glm::vec2(0), .2));
 	main_text.push_back(new Text("SansSerif", glm::vec3(0, .625, .9), glm::vec2(0), .2));
 
-	checkpoint = (new GameObject("checkpoint", glm::vec3(0, 2 * seg_len, .3) * MAP_TILE_SIZE * MAP_TILE_SCALE))->AddDefaultOBB(glm::vec3(1));
+	checkpoint = (new GameObject("checkpoint", glm::vec3(0, 2 * seg_len, 0) * MAP_TILE_SIZE * MAP_TILE_SCALE))->AddDefaultOBB(glm::vec3(1));
 	checkpoint->transform->ScaleTimes(2);
 	checkpoint->surface_type = NEVER_COLLIDE;
 
@@ -132,6 +133,18 @@ std::shared_ptr<Scene> TutorialScene::Init() {
 
 	music_first->PlayTrack(false);
 	music_timer = 243.0f;
+
+	MapManager* map = new MapManager(rand.getSeed());
+
+	map->addAnimal((new GameObject("krowa", glm::vec3(10000)))->AddDefaultOBB()->AddScript(new Animal(rand, glm::vec2(10), 1)));
+	map->addAnimal((new GameObject("krowa", glm::vec3(10000)))->AddDefaultOBB()->AddScript(new Animal(rand, glm::vec2(50), 1.25)));
+	map->addAnimal((new GameObject("krowa", glm::vec3(10000)))->AddDefaultOBB()->AddScript(new Animal(rand, glm::vec2(100), 1.75)));
+
+	map->generateAnimals([&](int n) {
+		std::vector<glm::vec2> p; p.reserve(n);
+		while (n --> 0) p.push_back({ rand.random(-100.0f, 100.0f), rand.random(-100.0f,100.0f) });
+		return p;
+	}(5));
 
 	return std::shared_ptr<Scene>(scene);
 }
