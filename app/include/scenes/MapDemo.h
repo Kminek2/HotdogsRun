@@ -25,6 +25,7 @@ private:
 
 	const float MAP_TILE_SIZE = 12.7f; // 127x127 mv size
 	bool on_end_screen;
+	bool screen = false;
 	void ShowEndScreen();
 	bool UpdateEndScreen();
 	bool first_music;

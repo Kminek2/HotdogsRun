@@ -26,11 +26,15 @@ public:
 		GameObject* car;
 		double progress;
 	};
+	
+	int _place;
 
 	RaceManager* SetMapManager(MapManager* map_manager);
 	RaceManager* SetCarsRelativeOffset(float offset);
 	CarObject* AddCar(GameObject* car, bool main = false);
 	RaceManager* SetAnimationManager(AnimationManager* am);
+
+	bool nextScreen();
 
 	void Update();
 	
@@ -99,4 +103,8 @@ private:
 
 	Sprite* nitro_icon = nullptr;
 	Text* nitro_counter = nullptr;
+
+	std::vector<Text*> end_screen;
+	int screen = 0;
+	int mscreen = 1;
 };

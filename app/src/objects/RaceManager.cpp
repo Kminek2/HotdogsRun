@@ -247,32 +247,31 @@ RaceManager::CarObject *RaceManager::EndRace(bool executeCallbacks) {
 	bg->rectTransform->ScaleTo(glm::vec2(100.0f, 100.0f));
 	bg->rectTransform->MoveTo(glm::vec3(0.0f, 0.0f, 1.0f));
 
-	int place = 0;
-	while (car_objects[place]->car != main_car)
-		++place;
-	++place;
+	_place = 0;
+	while (car_objects[_place]->car != main_car)
+		++_place;
+	++_place;
 
 	std::vector<LiveRaceObject*> lr_objects = GetLiveRace(false);
 	int lr_place = 0;
 	while (lr_objects[lr_place]->car != main_car)
 		++lr_place;
 
-	(new Text("SansSerif", glm::vec3(0.1f, 0.8f, 0.0f), glm::vec2(0.0f)))->SetText("The race ended")->ChangeSize(0.5);
-	(new Text("SansSerif", glm::vec3(0.1f, 0.575f, 0.0f), glm::vec2(0.0f)))->SetText("...and you were " + std::to_string(place) + String::getSuffix(place) + '!')->ChangeSize(0.4);
+	end_screen.push_back((new Text("SansSerif", glm::vec3(0.1f, 0.8f, 0.0f), glm::vec2(0.0f)))->SetText("The race ended")->ChangeSize(0.5));
+	end_screen.push_back((new Text("SansSerif", glm::vec3(0.1f, 0.575f, 0.0f), glm::vec2(0.0f)))->SetText("...and you were " + std::to_string(_place) + String::getSuffix(_place) + '!')->ChangeSize(0.4));
 
-	(new Text("SansSerif", glm::vec3(0.1f, 0.25f, 0.0f), glm::vec2(0.0f)))->SetText("Nitros used: " + std::to_string(main_car->cm->nitrosUsed))->ChangeSize(0.2);
-	(new Text("SansSerif", glm::vec3(0.1f, 0.1f, 0.0f), glm::vec2(0.0f)))->SetText("Time taken: " + String::formatDouble(race_time_elapsed, 2) + 's')->ChangeSize(0.2);
+	end_screen.push_back((new Text("SansSerif", glm::vec3(0.1f, 0.25f, 0.0f), glm::vec2(0.0f)))->SetText("Nitros used: " + std::to_string(main_car->cm->nitrosUsed))->ChangeSize(0.2));
+	end_screen.push_back((new Text("SansSerif", glm::vec3(0.1f, 0.1f, 0.0f), glm::vec2(0.0f)))->SetText("Time taken: " + String::formatDouble(race_time_elapsed, 2) + 's')->ChangeSize(0.2));
 
 	double dist = lr_objects[lr_place]->progress * sum_x * VELOCITY_DISPLAY_MULTIPLIER;
-	(new Text("SansSerif", glm::vec3(0.1f, -0.05f, 0.0f), glm::vec2(0.0f)))->SetText("Distance covered: " + String::formatDouble(dist, 2) + 'm')->ChangeSize(0.2);
-	(new Text("SansSerif", glm::vec3(0.1f, -0.2f, 0.0f), glm::vec2(0.0f)))->SetText("Avereage speed: " + String::formatDouble(dist / race_time_elapsed, 2) + "m/s")->ChangeSize(0.2);
+	end_screen.push_back((new Text("SansSerif", glm::vec3(0.1f, -0.05f, 0.0f), glm::vec2(0.0f)))->SetText("Distance covered: " + String::formatDouble(dist, 2) + 'm')->ChangeSize(0.2));
+	end_screen.push_back((new Text("SansSerif", glm::vec3(0.1f, -0.2f, 0.0f), glm::vec2(0.0f)))->SetText("Avereage speed: " + String::formatDouble(dist / race_time_elapsed, 2) + "m/s")->ChangeSize(0.2));
 
 	(new Text("SansSerif", glm::vec3(.1, -.7, 0), glm::vec2(0)))->SetText("Seed: " + std::to_string(map_manager->getSeed()))->ChangeSize(.125);
-
 	(new Text("SansSerif", glm::vec3(0.1f, -0.8f, 0.0f), glm::vec2(0.0f)))->SetText("Press ENTER to continue!")->ChangeSize(0.3);
 
-	if (!executeCallbacks)
-		return car_objects[0];
+	//if (!executeCallbacks)
+	//	return car_objects[0];
 
 	for (const auto &sub : subscribers)
 		sub(car_objects[0]);
@@ -318,6 +317,22 @@ std::set<std::string> RaceManager::GetCarNames() { return car_names; }
 RaceManager *RaceManager::SetAnimationManager(AnimationManager *am) {
 	animation_manager = am;
 	return this;
+}
+
+bool RaceManager::nextScreen()
+{
+	for (Text* t : end_screen) delete t;
+
+	if (screen == 0) {
+		std::vector<LiveRaceObject*> lr = GetLiveRace();
+
+		for (int i = 0; i < 5; i++) {
+			end_screen.push_back((new Text("HackBold", { -.8, .5 - .2 * i, .5 }, { -1,1 }, .3))->SetText(std::to_string(i + 1) + '.'));
+			end_screen.push_back((new Text("HackBold", { -.6, .5 - .2 * i, .5 }, { -1,1 }, .3))->SetText(i < lr.size() ? (lr[i]->car == main_car ? "YOU" : lr[i]->car->GetModelName()) : "---"));
+		}
+	}
+
+	return (++screen) >= mscreen;
 }
 
 void RaceManager::StartAnimation() {
@@ -398,8 +413,7 @@ void RaceManager::StartAnimation() {
 
 double counter_000 = 0;
 void RaceManager::Update() {
-	if (!race_started || race_ended)
-		return;
+	if (!race_started || race_ended) return;
 
 	handleClock();
 	handleLoops();

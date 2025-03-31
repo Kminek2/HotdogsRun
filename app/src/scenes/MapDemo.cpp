@@ -240,7 +240,8 @@ std::shared_ptr<Scene> MapDemo::Init() {
 void MapDemo::OnRaceEnd(RaceManager::CarObject* winner) {
 	sound_race_end->PlayTrack(false);
 	std::cout << "===\n\t" << winner->car->GetModelName() << "\n\t" << winner->checkpoint << "\n\t" << winner->time << '\n';
-	Application::Invoke([&](){ShowEndScreen();}, 10);
+	on_end_screen = true;
+	//Application::Invoke([&](){ShowEndScreen();}, 10);
 }
 
 void MapDemo::Update() {
@@ -296,7 +297,9 @@ void MapDemo::ShowEndScreen() {
 }
 
 bool MapDemo::UpdateEndScreen() {
-	if (Input::getKeyClicked(GLFW_KEY_ENTER))
-		return true;
+	if (Input::getKeyClicked(GLFW_KEY_ENTER)) {
+		if(screen) return true;
+		screen = race_manager->nextScreen();
+	}
 	return false;
 }
