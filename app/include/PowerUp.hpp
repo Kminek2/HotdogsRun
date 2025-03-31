@@ -5,6 +5,7 @@
 #include "Collisions.h"
 #include "objects/CarMovement.h"
 #include "objects/RaceManager.hpp"
+#include "objects/PowerUps/FancyController.hpp"
 
 class PowerUp : public ObjectScript {
 protected:

@@ -285,10 +285,6 @@
     <ClCompile Include="app\src\scenes\TutorialScene.cpp">
       <Filter>Source Files\scenes</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\objects\PowerUps\PUBanana.cpp">
-      <Filter>Source Files\objects\PowerUps</Filter>
-      <Filter>Source Files\objects</Filter>
-    </ClCompile>
     <ClCompile Include="app\src\objects\Animal.cpp">
       <Filter>Source Files\objects</Filter>
     </ClCompile>
@@ -297,6 +293,12 @@
     </ClCompile>
     <ClCompile Include="app\src\objects\BadBreakingBot.cpp">
       <Filter>Source Files\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\PowerUps\PUBanana.cpp">
+      <Filter>Source Files\objects\PowerUps</Filter>
+    </ClCompile>
+    <ClCompile Include="app\src\objects\PowerUps\FancyController.cpp">
+      <Filter>Source Files\objects\PowerUps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -552,10 +554,6 @@
     <ClInclude Include="app\include\scenes\TutorialScene.hpp">
       <Filter>Header Files\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="app\include\objects\PowerUps\PUBanana.hpp">
-      <Filter>Header Files\objects\PowerUps</Filter>
-      <Filter>Header Files\objects</Filter>
-    </ClInclude>
     <ClInclude Include="app\include\objects\BadBreakingBot.h">
       <Filter>Header Files\objects</Filter>
     </ClInclude>
@@ -564,6 +562,12 @@
     </ClInclude>
     <ClInclude Include="app\include\objects\AntiPersonelBot.h">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\PowerUps\PUBanana.hpp">
+      <Filter>Header Files\objects\PowerUps</Filter>
+    </ClInclude>
+    <ClInclude Include="app\include\objects\PowerUps\FancyController.hpp">
+      <Filter>Header Files\objects\PowerUps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

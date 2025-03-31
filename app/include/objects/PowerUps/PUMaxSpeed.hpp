@@ -14,12 +14,15 @@ private:
 	float timer;
 	GameObject *who_collected;
 
+	FancyController* fc;
+
 public:
 	PUMaxSpeed(float increase_percent, unsigned duration_ms) : increase(increase_percent), duration(duration_ms) {};
 
 	void OnCollide(Collisions::CollisionData* cd) override;
 	void OnActivate() override;
 
+	void _Init() override;
 	void Update() override;
 	void OnDestroy() override;
 

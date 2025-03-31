@@ -18,5 +18,10 @@ void PUNitro::OnActivate() {
 	collided = nullptr;
 }
 
-void PUNitro::Update() {}
+void PUNitro::_Init()
+{
+	fc = new FancyController(gameObject, .5f, .1f, 20.0f);
+}
+
+void PUNitro::Update() { fc->Update(); }
 void PUNitro::OnDestroy() {}

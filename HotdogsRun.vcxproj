@@ -63,6 +63,7 @@
     <ClCompile Include="app\src\objects\CarMovement.cpp" />
     <ClCompile Include="app\src\objects\LockPosition.cpp" />
     <ClCompile Include="app\src\objects\LockRotation.cpp" />
+    <ClCompile Include="app\src\objects\PowerUps\FancyController.cpp" />
     <ClCompile Include="app\src\objects\PowerUps\PUMaxSpeed.cpp" />
     <ClCompile Include="app\src\objects\PowerUps\PUNitro.cpp" />
     <ClCompile Include="app\src\objects\PowerUps\PUBanana.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="app\include\objects\LockPosition.h" />
     <ClInclude Include="app\include\objects\LockRotation.h" />
     <ClInclude Include="app\include\objects\MedBot.h" />
+    <ClInclude Include="app\include\objects\PowerUps\FancyController.hpp" />
     <ClInclude Include="app\include\objects\PowerUps\PUBanana.hpp" />
     <ClInclude Include="app\include\objects\PowerUps\PUNitro.hpp" />
     <ClInclude Include="app\include\objects\PowerUps\PUMaxSpeed.hpp" />
