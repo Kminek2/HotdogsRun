@@ -123,17 +123,7 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
 
         //MAIN
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getMainPipeline()->getPipeline());
-        viewport.x = 0.0f;
-        viewport.y = 0.0f;
-        //viewport.width = static_cast<float>(swapChain.getExtend().width);
-        //viewport.height = static_cast<float>(swapChain.getExtend().height);
-        viewport.width = static_cast<float>(Application::width);
-        viewport.height = static_cast<float>(Application::height);
-        viewport.minDepth = 0.0f;
-        viewport.maxDepth = 1.0f;
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-        scissor.offset = { 0, 0 };
-        scissor.extent = swapChain.getExtend();
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
         VkBuffer vertexBuffers[] = { Model::vertexBuffer->getBuffer(),  Transform::transformBuffer->getBuffer(), Model::textureOffBuffer->getBuffer(), GameObject::colorChangesPrObject->getBuffer()};
@@ -191,6 +181,12 @@ void Commands::RecordCommands(uint16_t frame, const VkFramebuffer& framebuffer, 
 
         //UI
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, swapChain.getRenderPass()->getUiPipeline()->getPipeline());
+
+        viewport.width = static_cast<float>(Application::width);
+        viewport.height = static_cast<float>(Application::height);
+
+        viewport.x = (swapChain.getExtend().width - Application::width) / 2.0f;
+        viewport.y = (swapChain.getExtend().height - Application::height) / 2.0f;
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);

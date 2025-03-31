@@ -27,9 +27,12 @@
 namespace fs = std::filesystem;
 
 uint16_t Application::width, Application::height;
+uint16_t Application::unscaledWidth, Application::unscaledHeight;
 GLFWwindow* Application::window;
 
 Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
+	this->unscaledHeight = height;
+	this->unscaledWidth = width;
 	this->width = width;
 	this->height = height;
 	this->window = window;
@@ -124,6 +127,8 @@ Application::~Application() {
 }
 
 void Application::UpdateWindowSizes(uint16_t width, uint16_t height) {
+	unscaledWidth = width;
+	unscaledHeight = height;
 	float aspWidth = width / ASPECT_WIDTH;
 	float aspHeight = height / ASPECT_HEIGHT;
 	
@@ -131,7 +136,7 @@ void Application::UpdateWindowSizes(uint16_t width, uint16_t height) {
 	height = std::min(aspHeight, aspWidth) * ASPECT_HEIGHT;
 	this->width = width;
 	this->height = height;
-	camera->UpdateCamera(width, height);
+	camera->UpdateCamera(unscaledWidth, unscaledHeight);
 
 	Input::width = width;
 	Input::height = height;
@@ -172,7 +177,7 @@ void Application::Quit()
 
 void Application::UpdateBuffer(uint16_t frame, Uniform *uniform, Uniform* cubeMapUniform)
 {
-	camera->UpdateCamera(width, height);
+	camera->UpdateCamera(unscaledWidth, unscaledHeight);
 	camera->UpdateBuffer(frame, cubeMapUniform);
 
 	if (LightObject::pointLightBuffer->getSize() != PointLight::SendData(frame) && PointLight::lightNum > 0)

@@ -49,6 +49,7 @@ public:
 	static void Quit();
 
 	static uint16_t width, height;
+	static uint16_t unscaledWidth, unscaledHeight;
 
 	friend Engine;
 };
