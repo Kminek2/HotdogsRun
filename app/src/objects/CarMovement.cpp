@@ -335,8 +335,11 @@ void CarMovement::handleNitroAcc() {
 }
 
 void CarMovement::handleGrip() {
-	if (forces.x < 1.0f)
+	if (forces.x < 1.0f) {
 		gripMult = glm::normalize(gripMult);
+		return;
+	}
+
 	gripMult = glm::normalize(surfaces_data[road_type].grip * gameObject->transform->front * Time::deltaTime * (gameObject->transform->position.z > 0 ? 0.01f : 1.0f) * (1 - __gripMult) * 2.0f + (1 - surfaces_data[road_type].grip) * gripMult * std::abs(actSpeed / (gripToSpeed * __maxSpeed)) * (std::pow(axleAngle * (actSpeed / (__maxSpeed * __multiplier)) / 30, 2.0f) + 0.5f)) * __gripMult * 2.0f;
 }
 
