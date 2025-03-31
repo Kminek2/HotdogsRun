@@ -341,7 +341,7 @@ void MainMenuScene::UpdateMenuHighlight() {
         menu_options[i].first->ChangeSize(0.4f);
     }
     menu_options[menu_choosen_option].second->ChangeSize(0.45f);
-    menu_options[menu_choosen_option].first->SetColor(glm::vec4(0.5254901960784314f,0.7294117647058823f,0.9568627450980392f,1.0f));
+    menu_options[menu_choosen_option].first->SetColor(glm::vec4(0.2f,0.5,0.9,1.0f));
     menu_options[menu_choosen_option].first->ChangeSize(0.45f);
 }
 
@@ -615,7 +615,7 @@ void MainMenuScene::HideAppearance() {
 void MainMenuScene::UpdateAppearance() {
     cp.update();
 
-    if (Input::getKeyClicked(GLFW_KEY_ESCAPE)) {
+    if (Input::getKeyClicked(GLFW_KEY_ESCAPE) || Input::getKeyClicked(GLFW_KEY_ENTER)) {
         from_appearance_animation();
         return;
     }
@@ -709,7 +709,7 @@ void MainMenuScene::ShowSettings() {
 }
 
 void MainMenuScene::UpdateSettings() {
-    if (Input::getKeyClicked(GLFW_KEY_ESCAPE)) {
+    if (Input::getKeyClicked(GLFW_KEY_ESCAPE) || Input::getKeyClicked(GLFW_KEY_ENTER)) {
         HideSettings();
         ShowMenu();
         return;
