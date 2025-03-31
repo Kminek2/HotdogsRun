@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include <exception>
 
 #ifdef _CONSOLE
 int main() {
@@ -11,6 +12,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin,
 int main(int argc, char** argv){
 #endif //_WIN32
 #endif // Console
-	Engine engine;
-	engine.Run();
+	bool done = false;
+	while (!done) {
+		try {
+			Engine engine;
+			engine.Run();
+			done = true;
+		} catch (std::exception e) {}
+	}
 }
