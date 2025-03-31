@@ -120,6 +120,10 @@ GameObject::GameObject(const GameObject& obj) : GameObject(obj.model->GetName(),
 
 	for (auto obSc : obj.objectScripts)
 		AddScript(obSc->copy());
+
+	for (auto obb : obj.obbs) {
+		addOBB(obb);
+	}
 }
 
 GameObject::~GameObject()
