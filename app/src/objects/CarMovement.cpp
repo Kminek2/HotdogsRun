@@ -125,7 +125,7 @@ void CarMovement::Collided(GameObject* with, glm::vec3 oldPos, glm::vec3 oldRot)
 	gameObject->transform->MoveTo(oldPos);
 	gameObject->transform->RotateTo(oldRot);
 	gameObject->transform->Move(glm::vec3(glm::normalize(glm::vec2(gameObject->transform->position - with->transform->position)) * Time::deltaTime, 0.0f));
-	if (with != nullptr)
+	if (with != nullptr && with->cm != nullptr)
 		actSpeed += 0.03f*with->cm->getActSpeed();
 	actSpeed *= -0.3f;
 	forces.x = -forces.x;
