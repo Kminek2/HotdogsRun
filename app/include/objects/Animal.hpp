@@ -6,7 +6,7 @@
 
 class Animal : public ObjectScript {
 public:
-	Animal(_rand& rand, glm::vec2 range = glm::vec2(100), float speed = 1.0f) : speed(speed), rand(rand), range(range) {};
+	Animal(_rand& rand, glm::vec2 range = glm::vec2(100), float speed = 1.0f) : speed(speed), rand(rand.getSeed() + rand.random(0, 100000)), range(range) {};
 
 	void Init() override;
 	void Update() override;
@@ -18,7 +18,7 @@ public:
 private:
 	glm::vec2 range;
 	float speed;
-	_rand& rand;
+	_rand rand;
 
 	glm::vec2 min_pos, max_pos;
 	glm::vec2 target_pos;
