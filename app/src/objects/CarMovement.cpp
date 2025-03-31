@@ -36,8 +36,10 @@ void CarMovement::Init() {
 	gameObject->cm = this;
 	crashsound_audio = new AudioSource3d(gameObject, "crash", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
 	gassound_audio = new AudioSource3d(gameObject, "gas", static_cast<float>(Settings::read("volume").value_or(100))/400.0f);
-	lights.push_back(new SpotLight(gameObject, 2.0f * glm::vec3(-1, 0.5f, 1), gameObject->transform->front, glm::vec3(0.7f, 0.7f, 0), glm::vec2(glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f))), 1.0f, 0.9f, 0.36f));
-	lights.push_back(new SpotLight(gameObject, 2.0f * glm::vec3(-1, -0.5f, 1), gameObject->transform->front, glm::vec3(0.7f, 0.7f, 0)));
+	lights.push_back(new SpotLight(gameObject, glm::vec3(-0.1, 0.5f, 1), gameObject->transform->front, glm::vec3(0.7f, 0.7f, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
+	lights.push_back(new SpotLight(gameObject, glm::vec3(-0.1, -0.5f, 1), gameObject->transform->front, glm::vec3(0.7f, 0.7f, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
+	stopLights.push_back(new SpotLight(gameObject, glm::vec3(0.5, 0.5f, 1), -gameObject->transform->front, glm::vec3(1.0f, 0, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
+	stopLights.push_back(new SpotLight(gameObject, glm::vec3(0.5, -0.5f, 1), -gameObject->transform->front, glm::vec3(1.0f, 0, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
 }
 
 void CarMovement::Update() {
@@ -106,6 +108,8 @@ void CarMovement::Update() {
 			carCollided->Collided(gameObject, carCollided->gameObject->transform->position, carCollided->gameObject->transform->rotation);
 	}
 	actActions = clearedActions;
+
+	handleLights();
 }
 
 void CarMovement::OnDestroy() {}
@@ -161,16 +165,23 @@ void CarMovement::handleGas() {
 }
 
 void CarMovement::handleBreaks() {
-	if (actActions.hand_break) {
-		if (actSpeed > 0) {
-			actSpeed -= surfaces_data[road_type].break_multiplier * __carWeight * breaksStrength * 200.0f * Time::deltaTime * __multiplier;
-			actSpeed = std::max(actSpeed, 0.0f);
-		}
-		else {
-			actSpeed += surfaces_data[road_type].break_multiplier * __carWeight * breaksStrength * 200.0f * Time::deltaTime * __multiplier;
-			actSpeed = std::min(actSpeed, 0.0f);
-		}
+	if (!actActions.hand_break) {
+		for (auto& stop : stopLights)
+			stop->Disable();
+		return;
 	}
+
+	if (actSpeed > 0) {
+		actSpeed -= surfaces_data[road_type].break_multiplier * __carWeight * breaksStrength * 200.0f * Time::deltaTime * __multiplier;
+		actSpeed = std::max(actSpeed, 0.0f);
+	}
+	else {
+		actSpeed += surfaces_data[road_type].break_multiplier * __carWeight * breaksStrength * 200.0f * Time::deltaTime * __multiplier;
+		actSpeed = std::min(actSpeed, 0.0f);
+	}
+
+	for (auto& stop : stopLights)
+		stop->Enable();
 }
 
 void CarMovement::handleEngBreak() {
@@ -333,6 +344,9 @@ void CarMovement::handleLights()
 {
 	for (auto& light : lights)
 		light->UpdateDir(gameObject->transform->front);
+
+	for (auto& light : stopLights)
+		light->UpdateDir(-gameObject->transform->front);
 }
 
 void CarMovement::handleAudio() {

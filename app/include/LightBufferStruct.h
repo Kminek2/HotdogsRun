@@ -19,10 +19,10 @@ struct PointLightBuffer {
 };
 
 struct SpotLightBuffer {
+	glm::vec2 cutOffs;
 	alignas(16) glm::vec3 pos;
 	alignas(16) glm::vec3 col;
 	alignas(16) glm::vec3 functions;
 
 	alignas(16) glm::vec3 direction;
-	glm::vec2 cutOffs;
 };

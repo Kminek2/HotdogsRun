@@ -15,12 +15,12 @@ struct PointLight {
 };
 
 struct SpotLight {
+	vec2 cutOffs;
 	vec3 pos;
     vec3 col;
 	vec3 functions;
 
 	vec3 direction;
-	vec2 cutOffs;
 };
 
 struct ColorChanges{
@@ -136,7 +136,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 
     float shadow = ShadowCalculation(lightSpacePos, normal, lightDir);       
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular));
-    return pow(lighting, vec3(gamma));
+    return (lighting);
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col){
@@ -158,7 +158,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-    return pow(ambient + diffuse + specular, vec3(gamma));
+    return (ambient + diffuse + specular);
 }
 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 col){
@@ -184,7 +184,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 pos, vec3 viewDir, vec3 co
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
-    return pow(ambient + diffuse + specular, vec3(gamma));
+    return (ambient + diffuse + specular);
 
 }
 

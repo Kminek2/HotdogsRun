@@ -109,7 +109,7 @@ MapManager* MapManager::Init()
 	build->setMap(&points);
 	build->generateCities(cities_count)->replaceCityRoads();
 
-	(new GameObject("BaseCube", glm::vec3(0, 0, -0.23f), glm::vec3(0), glm::vec3(1000, 1000, 0)))->AddColorChange(glm::vec3(1), glm::vec3(0.1f, 0.5f, 0.1f)); // just TEMPORARY hradcoded ground
+	(new GameObject("BaseCube", glm::vec3(0, 0, -0.23f), glm::vec3(0), glm::vec3(1000, 1000, 0.04f)))->AddColorChange(glm::vec3(1), glm::vec3(0.1f, 0.5f, 0.1f)); // just TEMPORARY hradcoded ground
 
 	return this;
 }

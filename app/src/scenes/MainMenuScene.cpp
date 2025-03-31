@@ -67,7 +67,7 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     am = new AnimationManager();
     objs[objs.size()-1]->AddScript(am);
     
-    objs.push_back(new GameObject("BaseCube", glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0.0f), glm::vec3(1000.0f, 1000.0f, 0.0f)));
+    objs.push_back(new GameObject("BaseCube", glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0.0f), glm::vec3(1000.0f, 1000.0f, 0.04f)));
     objs[objs.size()-1]->AddColorChange(glm::vec3(1.0f), glm::vec3(0.1f, 0.5f, 0.1f));
     
     user_car = new GameObject(car_models[model_choosen], glm::vec3(-6.0f, 0.0f, 0.3f));
@@ -221,7 +221,7 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
         ShowMenu();
     }
 
-    LightObject::SetDirLight(glm::vec3(0, 0.5, -0.5), glm::vec3(0.2), glm::vec3(0.7), glm::vec3(0.9));
+    LightObject::SetDirLight(glm::vec3(0, 0.5, -0.5), glm::vec3(0.4), glm::vec3(0.7), glm::vec3(0.9));
 
     Camera::main->ChangeCubeMap(new CubeMap({ "CubeMaps/Skybox/skybox-right.png", "CubeMaps/Skybox/skybox-left.png", "CubeMaps/Skybox/skybox-top.png", "CubeMaps/Skybox/skybox-bottom.png", "CubeMaps/Skybox/skybox-front.png", "CubeMaps/Skybox/skybox-back.png" }));
 	return std::shared_ptr<Scene>(scene);

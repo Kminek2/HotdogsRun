@@ -27,6 +27,7 @@ void SpotLight::DeleteAll()
 
 SpotLight::SpotLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 dir, glm::vec3 col, glm::vec2 cutOffs, float constant, float linear, float quadratic) : LightObject(gameObjec, pos)
 {
+	this->cutOffs = cutOffs;
 	lightNum++;
 	light.pos = pos;
 	light.col = col;
@@ -40,6 +41,7 @@ SpotLight::SpotLight(GameObject* gameObjec, glm::vec3 pos, glm::vec3 dir, glm::v
 
 SpotLight::SpotLight(GameObject* gameObject, SpotLightBuffer spotLight) : LightObject(gameObject, spotLight.pos)
 {
+	this->cutOffs = light.cutOffs;
 	lightNum++;
 	light = spotLight;
 
@@ -50,6 +52,16 @@ SpotLight::SpotLight(GameObject* gameObject, SpotLightBuffer spotLight) : LightO
 void SpotLight::UpdateDir(glm::vec3 dir)
 {
 	light.direction = dir;
+}
+
+void SpotLight::Disable()
+{
+	light.cutOffs = glm::cos(glm::radians(glm::vec2(0)));
+}
+
+void SpotLight::Enable()
+{
+	light.cutOffs = cutOffs;
 }
 
 SpotLight::~SpotLight()
