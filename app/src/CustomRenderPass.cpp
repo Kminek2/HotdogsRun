@@ -1,31 +1,73 @@
 #include "CustomRenderPass.h"
 
-void CustomRenderPass::CreateCompute(std::string shaderPath)
+VkFormat CustomRenderPass::FindDepthFormat()
 {
-	Shader compute(shaderPath, VK_SHADER_STAGE_COMPUTE_BIT);
-
-	uniform = Uniform();
+    return Device::FindSupportedFormat(
+        { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
+        VK_IMAGE_TILING_OPTIMAL,
+        VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+    );
 }
 
-void CustomRenderPass::AddComputeBinding(VkDescriptorType bindingType)
+CustomRenderPass::CustomRenderPass()
 {
-	uniform.AddUniforms(1U, bindingType, VK_SHADER_STAGE_COMPUTE_BIT);
+	uniform = new Uniform();
 }
 
-CustomRenderPass::CustomRenderPass(RenderPassFunction function) : function(function)
+CustomRenderPass::~CustomRenderPass()
 {
+	delete uniform;
 }
 
-void CustomRenderPass::AddBinding(VkDescriptorType bindingType)
+void CustomRenderPass::AddBinding(VkShaderStageFlagBits shaderStage, VkDescriptorType bindingType)
 {
-	if (function == COMPUTE)
-		AddComputeBinding(bindingType);
+	uniform->AddUniforms(1U, bindingType, shaderStage);
 }
 
-void CustomRenderPass::CreatePass(std::string shaderPath)
+void CustomRenderPass::AddDepthSubpass(std::string vertexShaderPath)
 {
-	if (function == COMPUTE)
-		CreateCompute(shaderPath);
+    VkAttachmentDescription depthAttachment = {};
+    depthAttachment.format = FindDepthFormat();
+    depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
-	uniform.BindUniforms();
+    VkAttachmentReference depthAttachmentRef = {};
+    depthAttachmentRef.attachment = 0;
+    depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    VkSubpassDescription subpass = {};
+    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount = 0;
+    subpass.pDepthStencilAttachment = &depthAttachmentRef;
+
+    VkSubpassDependency dependency = {};
+    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependency.dstSubpass = 0;
+    dependency.srcStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+    dependency.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+
+    VkRenderPassCreateInfo renderPassInfo = {};
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.attachmentCount = 1;
+    renderPassInfo.pAttachments = &depthAttachment;
+    renderPassInfo.subpassCount = 1;
+    renderPassInfo.pSubpasses = &subpass;
+    renderPassInfo.dependencyCount = 1;
+    renderPassInfo.pDependencies = &dependency;
+
+    if (vkCreateRenderPass(Device::getDevice(), &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create depth render pass!");
+    }
+}
+
+void CustomRenderPass::CreateRenderPass()
+{
+	uniform->BindUniforms();
 }

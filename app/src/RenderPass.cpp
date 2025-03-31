@@ -255,6 +255,7 @@ RenderPass::RenderPass(SwapChain* swapChain)
 }
 
 RenderPass::~RenderPass() {
+    delete shadowPipeline;
     delete mainPipeline;
     delete UIPipeline;
     delete SpritePipeline;

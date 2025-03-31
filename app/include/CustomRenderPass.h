@@ -1,25 +1,29 @@
 #pragma once
 #include "Shader.h"
 #include "Uniform.h"
+#include "AutomaticBuffer.h"
 
 class CustomRenderPass // Render pass 2.0
 {
-public:
-	enum RenderPassFunction {
-		RENDER,
-		COMPUTE
-	};
-
 private:
-	const RenderPassFunction function;
-	std::vector<VkDescriptorSetLayoutBinding> layoutBindings{};
-	Uniform uniform;
-
-	void CreateCompute(std::string shaderPath);
-	void AddComputeBinding(VkDescriptorType bindingType);
+	VkRenderPass renderPass;
+	static VkFormat FindDepthFormat();
+	std::vector< VkAttachmentDescription> attachments{};
+	Uniform* uniform;
 public:
-	CustomRenderPass(RenderPassFunction function);
+	CustomRenderPass();
+	~CustomRenderPass();
 
-	void AddBinding(VkDescriptorType bindingType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
-	void CreatePass(std::string shaderPath);
+	void AddBinding(VkShaderStageFlagBits shaderStage, VkDescriptorType bindingType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+	template<typename T>
+	void AddBinding(AutomaticBuffer<T>* buffer, VkShaderStageFlagBits shaderStage, VkDescriptorType bindingType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+	void AddDepthSubpass(std::string vertexShaderPath);
+	void CreateRenderPass();
 };
+
+template<typename T>
+inline void CustomRenderPass::AddBinding(AutomaticBuffer<T>* buffer, VkShaderStageFlagBits shaderStage, VkDescriptorType bindingType)
+{
+	AddBinding(shaderStage, bindingType);
+	buffer->SetBinding(uniform, uniform->getBindingCount());
+}
