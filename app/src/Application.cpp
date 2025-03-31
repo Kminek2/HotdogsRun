@@ -138,6 +138,7 @@ void Application::UpdateWindowSizes(uint16_t width, uint16_t height) {
 	this->height = height;
 	camera->UpdateCamera(unscaledWidth, unscaledHeight);
 
+	Input::offset = glm::vec2((unscaledWidth - width) / 2.0f, (unscaledHeight - height) / 2.0f);
 	Input::width = width;
 	Input::height = height;
 }

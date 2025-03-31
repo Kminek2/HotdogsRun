@@ -215,6 +215,7 @@ struct Transform {
 	}
 
 	glm::mat4 getModelMatrix() { RecalculateMatrix(); std::lock_guard<std::mutex> matrixLock(matrixMutex); return modelTransform; }
+	glm::mat4 getModelMatrix(glm::vec2 aspectSize) { return RecalculateMatrix(aspectSize); }
 private:
 	std::mutex matrixMutex;
 	/// <summary>
@@ -255,6 +256,20 @@ private:
 		modelTransform = glm::scale(modelTransform, scale);
 
 		changedTransform = false;
+	}
+
+	glm::mat4 RecalculateMatrix(glm::vec2 aspecSize) {
+		glm::mat model = glm::mat4(1);
+
+		model = glm::translate(model, position * glm::vec3(aspecSize, 1));
+
+		model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		model = glm::scale(model, scale * glm::vec3(aspecSize, 1));
+
+		return model;
 	}
 
 	bool changedTransform = false;
