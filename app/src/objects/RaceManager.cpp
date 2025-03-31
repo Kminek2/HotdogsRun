@@ -326,9 +326,13 @@ bool RaceManager::nextScreen()
 	if (screen == 0) {
 		std::vector<LiveRaceObject*> lr = GetLiveRace();
 
+		(new Text("HackBold", { 0,.8,.5 }, { 0,0 }, .5))->SetText("Results");
+
 		for (int i = 0; i < 5; i++) {
-			end_screen.push_back((new Text("HackBold", { -.8, .5 - .2 * i, .5 }, { -1,1 }, .3))->SetText(std::to_string(i + 1) + '.'));
-			end_screen.push_back((new Text("HackBold", { -.6, .5 - .2 * i, .5 }, { -1,1 }, .3))->SetText(i < lr.size() ? (lr[i]->car == main_car ? "YOU" : lr[i]->car->GetModelName()) : "---"));
+			end_screen.push_back((new Text("HackBold", { -.9, .5 - .2 * i, .5 }, { -1,1 }, .3))->SetText(std::to_string(i + 1) + '.'));
+			end_screen.push_back((new Text("HackBold", { -.75, .5 - .2 * i, .5 }, { -1,1 }, .3))->SetText(i < lr.size() ? (lr[i]->car == main_car ? "YOU" : lr[i]->car->GetModelName()) : "---"));
+			end_screen.push_back((new Text("HackBold", { -.025, .5 - .2 * i, .5 }, { -1,1 }, .3))->SetText(i < lr.size() ? std::to_string(car_objects[i]->checkpoint) + "/" + std::to_string(termination_condition_value * map_manager->GetCheckPoints()) : "---"));
+			end_screen.push_back((new Text("HackBold", { .9, .5 - .2 * i, .5 }, { 1,1 }, .3))->SetText(i < lr.size() ? String::formatDouble(car_objects[i]->time / lr[i]->progress, 2) + 's' : "---"));
 		}
 	}
 
