@@ -144,7 +144,23 @@ GameObject* MapManager::add_decor(const std::vector<MapPoint>& map_points) {
 		break;
 	}
 
-	if (rand.coin_toss(obj_data.second) && cur != 0) return decor; // allow for on-road placement if TRUE
+	bool puddle = rand.coin_toss();
+	if (cur != -1 && puddle) {
+		decor->GetOBBs().clear();
+		const std::vector<std::string> puddles = {
+			"plamaBlota", "plamaOleju", "plamaWody"
+		};
+		decor->ChangeModel(rand.choice(puddles, {0.4f, 0.3f, 0.3f}));
+		if (decor->GetModelName() == puddles[0])
+			decor->surface_type = 2;
+		else if (decor->GetModelName() == puddles[1])
+			decor->surface_type = 4;
+		else
+		 	decor->surface_type = 1;
+		decor->AddDefaultOBB(glm::vec3(0.0f), true);
+	}
+
+	if ((rand.coin_toss(obj_data.second) && cur != 0) || puddle) return decor; // allow for on-road placement if TRUE
 
 	if (cur == -1) return decor; // no collision - all good!
 
