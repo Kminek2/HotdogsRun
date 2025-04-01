@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <stdexcept>
 
+
 class Engine
 {
 public:
@@ -27,6 +28,7 @@ public:
 
     static ValidationLayers* getValidationLayers() { return enableValidationLayers ? validationLayers : nullptr; };
     static const std::vector<const char*> enValidationLayers;
+
 private:
     const uint32_t WIDTH;
     const uint32_t HEIGHT;

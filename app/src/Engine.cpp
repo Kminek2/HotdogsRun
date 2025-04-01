@@ -12,6 +12,7 @@
 GLFWwindow* Engine::window;
 VkInstance Engine::instance;
 
+
 ValidationLayers* Engine::validationLayers;
 const std::vector<const char*> Engine::enValidationLayers = {
     "VK_LAYER_KHRONOS_validation"
@@ -129,7 +130,16 @@ void Engine::DrawFrame() {
     submitInfo.pSignalSemaphores = signalSemaphores;
 
     if (vkQueueSubmit(Queues::graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
-        throw std::runtime_error("failed to submit draw command buffer!");
+        VkSemaphoreSignalInfo signalInfo{};
+        signalInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO;
+        signalInfo.semaphore = renderFinishedSemaphores[currentFrame];
+        signalInfo.value = 1; // Manually set value to 1
+
+        vkSignalSemaphore(Device::getDevice(), &signalInfo);
+
+        //throw std::runtime_error("failed to submit draw command buffer!");
+
+
     }
 
     VkPresentInfoKHR presentInfo{};

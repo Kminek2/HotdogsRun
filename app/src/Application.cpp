@@ -266,9 +266,9 @@ void Application::Update() {
 			);
 #endif // _WIN32
 
-			throw std::exception("Application failed");
+			throw std::runtime_error("Application failed");
 		}
-		std::cout << "Application update error: " << e.what() << "\Trying to fix it...\n";
+		std::cout << "Application update error: " << e.what() << ". Trying to fix it...\n";
 		threadPool.StopAll();
 
 		errorLastFrame = true;

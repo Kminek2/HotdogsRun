@@ -23,6 +23,11 @@ Device::~Device() {
     vkDestroyDevice(device, nullptr);
 }
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif // _WIN32
+
+
 void Device::PickPhysicalDevice() {
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(Engine::instance, &deviceCount, nullptr);
@@ -46,6 +51,15 @@ void Device::PickPhysicalDevice() {
     physicalDevice = scores.second;
 
     if (physicalDevice == VK_NULL_HANDLE) {
+#ifdef _WIN32
+        MessageBox(
+            NULL,
+            (LPCWSTR)L"Update your drivers and try again.",
+            (LPCWSTR)L"No compatable device found",
+            MB_ICONERROR | MB_OK | MB_DEFBUTTON1
+        );
+#endif // _WIN32
+
         throw std::runtime_error("failed to find a suitable GPU!");
     }
 

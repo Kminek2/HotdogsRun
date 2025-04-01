@@ -47,7 +47,6 @@ std::shared_ptr<Scene> MainMenuScene::Init() {
     // qc->_sr(0.75f);
 	// qc->_sm(100.0f);
 
-    return nullptr;
     music_timer = 0.0f;
 
     logo = nullptr;
