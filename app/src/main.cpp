@@ -21,4 +21,6 @@ int main(){
 //#endif // Console
 	Engine engine;
 	engine.Run();
+
+	return 0;
 }

@@ -1,6 +1,6 @@
 #pragma once
 #define GLFW_INCLUDE_VULKAN
-//#define NVALID 1
+#define NVALID 1
 #include <GLFW/glfw3.h>
 
 #include "SwapChain.h"
