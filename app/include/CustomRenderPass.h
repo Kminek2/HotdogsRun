@@ -6,10 +6,13 @@
 class CustomRenderPass // Render pass 2.0
 {
 private:
+	std::vector<std::pair<VkAttachmentDescription, VkAttachmentReference>> attachments;
 	VkRenderPass renderPass;
 	static VkFormat FindDepthFormat();
-	std::vector< VkAttachmentDescription> attachments{};
 	Uniform* uniform;
+
+	void MakeGraphicsPipeline(std::vector<std::pair<std::string, VkShaderStageFlagBits>> shadersPathAndStage);
+	std::pair<VkAttachmentDescription, VkAttachmentReference> CreateDepthAttachment();
 public:
 	CustomRenderPass();
 	~CustomRenderPass();
