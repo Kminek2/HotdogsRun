@@ -31,6 +31,8 @@ uint16_t Application::unscaledWidth, Application::unscaledHeight;
 GLFWwindow* Application::window;
 
 Application::Application(uint16_t width, uint16_t height, GLFWwindow* window) {
+	errorLastFrame = false;
+
 	this->unscaledHeight = height;
 	this->unscaledWidth = width;
 	this->width = width;
@@ -193,6 +195,10 @@ void Application::UpdateBuffer(uint16_t frame, Uniform *uniform, Uniform* cubeMa
 
 std::list <float> frameTimes;
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif // _WIN32
+
 void Application::Update() {
 	while (!threadPool.isEmpty())
 		continue;
@@ -244,11 +250,28 @@ void Application::Update() {
 		threadPool.enqueue(AudioSource3d::UpdateAllPosition);
 		while (!threadPool.isEmpty())
 			continue;
+
+		errorLastFrame = false;
 	}
 	catch (std::exception e)
 	{
-		std::cout << "Threading error: " << e.what() << "\nRecreating threading pool.\n";
+		if (errorLastFrame)
+		{
+#ifdef _WIN32
+			MessageBox(
+				NULL,
+				(LPCWSTR)L"Application failed and will be closed",
+				(LPCWSTR)L"Error",
+				MB_ICONERROR | MB_OK| MB_DEFBUTTON1
+			);
+#endif // _WIN32
+
+			throw std::exception("Application failed");
+		}
+		std::cout << "Application update error: " << e.what() << "\Trying to fix it...\n";
 		threadPool.StopAll();
+
+		errorLastFrame = true;
 	}
 	Transform::ClearMemory();
 	GameObject::TransformTransformsToMemory();

@@ -33,6 +33,8 @@ private:
 	std::thread modelLoading;
 
 	ThreadPool threadPool;
+
+	bool errorLastFrame;
 public:
 	Application(uint16_t width, uint16_t height, GLFWwindow* window);
 	~Application();
