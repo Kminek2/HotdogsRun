@@ -125,8 +125,10 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	if (music_type == "race-accordion")
 		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.4f), glm::vec3(0.8f), glm::vec3(0.9f));
-	else
+	else {
 		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.01f), glm::vec3(0.01f, 0.01f, 0.05f), glm::vec3(0.1f));
+		Camera::main->ChangeCubeMap(new CubeMap({ "CubeMaps/Skybox-night/skybox-right.png", "CubeMaps/Skybox-night/skybox-left.png", "CubeMaps/Skybox-night/skybox-top.png", "CubeMaps/Skybox-night/skybox-bottom.png", "CubeMaps/Skybox-night/skybox-front.png", "CubeMaps/Skybox-night/skybox-back.png" }));
+	}
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
