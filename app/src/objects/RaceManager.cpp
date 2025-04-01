@@ -55,7 +55,7 @@ RaceManager::CarObject *RaceManager::AddCar(GameObject *car, bool main) {
 	car->transform->RotateTo(glm::vec3(0, 0, glm::degrees(orient) - 180.0f));
 
 	glm::vec2 offset = offsets[cars_placed % 5] * map_manager->GetMapScale() * map_manager->GetMapTileSize() * cars_relative_offset;
-	car->transform->Translate(glm::vec3(offset.x, offset.y, 0));
+	car->transform->Translate(glm::vec3(offset.x, offset.y, 0.3f));
 
 	++cars_placed;
 	CarObject* newCarObject = new RaceManager::CarObject(car, 0, 0);
