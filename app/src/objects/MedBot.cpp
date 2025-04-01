@@ -114,9 +114,11 @@ void MedBot::LateUpdate()
 		lastCollided = 0;
 		lastCollPos = gameObject->transform->position;
 	}
-	else if (shouldReverse && lastCollided > 6.0f)
+	else if (shouldReverse && lastCollided > 6.0f) {
 		shouldReverse = false;
-	if (lastCollided > 5.0f)
+		if (!MovedOverPoint(gameObject->transform->position, 1))
+			currentPoint = glm::normalize((int)currentPoint - 1, (int)points.size());
+	}if (lastCollided > 5.0f)
 		avoiding = 0;
 }
 
