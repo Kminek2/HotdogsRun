@@ -13,7 +13,7 @@
 constexpr float EPSILON = 1e-3;
 
 class WheelsScript;
-
+class Bomb;
 class CarMovement :
     public ObjectScript {
 private:
@@ -119,4 +119,6 @@ public:
     int nitrosUsed = 0;
 
     CarMovement* copy() override { return new CarMovement(*this); }
+
+    friend Bomb;
 };

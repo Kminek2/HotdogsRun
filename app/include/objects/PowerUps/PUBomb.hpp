@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 #include "PowerUp.hpp"
-#include "objects/PowerUps/Bomba.hpp"
+#include "objects/PowerUps/Bomb.hpp"
 
 class PUBomb : public PowerUp {
 public:
