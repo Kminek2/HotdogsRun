@@ -133,7 +133,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 
-	int model_choosen = Settings::read("model_choosen").value_or(1);
+	int model_choosen = Settings::read("model_choosen").value_or(0);
 	car = new GameObject(car_models[model_choosen]);
 
 	ColorPicker cp(car);
