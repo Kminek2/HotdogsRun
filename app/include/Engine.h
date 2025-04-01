@@ -21,7 +21,7 @@ public:
         Cleanup();
     }
 
-    Engine(uint32_t Width = 800, uint32_t Height = 600);
+    Engine(uint32_t Width = 800, uint32_t Height = 500);
 
     static GLFWwindow* window;
     static VkInstance instance;
