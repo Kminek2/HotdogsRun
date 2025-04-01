@@ -13,7 +13,9 @@ GLFWwindow* Engine::window;
 VkInstance Engine::instance;
 
 ValidationLayers* Engine::validationLayers;
-const std::vector<const char*> Engine::enValidationLayers = {};
+const std::vector<const char*> Engine::enValidationLayers = {
+    "VK_LAYER_KHRONOS_validation"
+};
 
 Engine::Engine(uint32_t Width, uint32_t Height) :WIDTH(Width), HEIGHT(Height)
 {

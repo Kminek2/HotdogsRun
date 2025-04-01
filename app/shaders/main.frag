@@ -52,10 +52,10 @@ layout(location = 0) in vec2 fragTexCoord;
 layout(location = 1) in vec3 fragNormal;
 layout(location = 2) in vec3 fragPos;
 layout(location = 3) flat in InstColorChange colorChange;
-layout(location = 5) in vec4 lightSpacePos;
+//layout(location = 5) in vec4 lightSpacePos;
 
 layout(set = 0, binding = 1) uniform sampler2D samplers;
-layout(set = 0, binding = 5) uniform sampler2D shadowMap;
+//layout(set = 0, binding = 5) uniform sampler2D shadowMap;
 layout(std430, binding = 2) buffer PointLightBuffer {
     readonly PointLight pointLights[];
 };
@@ -134,8 +134,8 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     vec3 diffuse = light.diffuse * diff;
     vec3 specular = light.specular * spec;
 
-    float shadow = ShadowCalculation(lightSpacePos, normal, lightDir);       
-    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular));
+    //float shadow = ShadowCalculation(lightSpacePos, normal, lightDir);       
+    vec3 lighting = (ambient + diffuse + specular);
     return (lighting);
 }
 
@@ -193,14 +193,15 @@ float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir){
 
     projCoords = projCoords * 0.5 + 0.5;
 
-    float closestDepth = texture(shadowMap, projCoords.xy).r;  
+//    float closestDepth = texture(shadowMap, projCoords.xy).r;  
     float currentDepth = projCoords.z;  
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.2f);
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+//    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
 
-    if(projCoords.z > 1.0)
-        shadow = 0.0;
+//    if(projCoords.z > 1.0)
+//        shadow = 0.0;
 
 
-    return shadow;
+//    return shadow;
+      return 0.0;
 }

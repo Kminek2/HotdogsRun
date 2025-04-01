@@ -5,9 +5,9 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
     mat4 proj;
 } ubo;
 
-layout(set = 0, binding = 6) uniform LightMatrix {
-    mat4 mat;
-} lightMat;
+//layout(set = 0, binding = 6) uniform LightMatrix {
+//    mat4 mat;
+//} lightMat;
 
 struct InstColorChange{
     uint index;
@@ -26,12 +26,12 @@ layout(location = 0) out vec2 fragTexCoord;
 layout(location = 1) out vec3 fragNormal;
 layout(location = 2) out vec3 fragPos;
 layout(location = 3) flat out InstColorChange colorChange;
-layout(location = 5) out vec4 lightSpacePos;
+//layout(location = 5) out vec4 lightSpacePos;
 
 
 void main() {
     fragPos = (model * vec4(inPosition, 1.0)).xyz;
-    lightSpacePos = lightMat.mat * vec4(fragPos, 1.0);
+    //lightSpacePos = lightMat.mat * vec4(fragPos, 1.0);
     gl_Position = ubo.proj * ubo.view * vec4(fragPos, 1.0);
     fragTexCoord = texCoord + vec2(0, textOff);
     fragNormal = mat3(transpose(inverse(model))) * normal;
