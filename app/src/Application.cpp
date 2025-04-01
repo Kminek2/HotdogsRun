@@ -260,8 +260,8 @@ void Application::Update() {
 #ifdef _WIN32
 			MessageBox(
 				NULL,
-				L"Application failed and will be closed",
-				L"Error",
+				"Application failed and will be closed",
+				"Error",
 				MB_ICONERROR | MB_OK| MB_DEFBUTTON1
 			);
 #endif // _WIN32

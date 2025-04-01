@@ -94,6 +94,8 @@ MapManager* MapManager::Init()
 			{ parent_road->transform->position.x, parent_road->transform->position.y, 0 + i / 1e5 },
 			glm::vec3(0, 0, 45 * map_points[i].out + 90),
 			glm::vec3(MAP_TILE_SCALE));
+		if (cp_model == "meta")
+			ncp->transform->Move(glm::vec3(0.0f, 0.0f, -0.5f));
 
 		ncp->transform->Translate(glm::vec3(0, -offset, 0));
 		ncp->AddDefaultOBB(glm::vec3(1), true)->surface_type = NEVER_COLLIDE;
@@ -244,7 +246,7 @@ void MapManager::addAnimal(GameObject* animal) {
 void MapManager::generateAnimals(std::vector<glm::vec2> pos) {
 	for (const glm::vec2& p : pos) {
 		GameObject* chosen = rand.choice(animals);
-		chosen->transform->MoveTo(glm::vec3(p, .3));
+		chosen->transform->MoveTo(glm::vec3(p, .1));
 
 		animal_instances.push_back(new GameObject(*chosen));
 	}
