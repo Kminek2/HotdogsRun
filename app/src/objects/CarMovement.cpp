@@ -31,6 +31,7 @@ CarMovement::CarMovement(float carWeight, float breaksStrength, float maxSpeed, 
 	crashsound_timer = 0.0f;
 	gassound_timer = 0.0f;
 	__gripMult = 0.5f;
+	disabled_inputs = false;
 }
 
 void CarMovement::Init() {
