@@ -36,8 +36,8 @@ void Device::PickPhysicalDevice() {
 #ifdef _WIN32
         MessageBox(
             NULL,
-            "Update your drivers and try again.",
-            "No compatable device found",
+            L"Update your drivers and try again.",
+            L"No compatable device found",
             MB_ICONERROR | MB_OK | MB_DEFBUTTON1
         );
 #endif // _WIN32
@@ -63,8 +63,8 @@ void Device::PickPhysicalDevice() {
 #ifdef _WIN32
         MessageBox(
             NULL,
-            "Update your drivers and try again.",
-            "No compatable device found",
+            L"Update your drivers and try again.",
+            L"No compatable device found",
             MB_ICONERROR | MB_OK | MB_DEFBUTTON1
         );
 #endif // _WIN32
