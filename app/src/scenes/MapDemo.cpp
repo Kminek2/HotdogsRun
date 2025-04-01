@@ -96,12 +96,6 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	_rand rand = *randptr;
 
 	std::cout << "USING SEED: " << rand.getSeed() << '\n';
-	
-	music_type = rand.choice(std::vector<std::string>({"race-accordion", "race-bhrams"}), {0.5f, 0.5f});
-
-	music_first = new AudioSource2d("music/first-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/500.0f);
-	music_cont = new AudioSource2d("music/continue-"+music_type, static_cast<float>(Settings::read("volume").value_or(50))/500.0f);
-	sound_race_end = new AudioSource2d("race_end", Settings::read("volume").value_or(50)/100.0f);
 
 	on_end_screen = false;
 
@@ -123,12 +117,19 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		}
 	}
 
-	if (music_type == "race-accordion")
+	if (rand.coin_toss() || difficulty != 2) {
 		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.4f), glm::vec3(0.8f), glm::vec3(0.9f));
+		music_type = "race-accordion";
+	}
 	else {
-		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.01f), glm::vec3(0.01f, 0.01f, 0.05f), glm::vec3(0.1f));
+		LightObject::SetDirLight(glm::vec3(rand.random(-1, 1), rand.random(-1, 1), rand.random(-1.0f, -0.1f)), glm::vec3(0.05f), glm::vec3(0.05f, 0.05f, 0.2f), glm::vec3(0.3f));
+		music_type = "race-bhrams";
 		Camera::main->ChangeCubeMap(new CubeMap({ "CubeMaps/Skybox-night/skybox-right.png", "CubeMaps/Skybox-night/skybox-left.png", "CubeMaps/Skybox-night/skybox-top.png", "CubeMaps/Skybox-night/skybox-bottom.png", "CubeMaps/Skybox-night/skybox-front.png", "CubeMaps/Skybox-night/skybox-back.png" }));
 	}
+
+	music_first = new AudioSource2d("music/first-" + music_type, static_cast<float>(Settings::read("volume").value_or(50)) / 500.0f);
+	music_cont = new AudioSource2d("music/continue-" + music_type, static_cast<float>(Settings::read("volume").value_or(50)) / 500.0f);
+	sound_race_end = new AudioSource2d("race_end", Settings::read("volume").value_or(50) / 100.0f);
 
 	Camera::main->cameraTransform->MoveTo(map->GetPoint(0)->transform->position);
 

@@ -303,7 +303,7 @@
     <ClCompile Include="app\src\objects\PowerUps\PUBomb.cpp">
       <Filter>Source Files\objects\PowerUps</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\objects\PowerUps\Bomba.cpp">
+    <ClCompile Include="app\src\objects\PowerUps\Bomb.cpp">
       <Filter>Source Files\objects\PowerUps</Filter>
     </ClCompile>
   </ItemGroup>
@@ -578,7 +578,7 @@
     <ClInclude Include="app\include\objects\PowerUps\PUBomb.hpp">
       <Filter>Header Files\objects\PowerUps</Filter>
     </ClInclude>
-    <ClInclude Include="app\include\objects\PowerUps\Bomba.hpp">
+    <ClInclude Include="app\include\objects\PowerUps\Bomb.hpp">
       <Filter>Header Files\objects\PowerUps</Filter>
     </ClInclude>
   </ItemGroup>

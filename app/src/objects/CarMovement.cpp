@@ -37,10 +37,10 @@ void CarMovement::Init() {
 	gameObject->cm = this;
 	crashsound_audio = new AudioSource3d(gameObject, "crash", static_cast<float>(Settings::read("volume").value_or(100))/100.0f);
 	gassound_audio = new AudioSource3d(gameObject, "gas", static_cast<float>(Settings::read("volume").value_or(100))/400.0f);
-	lights.push_back(new SpotLight(gameObject, glm::vec3(-0.1, 0.5f, 1), gameObject->transform->front, glm::vec3(0.7f, 0.7f, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
-	lights.push_back(new SpotLight(gameObject, glm::vec3(-0.1, -0.5f, 1), gameObject->transform->front, glm::vec3(0.7f, 0.7f, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
-	stopLights.push_back(new SpotLight(gameObject, glm::vec3(0.5, 0.5f, 1), -gameObject->transform->front, glm::vec3(1.0f, 0, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
-	stopLights.push_back(new SpotLight(gameObject, glm::vec3(0.5, -0.5f, 1), -gameObject->transform->front, glm::vec3(1.0f, 0, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
+	lights.push_back(new SpotLight(gameObject, glm::vec3(-0.1, 0.5f, 1), gameObject->transform->front, glm::vec3(1.4f, 1.4f, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
+	lights.push_back(new SpotLight(gameObject, glm::vec3(-0.1, -0.5f, 1), gameObject->transform->front, glm::vec3(1.4f, 1.4f, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
+	stopLights.push_back(new SpotLight(gameObject, glm::vec3(0.5, 0.5f, 1), -gameObject->transform->front, glm::vec3(2.0f, 0, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
+	stopLights.push_back(new SpotLight(gameObject, glm::vec3(0.5, -0.5f, 1), -gameObject->transform->front, glm::vec3(2.0f, 0, 0), glm::vec2(glm::cos(glm::radians(30.0f)), glm::cos(glm::radians(35.0f))), 1.0f, 0.35f, 0.44f));
 }
 
 void CarMovement::Update() {
