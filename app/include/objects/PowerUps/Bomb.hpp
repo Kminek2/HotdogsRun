@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AudioSource2d.h"
 #include "ObjectScript.h"
 #include "GameObject.h"
 
@@ -14,4 +15,6 @@ public:
 
 private:
 	float timer;
+	AudioSource3d *explosion_sound;
+	GameObject *sound_obj;
 };
