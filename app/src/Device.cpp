@@ -36,8 +36,8 @@ void Device::PickPhysicalDevice() {
 #ifdef _WIN32
         MessageBox(
             NULL,
-            L"Update your drivers and try again.",
-            L"No compatable device found",
+            "Update your drivers and try again.",
+            "No compatable device found",
             MB_ICONERROR | MB_OK | MB_DEFBUTTON1
         );
 #endif // _WIN32
@@ -45,7 +45,7 @@ void Device::PickPhysicalDevice() {
         throw std::runtime_error("failed to find GPUs with Vulkan support!");
     }
 
-    std::vector<VkPhysicalDevice> devices(deviceCount);  //zmieniæ na rêczny wybór lub sutability check przy s³abej wydajnoœci
+    std::vector<VkPhysicalDevice> devices(deviceCount);  //zmieniï¿½ na rï¿½czny wybï¿½r lub sutability check przy sï¿½abej wydajnoï¿½ci
     vkEnumeratePhysicalDevices(Engine::instance, &deviceCount, devices.data());
 
     std::pair<uint32_t, VkPhysicalDevice> scores {0, nullptr};
@@ -63,8 +63,8 @@ void Device::PickPhysicalDevice() {
 #ifdef _WIN32
         MessageBox(
             NULL,
-            L"Update your drivers and try again.",
-            L"No compatable device found",
+            "Update your drivers and try again.",
+            "No compatable device found",
             MB_ICONERROR | MB_OK | MB_DEFBUTTON1
         );
 #endif // _WIN32
