@@ -499,7 +499,7 @@ void RaceManager::handleTracking()
 
 		glm::vec3 pos = race_trackers[c_index]->rectTransform->position;
 		//race_trackers[c_index]->rectTransform->MoveTo(glm::vec3(progress_bar->rectTransform->scale.x * (2 * race_data[i]->progress - 1), pos.y, pos.z));
-		race_trackers[c_index]->rectTransform->MoveTo(glm::vec3(posFromProgress(race_data[i]->progress, progress_bar->rectTransform->scale.x), pos.y, pos.z));
+		race_trackers[c_index]->rectTransform->MoveTo(glm::vec3(posFromProgress(std::max(race_data[i]->progress, 0.0), progress_bar->rectTransform->scale.x), pos.y, pos.z));
 
 		++i;
 	}
