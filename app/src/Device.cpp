@@ -33,6 +33,15 @@ void Device::PickPhysicalDevice() {
     vkEnumeratePhysicalDevices(Engine::instance, &deviceCount, nullptr);
 
     if (deviceCount == 0) {
+#ifdef _WIN32
+        MessageBox(
+            NULL,
+            L"Update your drivers and try again.",
+            L"No compatable device found",
+            MB_ICONERROR | MB_OK | MB_DEFBUTTON1
+        );
+#endif // _WIN32
+
         throw std::runtime_error("failed to find GPUs with Vulkan support!");
     }
 
