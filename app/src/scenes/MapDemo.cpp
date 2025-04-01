@@ -148,6 +148,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		car->AddScript(view_scripts[0]);
 		car->AddScript((new SmoothCamera(glm::vec3(10, 0, 3), 5.0f, Perspective))->SetDynamicFov(true, 45.0f, 50.0f));
 		car->AddScript(view_scripts[1]);
+		Bomb::cars.push_back(car);
 	}
 
 	if (camera_view != 0)
@@ -178,6 +179,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		else if(difficulty == 2)
 			bot->AddScript(carmv)->AddScript(new StraightKingBot(carmv, map, carObj, 0.5f, 0.4f));*/
 
+		Bomb::cars.push_back(bot);
 		bot = new GameObject("f1car");
 
 		carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f * (1 + (difficulty + 1) / 3.0f));
@@ -192,6 +194,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 		else if(difficulty == 2)
 			bot->AddScript(carmv)->AddScript(new MedBot(carmv, map, carObj, 0.9f, 0.6f, 0.3f));*/
 
+		Bomb::cars.push_back(bot);
 		bot = new GameObject("pickup");
 
 		carmv = new CarMovement(1.0f, 1.0f, 600.0f, -100.0f, 150.0f, 20.0f, 0.1f, false, 0.05f * (1 + (difficulty + 1) / 3.0f));
@@ -199,6 +202,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 		carObj = race_manager->AddCar(bot);
 		bot->AddScript(carmv)->AddScript(new AntiPersonelBot(carmv, map, carObj, race_manager->getMainCar()));
+		Bomb::cars.push_back(bot);
 
 		bot = new GameObject("racing_car");
 
@@ -207,6 +211,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 
 		carObj = race_manager->AddCar(bot);
 		bot->AddScript(carmv)->AddScript(new BadBreakingBot(carmv, map, carObj, race_manager->getMainCar(), race_manager));
+		Bomb::cars.push_back(bot);
 	}
 
 	PowerUp::car_objects = race_manager->getCarObjects();
@@ -217,7 +222,7 @@ std::shared_ptr<Scene> MapDemo::Init() {
 	pum->addPowerUp((new GameObject("banan2", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(2.25)))->AddScript(new PUBanana(2500)), -1.0f);
 	pum->addPowerUp((new GameObject("bomba", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(3.5)))->AddScript(new PUBomb()), -.5f);
 
-	PUBomb::SetBomb((new GameObject("TNT", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(2)))->AddScript(new Bomba()));
+	PUBomb::SetBomb((new GameObject("TNT", glm::vec3(1000.0f), glm::vec3(0), glm::vec3(2)))->AddScript(new Bomb()));
 
 	pum->generatePowerUps(10);
 

@@ -3,14 +3,15 @@
 #include "ObjectScript.h"
 #include "GameObject.h"
 
-class Bomba : public ObjectScript {
+class Bomb : public ObjectScript {
 public:
 	void Init() override;
 	void Update() override;
 	void OnDestroy() override;
 
-	Bomba* copy() override { return new Bomba(*this); }
+	Bomb* copy() override { return new Bomb(*this); }
+	static std::vector<GameObject*> cars;
 
 private:
-	// ...
+	float timer;
 };

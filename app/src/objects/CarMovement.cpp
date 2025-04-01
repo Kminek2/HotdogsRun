@@ -316,10 +316,10 @@ void CarMovement::useBomb()
 	if (disabled_inputs || bombs < 1) return;
 	--bombs;
 
-	GameObject* bomba = new GameObject(*PUBomb::bomb);
-	bomba->transform->MoveTo(gameObject->transform->position);
-	bomba->transform->RotateTo(gameObject->transform->rotation);
-	bomba->transform->Translate(glm::vec3(-1, 0, 0));
+	GameObject* bomb = new GameObject(*PUBomb::bomb);
+	bomb->transform->MoveTo(gameObject->transform->position);
+	bomb->transform->RotateTo(gameObject->transform->rotation);
+	bomb->transform->Translate(glm::vec3(-1, 0, 0));
 }
 
 void CarMovement::addNitros(int count) {
