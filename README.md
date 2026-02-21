@@ -5,6 +5,10 @@
 
 ---
 
+<p align="center">
+  <img src="images/preview.png" alt="Project preview" width="800"/>
+</p>
+
 ## Introduction
 
 This project is our solution to the [Wyścigi](https://science-cup.pl/wp-content/uploads/2025/01/MSC5_2025_Wyscigi.pdf) task of Motorola Science Cup 2025 contest.
